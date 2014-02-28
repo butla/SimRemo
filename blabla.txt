@@ -1,1 +1,2 @@
 takie tam testowe
+pierwsze po SSH
