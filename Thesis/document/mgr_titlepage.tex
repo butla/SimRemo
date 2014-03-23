@@ -2,6 +2,8 @@
 % required for macro redefinition
 \makeatletter
 
+\usepackage{tabularx}
+
 % parameters definition
 % they cannot conflict with other
 % like bibteh attributes etc.
@@ -62,9 +64,11 @@
 		\vspace{1cm}
 		
 		\noindent
-		\begin{tabular}{@{}lp{5cm}r@{}}
-			Opiekun pracy: & & Kierownik Katedry/Zakładu: \\ \\ \\ \\
-			Tytuł, imię i nazwisko & & Tytuł, imię i nazwisko
+		\begin{tabular}{@{}lp{6cm}r@{}}
+			Opiekun pracy: & & Kierownik Katedry/Zakładu: \\ 
+			....................... & & ....................... \\
+			....................... & & ....................... \\
+			Tytuł, imię i nazwisko & & Tytuł, imię i nazwisko \\
 		\end{tabular}
 		
 		\vspace*{\stretch{2}}
@@ -84,4 +88,4 @@
 %restore @ sign
 \makeatother
 
-\cleardoublepage
+%\cleardoublepage
