@@ -17,10 +17,10 @@
   %removal of header
   \thispagestyle{empty}%
 
-	%% zmniejszenie marginesów, zeby strona byla wysrodkowana
-	%\addtolength{\hoffset}{-0.5cm}
-	%\addtolength{\voffset}{-1.5cm}
-	%\addtolength{\textwidth}{0.5cm}
+	% zmniejszenie marginesów, zeby strona byla wysrodkowana
+	\addtolength{\hoffset}{-0.5cm}
+	\addtolength{\voffset}{-1.5cm}
+	\addtolength{\textwidth}{0.5cm}
 
   \begin{center}
     \begin{tabular}{lcr}
@@ -32,7 +32,7 @@
   \end{center}
   \vspace{1.5cm}
 	
-	\large{
+	\begin{large}
 		\begin{tabular}{@{}lp{1cm}l@{}}
 			\textbf{Katedra/Zakład:} & & \@dept\\
 			\textbf{Kierunek studiów:} & & Informatyka\\
@@ -41,7 +41,7 @@
 			\textbf{Imię i nazwisko:} & & \@author\\
 			\textbf{Nr albumu:} & & \@indeks\\
 		\end{tabular}
-	}
+	\end{large}
 	
   \begin{center}
     \vspace{1cm}
@@ -49,7 +49,7 @@
   \end{center}
   \vspace{1cm}
 	
-	\large{
+	\begin{large}
 		\begin{tabular}{@{}llr@{}}
 			\textbf{Temat pracy:} \\ \@title\\
 			\\
@@ -71,14 +71,14 @@
 		\begin{center}
 			\@miasto, \@date
 		\end{center}
-	}
+	\end{large}
 	
-	%%żeby strona z innym marginesem się zrobiła
-	%\pagebreak
-	%%wracamy z normalnym marginesem
-	%\addtolength{\hoffset}{0.5cm}
-	%\addtolength{\voffset}{1.5cm}
-	%\addtolength{\textwidth}{-0.5cm}
+	%żeby strona z innym marginesem się zrobiła
+	\pagebreak
+	%wracamy z normalnym marginesem
+	\addtolength{\hoffset}{0.5cm}
+	\addtolength{\voffset}{1.5cm}
+	\addtolength{\textwidth}{-0.5cm}
 }
 
 %restore @ sign
