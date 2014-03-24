@@ -191,11 +191,14 @@ Zachęcam wszystkich do modyfikacji, poprawiania i rozbudowy niniejszego dokumen
 \chapter{Wprowadzenie}
 Tu będzie wstęp i teoria.
 
+Do każdego punktu co i dlaczego znaleźć jakiś artykuł
+
 \section{Wstęp}
 Tutaj napiszę taki swój wstęp. Co chcę zrobić, jakie są wymagania, jakie mam pomysły na to.
 Praca jest odpowiedzią na prawdziwy problem napotkany w pracy (opis, że mamy framework, pluginy, Android z innymi urządzeniami).
 Jest trudniejsza niż inne prace, bo jest bardziej niezależna i dziedzina problemu jest szersza. Rzucony na otwartą wodę musiałem sobie radzić i tak może powstanie coś, czego jeszcze na świecie nie ma (albo nie jest tak przyjemne w użyciu).
 
+Będę robił system oparty o JSON z oznaczaniem typów. Referencyjna implementacja w Pythonie, poza tym Java (Androidowa) i C\#. Każda wersja językowa zawiera zarówno klienta jak i serwer.
 
 \section{Cel pracy}
 Dokładnie określić po co ta praca. W czym ma się przydać, po co ją robić? Jakie ma wymagania?
@@ -209,6 +212,7 @@ Ogólnie ujęte rozwiązanie dla powyższych problemów to serwer usług interne
 
 W reszcie rozdziału jest wytłumaczone dokładniej jak działają wspomniane tutaj mechanizmy oraz jak zostanie stworzony mój serwer.
 
+Wiele środowisk chcemy wspierać, np. Windows Phone też
 
 \section{Docelowe platformy}
 Tu o tych, co będą wymaganie
@@ -233,6 +237,8 @@ Nawet jak się zapisze w XML, JSONie czy czymś innym to możemy stosować inne 
 
 \emph{JAKAŚ KSIĄŻKA O TYM?}
 
+\subsubsection{Serializacja}
+
 \subsection{Transport danych}
 Też bardzo szeroka dziedzina. Jak już się przetłumaczy, to zawsze trzeba jakoś przetransportować. Jak możemy przekazywać w ramach jednego kompa, jak pomiędzy kompami lokalnie, jak globalnie.
 Celuję w globalnie, ale zwsze szerszą metodę można zastosować wężej (chociaż może nie być tak wydajna jak te węższe)
@@ -243,7 +249,12 @@ Celuję w globalnie, ale zwsze szerszą metodę można zastosować wężej (choc
 
 \subsection{RPC}
 Ogólnie trochę o RPC. Że wiele technologii to RPC (Web service'y, CORBA), że to zawiera i tłumaczenie i transport.
-\url{http://www.infoq.com/articles/rest-soap-when-to-use-each}
+\url{http://www.infoq.com/articles/rest-soap-when-to-use-each}\\
+
+\url{http://xmlrpc.scripting.com/default.html XML RPC}\\
+\url{http://xmlrpc.scripting.com/spec.html}\\
+\url{http://effbot.org/zone/xmlrpc-errata.htm}\\
+Przejrzeć specyfikację, zobaczyć, z czym musieli sobie poradzić i wyczaić jak to wszystko mozna odwzorować w JSONie. Obczaić, jak sobie DataContractSerializer (też DataContractJsonSerializer) radzą. 
 
 \subsection{XML binding}
 NA TYM BĘDZIE DZIAŁAŁO TŁUMACZENIE KLAS
@@ -261,10 +272,23 @@ W przeciwieństwie do tradycyjnych modeli przetwarzania typu klient – serwer, 
 Usługi internetowe pozwalają różnym aplikacjom wykonanych w różnych technologiach (np. całkowicie odmienne języki programowania) na porozumiewanie się ze sobą bez potrzeby czasochłonnego tworzenia kodu tłumaczącego. Nie ma też znaczenia to, czy obie aplikacje znajdują się na jednej maszynie, czy po drugiej stronie świata.
 Usługi sieciowe na platformie .NET realizowane są w ramach WCF. Javie obecnym standardem jest JAX-WS.
 
+co to webservicy i po co są?\\
+do czego mogą się przydać na androidzie?\\
+dlaczego ich nie ma? Chyba stwierdzili, że ogólne web servicey są za ciężkie i za bardzo obciążają (Windows phone też nie ma WCF)\\
+
 \subsection{REST}
+Cośtam o RESTcie \url{http://www.oracle.com/technetwork/articles/javase/index-137171.html}\\
+REST and POX \url{http://msdn.microsoft.com/en-us/library/vstudio/aa395208(v=vs.90).aspx}\\
+
+Restful web services vs ``big'' web services: \url{http://www2008.org/papers/pdf/p805-pautassoA.pdf}\\
 
 \chapter{Poszukiwanie rozwiązania}
 Jak w ogóle dojść do tego  co i jak zrobić, żeby dało nam to, co mamy w celach?
+
+Jak teoretycznie możnaby zrobić web service'y na Androidzie? Android jest tutaj przykładem ograniczonego systemu.
+W sumie jakiś powód musięli mieć, żeby ich nie zamieszać. Jakie jeszcze dodatkowe usprawnienia byłyby do zrobienia (tłumaczenie klas)?
+
+Najpierw zobaczmy, co jest.
 
 \section{Podobne rozwiązania}
 Tu o bibliotekach, frameworkach robiących to co chcemy albo rzeczy podobne.
@@ -273,11 +297,19 @@ Konkretne porównania osiągów w rozdziale o eksperymentach (chociaż tutaj ju�
 
 Te wszystkie do serializacji i soapów rzeczy to są, tutaj nic nie ma. Wszystko co by się chciało to jest, ale na dużą Javę, albo na pythona (ciężko przeportować, nie wiadomo, czy da się na pewno) Apache Thrift, Google Protocol Buffers, ZeroMQ (http://stackoverflow.com/questions/8062212/difference-between-apache-thrift-and-zeromq)
 
+Przy każdej technologii pokazać implementacje w WCF i Javie normalnej (bo ona będzie takim punktem odniesienia) i zrobić porównania prędkości, bezpieczeństwa itp.
+
 \url{http://www.webopedia.com/TERM/W/Web_Services.html}\\
 \url{http://thrift.apache.org/static/files/thrift-20070401.pdf}\\
 reliable sessions (w sumie też by mi się przydał jakiś mechanizm, który umożliwi komunikację w niestabilnym środowisku Internetu)\\
 \url{http://blogs.msdn.com/b/shycohen/archive/2006/02/20/535717.aspx}\\
 \url{http://docs.xamarin.com/guides/cross-platform/application_fundamentals/web_services}\\
+
+Apache Thrift, Google Protocol Buffers, ZeroMQ (\url{http://stackoverflow.com/questions/8062212/difference-between-apache-thrift-and-zeromq})\\
+\url{http://thrift.apache.org/static/files/thrift-20070401.pdf}\\
+\url{http://blogs.msdn.com/b/shycohen/archive/2006/02/20/535717.aspx}\\
+Xamarin\\
+\url{http://docs.xamarin.com/guides/cross-platform/application_fundamentals/web_services/}\\
 
 JiBX!!! Tworzenie klas ze schemy i robienie wsdl z javy\\
 Wsdl2Java: tworzenie klas z wsdl, głównie chodzi o klasy danych\\
@@ -292,18 +324,28 @@ Inne:\\
 \url{http://blog.tourgeek.com/2011/12/xml-data-binding-for-java-on-android.html}\\
 PODOBNE, ALE NIE PRZYDATNE:\\
 
-\url{http://forum.springsource.org/showthread.php?129058-Spring-Remoting-for-Android}
-\url{http://www.themidnightcoders.com/fileadmin/docs/java/v4/index.html?android}
-\url{http://developer.android.com/guide/components/aidl.html} - AIDL, androidowa komunikacja między procesami
+\url{http://forum.springsource.org/showthread.php?129058-Spring-Remoting-for-Android}\\
+\url{http://www.themidnightcoders.com/fileadmin/docs/java/v4/index.html?android}\\
+\url{http://developer.android.com/guide/components/aidl.html} - AIDL, androidowa komunikacja między procesami\\
+
 
 \subsection{WCF}
 \subsection{JAX-WS}
+Niestandardowe podejście z użyciem JSONa zamiast XMLa\url{http://jax-ws-commons.java.net/json/}\\
+
 \subsection{Jackson}
-\url{http://www.cowtowncoder.com/blog/archives/2010/03/entry_372.html}
+\url{http://www.cowtowncoder.com/blog/archives/2010/03/entry_372.html}\\
+
 \subsection{Restlet}
+\url{http://restlet.org/learn/tutorial/2.1/#/docs_2.0/13-restlet/275-restlet/266-restlet.html}\\
+\url{http://wiki.fasterxml.com/JacksonHowToIgnoreUnknown}\\
+
 \subsection{Spring}
 \subsection{Crest}
 \subsection{Ksoap}
+
+\subsection{I-jetty}
+Jest to serwer, może ma jakiś kontener Web-serviceów?
 
 \subsection{Porównanie możliwości tych technologii}
 
@@ -333,27 +375,70 @@ Co trzeba wtedy robić na androidzie	Co w C\# \\
 Może zamiast tylu podsekcji najpierw wyliczenie, krótki opis i decyzja, czy należy się tym zajmować? Dopiero te, które wydawałyby się bardziej interesujące dostają swoją własną podsekcję.
 
 \subsection{własna metoda oparta o JSON z oznaczaniem typów}
+Póki co wiem, że będzie JSON z opisanymi typami. Kanał komunikacyjny powinien być dowolny. 
+
 \subsection{serwer web serviców z narzędziami do generacji kodu itp}
 Generator wsdl na Androida + tworzenie bindingów do xsd + Parsowanie SOAPów
+
+JiBX!!! Tworzenie klas ze schemy i robienie wsdl z javy
+Wsdl2Java: tworzenie klas z wsdl, głównie chodzi o klasy danych
+
+Weryfikacja: tworzę graf w xmlu. Są obiekty, które mogą mieć dzieci (tablice, listy). Próbuję wygenerować C\# dla porównania. Zapisuję grafy, które nie działają (w trakcie automatycznych testów). Zrobić wizualizator grafów.
+
+Co by trzeba było po kolei zrobić w normalnej javie? (tłumaczenia do xsd, ujednolicanie namespaców, mamy do czynienia z jakimiś ArrayOfString, dziedziczenie chyba słabo działa przy generacji, nie da się używać DataContractSerializera żeby nie serializować części klas ogólnie syf, ale wszystko udokumentować). 
+
 \subsection{Własny serwer REST}
+Tu dyskusja o implementacji serwera RESTowego na Androidzie \url{https://groups.google.com/forum/?fromgroups=#!topic/android-developers/vgkXg1P8iBg}
+
 \subsection{remoting przez serializację}
 Po prostu serializujemy tak samo/
-\subsection{portowanie axisa na Androida?}
-Albo częściowe używanie go spod javy. W sumie można sportować też jakieś inne rzeczy. Np.\ pythonowe web service'y (pyro, twisted).
+
+\subsection{portowanie rozwiązań w C na Androida?}
+Axis. Może częściowe używanie go spod javy. W sumie można sportować też jakieś inne rzeczy. Np.\ pythonowe web service'y (pyro, twisted).
+
+sl4a, py4a, kompilacja na ubuntu z użyciem NDK i Cythona
+distutils.core zamienić na setuptools w setup.py
+
 \subsection{Zcentralizowane pseudo web servicy (albo nawet i nie)}
 Też potrzebny serializator / deserializator + bindingi. To był ten pomysł, że to komp pinga serwer (Androida), żeby ten sobie pobrał rozkaz i to Android woła web service na kompie. Trzeba by było używać Ksoap albo innego ścierwa. Zobaczyć, czy to w ogóle miałoby sens. Czy tymi Ksoapami da się coś sensownie zrobić.
 
 \subsection{Wybrane rozwiązanie}
 Jakie i dlaczego?
 
+Dlaczego nie soapem?
 
 \chapter{Projekt systemu}
 Tutaj cały czas teorie, ale już wiadomo na czym się skupić. Wiem, jaki chcę zrobić system, teraz muszę go zaprojektować.
 
 Jakiej licencji użyję?
 
+Call:
+- id obiektu (0 dla tworzenia nowego, wtedy argumentem jest tym)
+- id metody
+- parametry
+
+Response:
+- czy sie udalo
+- obiekt zwrotny, opis błędu przy wywołaniu zdalnej metody lub stacktrace z exceptiona, który wystąpił w metodzie
+
+Id metody:
+składa się z nazwy i aliasów jej parametrów.
+
+Alias:
+typy prymitywne - int, string, itp.
+datacontract - sraka:\#ptaka.daka
+lista - List
+tablica - [int, [[int, [sraka:\#ptaka.daka, itp.
+
+Tłumaczenie aliasów:
+C\# tłumaczy klasy na aliasy, jak przetłumaczy dla jednej metody to dodaje to do słownika, żeby potem robić to od razu.
+Java tłumaczy aliasy na nazwy klas (potem loaderem). Wiąże w słowniku id metody z obiektem metody. Może być metoda przyjmująca jakiś konkretny List, np. ArrayList, ale nie może mieć overloada przyjmującego inny List.
+Kiedy czyścić te słowniki?
+
 \section{Specyfikacja wymagań systemowych}
 Wymienić te wszystkie typy wymagań i wylistować.
+
+reliable sessions (w sumie też by mi się przydał jakiś mechanizm, który umożliwi komunikację w niestabilnym środowisku Internetu)
 
 \section{Przypadki użycia}
 
