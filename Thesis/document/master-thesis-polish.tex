@@ -247,6 +247,8 @@ Celuję w globalnie, ale zwsze szerszą metodę można zastosować wężej (choc
 
 \emph{TCP, PIPEy, SSL, HTTP, HTTPS, Webservicey, SOAP, REST, JSON}
 
+\url{http://stackoverflow.com/questions/12450404/json-pojo-consumer-of-polymorphic-objects}
+
 \subsection{RPC}
 Ogólnie trochę o RPC. Że wiele technologii to RPC (Web service'y, CORBA), że to zawiera i tłumaczenie i transport.
 \url{http://www.infoq.com/articles/rest-soap-when-to-use-each}\\
@@ -290,7 +292,7 @@ W sumie jakiś powód musięli mieć, żeby ich nie zamieszać. Jakie jeszcze do
 
 Najpierw zobaczmy, co jest.
 
-\section{Podobne rozwiązania}
+\section{Pokrewne rozwiązania}
 Tu o bibliotekach, frameworkach robiących to co chcemy albo rzeczy podobne.
 
 Konkretne porównania osiągów w rozdziale o eksperymentach (chociaż tutaj już zrobić porównanie wysiłku programisty, po prostu zamieścić je na końcu). Tutaj napisać o funkcjonalności żeby w ogóle wiedzieć, czy to czegoś warte i na ile mam się inspirować. Poza tym, może się okazać że jest już coś, co robi to, ca ja bym chciał zrobić.
@@ -330,11 +332,19 @@ PODOBNE, ALE NIE PRZYDATNE:\\
 
 
 \subsection{WCF}
+\url{http://msdn.microsoft.com/en-us/library/system.runtime.serialization.json.datacontractjsonserializer.aspx}\\
+
 \subsection{JAX-WS}
 Niestandardowe podejście z użyciem JSONa zamiast XMLa\url{http://jax-ws-commons.java.net/json/}\\
 
 \subsection{Jackson}
 \url{http://www.cowtowncoder.com/blog/archives/2010/03/entry_372.html}\\
+\url{http://stackoverflow.com/questions/8368873/deserialize-json-string-generated-from-net-using-jackson}
+\url{http://stackoverflow.com/questions/10329706/json-deserialization-into-another-class-hierarchy-using-jackson}
+\url{http://stackoverflow.com/questions/14454028/polymorphic-serialization-of-collections-with-custom-serializer-in-jackson}
+\url{http://stackoverflow.com/questions/12350571/how-can-i-change-global-type-information-format-in-jackson}
+
+sprawdzić jak się wymienia ze wszystkim opisanym adnotacjami (dodać jeszcze rozszerzenie defaulttyperesolvera), wtedy sprawdzić mixed iny; lista objectów, na którą wpakuję stringi i inty
 
 \subsection{Restlet}
 \url{http://restlet.org/learn/tutorial/2.1/#/docs_2.0/13-restlet/275-restlet/266-restlet.html}\\
@@ -434,6 +444,9 @@ Tłumaczenie aliasów:
 C\# tłumaczy klasy na aliasy, jak przetłumaczy dla jednej metody to dodaje to do słownika, żeby potem robić to od razu.
 Java tłumaczy aliasy na nazwy klas (potem loaderem). Wiąże w słowniku id metody z obiektem metody. Może być metoda przyjmująca jakiś konkretny List, np. ArrayList, ale nie może mieć overloada przyjmującego inny List.
 Kiedy czyścić te słowniki?
+
+Loader:
+Loaduje aliasy DataContractów, klasy javowe, klasy serwisów(?). Czyta sobie jary, szuka adnotacji
 
 \section{Specyfikacja wymagań systemowych}
 Wymienić te wszystkie typy wymagań i wylistować.
