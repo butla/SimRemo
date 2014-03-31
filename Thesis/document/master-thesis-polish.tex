@@ -198,7 +198,22 @@ Tutaj napiszę taki swój wstęp. Co chcę zrobić, jakie są wymagania, jakie m
 Praca jest odpowiedzią na prawdziwy problem napotkany w pracy (opis, że mamy framework, pluginy, Android z innymi urządzeniami).
 Jest trudniejsza niż inne prace, bo jest bardziej niezależna i dziedzina problemu jest szersza. Rzucony na otwartą wodę musiałem sobie radzić i tak może powstanie coś, czego jeszcze na świecie nie ma (albo nie jest tak przyjemne w użyciu).
 
+Cała ta magisterka jest odpowiedzą na konkretny problem napotkany w rzeczywistej pracy. Zostanie trocvhę uogólniona i będzie mogła znaleźć (mam nadzieje) szerokie zastosowanie. Chciałem coś zrobić i było mi smutno, że na Androidzie nie mogłem sobie gladko wszystkiego łączyć, że trzeba było generować konkretne klasy, że nie mogło być dynamicznie
+
 Będę robił system oparty o JSON z oznaczaniem typów. Referencyjna implementacja w Pythonie, poza tym Java (Androidowa) i C\#. Każda wersja językowa zawiera zarówno klienta jak i serwer.
+
+Wyjaśnić jak wytaczałem sobie drogę działania i jak metodyki dobierałem, jak zmieniało się to w trakcie pracy. Zmieniało się też zanim zacząłem pisać ten dokument.
+
+Napisać o tym, że język w mojej pracy może nie być do końca formalny. Mogę wtedy przekazywać informacje tak samo dobrze albo nawet lepiej (bo mogę być bardziej obrazowy, a nie muszę być od razu nieprecyzyjny) a zarówno pisanie jak i czytanie pracy będzie przyjemniejsze. Nauka powinna być frajdą. Coś przytoczyć może z tego headfirsta albo ich źródeł? W anglojęzycznej literaturze, która jest w sumie światowym standardem naukowym (jakiś cytat znaleźć) często tworzą jakieś nieformalne konstrukcje (sandwiche, cargo cult programming)
+
+We wstępie napisać, że głównie chodzi mi o to, żeby argumenty do metod były polimorficznei żeby nie trzeba było znać z góry typów, które mogą przejść (ogólnie jak przy normalnej obiektowości). W trakcie pracy sprawdzę, czy inne frameworki potrafią to robić bez jakiś strasznych tricków (out of the box, żeby programista się nie męczył). Jeśli potrafią, to jak wygodnie się z tego korzysta.
+
+We wstępie napisać, że praca może się trochę zmienić. Że dopiero zobaczę jak działają te frameworki. Może wpadnę na nowe, bardziej adekwatne rozwiązanie.
+
+\begin{em}
+Wyślij kiedyś szablon strony tytułowej.
+Wywalić Jacka jako konsultanta. Załatwić sobie kogoś od web service’ów z KASKU jako konsultanta/recenzenta. Zmienić tytuł pracy na jakiś uniwersalny obiektowy cross-platform system. O Androidzie i .NETcie napisać w wymaganiach.
+\end{em}
 
 \section{Cel pracy}
 Dokładnie określić po co ta praca. W czym ma się przydać, po co ją robić? Jakie ma wymagania?
@@ -215,7 +230,7 @@ W reszcie rozdziału jest wytłumaczone dokładniej jak działają wspomniane tu
 Wiele środowisk chcemy wspierać, np. Windows Phone też
 
 \section{Docelowe platformy}
-Tu o tych, co będą wymaganie
+Tu o tych, co będą wymaganie. O specyfice .NETa i Androida, co i jak można na tym pisać (jakie języki)
 
 \subsection{Android}
 Tu o Androidzie, o JVM o samym języku Java. Jego środowisko programistyczne.
@@ -223,17 +238,35 @@ Tu o Androidzie, o JVM o samym języku Java. Jego środowisko programistyczne.
 Wizja systemu Android. Że to na telefony. Co w tej Javie jest, dlaczego tak jest, czego nie ma (właśnie tych bibliotek). Dalvik. Co jest w C (bionic)?
 Jak działa Java? Maszyna wirtualna, baza w C, teoretycznie ten sam kod powinien działać wszędzie, należy jednak dobrze zaimplementować podstawę wszystkich bibliotek (czyli maszynę). A czasem są np. rozbieżności (drobne) pomiędzy windowsem a Linuxem.
 
-\subsection{.NET}
-Tu o .NETcie i o C\# (bo tego będę używał)
+ak Androidowa Java współpracuje z innymi środowiskami.
 
+
+\subsection{.NET}
+Tu o .NETcie i o C\# (bo tego będę używał).
+Jak .NET współpracuje z innymi środowiskami
+
+\subsection{Python}
+W sumie chodzi na wszystkim. I na windowsie, linuxie i androidzie. Lubię też w nim pisać. Można go sportować.
+
+Wzmianka, że podstawowa implementacja pythona, której będę używał (albo i nie) nie korzysta z wielu procesorów.
 
 \section{Zdalne wywoływanie kodu}
 Tu o RPC, o problemach, o tłumaczeniu danych, istniejących standardach itp.
+
+Czym jest programowanie obiektowe napisać, co to polimorfizm i dlaczego ważny
 
 \subsection{Tłumaczenie danych}
 Jaka jest problematyka przetłumaczenia danych/obiektów z jednego języka, platformy na drugą?
 Nawet na niskim poziomie mamy little/big endian. Potem dochodzi jeszcze niezgodność kodów bajtowych platform wirtualnych.
 Nawet jak się zapisze w XML, JSONie czy czymś innym to możemy stosować inne formaty, czy coś. Bindingi.
+
+problemy komunikacji w heterogenicznych środowiskach (inne formaty danych, inne dostępne klasy i zasady działania obiektów, np. Type erasure)
+
+Zgodność zapisu bajtowego obiektów w .NETcie, Javie i Dalviku (może inna niż w normalnej Javie, może pomiędzy maszynami wirtualnymi też różna). Gdyby wszystko było zgodne to nie trzeba by się było tak męczyć z szukaniem standardu opisu danych. Też type erasure wchodzi w grę (zapis bajtowy dwóch list różnych typów sprawdzić)
+
+\url{http://json-schema.org/}\\
+\url{http://bsonspec.org/}\\
+\url{http://json.codeplex.com/}\\
 
 \emph{JAKAŚ KSIĄŻKA O TYM?}
 
@@ -251,12 +284,16 @@ Celuję w globalnie, ale zwsze szerszą metodę można zastosować wężej (choc
 
 \subsection{RPC}
 Ogólnie trochę o RPC. Że wiele technologii to RPC (Web service'y, CORBA), że to zawiera i tłumaczenie i transport.
+Wywoływaniu kodu w innym procesie lub na innym kompie.
+
 \url{http://www.infoq.com/articles/rest-soap-when-to-use-each}\\
 
 \url{http://xmlrpc.scripting.com/default.html XML RPC}\\
 \url{http://xmlrpc.scripting.com/spec.html}\\
 \url{http://effbot.org/zone/xmlrpc-errata.htm}\\
 Przejrzeć specyfikację, zobaczyć, z czym musieli sobie poradzić i wyczaić jak to wszystko mozna odwzorować w JSONie. Obczaić, jak sobie DataContractSerializer (też DataContractJsonSerializer) radzą. 
+
+Service oriented architecture a remote procedure call? Jakie różnice? Czym będzie moje? A same web services?
 
 \subsection{XML binding}
 NA TYM BĘDZIE DZIAŁAŁO TŁUMACZENIE KLAS
@@ -285,12 +322,14 @@ REST and POX \url{http://msdn.microsoft.com/en-us/library/vstudio/aa395208(v=vs.
 Restful web services vs ``big'' web services: \url{http://www2008.org/papers/pdf/p805-pautassoA.pdf}\\
 
 \chapter{Poszukiwanie rozwiązania}
-Jak w ogóle dojść do tego  co i jak zrobić, żeby dało nam to, co mamy w celach?
+Jak w ogóle dojść do tego  co i jak zrobić, żeby dało nam to, co mamy w celach? Jak się odnaleźć w tym wszystkim?
 
 Jak teoretycznie możnaby zrobić web service'y na Androidzie? Android jest tutaj przykładem ograniczonego systemu.
 W sumie jakiś powód musięli mieć, żeby ich nie zamieszać. Jakie jeszcze dodatkowe usprawnienia byłyby do zrobienia (tłumaczenie klas)?
 
 Najpierw zobaczmy, co jest.
+
+Napisać, co jest potrzebne dla remotingu: jakaś tożsamość, adres obiektu, oznaczenia metod, argumentów.
 
 \section{Pokrewne rozwiązania}
 Tu o bibliotekach, frameworkach robiących to co chcemy albo rzeczy podobne.
@@ -300,6 +339,8 @@ Konkretne porównania osiągów w rozdziale o eksperymentach (chociaż tutaj ju�
 Te wszystkie do serializacji i soapów rzeczy to są, tutaj nic nie ma. Wszystko co by się chciało to jest, ale na dużą Javę, albo na pythona (ciężko przeportować, nie wiadomo, czy da się na pewno) Apache Thrift, Google Protocol Buffers, ZeroMQ (http://stackoverflow.com/questions/8062212/difference-between-apache-thrift-and-zeromq)
 
 Przy każdej technologii pokazać implementacje w WCF i Javie normalnej (bo ona będzie takim punktem odniesienia) i zrobić porównania prędkości, bezpieczeństwa itp.
+
+Każdy framework opisać ile plików, jaką objętość trzeba ściągnąć. Ile kroków instalacji, ile rzeczy trzeba zrobić, żeby wystawić jakiś helloWorld serwis i jakiś serwis z własnymi danymi. Zrobić zestawienie frameworków (tabelę), czy pozwalają na wystawianie serwisów, czy tylko korzystanie. Czy pozwalają na polimorficzne argumenty.
 
 \url{http://www.webopedia.com/TERM/W/Web_Services.html}\\
 \url{http://thrift.apache.org/static/files/thrift-20070401.pdf}\\
@@ -387,6 +428,8 @@ Może zamiast tylu podsekcji najpierw wyliczenie, krótki opis i decyzja, czy na
 \subsection{własna metoda oparta o JSON z oznaczaniem typów}
 Póki co wiem, że będzie JSON z opisanymi typami. Kanał komunikacyjny powinien być dowolny. 
 
+Może zamiast równoważnych implementacji na pythona, C\# i javę zrobić tylko pythona i wrappery w jythonie i iron pythonie?
+
 \subsection{serwer web serviców z narzędziami do generacji kodu itp}
 Generator wsdl na Androida + tworzenie bindingów do xsd + Parsowanie SOAPów
 
@@ -406,6 +449,8 @@ Po prostu serializujemy tak samo/
 \subsection{portowanie rozwiązań w C na Androida?}
 Axis. Może częściowe używanie go spod javy. W sumie można sportować też jakieś inne rzeczy. Np.\ pythonowe web service'y (pyro, twisted).
 
+Sprawdzić Python Remote Objects (Pyro) na pythonie 2, 3 (też na warstwie skryptowej Androida). Porównać z Twistedem, napisać o próbach portowania wymaganych bibliotek w C na Androida. \url{http://pythonhosted.org/Pyro4/intro.html#performance}
+
 sl4a, py4a, kompilacja na ubuntu z użyciem NDK i Cythona
 distutils.core zamienić na setuptools w setup.py
 
@@ -415,7 +460,7 @@ Też potrzebny serializator / deserializator + bindingi. To był ten pomysł, ż
 \subsection{Wybrane rozwiązanie}
 Jakie i dlaczego?
 
-Dlaczego nie soapem?
+Dlaczego nie Soap, bindingi itp.?
 
 \chapter{Projekt systemu}
 Tutaj cały czas teorie, ale już wiadomo na czym się skupić. Wiem, jaki chcę zrobić system, teraz muszę go zaprojektować.
@@ -448,6 +493,24 @@ Kiedy czyścić te słowniki?
 Loader:
 Loaduje aliasy DataContractów, klasy javowe, klasy serwisów(?). Czyta sobie jary, szuka adnotacji
 
+Typy danych i serwisy w javie są oznaczone namespaceami, odpowiadających im rzeczy z C\# (DataContracty i interfejsy)
+
+Oddzielić abstrakcje od sposobu transportu. Wyróżnic transport streamowany (serializator dostaje strumień i na niego wali output, możemy tłumaczyć i wysyłać na raz) i nie (trzeba stworzyć całą wiadomość, wtedy wysłać).
+
+Zrobić timeouty na łączenie do serwisu i na operacje. Poczytać więcej o TCP, zobaczyć, czy dobrze można nim sprawdzać, czy trzeba używać PINGa.
+
+Serializujemy wszystkie publiczne pola/ propertiesy albo metody z get / set (to w Javie). Używać jakiś dostępnych już atrybutów do ręcznej konfiguracji wyboru serializowanych elementów.
+
+Dodać objaśnienia metodyki, którą wytwarzam:
+Robienie prototypów elementarnych funkcjonalności, projekt, testy, implementacja. Powiedzieć o Test Driven Development.
+
+Jak się decydowałem na licencję, narzędzia, repozytorium.
+Założyłem repozytorium na GitHubie, którego znam. Jest sławny i wygodny w użyciu. Kod ma być publiczny, więc nie mam problemu. Wybrałem MIT license (sam przeczytałem licencje, a porównanie tutaj http://choosealicense.com/licenses/). Jest przeciwnikiem skomplikowanych przepisów, na które Apache (główny konkurent) zakrawa, a na patentach mi nie zależy (wątpię, żebym jakieś tu miał, poza tym w UE nie można patentować kodu, chyba). MIT jest proste, zapewnia wzmiankowanie mojego nazwiska i umożliwia używanie mojego kodu także w komercyjnych rozwiązaniach.
+
+Unittesty wywoływania w obrębie jednej aplikacji z kilkoma wątkami - jako kanał komunikacji strumień w pamięci.
+
+Na jakiś sprzęcie testuję.
+
 \section{Specyfikacja wymagań systemowych}
 Wymienić te wszystkie typy wymagań i wylistować.
 
@@ -469,6 +532,13 @@ Jak mi wyszło, jak wrażenia? Co musiałem zmienić, co dopracować, co dookre�
 Jakie repo, visuale, notepad++ itp.
 
 \chapter{Eksperymenty}
+
+Udokumentować jak zestawiałem testy, podpinałem debuggery, zbierałem wyniki.
+Testy na Windowsie, Ubuntu i Androidzie
+
+Jak benchmarkować serwisy? Są jakieś kryteria, benchmarki? Trochę o błędności benchmarkowania
+
+Zrobić testy integracyjne w pythonie. Testy ze sleepami itd. maszyn zrobć przy pomocy automatyzacji Virtual Boxa.
 
 \section{Porównanie funkcjonalności}
 Będzie tu też bezpieczeństwo, wznawianie połączeń, radzenie sobie z obiążeniem. Takie główne funkcjonalności już były omawiane wcześniej.
