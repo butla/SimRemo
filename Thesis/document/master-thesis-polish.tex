@@ -190,7 +190,7 @@
 
 \chapter{Wprowadzenie}
 
-Niniejsza praca powstała jest próbą rozwiązania problemu napotkanego w pracy zawodowej autora. W trakcie rozwijania istniejącego rozproszonego systemu napisanego pod Windows wyszło na to, że trzeba będzie go rozszerzyć o wsparcie dla Linuxa i Androida. System ten mocno polegał na .NETowych usługach sieciowych (WCF). \emph{Wszystkie technologie zostaną wyjaśnione później.} Bez wielkich zmian w istniejących komponentach trzeba było dokleić support dla innych platform z innym językiem. Stare klasy musiały działać tak samo, najlepiej, jakby były użyteczne na nowym urządzeniu. Też byłoby najlepiej, gdyby nowe klasy można było tworzyć bez problemu no i mieszać wszystko zgodnie z zasadami obiektowości (dodajemy rozszerzenie klasy to metody dla starej działają tak samo). I w dużym Linuxie i na Androidzie trzeba było to zrobić inaczej. I w Javie wszystko trzeba było generować, co i tak nie do końca współgrało z WCF problemy. Dodawanie nowego standardu mającego połączyć albo być lepszym niż istniejące standardy nie jest dobrą rzeczą \emph{(jakieś źródło)}. Nawet jak działało, to nie było do końca dobre, trzeba było z góry wiedzieć jakie klasy mają się znaleźć \emph{(dokumentacja javy i WCF jako źródło)}.
+Niniejsza praca powstała jest próbą rozwiązania problemu napotkanego w pracy zawodowej autora. W trakcie rozwijania istniejącego rozproszonego systemu napisanego pod Windows wyszło na to, że trzeba będzie go rozszerzyć o wsparcie dla Linuxa i Androida. System ten mocno polegał na .NETowych usługach sieciowych (WCF). \emph{Wszystkie technologie zostaną wyjaśnione później.} Bez wielkich zmian w istniejących komponentach trzeba było dokleić support dla innych platform z innym językiem. Stare klasy musiały działać tak samo, najlepiej, jakby były użyteczne na nowym urządzeniu. Też byłoby najlepiej, gdyby nowe klasy można było tworzyć bez problemu no i mieszać wszystko zgodnie z zasadami obiektowości (dodajemy rozszerzenie klasy to metody dla starej działają tak samo). I w dużym Linuxie i na Androidzie trzeba było to zrobić inaczej. I w Javie wszystko trzeba było generować, co i tak nie do końca współgrało z WCF problemy. Dodawanie nowego standardu mającego połączyć albo być lepszym niż istniejące standardy nie jest dobrą rzeczą \emph{(jakieś źródło)}. Nawet jak działało, to nie było do końca dobre, trzeba było z góry wiedzieć jakie klasy mają się znaleźć \emph{(dokumentacja javy i WCF jako źródło)}. I tak w ogóle, to praca zawodowa miało trochę wpływu, na to moje pisanie, bo trochę się nauczyłem (TDD, Spike'owanie).
 
 Zrobiłem wcześniejszy system, który udawał microsoftowy serializator, ale nie jest to rozwiązanie do końca dobre, ponieważ nie ma udostępnionej specyfykacji (nie można wiedzieć, że zawsze będzie dobry) i kod zaczynał się robić pogmatwany, nieczytelny (bo powstawał inkrementacyjnie w momentach, kiedy okazywało się, że coś nie działa). Nie było tam za bardzo zarządzania połączeniami i innych cech dojrzałego systemu - tylko prosta map obietków i przesyłanie zserializowanych poleceń. Dlatego postanowiłem, że dobrze zrobić nowy system. Skoro i tak nie było to zgodne ze standardnem (własne łączenie, przesyłanie z serializowanych rzeczy), to nie jest dużym problemem wymienienie kawałka po stronie .NET (serializatora) i zrobienie tego tak, żeby było też ``wygodnie'' po stronie Javy. Czyli po prostu mieć kod po obu stronach, który wygląda (choć w innym języku) i zachowuje się tak samo. Poza tym brakuje takich rozwiązań, których można użyć we własnym projekcie bez używania jakiś standardowych i ciężkich rozwiązań. Poza tym, te rozwiązania i tak nie są zgodne i wspierają różne częśći standardu \emph{(Jakiś źródło)}.
 
@@ -207,6 +207,8 @@ Napisać o tym, że język w mojej pracy może nie być do końca formalny. Mog�
 \emph{(Twarde spacje gdzie trzeba, żeby nie było sierot)}
 
 \emph{(Dodać spis pojęć)}
+
+\emph{(Rozdziały albo mniejsze sekcje w osobnych plikach, które będą includowane.)}
 
 \begin{em}
 Do każdego punktu co i dlaczego znaleźć jakiś artykuł
@@ -348,6 +350,7 @@ GSOAP
 reliable sessions (w sumie też by mi się przydał jakiś mechanizm, który umożliwi komunikację w niestabilnym środowisku Internetu)\\
 \url{http://blogs.msdn.com/b/shycohen/archive/2006/02/20/535717.aspx}\\
 \url{http://docs.xamarin.com/guides/cross-platform/application_fundamentals/web_services}\\
+\url{http://wsme.readthedocs.org/en/latest/}\\
 
 Apache Thrift, Google Protocol Buffers, ZeroMQ (\url{http://stackoverflow.com/questions/8062212/difference-between-apache-thrift-and-zeromq})\\
 \url{http://thrift.apache.org/static/files/thrift-20070401.pdf}\\
@@ -503,7 +506,7 @@ Zrobić timeouty na łączenie do serwisu i na operacje. Poczytać więcej o TCP
 Serializujemy wszystkie publiczne pola/ propertiesy albo metody z get / set (to w Javie). Używać jakiś dostępnych już atrybutów do ręcznej konfiguracji wyboru serializowanych elementów.
 
 Dodać objaśnienia metodyki, którą wytwarzam:
-Robienie prototypów elementarnych funkcjonalności (to się nazywa Spike w Extreme Programming, bodajże i ma za zadanie właśnie sprawdzić czy coś się da zrobić oraz jakie elementy będzie musiało zawierać rozwiązanie), projekt, testy, implementacja. Powiedzieć o Test Driven Development.
+Robienie prototypów elementarnych funkcjonalności (to się nazywa Spike w Extreme Programming, bodajże i ma za zadanie właśnie sprawdzić czy coś się da zrobić oraz jakie elementy będzie musiało zawierać rozwiązanie), projekt, testy, implementacja. Powiedzieć o Test Driven Development i Extreme Programming.
 
 Jak się decydowałem na licencję, narzędzia, repozytorium.
 Założyłem repozytorium na GitHubie, którego znam. Jest sławny i wygodny w użyciu. Kod ma być publiczny, więc nie mam problemu. Wybrałem MIT license (sam przeczytałem licencje, a porównanie tutaj http://choosealicense.com/licenses/). Jest przeciwnikiem skomplikowanych przepisów, na które Apache (główny konkurent) zakrawa, a na patentach mi nie zależy (wątpię, żebym jakieś tu miał, poza tym w UE nie można patentować kodu, chyba). MIT jest proste, zapewnia wzmiankowanie mojego nazwiska i umożliwia używanie mojego kodu także w komercyjnych rozwiązaniach.
