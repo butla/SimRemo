@@ -408,6 +408,8 @@ Jest to serwer, może ma jakiś kontener Web-serviceów?
 \section{Moje pomysły na rozwiązanie}
 Wymienić, zrobić POCe, porównać, wybrać i uzasadnić wybór. Wypracować jaką metodę odcięcia pracy na POCem? Że jak będę widział, że da się coś zrobić, ale jest to za trudne to kończyć pracę.
 
+Namespace'y są ważną rzeczą w SOAPie. Ja twierdzę, że nie są potrzebne w tak rozbudowanej formie. Może być jedno standardowe nazewnictwo z kropkami. Zakładam taki jakby jeden globalny namespace na oba runtime'y (klient i serwer). Fakt, że nawet jedna strona może mieć kilka przestrzeni nazw (parę class loaderów albo assembly cache'y) ale nie chcę tego robić z uwagi n utrudnienia w integracji (tu można napisać jakby to mogło wyglądać, ale nie trzeba, mogę po prostu to olać).
+
 Napisanie wszystkiego w C, Javie albo nawet Pythonie. Z czym by się to wiązało. Chcemy żeby było łatwo, co by trzeba było zrobić wtedy?
 Podłączanie się pod istniejące rozwiązania Axis w C, portowanie Pythona, tłumaczenie JibXem
 
