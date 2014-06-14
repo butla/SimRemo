@@ -419,6 +419,8 @@ Tu już konkretnie jakie biblioteki, jak konkretniej to będzie wyglądać
 a)	Rozpoznanie istniejących rozwiązań dotyczących wiązania danych (ang. data binding) z XML oraz wystawiania usług sieciowych (ang. web services) w językach Java oraz C++.
 Zaprojektowanie i wykonanie biblioteki pozwalającej na przyjmowanie, przetwarzanie, tworzenie i wysyłanie wiadomości SOAP, generowanie plików WSDL na bazie kodu oraz na wiązanie danych z języka C\# do języka Java z zakresem bibliotek dostępnym na Androidzie. Akceptowalne jest również stworzenie biblioteki, w której komunikacja oparta zostałaby o protokół TCP/IP i serializację obiektów do XML tak, by były rozumiane zarówno przez kod w języku Java, jak i w języku C\#.
 
+Użyć w Pythonie Flaska do tłumaczenia JSONa? Albo jakiegoś innego tłumacza python-JSON.
+
 Jak jest? \\
 JAVA dla przykładu \\
 Co trzeba robić w javie			Co trzeba robić w C\# \\
@@ -538,6 +540,7 @@ Jak mi wyszło, jak wrażenia? Co musiałem zmienić, co dopracować, co dookre�
 Jakie repo, visuale, notepad++ itp.
 
 \chapter{Eksperymenty}
+Musi być lista drzew obiektów z różnymi normalnymi i ciężkimi przypadkami. Ta lista będzie używana do sprawdzania jak idzie serializacja, czy nie są tracone żadne informacje. Test polega na tym, że wysyłamy w jedną stronę z C\# (bo tam jest dobra informacja o typach) potem tamta strona to odczytuje, serializuje i~wysyła z~powrotem. Jak to, co wróciło jest takie samo, to test zaliczony.
 
 Udokumentować jak zestawiałem testy, podpinałem debuggery, zbierałem wyniki.
 Testy na Windowsie, Ubuntu i Androidzie
