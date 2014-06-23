@@ -1,0 +1,61 @@
+\chapter{Projekt systemu}
+Tutaj cały czas teorie, ale już wiadomo na czym się skupić. Wiem, jaki chcę zrobić system, teraz muszę go zaprojektować.
+
+Jakiej licencji użyję?
+
+Call:
+- id obiektu (0 dla tworzenia nowego, wtedy argumentem jest tym)
+- id metody
+- parametry
+
+Response:
+- czy sie udalo
+- obiekt zwrotny, opis błędu przy wywołaniu zdalnej metody lub stacktrace z exceptiona, który wystąpił w metodzie
+
+Id metody:
+składa się z nazwy i aliasów jej parametrów.
+
+Alias:
+typy prymitywne - int, string, itp.
+datacontract - sraka:\#ptaka.daka
+lista - List
+tablica - [int, [[int, [sraka:\#ptaka.daka, itp.
+
+Tłumaczenie aliasów:
+C\# tłumaczy klasy na aliasy, jak przetłumaczy dla jednej metody to dodaje to do słownika, żeby potem robić to od razu.
+Java tłumaczy aliasy na nazwy klas (potem loaderem). Wiąże w słowniku id metody z obiektem metody. Może być metoda przyjmująca jakiś konkretny List, np. ArrayList, ale nie może mieć overloada przyjmującego inny List.
+Kiedy czyścić te słowniki?
+
+Loader:
+Loaduje aliasy DataContractów, klasy javowe, klasy serwisów(?). Czyta sobie jary, szuka adnotacji
+
+Typy danych i serwisy w javie są oznaczone namespaceami, odpowiadających im rzeczy z C\# (DataContracty i interfejsy)
+
+Oddzielić abstrakcje od sposobu transportu. Wyróżnic transport streamowany (serializator dostaje strumień i na niego wali output, możemy tłumaczyć i wysyłać na raz) i nie (trzeba stworzyć całą wiadomość, wtedy wysłać).
+
+Zrobić timeouty na łączenie do serwisu i na operacje. Poczytać więcej o TCP, zobaczyć, czy dobrze można nim sprawdzać, czy trzeba używać PINGa.
+
+Serializujemy wszystkie publiczne pola/ propertiesy albo metody z get / set (to w Javie). Używać jakiś dostępnych już atrybutów do ręcznej konfiguracji wyboru serializowanych elementów.
+
+Dodać objaśnienia metodyki, którą wytwarzam:
+Robienie prototypów elementarnych funkcjonalności (to się nazywa Spike w Extreme Programming, bodajże i ma za zadanie właśnie sprawdzić czy coś się da zrobić oraz jakie elementy będzie musiało zawierać rozwiązanie), projekt, testy, implementacja. Powiedzieć o Test Driven Development i Extreme Programming.
+
+Jak się decydowałem na licencję, narzędzia, repozytorium.
+Założyłem repozytorium na GitHubie, którego znam. Jest sławny i wygodny w użyciu. Kod ma być publiczny, więc nie mam problemu. Wybrałem MIT license (sam przeczytałem licencje, a porównanie tutaj http://choosealicense.com/licenses/). Jest przeciwnikiem skomplikowanych przepisów, na które Apache (główny konkurent) zakrawa, a na patentach mi nie zależy (wątpię, żebym jakieś tu miał, poza tym w UE nie można patentować kodu, chyba). MIT jest proste, zapewnia wzmiankowanie mojego nazwiska i umożliwia używanie mojego kodu także w komercyjnych rozwiązaniach.
+
+Unittesty wywoływania w obrębie jednej aplikacji z kilkoma wątkami - jako kanał komunikacji strumień w pamięci.
+
+Na jakiś sprzęcie testuję.
+
+\section{Specyfikacja wymagań systemowych}
+Wymienić te wszystkie typy wymagań i wylistować.
+
+reliable sessions (w sumie też by mi się przydał jakiś mechanizm, który umożliwi komunikację w niestabilnym środowisku Internetu)
+
+\section{Przypadki użycia}
+
+\section{Struktura projektu}
+Diagramy warstwowe, komponentowe, klas.
+
+\section{Schemat działanie projektu}
+Schematy działania, to z liniami życia itp.

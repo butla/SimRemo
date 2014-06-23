@@ -1,0 +1,133 @@
+\chapter{Wprowadzenie}
+
+Niniejsza praca powstała jest próbą rozwiązania problemu napotkanego w pracy zawodowej autora. W trakcie rozwijania istniejącego rozproszonego systemu napisanego pod Windows wyszło na to, że trzeba będzie go rozszerzyć o wsparcie dla Linuxa i Androida. System ten mocno polegał na .NETowych usługach sieciowych (WCF). \emph{Wszystkie technologie zostaną wyjaśnione później.} Bez wielkich zmian w istniejących komponentach trzeba było dokleić support dla innych platform z innym językiem. Stare klasy musiały działać tak samo, najlepiej, jakby były użyteczne na nowym urządzeniu. Też byłoby najlepiej, gdyby nowe klasy można było tworzyć bez problemu no i mieszać wszystko zgodnie z zasadami obiektowości (dodajemy rozszerzenie klasy to metody dla starej działają tak samo). I w dużym Linuxie i na Androidzie trzeba było to zrobić inaczej. I w Javie wszystko trzeba było generować, co i tak nie do końca współgrało z WCF problemy. Dodawanie nowego standardu mającego połączyć albo być lepszym niż istniejące standardy nie jest dobrą rzeczą \emph{(jakieś źródło)}. Nawet jak działało, to nie było do końca dobre, trzeba było z góry wiedzieć jakie klasy mają się znaleźć \emph{(dokumentacja javy i WCF jako źródło)}. I tak w ogóle, to praca zawodowa miało trochę wpływu, na to moje pisanie, bo trochę się nauczyłem (TDD, Spike'owanie).
+
+Zrobiłem wcześniejszy system, który udawał microsoftowy serializator, ale nie jest to rozwiązanie do końca dobre, ponieważ nie ma udostępnionej specyfykacji (nie można wiedzieć, że zawsze będzie dobry) i kod zaczynał się robić pogmatwany, nieczytelny (bo powstawał inkrementacyjnie w momentach, kiedy okazywało się, że coś nie działa). Nie było tam za bardzo zarządzania połączeniami i innych cech dojrzałego systemu - tylko prosta map obietków i przesyłanie zserializowanych poleceń. Dlatego postanowiłem, że dobrze zrobić nowy system. Skoro i tak nie było to zgodne ze standardnem (własne łączenie, przesyłanie z serializowanych rzeczy), to nie jest dużym problemem wymienienie kawałka po stronie .NET (serializatora) i zrobienie tego tak, żeby było też ``wygodnie'' po stronie Javy. Czyli po prostu mieć kod po obu stronach, który wygląda (choć w innym języku) i zachowuje się tak samo. Poza tym brakuje takich rozwiązań, których można użyć we własnym projekcie bez używania jakiś standardowych i ciężkich rozwiązań. Poza tym, te rozwiązania i tak nie są zgodne i wspierają różne części standardu \emph{(Jakieś źródło)}.
+
+Docelowe rozwiązanie powinno być biblioteką na wiele języków. Skoro łączymy dwie różne technologie, z których jedna jest dość mobilna, czyli ograniczona, to może można zrobić coś dość uniwersalnego wspierającego wiele systemów. Powinno też być dojrzałe i od razu zawierać elementy zarządzania połączeniami, sesjami itp.,~chociaż skupienie leży na połączeniu 1 do 1, bo tak to bardzo często wygląda w prostym systemie, gdzie po prostu chcemy mieć most pomiędzy częściami aplikacji. Moje rozwiązanie trochę uogólniona i będzie mogła znaleźć (mam nadzieje) szerokie zastosowanie. Chciałem coś zrobić i było mi smutno, że na Androidzie nie mogłem sobie gladko wszystkiego łączyć, że trzeba było generować konkretne klasy, że nie mogło być dynamicznie
+
+Aktualnie zakładam, że będę robił system oparty o JSON z oznaczaniem typów (wytłumaczenie w trakcie pracy). Jeszcze nic nie zaimplementowałem, ale zakładam, że referencyjna implementacja w Pythonie, poza tym Java (Androidowa) i C\#. Każda wersja językowa zawiera zarówno klienta jak i serwer. W trakcie pracy przeprowadzę jeszcze trochę badań i eksperymentów co dostarczy ostatecznego uzasadnienia takiego rozwiązania, lub sprawi, że wybiorę inne rozwiązanie. Że dopiero zobaczę jak działają te frameworki. Może wpadnę na nowe, bardziej adekwatne rozwiązanie. Wyjaśnić jak wytaczałem sobie drogę działania i jak metodyki dobierałem, jak zmieniało się to w trakcie pracy. Zmieniało się też zanim zacząłem pisać ten dokument.
+
+We wstępie napisać, że głównie chodzi mi o to, żeby argumenty do metod były polimorficznei żeby nie trzeba było znać z góry typów, które mogą przejść (ogólnie jak przy normalnej obiektowości). W trakcie pracy sprawdzę, czy inne frameworki potrafią to robić bez jakiś strasznych tricków (out of the box, żeby programista się nie męczył). Jeśli potrafią, to jak wygodnie się z tego korzysta.
+
+Jest trudniejsza niż inne prace, bo jest bardziej niezależna i dziedzina problemu jest szersza. Rzucony na otwartą wodę musiałem sobie radzić i tak może powstanie coś, czego jeszcze na świecie nie ma (albo nie jest tak przyjemne w użyciu).
+
+Napisać o tym, że język w mojej pracy może nie być do końca formalny. Mogę wtedy przekazywać informacje tak samo dobrze albo nawet lepiej (bo mogę być bardziej obrazowy, a nie muszę być od razu nieprecyzyjny) a zarówno pisanie jak i czytanie pracy będzie przyjemniejsze. Nauka powinna być frajdą. Coś przytoczyć może z tego headfirsta albo ich źródeł? W anglojęzycznej literaturze, która jest w sumie światowym standardem naukowym (jakiś cytat znaleźć) często tworzą jakieś nieformalne konstrukcje (sandwiche, cargo cult programming)
+
+\emph{(Twarde spacje gdzie trzeba, żeby nie było sierot)}
+
+\emph{(Dodać spis pojęć)}
+
+\emph{(Rozdziały albo mniejsze sekcje w osobnych plikach, które będą includowane.)}
+
+\begin{em}
+Do każdego punktu co i dlaczego znaleźć jakiś artykuł
+
+Wyślij kiedyś szablon strony tytułowej.
+Wywalić Jacka jako konsultanta. Załatwić sobie kogoś od web service’ów z KASKU jako konsultanta/recenzenta. Zmienić tytuł pracy na jakiś uniwersalny obiektowy cross-platform system. O Androidzie i .NETcie napisać w wymaganiach.
+\end{em}
+
+\section{Cel pracy}
+Dokładnie określić po co ta praca. W czym ma się przydać, po co ją robić? Jakie ma wymagania?
+Powiedzieć, że tematyka będzie wyjaśniona za jakiś czas.
+
+CELE: pełne wsparcie programowania obiektowego, prostota i szybkość użycia, łączenie różnych technologii
+Głównym celem pracy jest stworzenie rozwiązania (biblioteki), które pozwoli na zdalne wywoływanie kodu w systemie Android z platformy .NET przy pomocy języka C\#. Można powiedzieć, że jest to zarządzanie Androidem z Windowsa (bo .NET najprawdopodobniej chodzi właśnie na nim).
+
+Druga rzecz, którą chcę uzyskać to możliwość łatwego tworzenia programów współpracujących między wyżej wymienionymi platformami. Kiedy wywołujemy zdalny kod często trzeba przekazać mu jakieś parametry, często też chcemy otrzymać wartości zwrotne. Pomijając sam fakt transportu danych z jednej platformy na drugą stajemy przed problemem niezgodności typów danych. Wiemy, że na obu końcach będą użyte dwa różne języki, więc struktury danych nie będą kompatybilne. Trzeba temu zaradzić.
+Ogólnie ujęte rozwiązanie dla powyższych problemów to serwer usług internetowych (ang. web services) wraz z narzędziami. Dzięki mechanizmowi usług sieciowych można wykonać dowolny kod na serwerze nie zależnie od technologii wykorzystywanych po obu stronach. Nie istnieje jeszcze (przynajmniej nie udało się znaleźć) serwer web service’ów dla Androida. Istnieją za to biblioteki pozwalające na przetłumaczenie klas z C\# na Javę.
+
+W reszcie rozdziału jest wytłumaczone dokładniej jak działają wspomniane tutaj mechanizmy oraz jak zostanie stworzony mój serwer.
+
+Wiele środowisk chcemy wspierać, np. Windows Phone też
+
+\section{Docelowe platformy}
+Tu o tych, co będą wymaganie. O specyfice .NETa i Androida, co i jak można na tym pisać (jakie języki)
+
+\subsection{Android}
+Tu o Androidzie, o JVM o samym języku Java. Jego środowisko programistyczne.
+
+Wizja systemu Android. Że to na telefony. Co w tej Javie jest, dlaczego tak jest, czego nie ma (właśnie tych bibliotek). Dalvik. Co jest w C (bionic)? Nowa maszyna (\url{http://www.dobreprogramy.pl/Google-testuje-nastepce-Dalvika-z-ARTem-Android-bedzie-dwukrotnie-szybszy,News,49129.html}) wirtualna na Androida.
+Jak działa Java? Maszyna wirtualna, baza w C, teoretycznie ten sam kod powinien działać wszędzie, należy jednak dobrze zaimplementować podstawę wszystkich bibliotek (czyli maszynę). A czasem są np. rozbieżności (drobne) pomiędzy windowsem a Linuxem.
+
+Jak Androidowa Java współpracuje z innymi środowiskami.
+
+\subsection{.NET}
+Tu o .NETcie i o C\# (bo tego będę używał).
+Jak .NET współpracuje z innymi środowiskami
+
+\subsection{Python}
+W sumie chodzi na wszystkim. I na windowsie, linuxie i androidzie. Lubię też w nim pisać. Można go sportować.
+
+Wzmianka, że podstawowa implementacja pythona, której będę używał (albo i nie) nie korzysta z wielu procesorów.
+
+\section{Zdalne wywoływanie kodu}
+Tu o RPC, o problemach, o tłumaczeniu danych, istniejących standardach itp.
+
+Czym jest programowanie obiektowe napisać, co to polimorfizm i dlaczego ważny
+
+\subsection{Tłumaczenie danych}
+Jaka jest problematyka przetłumaczenia danych/obiektów z jednego języka, platformy na drugą?
+Nawet na niskim poziomie mamy little/big endian. Potem dochodzi jeszcze niezgodność kodów bajtowych platform wirtualnych.
+Nawet jak się zapisze w XML, JSONie czy czymś innym to możemy stosować inne formaty, czy coś. Bindingi.
+
+problemy komunikacji w heterogenicznych środowiskach (inne formaty danych, inne dostępne klasy i zasady działania obiektów, np. Type erasure)
+
+Zgodność zapisu bajtowego obiektów w .NETcie, Javie i Dalviku (może inna niż w normalnej Javie, może pomiędzy maszynami wirtualnymi też różna). Gdyby wszystko było zgodne to nie trzeba by się było tak męczyć z szukaniem standardu opisu danych. Też type erasure wchodzi w grę (zapis bajtowy dwóch list różnych typów sprawdzić)
+
+\url{http://json-schema.org/}\\
+\url{http://bsonspec.org/}\\
+\url{http://json.codeplex.com/}\\
+
+\emph{JAKAŚ KSIĄŻKA O TYM?}
+
+\subsubsection{Serializacja}
+
+\subsection{Transport danych}
+Też bardzo szeroka dziedzina. Jak już się przetłumaczy, to zawsze trzeba jakoś przetransportować. Jak możemy przekazywać w ramach jednego kompa, jak pomiędzy kompami lokalnie, jak globalnie.
+Celuję w globalnie, ale zwsze szerszą metodę można zastosować wężej (chociaż może nie być tak wydajna jak te węższe)
+
+\emph{TEŻ PRZYDAŁBY SIĘ JAKIŚ ARTYKUŁ CHOCIAŻ}
+
+\emph{TCP, PIPEy, SSL, HTTP, HTTPS, Webservicey, SOAP, REST, JSON}
+
+\url{http://stackoverflow.com/questions/12450404/json-pojo-consumer-of-polymorphic-objects}
+
+\subsection{RPC}
+Ogólnie trochę o RPC. Że wiele technologii to RPC (Web service'y, CORBA), że to zawiera i tłumaczenie i transport.
+Wywoływaniu kodu w innym procesie lub na innym kompie.
+
+\url{http://www.infoq.com/articles/rest-soap-when-to-use-each}\\
+
+\url{http://xmlrpc.scripting.com/default.html XML RPC}\\
+\url{http://xmlrpc.scripting.com/spec.html}\\
+\url{http://effbot.org/zone/xmlrpc-errata.htm}\\
+Przejrzeć specyfikację, zobaczyć, z czym musieli sobie poradzić i wyczaić jak to wszystko mozna odwzorować w JSONie. Obczaić, jak sobie DataContractSerializer (też DataContractJsonSerializer) radzą. 
+
+Service oriented architecture a remote procedure call? Jakie różnice? Czym będzie moje? A same web services?
+
+\subsection{XML binding}
+NA TYM BĘDZIE DZIAŁAŁO TŁUMACZENIE KLAS
+W WSDL poza opisami operacji realizowanych przez usługę znajdują się też pliki XSD opisujące wszystkie struktury danych (klasy), które będą wymieniane. Dla tego posiadając WSDL usługi możemy wygenerować wszystkie klasy potrzebne do stworzenia klienta usługi.
+
+Złożony problem pojawia się wtedy, kiedy servicy mają działać w obie strony wykorzystując te same klasy danych. W bardziej skomplikowanych systemach rozproszonych może się pojawiać taka sytuacja. Załóżmy istnienie dwóch aplikacji: A i B. Są one napisane w różnych językach. Każda z nich udostępnia usługę zwracającą obiekt danych X. A korzysta z usługi wystawianej przez B, a B korzysta z usługi wystawianej przez A. Mimo tego, że obiekt X w obu aplikacjach będzie zawierał te same dane, to jednak jego kod będzie inny. Dlatego nie można mówić o jednej klasie X, a o dwóch. Nazwijmy je XA i XB. TUTAJ DALEJ WYTŁUMACZENIE PRZYKŁADU AŻ W KOŃCU DOJDZIEMY DO TEGO, ŻE TRZEBA NAPISAĆ KLASĘ W JEDNYM JĘZYKU, POTEM ZROBIĆ JEJ BINDING DO XSD I Z XSD DO DRUGIEGO JĘZYKA. 
+
+\subsection{Web service'y i SOAP}
+W sumie to przykład tłumaczenia danych  i transpotru.
+
+Jeden ze sposobów na zdalne wywoływanie kodu to usługi internetowe. Korzystając z otwartych standardów takich jak XML, SOAP, WSDL i UDDI umożliwiają integrację aplikacji poprzez Internet. XML jest używany do etykietowania danych, SOAP do ich pakowania i transferu (alternatywnie można używać też RESTa lub JSONa), WSDL opisuje interfejs usługi, a UDDI dostarcza spisu dostępnych usług (on nie leży w naszym obszarze zainteresowań). SOAP i WSDL są zapisywane przy pomocy XML. Web servicy używane są najczęściej do komunikacji aplikacji komercyjnych (np. serwery, portale) ze sobą lub z klientami. Pozwalają organizacjom na wymianę danych nie wymagając wiedzy o wewnętrznej strukturze informatycznej za firewallem.
+
+W przeciwieństwie do tradycyjnych modeli przetwarzania typu klient – serwer, takich jak np. system stron internetowych, usługi internetowe nie mają graficznego interfejsu użytkownika. Służą one do dzielenia logiki biznesowej, danych i procesów poprzez sieć, przy pomocy jednolitego interfejsu programistycznego. To aplikacje się komunikują, nie użytkownicy. Programiści mogą, co prawda, dodać usługę internetową do aplikacji, która posiada GUI (np. aplikacja okienkowa lub strona internetowa) aby zaoferować zwykłym użytkownikom jej funkcjonalność.
+
+Usługi internetowe pozwalają różnym aplikacjom wykonanych w różnych technologiach (np. całkowicie odmienne języki programowania) na porozumiewanie się ze sobą bez potrzeby czasochłonnego tworzenia kodu tłumaczącego. Nie ma też znaczenia to, czy obie aplikacje znajdują się na jednej maszynie, czy po drugiej stronie świata.
+Usługi sieciowe na platformie .NET realizowane są w ramach WCF. Javie obecnym standardem jest JAX-WS.
+
+co to webservicy i po co są?\\
+do czego mogą się przydać na androidzie?\\
+dlaczego ich nie ma? Chyba stwierdzili, że ogólne web servicey są za ciężkie i za bardzo obciążają (Windows phone też nie ma WCF)\\
+
+\subsection{REST}
+Cośtam o RESTcie \url{http://www.oracle.com/technetwork/articles/javase/index-137171.html}\\
+REST and POX \url{http://msdn.microsoft.com/en-us/library/vstudio/aa395208(v=vs.90).aspx}\\
+
+Restful web services vs ``big'' web services: \url{http://www2008.org/papers/pdf/p805-pautassoA.pdf}\\
