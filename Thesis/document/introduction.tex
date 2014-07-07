@@ -6,45 +6,43 @@ Postawiono przede mną zadanie dodania do systemu możliwości uruchamiania test
 
 Mój system do RPC (Remote Procedure Call, z~ang.\ zdalne wywoływanie metody) nie musiał się przejmować dużą częścią bolączek istniejących przemysłowych rozwiązań, takich jak kolejkowanie wiadomości, równoległa obsługa wielu klientów, czy bezpieczeństwo komunikacji. To dlatego, że model użycia był stosunkowo prosty -- na raz łączyły się tylko dwa węzły (klient i serwer), a wszystkie dane (podróżujące w zaufanej wewnętrznej sieci) miały być łatwo podglądanie, aby wspierać debugowanie. Głównym problemem pozostało tłumaczenie danych. Udało mi się je zrealizować przez napisanie kodu w~Javie który serializował dane do XML w taki sam sposób jak .NET (przy użyciu klasy DataContractSerializer) oraz potrafił deserializować XMLe od niego otrzymane. Ponieważ nie mogłem znaleźć żadnych zasad opisujących XMLe tworzone przez DataContractSerializer, sam musiałem je wydedukować poprzez analizę wyjścia dla różnych możliwych drzew obiektów, np. tablic, list, obiektów zawierających listy list itp. Takie podejście nie dawało, niestety, pewności, że program będzie działał poprawnie (a więc tak samo, jak .NET) dla wszystkich możliwych danych. Ale dla wszystkich z~jakimi zostało sprawdzone oraz dla tych które podawali użytkownicy (programiści piszący testy bazujące na naszym frameworku) działało, więc projekt został uznany za sukces.
 
-Sukces ten jednak nie był bardzo satysfakcjonujący. Po pierwsze przez wspomnianą niepewność poprawności działania, po drugie przez to, że kod był słabej jakości. Co prawda działał poprawnie, ale był mało czytelny i zagmatwany. Po części to wina pośpiechu przy jego tworzeniu, po części tego, że kilka razy już po jego wprowadzeniu do użytku odkrywano nowe przypadki serializacji, które nieraz zmieniały założeniu już istniejące. Oczywiste stało się, że rozwiązanie trzeba było przepisać aby mogło żyć dalej i~stać się dojrzałym produktem, na którym można polegać. A przede wszystkim musiałem się upewnić, że to co robię ma sens? Ponadto należało w~końcu porządnie się zastanowić nad naturą programu
+Sukces ten jednak nie był bardzo satysfakcjonujący. Po pierwsze przez wspomnianą niepewność poprawności działania, po drugie przez to, że kod był słabej jakości. Co prawda działał poprawnie, ale był mało czytelny i zagmatwany. Po części to wina pośpiechu przy jego tworzeniu, po części tego, że kilka razy już po jego wprowadzeniu do użytku odkrywano nowe przypadki serializacji, które nieraz zmieniały założeniu już istniejące. Oczywiste stało się, że rozwiązanie trzeba było przepisać aby mogło żyć dalej i~stać się produktem, na którym można polegać. Co więcej tym razem trzeba było się dużo poważniej zastanowić nad miejscem mojej biblioteki w~ekosystemie systemów rozproszonych i nad uzasadnieniem jej stworzenia. Bo może jednak jest gdzieś na świecie coś, co spełniałoby nasz scenariusz użycia a~wcześniej zostało przeoczone. Albo przez ostatnie dwa lata, czyli od skończenia mojej pracy nad starym projektem, ktoś coś takiego stworzył.
 
-Albo chociaż znaleźć już dobre istniejące rozwiązanie dla tego problemu.
+Tak zostały wytyczone zgrubne cele niniejszej pracy magisterskiej: przeszukanie istniejącego oprogramowania w~celu wyłonienia kandydatów na gotowe rozwiązanie (bądź jego składniki), praktyczne porównanie możliwości istniejących bibliotek oraz \textbf{(TODO)}stworzenie biblioteki na bazie wniosków z~tych doświadczeń. Ma ona przede wszystkim zminimalizować nakład pracy programisty w~łączeniu takich tam klocków rozproszonych aplikacji. To idzie w~parze z~wielkim atutem mojego oprogramowania -- polimorfizmem danych, który nie wymaga dodatkowych oznaczeń przy typach bazowych. Nie jest on za często spotykany w systemach RPC, ale był już obecny w~moim starym projekcie.
 
-Na obronę pierwszego systemu, który stworzyłem, trzeba powiedzieć, że POLIMORFIZM(rzadko spotykane w RPC)! Chcę to mieć w ostatecznym rozwiązaniu.
-
-Też byłoby najlepiej, gdyby nowe klasy można było tworzyć bez problemu no i mieszać wszystko zgodnie z zasadami obiektowości (dodajemy rozszerzenie klasy to metody dla starej działają tak samo). I w dużym Linuxie i na Androidzie trzeba było to zrobić inaczej. I w Javie wszystko trzeba było generować, co i tak nie do końca współgrało z WCF problemy. I tak w ogóle, to praca zawodowa miało trochę wpływu, na to moje pisanie, bo trochę się nauczyłem (TDD, Spike'owanie).
-
-Nie było tam za bardzo zarządzania połączeniami i innych cech dojrzałego systemu - tylko prosta map obietków i przesyłanie zserializowanych poleceń. Dlatego postanowiłem, że dobrze zrobić nowy system. Skoro i tak nie było to zgodne ze standardnem (własne łączenie, przesyłanie z serializowanych rzeczy), to nie jest dużym problemem wymienienie kawałka po stronie .NET (serializatora) i zrobienie tego tak, żeby było też ``wygodnie'' po stronie Javy. Czyli po prostu mieć kod po obu stronach, który wygląda (choć w innym języku) i zachowuje się tak samo. Poza tym brakuje takich rozwiązań, których można użyć we własnym projekcie bez używania jakiś standardowych i ciężkich rozwiązań. Poza tym, te rozwiązania i tak nie są zgodne i wspierają różne części standardu \emph{(Jakieś źródło)}.
-
-Ta praca będzie w dużej części przeglądem i porównaniem obecnych rozwiązań. Tylko na tej drodzę można stwierdzić, że to co robię jest przydatne, a cała praca ma sens.
-
-Docelowe rozwiązanie powinno być biblioteką na wiele języków. Skoro łączymy dwie różne technologie, z których jedna jest dość mobilna, czyli ograniczona, to może można zrobić coś dość uniwersalnego wspierającego wiele systemów. Powinno też być dojrzałe i od razu zawierać elementy zarządzania połączeniami, sesjami itp.,~chociaż skupienie leży na połączeniu 1 do 1, bo tak to bardzo często wygląda w prostym systemie, gdzie po prostu chcemy mieć most pomiędzy częściami aplikacji. Moje rozwiązanie trochę uogólniona i będzie mogła znaleźć (mam nadzieje) szerokie zastosowanie. Chciałem coś zrobić i było mi smutno, że na Androidzie nie mogłem sobie gladko wszystkiego łączyć, że trzeba było generować konkretne klasy, że nie mogło być dynamicznie
+I tak w ogóle, to praca zawodowa miało trochę wpływu, na to moje pisanie, bo trochę się nauczyłem (TDD, Spike'owanie).
 
 Aktualnie zakładam, że będę robił system oparty o JSON (lub jakąś jego pochodną) z oznaczaniem typów (wytłumaczenie w trakcie pracy). Jeszcze nic nie zaimplementowałem, ale zakładam, że referencyjna implementacja w Pythonie, poza tym Java (Androidowa) i C\#. Każda wersja językowa zawiera zarówno klienta jak i serwer. W trakcie pracy przeprowadzę jeszcze trochę badań i eksperymentów co dostarczy ostatecznego uzasadnienia takiego rozwiązania, lub sprawi, że wybiorę inne rozwiązanie. Że dopiero zobaczę jak działają te frameworki. Może wpadnę na nowe, bardziej adekwatne rozwiązanie. Wyjaśnić jak wytaczałem sobie drogę działania i jak metodyki dobierałem, jak zmieniało się to w trakcie pracy. Zmieniało się też zanim zacząłem pisać ten dokument.
 
-We wstępie napisać, że głównie chodzi mi o to, żeby argumenty do metod były polimorficznei żeby nie trzeba było znać z góry typów, które mogą przejść (ogólnie jak przy normalnej obiektowości). W trakcie pracy sprawdzę, czy inne frameworki potrafią to robić bez jakiś strasznych tricków (out of the box, żeby programista się nie męczył). Jeśli potrafią, to jak wygodnie się z tego korzysta.
-
 Jest trudniejsza niż inne prace, bo jest bardziej niezależna i dziedzina problemu jest szersza. Rzucony na otwartą wodę musiałem sobie radzić i tak może powstanie coś, czego jeszcze na świecie nie ma (albo nie jest tak przyjemne w użyciu). Co prawda pewnie nie będzie uniwersalne, ale będzie lepszym niż dostępne rozwiązaniem pewnej klasy problemów (jak już ktoś ma te kawałki).
 
-\emph{(Twarde spacje gdzie trzeba, żeby nie było sierot)}
-
-\emph{(Dodać spis pojęć)}
-
-\emph{(Rozdziały albo mniejsze sekcje w osobnych plikach, które będą includowane.)}
-
-\begin{em}
-Do każdego punktu co i dlaczego znaleźć jakiś artykuł
-
-Wyślij kiedyś szablon strony tytułowej.
-Wywalić Jacka jako konsultanta. Załatwić sobie kogoś od web service’ów z KASKU jako konsultanta/recenzenta. Zmienić tytuł pracy na jakiś uniwersalny obiektowy cross-platform system. O Androidzie i .NETcie napisać w wymaganiach.
-\end{em}
-
 \section{Cele pracy}
+\subsection{Przegląd stanu wiedzy}
+Patrzę na wszystko i zastanawiam się, to już można zrobić.
+
+Ta praca będzie w dużej części przeglądem i porównaniem obecnych rozwiązań. Tylko na tej drodzę można stwierdzić, że to co robię jest przydatne, a cała praca ma sens.
+
+We wstępie napisać, że głównie chodzi mi o to, żeby argumenty do metod były polimorficznei żeby nie trzeba było znać z góry typów, które mogą przejść (ogólnie jak przy normalnej obiektowości). W trakcie pracy sprawdzę, czy inne frameworki potrafią to robić bez jakiś strasznych tricków (out of the box, żeby programista się nie męczył). Jeśli potrafią, to jak wygodnie się z tego korzysta.
+
+\subsection{Porównanie istniejącego oprogramowania}
+Porównuję ze sobą istniejący software. Sprawdzam, jak bardzo spełnia swoje obietnice
+
+Porównanie istniejcych rozwiązań, udowodnienie, że to co robię ma niszę dla siebie jakąś.
+
+Też byłoby najlepiej, gdyby nowe klasy można było tworzyć bez problemu no i mieszać wszystko zgodnie z zasadami obiektowości (dodajemy rozszerzenie klasy to metody dla starej działają tak samo). I w dużym Linuxie i na Androidzie trzeba było to zrobić inaczej. I w Javie wszystko trzeba było generować, co i tak nie do końca współgrało z WCF problemy.
+
+\subsection{Stworzenie super biblioteki}
+Obiektowa, polimorficzna, sama szuka, umila życie.
+
+Docelowe rozwiązanie powinno być biblioteką na wiele języków. Skoro łączymy dwie różne technologie, z których jedna jest dość mobilna, czyli ograniczona, to może można zrobić coś dość uniwersalnego wspierającego wiele systemów. Powinno też być dojrzałe i od razu zawierać elementy zarządzania połączeniami, sesjami itp.,~chociaż skupienie leży na połączeniu 1 do 1, bo tak to bardzo często wygląda w prostym systemie, gdzie po prostu chcemy mieć most pomiędzy częściami aplikacji. Moje rozwiązanie trochę uogólniona i będzie mogła znaleźć (mam nadzieje) szerokie zastosowanie. Chciałem coś zrobić i było mi smutno, że na Androidzie nie mogłem sobie gladko wszystkiego łączyć, że trzeba było generować konkretne klasy, że nie mogło być dynamicznie
+
 Dokładnie określić po co ta praca. W czym ma się przydać, po co ją robić? Jakie ma wymagania?
 Powiedzieć, że tematyka będzie wyjaśniona za jakiś czas.
 
 CELE: pełne wsparcie programowania obiektowego, prostota i szybkość użycia, łączenie różnych technologii
 Głównym celem pracy jest stworzenie rozwiązania (biblioteki), które pozwoli na zdalne wywoływanie kodu w systemie Android z platformy .NET przy pomocy języka C\#. Można powiedzieć, że jest to zarządzanie Androidem z Windowsa (bo .NET najprawdopodobniej chodzi właśnie na nim).
+
+Opisać o co chodzi z tym polimorfizmem, że w WCF trzeba wypisywać KnownType, co jest robieniem wzajemnych zależności, co jest straszną praktyką programowania (źródło). W~ogóle moje będzie piękne, obiektowe i~uniewżni tyle trosk. Fakt, będzie się to wiązało z~jakimś narzutem performance'owym na szukanie klas nie wskazanych jawnie, a~i~trzeba będzie ustalić jakiś mechanizm szukania. Ale performace to często obecnie kwestia drugorządna (źródło o jakiś wolnych pythonach, w których ludzie piszą, bo im fajnie itp.).
 
 Druga rzecz, którą chcę uzyskać to możliwość łatwego tworzenia programów współpracujących między wyżej wymienionymi platformami. Kiedy wywołujemy zdalny kod często trzeba przekazać mu jakieś parametry, często też chcemy otrzymać wartości zwrotne. Pomijając sam fakt transportu danych z jednej platformy na drugą stajemy przed problemem niezgodności typów danych. Wiemy, że na obu końcach będą użyte dwa różne języki, więc struktury danych nie będą kompatybilne. Trzeba temu zaradzić.
 Ogólnie ujęte rozwiązanie dla powyższych problemów to serwer usług internetowych (ang. web services) wraz z narzędziami. Dzięki mechanizmowi usług sieciowych można wykonać dowolny kod na serwerze nie zależnie od technologii wykorzystywanych po obu stronach. Nie istnieje jeszcze (przynajmniej nie udało się znaleźć) serwer web service’ów dla Androida. Istnieją za to biblioteki pozwalające na przetłumaczenie klas z C\# na Javę.
@@ -53,7 +51,7 @@ W reszcie rozdziału jest wytłumaczone dokładniej jak działają wspomniane tu
 
 Wiele środowisk chcemy wspierać, np. Windows Phone też
 
-Porównanie istniejcych rozwiązań, udowodnienie, że to co robię ma niszę dla siebie jakąś.
+Nie było tam za bardzo zarządzania połączeniami i innych cech dojrzałego systemu - tylko prosta map obietków i przesyłanie zserializowanych poleceń. Dlatego postanowiłem, że dobrze zrobić nowy system. Skoro i tak nie było to zgodne ze standardnem (własne łączenie, przesyłanie z serializowanych rzeczy), to nie jest dużym problemem wymienienie kawałka po stronie .NET (serializatora) i zrobienie tego tak, żeby było też ``wygodnie'' po stronie Javy. Czyli po prostu mieć kod po obu stronach, który wygląda (choć w innym języku) i zachowuje się tak samo. Poza tym brakuje takich rozwiązań, których można użyć we własnym projekcie bez używania jakiś standardowych i ciężkich rozwiązań. Poza tym, te rozwiązania i tak nie są zgodne i wspierają różne części standardu \emph{(Jakieś źródło)}.
 
 \section{Używany język (opcjonalnie)}
 Napisać o tym, że język w mojej pracy może nie być do końca formalny. Mogę wtedy przekazywać informacje tak samo dobrze albo nawet lepiej (bo mogę być bardziej obrazowy, a nie muszę być od razu nieprecyzyjny) a zarówno pisanie jak i czytanie pracy będzie przyjemniejsze. Nauka powinna być frajdą. Coś przytoczyć może z tego headfirsta albo ich źródeł? W anglojęzycznej literaturze, która jest w sumie światowym standardem naukowym (jakiś cytat znaleźć) często tworzą jakieś nieformalne konstrukcje (sandwiche, cargo cult programming). Cytat z Head firsta o tym, że jak jest rozmowa to się lepiej czyta i pamięta. A zakładam, że ktoś poza mną przynajmniej raz będzie to czytał i chociaż jego zadanie będzie przyjemniejsze. Moje na pewno. Niby praca dyplomowa ma być napisana jasno i konkretnie (\url{http://www.slideshare.net/jszypryt/prace-dyplomowe-i-ich-cele-rodzaje-i}), a takie bezosobowe ściemnianie jest oczywistym tego przeciwieństwem. Bo przecież napisanie, że jakiś program ``zrobiono'' albo, że ``powstał'' ukrywa prawdę, że to właśnie JA zrobiłem. Za często trzeba się zastanawiać jak coś trafnie sformułować, żeby nie brzmiało nazbyt potocznie. Zdecydowałem się odrzucić takie problemy. Uznaję, że jeśli tekst przekazuje informacje precyzyjnie i zrozumiale dla osoby posługującej się współczesnym językiem polskim to jest to tekst poprawny.
