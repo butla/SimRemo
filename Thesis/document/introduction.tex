@@ -17,55 +17,79 @@ System który ostatecznie stworzę nie znajdzie, najprawdopodobniej, zastosowani
 %Wydaje mi się, że niniejsza praca jest trudniejsza w~realizacji niż większość innych na naszym wydziale. Rzucony na otwartą wodę szerokiej dziedziny musiałem sobie radzić sam. Z~wytyczonym z~grubsza celem sam musiałem go dookreślić (aby w~ogóle powstał temat) i~wyszukać możliwe rozwiązania. Podczas gdy wiele prac polega na sprawdzeniu lub zrealizowaniu jednego pomysłu, ja musiałem najpierw stworzyć sam pomysł -- i~to nie jeden. Mimo, że mój ostateczny produkt nie powinien być bardzo skomplikowany (taką mam nadzieję), to droga, którą musiałem pokonać 
 %wysiłek umysłowy potrzebny do odnalezienia się w~tym świecie i zaproponowaniu czegoś, czego jeszcze nie ma jest znaczny. Droga potrzebna do odnalezienia tego rozwiązania jest męcząca -- ją przedstawię. Cały czas się zastanawiam, czy ma to sens.
 
+%Nie było tam za bardzo zarządzania połączeniami i innych cech dojrzałego systemu - tylko prosta map obietków i przesyłanie zserializowanych poleceń. Dlatego postanowiłem, że dobrze zrobić nowy system. Skoro i tak nie było to zgodne ze standardnem (własne łączenie, przesyłanie z serializowanych rzeczy), to nie jest dużym problemem wymienienie kawałka po stronie .NET (serializatora) i zrobienie tego tak, żeby było też ``wygodnie'' po stronie Javy. Czyli po prostu mieć kod po obu stronach, który wygląda (choć w innym języku) i zachowuje się tak samo. Poza tym brakuje takich rozwiązań, których można użyć we własnym projekcie bez używania jakiś standardowych i ciężkich rozwiązań. Poza tym, te rozwiązania i tak nie są zgodne i wspierają różne części standardu \emph{(Jakieś źródło)}.
+
 \section{Cele pracy}
-W tym miejscu dokładnie nakreślę cele tej pracy. Z jednej strony mówi to Tobie, czytelniku, co zostanie tutaj dokonane, z drugiej - wytycza mi ścieżkę i będzie służyło za przypomnienie w trakcie badań, projektowania, implementacji i testów mojego produktu.
+W tym miejscu zdefiniowane i uzasadnione zostaną cele niniejszej pracy. Ponadto wymienię zagadnienia, które będą pomijane aby nie przesłaniać najważniejszych (według mnie) kwestii.
 
-\subsection{Przegląd stanu wiedzy (połącz z drugim)}
-Patrzę na wszystko i zastanawiam się, to już można zrobić.
+%Każdy punkt powinien mieć dwie podsekcje - co? (wyjaśnia co dokładnie będzie zrobione) i dlaczego? (moje pobódki, co mi i innym to da). Jak? Po co? dla każdego celu zostanie odpowiedziane już w pracy.
 
-Ta praca będzie w dużej części przeglądem i porównaniem obecnych rozwiązań. Tylko na tej drodzę można stwierdzić, że to co robię jest przydatne, a cała praca ma sens.
-
-We wstępie napisać, że głównie chodzi mi o to, żeby argumenty do metod były polimorficznei żeby nie trzeba było znać z góry typów, które mogą przejść (ogólnie jak przy normalnej obiektowości). W trakcie pracy sprawdzę, czy inne frameworki potrafią to robić bez jakiś strasznych tricków (out of the box, żeby programista się nie męczył). Jeśli potrafią, to jak wygodnie się z tego korzysta.
-
-Tyson? Typed JSON?
+\subsection{Przybliżenie tematyki}
+Aby dało się zrozumieć pobudki, wywody oraz produkty tej pracy należy zaznajomić się z~tematyką zdalnego wywoływania kodu oraz charakterystyką docelowych platform. Zrobienie tego w~stopniu wystarczającym powinien umożliwić rozdział 1.
 
 \subsection{Porównanie istniejącego oprogramowania}
-Porównuję ze sobą istniejący software. Sprawdzam, jak bardzo spełnia swoje obietnice
+Przybliżone i~porównane zostaną co bardziej interesujące (dla mojego zastosowania) istniejące biblioteki oraz frameworki z~dziedziny RPC i~serializacji. Będzie to obszerna i~bardzo ważna część tej pracy.
 
-Porównanie istniejących rozwiązań, udowodnienie, że to co robię ma niszę dla siebie jakąś.
+Tylko przez takie badania można stwierdzić, że mój produkt znajdzie dla siebie jakąś niszę, a~zatem tworzenie go nie będzie pozbawione praktycznego sensu.
 
-Też byłoby najlepiej, gdyby nowe klasy można było tworzyć bez problemu no i mieszać wszystko zgodnie z zasadami obiektowości (dodajemy rozszerzenie klasy to metody dla starej działają tak samo). I w dużym Linuxie i na Androidzie trzeba było to zrobić inaczej. I w Javie wszystko trzeba było generować, co i tak nie do końca współgrało z WCF problemy.
+Technologie będą rozpatrywane w kategoriach:
+\begin{itemize}
+	\item obecności pożądanych przeze mnie cech (wymienianych w \ref{lib_requirements}),
+	\item spełniania obietnic, co do swoich możliwości,
+	\item zdolności współpracy z innymi technologiami.
+\end{itemize}
 
-\subsection{Stworzenie super biblioteki}
-Obiektowa, polimorficzna, sama szuka, umila życie.
+Po tej analizie stwierdzę na których rozwiązaniach mogę się wzorować lub wykorzystać jako elementy swojego.
 
-Docelowe rozwiązanie powinno być biblioteką na wiele języków. Skoro łączymy dwie różne technologie, z których jedna jest dość mobilna, czyli ograniczona, to może można zrobić coś dość uniwersalnego wspierającego wiele systemów. Powinno też być dojrzałe i od razu zawierać elementy zarządzania połączeniami, sesjami itp.,~chociaż skupienie leży na połączeniu 1 do 1, bo tak to bardzo często wygląda w prostym systemie, gdzie po prostu chcemy mieć most pomiędzy częściami aplikacji. Moje rozwiązanie trochę uogólniona i będzie mogła znaleźć (mam nadzieje) szerokie zastosowanie. Chciałem coś zrobić i było mi smutno, że na Androidzie nie mogłem sobie gladko wszystkiego łączyć, że trzeba było generować konkretne klasy, że nie mogło być dynamicznie
-
-Dokładnie określić po co ta praca. W czym ma się przydać, po co ją robić? Jakie ma wymagania?
-Powiedzieć, że tematyka będzie wyjaśniona za jakiś czas.
+\subsection{Stworzenie biblioteki do łatwej łącznośni}
+\label{lib_requirements}
+Należy się skupić na połączenia Androida z .NETem i to jest celem minimalnym. Ale zrobienie biblioteki ogólnej może nie być dużo bardziej skomplikowane, dlatego warto spróbować.
 
 CELE: pełne wsparcie programowania obiektowego, prostota i szybkość użycia, łączenie różnych technologii
 Głównym celem pracy jest stworzenie rozwiązania (biblioteki), które pozwoli na zdalne wywoływanie kodu w systemie Android z platformy .NET przy pomocy języka C\#. Można powiedzieć, że jest to zarządzanie Androidem z Windowsa (bo .NET najprawdopodobniej chodzi właśnie na nim).
 
-Opisać o co chodzi z tym polimorfizmem, że w WCF trzeba wypisywać KnownType, co jest robieniem wzajemnych zależności, co jest straszną praktyką programowania (źródło). W~ogóle moje będzie piękne, obiektowe i~uniewżni tyle trosk. Fakt, będzie się to wiązało z~jakimś narzutem performance'owym na szukanie klas nie wskazanych jawnie, a~i~trzeba będzie ustalić jakiś mechanizm szukania. Ale performace to często obecnie kwestia drugorządna (źródło o jakiś wolnych pythonach, w których ludzie piszą, bo im fajnie itp.).
+Porządane cechy rozwiązania w podsekcjach (łatwość)
 
-Druga rzecz, którą chcę uzyskać to możliwość łatwego tworzenia programów współpracujących między wyżej wymienionymi platformami. Kiedy wywołujemy zdalny kod często trzeba przekazać mu jakieś parametry, często też chcemy otrzymać wartości zwrotne. Pomijając sam fakt transportu danych z jednej platformy na drugą stajemy przed problemem niezgodności typów danych. Wiemy, że na obu końcach będą użyte dwa różne języki, więc struktury danych nie będą kompatybilne. Trzeba temu zaradzić.
-Ogólnie ujęte rozwiązanie dla powyższych problemów to serwer usług internetowych (ang. web services) wraz z narzędziami. Dzięki mechanizmowi usług sieciowych można wykonać dowolny kod na serwerze nie zależnie od technologii wykorzystywanych po obu stronach. Nie istnieje jeszcze (przynajmniej nie udało się znaleźć) serwer web service’ów dla Androida. Istnieją za to biblioteki pozwalające na przetłumaczenie klas z C\# na Javę.
+Pomijane rzeczy w podsekcjach
+
+Tyson? Typed JSON?
+
+Brak wymagania oznaczeń tworzących wzajemne zależności (jak KnownType w .NETcie). Jakieś tam pojedyncze, proste mogą być (transient itp.), ale żeby robiło się je raz i żeby dalej klasa mogła być dowolnie rozszerzana a pierwotny kod nieruszany.
+
+Opisać o co chodzi z tym polimorfizmem, że w WCF trzeba wypisywać KnownType, co jest robieniem wzajemnych zależności, co jest straszną praktyką programowania (źródło). W~ogóle moje będzie piękne, obiektowe i~uniewżni tyle trosk. Fakt, będzie się to wiązało z~jakimś narzutem performance'owym na szukanie klas nie wskazanych jawnie, a~i~trzeba będzie ustalić jakiś mechanizm szukania. Ale performace to często obecnie kwestia drugorządna (źródło o jakiś wolnych pythonach, w których ludzie piszą, bo im fajnie itp.).
+ 
+Obiektowa, polimorficzna, sama szuka, umila życie.
+
+Docelowe rozwiązanie powinno być biblioteką na wiele języków. Skoro łączymy dwie różne technologie, z których jedna jest dość mobilna, czyli ograniczona, to może można zrobić coś dość uniwersalnego wspierającego wiele systemów. Powinno też być dojrzałe i od razu zawierać elementy zarządzania połączeniami, sesjami itp., chociaż skupienie leży na połączeniu 1 do 1, bo tak to bardzo często wygląda w prostym systemie, gdzie po prostu chcemy mieć most pomiędzy częściami aplikacji. Moje rozwiązanie trochę uogólniona i będzie mogła znaleźć (mam nadzieje) szerokie zastosowanie. Chciałem coś zrobić i było mi smutno, że na Androidzie nie mogłem sobie gladko wszystkiego łączyć, że trzeba było generować konkretne klasy, że nie mogło być dynamicznie
 
 W reszcie rozdziału jest wytłumaczone dokładniej jak działają wspomniane tutaj mechanizmy oraz jak zostanie stworzony mój serwer.
 
 Wiele środowisk chcemy wspierać, np. Windows Phone też
 
-Nie było tam za bardzo zarządzania połączeniami i innych cech dojrzałego systemu - tylko prosta map obietków i przesyłanie zserializowanych poleceń. Dlatego postanowiłem, że dobrze zrobić nowy system. Skoro i tak nie było to zgodne ze standardnem (własne łączenie, przesyłanie z serializowanych rzeczy), to nie jest dużym problemem wymienienie kawałka po stronie .NET (serializatora) i zrobienie tego tak, żeby było też ``wygodnie'' po stronie Javy. Czyli po prostu mieć kod po obu stronach, który wygląda (choć w innym języku) i zachowuje się tak samo. Poza tym brakuje takich rozwiązań, których można użyć we własnym projekcie bez używania jakiś standardowych i ciężkich rozwiązań. Poza tym, te rozwiązania i tak nie są zgodne i wspierają różne części standardu \emph{(Jakieś źródło)}.
+w sumie olewam performance i bezpieczeństwo, ale jak nie będzie to przeszkadzało, to będę dążył do jak największej ich wartości.
 
-\section{Używany język (opcjonalnie)}
+\section{Używany język (TODO)}
 Napisać o tym, że język w mojej pracy może nie być do końca formalny. Mogę wtedy przekazywać informacje tak samo dobrze albo nawet lepiej (bo mogę być bardziej obrazowy, a nie muszę być od razu nieprecyzyjny) a zarówno pisanie jak i czytanie pracy będzie przyjemniejsze. Nauka powinna być frajdą. Coś przytoczyć może z tego headfirsta albo ich źródeł? W anglojęzycznej literaturze, która jest w sumie światowym standardem naukowym (jakiś cytat znaleźć) często tworzą jakieś nieformalne konstrukcje (sandwiche, cargo cult programming). Cytat z Head firsta o tym, że jak jest rozmowa to się lepiej czyta i pamięta. A zakładam, że ktoś poza mną przynajmniej raz będzie to czytał i chociaż jego zadanie będzie przyjemniejsze. Moje na pewno. Niby praca dyplomowa ma być napisana jasno i konkretnie (\url{http://www.slideshare.net/jszypryt/prace-dyplomowe-i-ich-cele-rodzaje-i}), a takie bezosobowe ściemnianie jest oczywistym tego przeciwieństwem. Bo przecież napisanie, że jakiś program ``zrobiono'' albo, że ``powstał'' ukrywa prawdę, że to właśnie JA zrobiłem. Za często trzeba się zastanawiać jak coś trafnie sformułować, żeby nie brzmiało nazbyt potocznie. Zdecydowałem się odrzucić takie problemy. Uznaję, że jeśli tekst przekazuje informacje precyzyjnie i zrozumiale dla osoby posługującej się współczesnym językiem polskim to jest to tekst poprawny.
+
+\emph{Mam jakies rzeczy w downloadsach.} \\
+\url{http://galaxy.agh.edu.pl/~wkowalsk/dydaktyka/skrypt.pdf}\\
+\url{http://chomikuj.pl/miechu17/Ksi*c4*85*c5*bcki/Uwagi+o+pisaniu+i+redagowaniu+prac+dyplomowych+na+studiach+technicznych+-+E.+Opoka,3372705642.pdf}\\
+\url{http://dyplom.best4u.pl/zasady-pisania-prac-dyplomowych}\\
+\url{http://zwa.univ.szczecin.pl/wp-content/uploads/2013/04/zasady-pisania-prac-dyplomowych_2012_2013.pdf}\\
+\url{http://www.slideshare.net/jszypryt/prace-dyplomowe-i-ich-cele-rodzaje-i}\\
+\url{http://www.ithg.wsg.byd.pl/userfiles/files/II%20Uwagi%20dotycz%C4%85ce%20pisania%20prac%20seminaryjnych(1).pdf}\\
+\url{http://dydaktyka.polsl.pl/kwmimkm/jak_pisac.pdf}\\
+\url{http://www.maraton.home.pl/por_aut.htm}\\
+
+Książki O'Reilly i Head First na przykłady.
 
 \section{Docelowe platformy}
 Tu o tych, co będą wymaganie. O specyfice .NETa i Androida, co i jak można na tym pisać (jakie języki)
 
 \subsection{Android}
 Tu o Androidzie, o JVM o samym języku Java. Jego środowisko programistyczne.
+
+Głównie pisze się w Javie, ale można też aplikacje natywne a i skryptowe. Poza tym jest to linux, więc z rootem można normalnie w C pisać. A i są jakieś Mono itp.
 
 Wizja systemu Android. Że to na telefony. Co w tej Javie jest, dlaczego tak jest, czego nie ma (właśnie tych bibliotek). Dalvik. Co jest w C (bionic)? Nowa maszyna (\url{http://www.dobreprogramy.pl/Google-testuje-nastepce-Dalvika-z-ARTem-Android-bedzie-dwukrotnie-szybszy,News,49129.html}) wirtualna na Androida.
 Jak działa Java? Maszyna wirtualna, baza w C, teoretycznie ten sam kod powinien działać wszędzie, należy jednak dobrze zaimplementować podstawę wszystkich bibliotek (czyli maszynę). A czasem są np. rozbieżności (drobne) pomiędzy windowsem a Linuxem.
@@ -147,6 +171,9 @@ Usługi sieciowe na platformie .NET realizowane są w ramach WCF. Javie obecnym 
 co to webservicy i po co są?\\
 do czego mogą się przydać na androidzie?\\
 dlaczego ich nie ma? Chyba stwierdzili, że ogólne web servicey są za ciężkie i za bardzo obciążają (Windows phone też nie ma WCF)\\
+
+Druga rzecz, którą chcę uzyskać to możliwość łatwego tworzenia programów współpracujących między wyżej wymienionymi platformami. Kiedy wywołujemy zdalny kod często trzeba przekazać mu jakieś parametry, często też chcemy otrzymać wartości zwrotne. Pomijając sam fakt transportu danych z jednej platformy na drugą stajemy przed problemem niezgodności typów danych. Wiemy, że na obu końcach będą użyte dwa różne języki, więc struktury danych nie będą kompatybilne. Trzeba temu zaradzić.
+Ogólnie ujęte rozwiązanie dla powyższych problemów to serwer usług internetowych (ang. web services) wraz z narzędziami. Dzięki mechanizmowi usług sieciowych można wykonać dowolny kod na serwerze nie zależnie od technologii wykorzystywanych po obu stronach. Nie istnieje jeszcze (przynajmniej nie udało się znaleźć) serwer web service’ów dla Androida. Istnieją za to biblioteki pozwalające na przetłumaczenie klas z C\# na Javę.
 
 \subsection{JSON, YAML, AXON}
 \url{http://intellimath.bitbucket.org/blog/posts/axon_overcomes_json.html}\\
