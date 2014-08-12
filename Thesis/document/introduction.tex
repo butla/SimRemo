@@ -44,12 +44,13 @@ Po tej analizie stwierdzę na których rozwiązaniach mogę się wzorować lub w
 
 \subsection{Stworzenie wieloplatformowej biblioteki(TODO)}
 \label{lib_requirements}
-Oprogramowanie które stworzę będzie miało postać kilku (dwóch lub więcej) bibliotek na różne systemy. Każda z~nich będzie miała analogiczny interfejs i~taką samą funkcjonalność. Wyliczam cechy, których kombinacji jeszcze nie spotkałem i~którymi to ma się odznaczać mój program.
+Oprogramowanie które stworzę będzie miało postać kilku (dwóch lub więcej) bibliotek na różne systemy. Każda z~nich będzie miała analogiczny interfejs i~taką samą funkcjonalność. Poniżej wyliczone są cechy, których obecność ma definiować mojego rozwiązanie.
 
 \begin{description}
-\itemtitle{Dynamiczny polimorfizm obiektów danych}
-Dane będą obiektami. Będą polimorficzne. Można wywoływać metody. Krótko wyjaśnić polimorfizm.
-No musi być niezłe. Żadnych wzajemnych zależności. Pełne wsparcie programowania obiektowego. Brak wymagania oznaczeń tworzących wzajemne zależności (jak KnownType w .NETcie). Jakieś tam pojedyncze, proste mogą być (transient itp.), ale żeby robiło się je raz i żeby dalej klasa mogła być dowolnie rozszerzana a pierwotny kod nieruszany. Opisać o co chodzi z tym polimorfizmem, że w WCF trzeba wypisywać KnownType, co jest robieniem wzajemnych zależności, co jest straszną praktyką programowania (źródło). Polimorfizm daje rozszerzalność danych przez dziedziczenie.
+\itemtitle{Faktyczna obiektowość danych (Dynamiczny polimorfizm danych)}
+Dane (argumenty metod i~wartości przez nie zwracane) wymieniane pomiędzy klientem a serwerem będą miały postać obiektów (programowanie obiektowe). To znaczy, że typy dziedziczące i implementujące ten sam interfejs będą polimorficzne (źródło!). Często normalnie nie jest tak łatwo to osiągnąć w heterogenicznych środowiskach - ciężko o zachowanie związków między klasami po mapowaniu na drugi język (pokażę to wo \ref{existing_frameworks})
+ Można wywoływać metody. Krótko wyjaśnić polimorfizm.
+Dzięki temu dostaniemy np. brak wzajemnych zależności i pełną swobodę w korzystaniu z obiektowości używanych przeze mnie języków, czyli Javy i C\#. Oba niby są obiektowe, ale przy przechodzeniu przez warstwę zdalną potrafią tracić tę właściwość. Brak wymagania oznaczeń tworzących wzajemne zależności (jak KnownType w .NETcie). Jakieś tam pojedyncze, proste mogą być (transient itp.), ale żeby robiło się je raz i żeby dalej klasa mogła być dowolnie rozszerzana a pierwotny kod nieruszany. Opisać o co chodzi z tym polimorfizmem, że w WCF trzeba wypisywać KnownType, co jest robieniem wzajemnych zależności, co jest straszną praktyką programowania (źródło). Polimorfizm daje rozszerzalność danych przez dziedziczenie.
 
 \itemtitle{Prostota}
 Można szybko używać. prostota, łatwość i szybkość użycia, łączenie różnych technologii. Przejrzyste API. Sama szuka klas, umila życie. W~ogóle moje będzie piękne, obiektowe i~uniewżni tyle trosk. Fakt, będzie się to wiązało z~jakimś narzutem performance'owym na szukanie klas nie wskazanych jawnie, a~i~trzeba będzie ustalić jakiś mechanizm szukania. Ale performace to często obecnie kwestia drugorządna (źródło o jakiś wolnych pythonach, w których ludzie piszą, bo im fajnie itp.). Chciałem coś zrobić i było mi smutno, że na Androidzie nie mogłem sobie gladko wszystkiego łączyć, że trzeba było generować konkretne klasy, że nie mogło być dynamicznie
@@ -61,7 +62,7 @@ Należy się skupić na połączenia Androida z .NETem i to jest celem minimalny
 Jak już Android i C\#, które są różne, to można więcej dodać. Najprawdopodobniej bez więszkego wysiłku będzie to można uogólnić tworząc biblioteki, które dają możliwości zarówno klienta jak i serwera, a także dostosować je do innych platform. Sam python chodzi na wielu (tu źródła). Docelowe rozwiązanie powinno być biblioteką na wiele języków. Skoro łączymy dwie różne technologie, z których jedna jest dość mobilna, czyli ograniczona, to może można zrobić coś dość uniwersalnego wspierającego wiele systemów. 
 \end{description}
 
-Rzeczy, które są ważne przy łączeniu, ale nie będę się na nich skupiał, bo istnieją już ich dobre implementacje. Ponieważ nie sposób choć trochę o nich nie myśleć przy projektowaniu takiego systemu, to jeśli będzie to sprawiało minimalny problem, to będę dążył do jak najwyższej ich wartości, albo zostawiał miejsce na ich zapewnienie w przyszłości.
+Rzeczy, które są ważne przy łączeniu (RPC), ale nie będę się na nich skupiał, bo istnieją już ich dobre implementacje i moja praca nic do nich nie wniesie. Ponieważ nie sposób choć trochę o nich nie myśleć przy projektowaniu takiego systemu, to jeśli będzie to sprawiało minimalny problem, to będę dążył do jak najwyższej ich wartości, albo zostawiał miejsce na ich zapewnienie w przyszłości.
 \begin{description}
 \itemtitle{Bezpieczeństwo}
 Zakładam, że można dodać jako warstwę, np. wymienić TCP na SSL (jakiś link). A nie będę się bezpośrednio wiązał z jedną warstwą transportową, tak że spoko.
@@ -83,6 +84,9 @@ Napisać o tym, że język w mojej pracy może nie być do końca formalny. Mog�
 \url{http://www.maraton.home.pl/por_aut.htm}\\
 
 Książki O'Reilly i Head First na przykłady.
+
+\section{Obiektowość, polimorfizm}
+Robić to, w ogóle?
 
 \section{Docelowe platformy}
 Tu o tych, co będą wymaganie. O specyfice .NETa i Androida, co i jak można na tym pisać (jakie języki)
