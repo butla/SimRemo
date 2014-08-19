@@ -1,7 +1,6 @@
 \chapter{Wprowadzenie}
 \label{intro}
-
-Niniejsza praca magisterska jest próbą rozwiązania problemu napotkanego w~mojej pracy zawodowej. W poprzednim zdaniu najprawdopodobniej rzuciła się Tobie, czytelniku, od razu w oczy nieformalna konstrukcja pierwszego zdania. Mogła nawet w~nie razić. Mimo, że może się ona wydawać nieadekwatna, to przenosi nie mniej informacji niż bezosobowe stwierdzenie ``w~pracy zawodowej autora'', a~jest dla mnie -- tegoż właśnie autora -- przyjemniejsza w~użyciu, a~zatem lepsza. Więcej o~tym później. Wracając do zasadniczego tematu -- praca polegała na rozwijaniu rozproszonego systemu przeznaczonego do tworzenia i~wykonywania zautomatyzowanych testów. Można przyjąć, że system ten miał architekturę klient-serwer. Serwer uruchamiał na sobie testowany kod sparametryzowany danymi przesyłanymi przez klienta i następnie zwracał mu wyniki. Oba te elementy działały na platformie .NET pod Windowsem (oczywiście na różnych maszynach) i~komunikowały się przy pomocy Windows Communication Foundation (WCF, czyli web service'y Microsoftu). Całe to rozwiązanie miało już swoje lata (zaczęte jeszcze w .NET 2), było ciężkie w~utrzymaniu i~mało modularne. Tylko wspomnę, że wszystkie technologie i~techniki wymieniane w~tym i~następnych akapitach będą szerzej przybliżone w~dalszej części pracy.
+Niniejsza praca magisterska jest próbą rozwiązania problemu napotkanego w~mojej pracy zawodowej. Polegała ona na rozwijaniu rozproszonego systemu przeznaczonego do tworzenia i~wykonywania zautomatyzowanych testów. Można przyjąć, że system ten miał architekturę klient-serwer. Serwer uruchamiał na sobie testowany kod sparametryzowany danymi przesyłanymi przez klienta i następnie zwracał mu wyniki. Oba te elementy działały na platformie .NET pod Windowsem (oczywiście na różnych maszynach) i~komunikowały się przy pomocy Windows Communication Foundation (WCF, czyli web service'y Microsoftu). Całe to rozwiązanie miało już swoje lata (zaczęte jeszcze w .NET 2), było ciężkie w~utrzymaniu i~mało modularne. Tylko wspomnę, że wszystkie technologie i~techniki wymieniane w~tym i~następnych akapitach będą szerzej przybliżone w~dalszej części pracy.
 
 Postawiono przede mną zadanie dodania do systemu możliwości uruchamiania testów na platformie Android. Wielki nacisk położono na kompatybilność wsteczną. Ponieważ w aplikacji klienta nie można było robić drastycznych zmian (takich jak przepisanie na inny język), nowy serwer na Androida (który miał zostać napisany w domyślnej dla tej platformy Javie) musiał tłumaczyć dane wejściowe i wyjściowe pomiędzy językami -- Javą a~C\#.  Właśnie to umożliwiają różne systemy zdalnego wywoływania kodu w środowiskach heterogenicznych, takie jak web service'y (jedną z~ich implementacji jest WCF). Niestety, Java na Androida -- a~ta różni się od standardowej -- nie ma żadnego odpowiednika serwera WCF. Trzeba go było stworzyć.
 
@@ -47,7 +46,9 @@ Po tej analizie stwierdzę na których rozwiązaniach mogę się wzorować lub w
 Oprogramowanie które stworzę będzie miało postać kilku (dwóch lub więcej) bibliotek na różne systemy. Każda z~nich będzie miała analogiczny interfejs i~taką samą funkcjonalność. Poniżej wyliczone są cechy, których obecność ma definiować mojego rozwiązanie.
 
 \begin{description}
-\itemtitle{Faktyczna obiektowość danych (Dynamiczny polimorfizm danych)}
+\itemtitle{Polimorfizm zdalnych metod}
+Zdalne metody powinny być polimorficzne. Chodzi tu zarówno o przeładowywanie (overloading, ad-hoc polymorphism, krótkie wyjasnienie) jak i inclusion polymorphism ich argumentów (i zwracanych wartości) \cite{polymorphism}.
+
 Dane (argumenty metod i~wartości przez nie zwracane) wymieniane pomiędzy klientem a serwerem będą miały postać obiektów (programowanie obiektowe). To znaczy, że typy dziedziczące i implementujące ten sam interfejs będą polimorficzne (źródło!). Często normalnie nie jest tak łatwo to osiągnąć w heterogenicznych środowiskach - ciężko o zachowanie związków między klasami po mapowaniu na drugi język (pokażę to wo \ref{existing_frameworks})
  Można wywoływać metody. Krótko wyjaśnić polimorfizm.
 Dzięki temu dostaniemy np. brak wzajemnych zależności i pełną swobodę w korzystaniu z obiektowości używanych przeze mnie języków, czyli Javy i C\#. Oba niby są obiektowe, ale przy przechodzeniu przez warstwę zdalną potrafią tracić tę właściwość. Brak wymagania oznaczeń tworzących wzajemne zależności (jak KnownType w .NETcie). Jakieś tam pojedyncze, proste mogą być (transient itp.), ale żeby robiło się je raz i żeby dalej klasa mogła być dowolnie rozszerzana a pierwotny kod nieruszany. Opisać o co chodzi z tym polimorfizmem, że w WCF trzeba wypisywać KnownType, co jest robieniem wzajemnych zależności, co jest straszną praktyką programowania (źródło). Polimorfizm daje rozszerzalność danych przez dziedziczenie.
@@ -71,6 +72,8 @@ Powinno też być dojrzałe i od razu zawierać elementy zarządzania połączen
 \end{description}
 
 \section{Używany język (TODO)}
+W~pierwszym zdaniu tej pracy najprawdopodobniej rzuciła się Tobie, czytelniku, od razu w oczy nieformalna konstrukcja. Mogła nawet w~nie razić. Mimo, że może się ona wydawać nieadekwatna, to przenosi nie mniej informacji niż bezosobowe stwierdzenie ``w~pracy zawodowej autora'', a~jest dla mnie -- tegoż właśnie autora -- przyjemniejsza w~użyciu, a~zatem lepsza. Więcej o~tym później.
+
 Napisać o tym, że język w mojej pracy może nie być do końca formalny. Mogę wtedy przekazywać informacje tak samo dobrze albo nawet lepiej (bo mogę być bardziej obrazowy, a nie muszę być od razu nieprecyzyjny) a zarówno pisanie jak i czytanie pracy będzie przyjemniejsze. Nauka powinna być frajdą. Coś przytoczyć może z tego headfirsta albo ich źródeł? W anglojęzycznej literaturze, która jest w sumie światowym standardem naukowym (jakiś cytat znaleźć) często tworzą jakieś nieformalne konstrukcje (sandwiche, cargo cult programming). Cytat z Head firsta o tym, że jak jest rozmowa to się lepiej czyta i pamięta. A zakładam, że ktoś poza mną przynajmniej raz będzie to czytał i chociaż jego zadanie będzie przyjemniejsze. Moje na pewno. Niby praca dyplomowa ma być napisana jasno i konkretnie (\url{http://www.slideshare.net/jszypryt/prace-dyplomowe-i-ich-cele-rodzaje-i}), a takie bezosobowe ściemnianie jest oczywistym tego przeciwieństwem. Bo przecież napisanie, że jakiś program ``zrobiono'' albo, że ``powstał'' ukrywa prawdę, że to właśnie JA zrobiłem. Za często trzeba się zastanawiać jak coś trafnie sformułować, żeby nie brzmiało nazbyt potocznie. Zdecydowałem się odrzucić takie problemy. Uznaję, że jeśli tekst przekazuje informacje precyzyjnie i zrozumiale dla osoby posługującej się współczesnym językiem polskim to jest to tekst poprawny.
 
 \emph{Mam jakies rzeczy w downloadsach.} \\
@@ -83,7 +86,7 @@ Napisać o tym, że język w mojej pracy może nie być do końca formalny. Mog�
 \url{http://dydaktyka.polsl.pl/kwmimkm/jak_pisac.pdf}\\
 \url{http://www.maraton.home.pl/por_aut.htm}\\
 
-Książki O'Reilly i Head First na przykłady.
+Książki O'Reilly i Head First na przykłady. W ``On Understanding Types, Data Abstraction and Polymorphism.pdf'' nawet jest ``set of clothes'' i ``naked'' representation.
 
 \section{Obiektowość, polimorfizm}
 Robić to, w ogóle?
@@ -101,9 +104,16 @@ Jak działa Java? Maszyna wirtualna, baza w C, teoretycznie ten sam kod powinien
 
 Jak Androidowa Java współpracuje z innymi środowiskami.
 
+\subsubsection{Historia}
+\subsubsection{Założenia i cechy}
+\subsubsection{Java}
+
 \subsection{.NET}
 Tu o .NETcie i o C\# (bo tego będę używał).
 Jak .NET współpracuje z innymi środowiskami
+
+\subsection{Porównanie cech Javy i C\#}
+Porównać zdolności obu języków, znaleźć cechy nieprzetłumaczalne. Jak dużą zgodność można uzyskać teoretycznie?
 
 \subsection{Python}
 Nie platforma a język, ale w sumie chodzi na wszystkim. I na windowsie, linuxie i androidzie. Lubię też w nim pisać. Można go sportować.
@@ -115,8 +125,6 @@ Cholera wie, może nawet Windows Phone by dało radę. Ogólnie wymienić to, na
 
 \section{Zdalne wywoływanie kodu}
 Tu o RPC, o problemach, o tłumaczeniu danych, istniejących standardach itp.
-
-Czym jest programowanie obiektowe napisać, co to polimorfizm i dlaczego ważny
 
 \subsection{Tłumaczenie danych}
 Jaka jest problematyka przetłumaczenia danych/obiektów z jednego języka, platformy na drugą?
@@ -149,6 +157,8 @@ Celuję w globalnie, ale zwsze szerszą metodę można zastosować wężej (choc
 Ogólnie trochę o RPC. Że wiele technologii to RPC (Web service'y, CORBA), że to zawiera i tłumaczenie i transport.
 Wywoływaniu kodu w innym procesie lub na innym kompie.
 
+Czym jest programowanie obiektowe napisać, co to polimorfizm i dlaczego ważny. Web-servicey, XML-RPC, REST z JSONem i XMLem.
+
 \url{http://www.infoq.com/articles/rest-soap-when-to-use-each}\\
 
 \url{http://xmlrpc.scripting.com/default.html XML RPC}\\
@@ -158,7 +168,9 @@ Przejrzeć specyfikację, zobaczyć, z czym musieli sobie poradzić i wyczaić j
 
 Service oriented architecture a remote procedure call? Jakie różnice? Czym będzie moje? A same web services?
 
-\subsection{XML binding}
+\subsection{Binding}
+A może najlepszym rozwiązaniem będzie generator customizowalnych bindingów (może nawet do JSONa) z wygodną konfiguracj)? Raz by się generowało mapowanie i wszystko działa na zawsze. 
+
 NA TYM BĘDZIE DZIAŁAŁO TŁUMACZENIE KLAS
 W WSDL poza opisami operacji realizowanych przez usługę znajdują się też pliki XSD opisujące wszystkie struktury danych (klasy), które będą wymieniane. Dla tego posiadając WSDL usługi możemy wygenerować wszystkie klasy potrzebne do stworzenia klienta usługi.
 
