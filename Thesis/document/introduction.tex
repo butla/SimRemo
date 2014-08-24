@@ -20,7 +20,7 @@ System który ostatecznie stworzę nie znajdzie, najprawdopodobniej, zastosowani
 %Nie było tam za bardzo zarządzania połączeniami i innych cech dojrzałego systemu - tylko prosta map obietków i przesyłanie zserializowanych poleceń. Dlatego postanowiłem, że dobrze zrobić nowy system. Skoro i tak nie było to zgodne ze standardnem (własne łączenie, przesyłanie z serializowanych rzeczy), to nie jest dużym problemem wymienienie kawałka po stronie .NET (serializatora) i zrobienie tego tak, żeby było też ``wygodnie'' po stronie Javy. Czyli po prostu mieć kod po obu stronach, który wygląda (choć w innym języku) i zachowuje się tak samo. Poza tym brakuje takich rozwiązań, których można użyć we własnym projekcie bez używania jakiś standardowych i ciężkich rozwiązań. Poza tym, te rozwiązania i tak nie są zgodne i wspierają różne części standardu \emph{(Jakieś źródło)}.
 
 \section{Cele pracy}
-W tym miejscu zdefiniowane i uzasadnione zostaną cele niniejszej pracy. Ponadto wymienię zagadnienia, które będą pomijane aby nie przesłaniać najważniejszych (według mnie) kwestii.
+W tym miejscu zdefiniowane i uzasadnione zostaną cele niniejszej pracy.
 
 %Każdy punkt powinien mieć dwie podsekcje - co? (wyjaśnia co dokładnie będzie zrobione) i dlaczego? (moje pobódki, co mi i innym to da). Jak? Po co? dla każdego celu zostanie odpowiedziane już w pracy.
 
@@ -47,35 +47,39 @@ Oprogramowanie które stworzę będzie miało postać kilku (dwóch lub więcej)
 
 \begin{description}
 \itemtitle{Wywoływanie kodu na Androidzie z~poziomu C\#}
-Cel główny. Moje dzieło ma pozwolić na wywoływanie metod (i~otrzymanie od nich wartości zwrotnych) napisanych w~języku Java pod Androidem przez program napisany w C\#. Można powiedzieć, że jest to zarządzanie Androidem z Windowsa (bo C\# działa na .NET, a ten z kolei domyślnie działa na Windowsie).
+Cel główny, w~końcu to jest mój problem wyjściowy. Moje dzieło ma pozwolić na wywoływanie metod (i~otrzymanie od nich wartości zwrotnych) napisanych w~języku Java pod Androidem przez program napisany w C\#. Można powiedzieć, że jest to zarządzanie Androidem z Windowsa (bo C\# działa na .NET, a ten z kolei domyślnie działa na Windowsie).
 
 \itemtitle{Polimorfizm zdalnych metod}
 Zdalne metody powinny być polimorficzne. To znaczy, że każdy z~ich argumentów (jeśli jest to metoda przyjmująca argumenty) nie jest ograniczony do przynależności do jednego typu\cite{polymorphism}. Będzie to osiągnięte na dwa sposoby. Pierwszy -- przeciążanie metod (polimorfizm ad-hoc), polega na tym, że może istnieć zbiór różnych metod o~tej samej nazwie, pod warunkiem, że przyjmują różne zestawy argumentów. Drugi -- to nadanie argumentom cechy nazywanej z~angielskiego \emph{inclusion polymorphism}. Można by to przetłumaczyć jako polimorfizm zawierania. Znaczy to tyle, że jeden typ posiada te same metody i~pola co inny typ (zawiera go); najczęściej posiada też właściwe dla siebie cechy (metody i~pola). W~językach obiektowych zazwyczaj taki polimorfizm realizowany jest przez dziedziczenie -- jeden typ dziedziczy po drugim, w ten sposób przejmując jego cechy. Dzięki temu typ dziedziczący może być traktowany tak samo, jak typ dziedziczony. Podsumowując, pod każdy argument zdalnej metody można podstawić zarówno wartość typu określonego przez nią oczekiwanego, jak i dowolnego typu dziedziczącego po nim.
 
 %Nie zapewnie polimorfizmu parametrycznego, czyli szblonów.
 
-\itemtitle{Swoboda rozszerzania kodu(TODO)}
-Raz napisany kod zawierający moje zdalne metody powinien być rozszerzalny bez potrzeby jego zmiany \cite[105]{headfirst}. Jest to jedna z~podstaw obiektowego podejścia do programowania. Umożliwia jej działanie, między innymi, polimorfizm. Dla przykładu -- raz stworzonej zdalnej metodzie mogę przekazać argument nowego typu, który dziedziczy po spodziewanym. Taki parametr może wykonywać/wywoływać inne operacje po obu stronch kanału komunikacyjnego niż jego pierwowzór, a~kod zarówno metody jak i~oryginalnego typu nie musi być w~żaden sposób zmieniany.
+\itemtitle{Swoboda rozszerzania kodu}
+Raz napisany kod zawierający moje zdalne metody powinien być rozszerzalny bez potrzeby jego zmiany \cite[str.~105]{designpatterns}. Jest to jedna z~podstaw obiektowego podejścia do programowania. Umożliwia jej działanie, między innymi, polimorfizm. Dla przykładu -- raz stworzonej zdalnej metodzie mogę przekazać argument nowego typu, który dziedziczy po spodziewanym. Przypuśćmy dalej, że metoda uruchamia jakąś metodę parametru, który otrzyma, a~ta metoda została rozszerzona w podtypie. Tym samym stara metoda zaowocuje uruchomieniem nowego kodu, a~ani jej, ani oryginalnego typu parametru nie trzeba było zmieniać.
 
-\itemtitle{Prostota użycia(TODO)}
-Albo wszystko działa z automatu po krótkiej konfiguracji środowiska, albo potrzebne dodatkowe wiązania mogą być generowane automatycznie i to tylko raz, bez potrzeby zmieniania plików po dodawaniu czegoś.
-Można szybko używać. prostota, łatwość i szybkość użycia, łączenie różnych technologii. Przejrzyste API. Sama szuka klas, umila życie. W~ogóle moje będzie piękne, obiektowe i~uniewżni tyle trosk. Fakt, będzie się to wiązało z~jakimś narzutem performance'owym na szukanie klas nie wskazanych jawnie, a~i~trzeba będzie ustalić jakiś mechanizm szukania. Ale performace to często obecnie kwestia drugorządna (źródło o jakiś wolnych pythonach, w których ludzie piszą, bo im fajnie itp.). Chciałem coś zrobić i było mi smutno, że na Androidzie nie mogłem sobie gladko wszystkiego łączyć, że trzeba było generować konkretne klasy, że nie mogło być dynamicznie
+\itemtitle{Prostota użycia}
+Moja biblioteka powinna pozwalać na szybkie tworzenie zdalnych metod w~prosty sposób. Jej instalacja ma być oczywista, API przejrzyste. Jeśli wymagana będzie jakaś konfiguracja to powinna być krótka i~zrozumiała. Jeśli trzeba będzie tworzyć jakieś opisy umożliwiające tłumaczenie obiektów danych (przedstawicieli klasy bez metod) z~jednego języka na odpowiadające obiekty w~drugim języku drugi, to powinny być one generowane automatycznie przy minimalnej ilości parametrów. Moje oprogramowanie może także mieć możliwość wygenerowania kodu klasy (danych) w~jednym języku na bazie kodu klasy napisanej w~drugim. Ogólnie powinno zdejmować z~programisty możliwie dużo trosk (zadań), które nie wymagają interwencji istoty obdarzonej zdolnością abstrakcyjnego myślenia i~mogą być rozwiązane przez automat.
 
-Brak wymagania oznaczeń tworzących wzajemne zależności (jak KnownType w .NETcie). Jakieś tam pojedyncze, proste mogą być (transient itp.), ale żeby robiło się je raz i żeby dalej klasa mogła być dowolnie rozszerzana a pierwotny kod nieruszany.
-
-\itemtitle{Uniwersalne wywoływanie kodu(TODO)}
-Należy się skupić na połączenia Androida z .NETem i to jest celem minimalnym. Ale zrobienie biblioteki ogólnej może nie być dużo bardziej skomplikowane, dlatego warto spróbować.
-Jak już Android i C\#, które są różne, to można więcej dodać. Najprawdopodobniej bez więszkego wysiłku będzie to można uogólnić tworząc biblioteki, które dają możliwości zarówno klienta jak i serwera, a także dostosować je do innych platform. Sam python chodzi na wielu (tu źródła). Docelowe rozwiązanie powinno być biblioteką na wiele języków. Skoro łączymy dwie różne technologie, z których jedna jest dość mobilna, czyli ograniczona, to może można zrobić coś dość uniwersalnego wspierającego wiele systemów. 
+\itemtitle{Wsparcie wielu środowisk}
+Cel drugorzędny, do którego nie będę przywiązywał wielkiej wagi. Ale jeśli uda się umożliwić łączenie tak różnych środowisk jak Android (który jest platformą mobilną, a~więc ograniczoną) i~.NET, to może nie będzie wielkim problemem wsparcie kolejnych platform. Może połączenie tych środowisk będzie rozwiązywało na tyle uniwersalne problemy, że dodanie klienta/serwera dla, chociażby, Pythona lub Windows Phone będzie procesem, który można wykonać bez większej refleksji. 
 \end{description}
 
-(TODO)
-Rzeczy, które są ważne przy łączeniu (RPC), ale nie będę się na nich skupiał, bo istnieją już ich dobre implementacje i moja praca nic do nich nie wniesie. Ponieważ nie sposób choć trochę o nich nie myśleć przy projektowaniu takiego systemu, to jeśli będzie to sprawiało minimalny problem, to będę dążył do jak najwyższej ich wartości, albo zostawiał miejsce na ich zapewnienie w przyszłości.
+Istnieją zagadnienia ważne dla aplikacji rozproszonych, które będą przeze mnie pomijane, aby nie przesłaniać najważniejszych (według mnie) kwestii. Moja praca nic do nich nie wniesie, więc nie ma sensu się nimi zajmować. Są to, między innymi (bo nie sposób wymienić wszystkiego, co \emph{nie} wchodzi w~obszar zainteresowań):
+
 \begin{description}
-\itemtitle{Bezpieczeństwo}
+\itemtitle{Bezpieczeństwo(TODO)}
+Zapewnienie poufności, uwierzytelniania (i autoryzacji) oraz ``bezpieczeństwa sieciowego'' (z~ang. ``network security'') \cite[str.~21]{webservices}. Tego bezpieczeństwa siecowego chcę umyślnie uniknąć, bo moja aplikacja miała zarządzać Androidem. Jeszcze można mówić o nienaruszalności (integrity).
+
+Nie będę starał się go zapewnić, ale wydaje mi się, że będzie łatwo je dodać potem.
 Zakładam, że można dodać jako warstwę, np. wymienić TCP na SSL (jakiś link). A nie będę się bezpośrednio wiązał z jedną warstwą transportową (bo nie zamierzam jakiś niskopoziomowych operacji wykonywać przy transporcie), tak że spoko.
-\itemtitle{Wydajność}
+\itemtitle{Wydajność(TODO)}
 Powinno też być dojrzałe i od razu zawierać elementy zarządzania połączeniami, sesjami itp., chociaż skupienie leży na połączeniu 1 do 1, bo tak to bardzo często wygląda w prostym systemie, gdzie po prostu chcemy mieć most pomiędzy częściami aplikacji.
+
+Fakt, będzie się to (sszukanie klas) wiązało z~jakimś narzutem performance'owym na szukanie klas nie wskazanych jawnie, a~i~trzeba będzie ustalić jakiś mechanizm szukania. Ale performace to często obecnie kwestia drugorządna (źródło o jakiś wolnych pythonach, w których ludzie piszą, bo im fajnie itp.).
 \end{description}
+
+%Ale ponieważ nie sposób choć trochę o~nich nie myśleć przy projektowaniu tego typu systemu, b to jeśli będzie to sprawiało minimalny problem, będę starał się o nie zadbać
+%dążył do jak najwyższej ich wartości, albo zostawiał miejsce na ich zapewnienie w przyszłości.
 
 \section{Używany język (TODO)}
 W~pierwszym zdaniu tej pracy najprawdopodobniej rzuciła się Tobie, czytelniku, od razu w oczy nieformalna konstrukcja. Mogła nawet w~nie razić. Mimo, że może się ona wydawać nieadekwatna, to przenosi nie mniej informacji niż bezosobowe stwierdzenie ``w~pracy zawodowej autora'', a~jest dla mnie -- tegoż właśnie autora -- przyjemniejsza w~użyciu, a~zatem lepsza. Więcej o~tym później.
