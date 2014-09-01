@@ -61,7 +61,7 @@ Raz napisany kod zawierający moje zdalne metody powinien być rozszerzalny bez 
 Moja biblioteka powinna pozwalać na szybkie tworzenie zdalnych metod w~prosty sposób. Jej instalacja ma być oczywista, API przejrzyste. Jeśli wymagana będzie konfiguracja to powinna być krótka i~zrozumiała. Jeśli trzeba będzie tworzyć opisy umożliwiające tłumaczenie obiektów danych (przedstawicieli klasy bez metod) z~jednego języka na odpowiadające obiekty w~drugim języku drugi, to powinny być one generowane automatycznie przy minimalnej ilości parametrów. Moje oprogramowanie może także mieć możliwość wygenerowania kodu klasy (danych) w~jednym języku na bazie kodu klasy napisanej w~drugim. Ogólnie powinno zdejmować z~programisty możliwie dużo trosk (zadań), które nie wymagają interwencji istoty obdarzonej zdolnością abstrakcyjnego myślenia i~mogą być rozwiązane przez automat.
 
 \itemtitle{Wsparcie wielu środowisk}
-Cel drugorzędny, do którego nie będę przywiązywał wielkiej wagi. Ale jeśli uda się umożliwić łączenie tak różnych środowisk jak Android (który jest platformą mobilną, a~więc ograniczoną) i~.NET, to może nie będzie wielkim problemem wsparcie kolejnych platform. Może połączenie tych środowisk będzie rozwiązywało na tyle uniwersalne problemy, że dodanie klienta/serwera dla, chociażby, Pythona lub Windows Phone będzie procesem, który można wykonać bez większej refleksji. 
+Cel drugorzędny, do którego nie będę przywiązywał wielkiej wagi. Ale jeśli uda się umożliwić łączenie tak różnych środowisk jak Android (który jest platformą mobilną, a~więc ograniczoną) i~.NET, to może nie będzie wielkim problemem wsparcie kolejnych platform. Może połączenie tych środowisk będzie rozwiązywało na tyle uniwersalne problemy, że dodanie klienta/serwera dla, chociażby, Pythona, Windows Phone lub innych platform (w~tym osadzonych) będzie procesem, który można wykonać bez większej refleksji. 
 \end{description}
 
 Istnieją zagadnienia ważne dla aplikacji rozproszonych, które będą przeze mnie pomijane, aby nie przesłaniać najważniejszych (według mnie) kwestii. Moja praca nic do nich nie wniesie, więc nie ma sensu się nimi zajmować. Są to, między innymi (bo nie sposób wymienić wszystkiego, co \emph{nie} wchodzi w~obszar zainteresowań):
@@ -77,41 +77,78 @@ Jest niezmiernie ważna dla wszystkich serwerów, ponieważ muszą obsługiwać 
 %Ale ponieważ nie sposób choć trochę o~nich nie myśleć przy projektowaniu tego typu systemu, b to jeśli będzie to sprawiało minimalny problem, będę starał się o nie zadbać
 %dążył do jak najwyższej ich wartości, albo zostawiał miejsce na ich zapewnienie w przyszłości.
 
-\section{Używany język (TODO)}
-W~pierwszym zdaniu tej pracy najprawdopodobniej rzuciła się Tobie, czytelniku, od razu w oczy nieformalna konstrukcja. Mogła nawet w~nie razić. Mimo, że może się ona wydawać nieadekwatna, to przenosi nie mniej informacji niż bezosobowe stwierdzenie ``w~pracy zawodowej autora'', a~jest dla mnie -- tegoż właśnie autora -- przyjemniejsza w~użyciu, a~zatem lepsza. Więcej o~tym później.
-
-Napisać o tym, że język w mojej pracy może nie być do końca formalny. Mogę wtedy przekazywać informacje tak samo dobrze albo nawet lepiej (bo mogę być bardziej obrazowy, a nie muszę być od razu nieprecyzyjny) a zarówno pisanie jak i czytanie pracy będzie przyjemniejsze. Nauka powinna być frajdą. Coś przytoczyć może z tego headfirsta albo ich źródeł? W anglojęzycznej literaturze, która jest w sumie światowym standardem naukowym (jakiś cytat znaleźć) często tworzą jakieś nieformalne konstrukcje (sandwiche, cargo cult programming). Cytat z Head firsta o tym, że jak jest rozmowa to się lepiej czyta i pamięta. A zakładam, że ktoś poza mną przynajmniej raz będzie to czytał i chociaż jego zadanie będzie przyjemniejsze. Moje na pewno. Niby praca dyplomowa ma być napisana jasno i konkretnie (\url{http://www.slideshare.net/jszypryt/prace-dyplomowe-i-ich-cele-rodzaje-i}), a takie bezosobowe ściemnianie jest oczywistym tego przeciwieństwem. Bo przecież napisanie, że jakiś program ``zrobiono'' albo, że ``powstał'' ukrywa prawdę, że to właśnie JA zrobiłem. Za często trzeba się zastanawiać jak coś trafnie sformułować, żeby nie brzmiało nazbyt potocznie. Zdecydowałem się odrzucić takie problemy. Uznaję, że jeśli tekst przekazuje informacje precyzyjnie i zrozumiale dla osoby posługującej się współczesnym językiem polskim to jest to tekst poprawny.
-
-\emph{Mam jakies rzeczy w downloadsach.} \\
-\url{http://galaxy.agh.edu.pl/~wkowalsk/dydaktyka/skrypt.pdf}\\
-\url{http://chomikuj.pl/miechu17/Ksi*c4*85*c5*bcki/Uwagi+o+pisaniu+i+redagowaniu+prac+dyplomowych+na+studiach+technicznych+-+E.+Opoka,3372705642.pdf}\\
-\url{http://dyplom.best4u.pl/zasady-pisania-prac-dyplomowych}\\
-\url{http://zwa.univ.szczecin.pl/wp-content/uploads/2013/04/zasady-pisania-prac-dyplomowych_2012_2013.pdf}\\
-\url{http://www.slideshare.net/jszypryt/prace-dyplomowe-i-ich-cele-rodzaje-i}\\
-\url{http://www.ithg.wsg.byd.pl/userfiles/files/II%20Uwagi%20dotycz%C4%85ce%20pisania%20prac%20seminaryjnych(1).pdf}\\
-\url{http://dydaktyka.polsl.pl/kwmimkm/jak_pisac.pdf}\\
-\url{http://www.maraton.home.pl/por_aut.htm}\\
-
-Książki O'Reilly i Head First na przykłady. W ``On Understanding Types, Data Abstraction and Polymorphism.pdf'' nawet jest ``set of clothes'' i ``naked'' representation.
+%\section{Używany język (TODO)}
+%W~pierwszym zdaniu tej pracy najprawdopodobniej rzuciła się Tobie, czytelniku, od razu w oczy nieformalna konstrukcja. Mogła nawet w~nie razić. Mimo, że może się ona wydawać nieadekwatna, to przenosi nie mniej informacji niż bezosobowe stwierdzenie ``w~pracy zawodowej autora'', a~jest dla mnie -- tegoż właśnie autora -- przyjemniejsza w~użyciu, a~zatem lepsza. Więcej o~tym później.
+%
+%Napisać o tym, że język w mojej pracy może nie być do końca formalny. Mogę wtedy przekazywać informacje tak samo dobrze albo nawet lepiej (bo mogę być bardziej obrazowy, a nie muszę być od razu nieprecyzyjny) a zarówno pisanie jak i czytanie pracy będzie przyjemniejsze. Nauka powinna być frajdą. Coś przytoczyć może z tego headfirsta albo ich źródeł? W anglojęzycznej literaturze, która jest w sumie światowym standardem naukowym (jakiś cytat znaleźć) często tworzą jakieś nieformalne konstrukcje (sandwiche, cargo cult programming). Cytat z Head firsta o tym, że jak jest rozmowa to się lepiej czyta i pamięta. A zakładam, że ktoś poza mną przynajmniej raz będzie to czytał i chociaż jego zadanie będzie przyjemniejsze. Moje na pewno. Niby praca dyplomowa ma być napisana jasno i konkretnie (\url{http://www.slideshare.net/jszypryt/prace-dyplomowe-i-ich-cele-rodzaje-i}), a takie bezosobowe ściemnianie jest oczywistym tego przeciwieństwem. Bo przecież napisanie, że jakiś program ``zrobiono'' albo, że ``powstał'' ukrywa prawdę, że to właśnie JA zrobiłem. Za często trzeba się zastanawiać jak coś trafnie sformułować, żeby nie brzmiało nazbyt potocznie. Zdecydowałem się odrzucić takie problemy. Uznaję, że jeśli tekst przekazuje informacje precyzyjnie i zrozumiale dla osoby posługującej się współczesnym językiem polskim to jest to tekst poprawny.
+%
+%\emph{Mam jakies rzeczy w downloadsach.} \\
+%\url{http://galaxy.agh.edu.pl/~wkowalsk/dydaktyka/skrypt.pdf}\\
+%\url{http://chomikuj.pl/miechu17/Ksi*c4*85*c5*bcki/Uwagi+o+pisaniu+i+redagowaniu+prac+dyplomowych+na+studiach+technicznych+-+E.+Opoka,3372705642.pdf}\\
+%\url{http://dyplom.best4u.pl/zasady-pisania-prac-dyplomowych}\\
+%\url{http://zwa.univ.szczecin.pl/wp-content/uploads/2013/04/zasady-pisania-prac-dyplomowych_2012_2013.pdf}\\
+%\url{http://www.slideshare.net/jszypryt/prace-dyplomowe-i-ich-cele-rodzaje-i}\\
+%\url{http://www.ithg.wsg.byd.pl/userfiles/files/II%20Uwagi%20dotycz%C4%85ce%20pisania%20prac%20seminaryjnych(1).pdf}\\
+%\url{http://dydaktyka.polsl.pl/kwmimkm/jak_pisac.pdf}\\
+%\url{http://www.maraton.home.pl/por_aut.htm}\\
+%
+%Książki O'Reilly i Head First na przykłady. W ``On Understanding Types, Data Abstraction and Polymorphism.pdf'' nawet jest ``set of clothes'' i ``naked'' representation.
 
 \section{Docelowe platformy}
-Tu o tych, co będą wymaganie. O specyfice .NETa i Androida, co i jak można na tym pisać (jakie języki)
+Tutaj zostaną opisane platformy technologiczne, na których będzie działać moja biblioteka.
 
-Ciężko o pełną swobodę w korzystaniu z obiektowości używanych przeze mnie języków, czyli Javy i C\#. Oba niby są obiektowe, ale przy przechodzeniu przez warstwę zdalną potrafią tracić tę właściwość.
+\subsection{Android(TODO)}
+%moze dodac odniesienie do kilku rozdzialow learningandroid od razu przy tym rozdziale, a nie gdzies w tekscie? tak się robi?
 
-\subsection{Android}
-Tu o Androidzie, o JVM o samym języku Java. Jego środowisko programistyczne.
+%Tu o Androidzie, o JVM o samym języku Java. Jego środowisko programistyczne.
 
-Głównie pisze się w Javie, ale można też aplikacje natywne a i skryptowe. Poza tym jest to linux, więc z rootem można normalnie w C pisać. A i są jakieś Mono itp.
+%Głównie pisze się w Javie, ale można też aplikacje natywne a i skryptowe. Poza tym jest to linux, więc z rootem można normalnie w C pisać. A i są jakieś Mono itp.
+%
+%Wizja systemu Android. Że to na telefony. Co w tej Javie jest, dlaczego tak jest, czego nie ma (właśnie tych bibliotek). Dalvik. Co jest w C (bionic)? Nowa maszyna (\url{http://www.dobreprogramy.pl/Google-testuje-nastepce-Dalvika-z-ARTem-Android-bedzie-dwukrotnie-szybszy,News,49129.html}) wirtualna na Androida.
+%Jak działa Java? Maszyna wirtualna, baza w C, teoretycznie ten sam kod powinien działać wszędzie, należy jednak dobrze zaimplementować podstawę wszystkich bibliotek (czyli maszynę). A czasem są np. rozbieżności (drobne) pomiędzy windowsem a Linuxem.
+%
+%Jak Androidowa Java współpracuje z innymi środowiskami.
 
-Wizja systemu Android. Że to na telefony. Co w tej Javie jest, dlaczego tak jest, czego nie ma (właśnie tych bibliotek). Dalvik. Co jest w C (bionic)? Nowa maszyna (\url{http://www.dobreprogramy.pl/Google-testuje-nastepce-Dalvika-z-ARTem-Android-bedzie-dwukrotnie-szybszy,News,49129.html}) wirtualna na Androida.
-Jak działa Java? Maszyna wirtualna, baza w C, teoretycznie ten sam kod powinien działać wszędzie, należy jednak dobrze zaimplementować podstawę wszystkich bibliotek (czyli maszynę). A czasem są np. rozbieżności (drobne) pomiędzy windowsem a Linuxem.
+\subsubsection{Omówienie(TODO)}
+Android jest kompletną, otwartą (open-source) platformą dla urządzeń mobilnych \cite{learningandroid}. Został stworzony przez organizację Open Handset Alliance. Organizacja skupia wielu operatorów komórkowych, producentów elektroniki, telefonów i~oprogramowania oraz firmy komercjalizacyjne \cite{oha}. Pomysłodawcą uformowania oraz liderem tej organizacji jest firma Google. Jej misją jest przyspieszenie innowacji na platformach mobilnych oraz dostarczenie konsumentom pełniejszego, tańszego i~ogólnie lepszego doznania z~korzystania z~telefonu. Wszystko to za sprawą Androida, który dodatkowo jest (w~teorii, o tym potem) całkowicie otwarty.
 
-Jak Androidowa Java współpracuje z innymi środowiskami.
+Krótka historia systemu, która powinna rzucić na niego trochę światła:
+\begin{itemize}
+	\item W 2005 roku Google kupuje Android, Inc. -- świat oczekuje pojawienia się telefonu Googla (``gPhone'').
+	\item Długa cisza.
+	\item 2007, ogłoszenie zawiązania Open Handset Alliance i~pojawienie się Androida.
+	\item 
+	\item Android 3.0 tylko na tablety
+	\item Android 4.0 znowu na telefony i tablety, podział był błędem
+	\item Android L
+\end{itemize}
 
-\subsubsection{Historia}
-\subsubsection{Założenia i cechy}
-\subsubsection{Java}
+Jako że Android jest przeznaczony dla urządzeń mobilnych, jego twórcy musieli wziąć pod uwagę ograniczenia, które miały być względnie niezmienne w~przewidywalnym czasie.
+To, że telefony są zasilane z~baterii (których pojemność bardzo się nie zmienia) oraz nieduży rozmiar, ograniczają moc procesora i~możliwą pamięć. Mimo tego, użytkownik powinien być zadowolony z~szybkości urządzenia, tak samo jak w~przypadku zasobożernych komputerów osobistych.
+Rozwiązanie tego problemu wymaga dużej pomysłowości i~musi owocować pewnymi kosztami.
+
+Ten system zrewolucjonizował rynek mobilny (i~nie tylko). Pierwszy raz otwarta platforma rozdziela sprzęt od oprogramowania na nim działającego. Ponieważ jej rdzeń jest przenośny i~nie ma założeń co do sprzętu, pozwala dużo większej niż do tej pory liczbie urządzeń na uruchamianie tych samych aplikacji i~tworzy bogatsze środowisko, zarówno dla programistów, jak i~konsumentów. Nie ogranicza się tylko do telefonów, tabletów, i~laptopów, ale zaczyna występować nawet w~telewizorach, samochodach i, zdaje się, wszystkich innych urządzeniach w~których można osadzić mikrokomputer\footnote{Np. w~lodówkach \url{http://venturebeat.com/2013/01/11/samsung-smart-fridge-it-runs-android-apps-like-evernote-video-demo/}}.
+
+
+
+Użytkownicy zauważą, że działa w~pełni od razu po zakupie urządzenia, bez potrzeby skomplikowanej konfiguracji. Mogą też go mocno zmodyfikować dopasowując go do swoich potrzeb.
+Programistom dostarcza kompletny zbiór narzędzi -- Android SDK (Software Development Kit) -- potrzebnych do łatwego i~szybkiego tworzenia aplikacji. Nie ma nawet potrzeby posiadania fizycznego urządzenia, ponieważ Android SDK zawiera emulator.
+Producenci mogą go widzieć jako kompleksowe rozwiązanie na oprogramowanie swoich urządzeń. Jedyne, czego brakuje Androidowi do nadania życia urządzeniu to warstwa sterowników bezpośrednio związana ze sprzętem.
+
+Każdy element systemu jest objęty licencjami przyjaznymi dla firm komercyjnych (Apache, MIT), aby mógł być swobodnie rozszerzany i~używać dla różnorakich celów.
+Jeśli jakiś producent sobie tego życzy, to może nie ujawniać części, które sam dodał. Ale poza tym, reszta systemu jest otwarta i~każdy może ją ściągnąć\footnote{Instrukcje można znaleźć tu: \url{https://source.android.com/source/building.html}} i~przejrzeć, albo nawet zmodyfikować.
+Niektóre z~otwartych bibliotek, które były wcielone do systemu, zostały nawet przepisane specjalnie po to, aby objąć nadać im takie licencje.
+
+
+
+%http://arstechnica.com/gadgets/2014/06/building-android-a-40000-word-history-of-googles-mobile-os/
+
+\subsubsection{Programowanie(TODO)}
+Android jest platformą kompletną (ang. \emph{comprehensive platform}), co znaczy, że zawiera pełny stos oprogramowania dla urządzenia mobilnego. Stos ten zawiera wszystko od niskopoziomowych modułów jądra Linuxa, przez biblioteki natywne, platformę aplikacji (ang. \emph{framework}) po same aplikacje.
+
+Jak programuje się na tej platformie, co można, specyfika Javy tutaj. Biblioteki Linuxa, działa niby jak linux, ale nie do końca
+
+Dalvik, Android runtime
 
 \subsection{.NET}
 Tu o .NETcie i o C\# (bo tego będę używał).
@@ -121,15 +158,16 @@ Jak .NET współpracuje z innymi środowiskami
 Porównać zdolności obu języków, znaleźć cechy nieprzetłumaczalne. Jak dużą zgodność można uzyskać teoretycznie?
 
 \subsection{Python}
+Pierwsza platforma jaką rozważałbym jako alternatywę dla podstawowych (Androida i .NETa) do implementacji mojej biblioteki. A to dlatego, że jest moją ulubioną. I może chodzić praktycznie na wszystkim.
+
 Nie platforma a język, ale w sumie chodzi na wszystkim. I na windowsie, linuxie i androidzie. Lubię też w nim pisać. Można go sportować.
 
 Wzmianka, że podstawowa implementacja pythona, której będę używał (albo i nie) nie korzysta z wielu procesorów.
 
-\subsection{Inne}
-Cholera wie, może nawet Windows Phone by dało radę. Ogólnie wymienić to, na czym to moje mogło by chodzić. Jakieś Linuxy, Windowsy, Apple. Też osadzone rzeczy.
+\section{Zdalne wywoływanie kodu(TODO)}
+Tu rozstaną opisane techniki umożliwiające zdalne wywoływanie kodu.
 
-\section{Zdalne wywoływanie kodu}
-Tu o RPC, o problemach, o tłumaczeniu danych, istniejących standardach itp.
+Zrób tak, żeby najpierw zarysować RPC, web servicy itp a dopiero potem wiązanie danych (żeby było wiadomo po co jest)
 
 Dane (argumenty metod i~wartości przez nie zwracane) wymieniane pomiędzy klientem a serwerem będą miały postać obiektów (programowanie obiektowe). To znaczy, że typy dziedziczące i implementujące ten sam interfejs będą polimorficzne (źródło!). Często normalnie nie jest tak łatwo to osiągnąć w heterogenicznych środowiskach - ciężko o zachowanie związków między klasami po mapowaniu na drugi język
 
@@ -149,6 +187,8 @@ Niestety przekazywane obiekty nie mogą mieć żadnej większej logiki związane
 \url{http://json.codeplex.com/}\\
 
 \emph{JAKAŚ KSIĄŻKA O TYM?}
+
+Ciężko o pełną swobodę w korzystaniu z obiektowości używanych przeze mnie języków, czyli Javy i C\#. Oba niby są obiektowe, ale przy przechodzeniu przez warstwę zdalną potrafią tracić tę właściwość.
 
 \subsubsection{Serializacja}
 
@@ -189,6 +229,8 @@ Problem przesyłania typów polimorficznych (coś przeczytać, może).
 
 \subsection{Web service'y i SOAP}
 W sumie to przykład tłumaczenia danych  i transpotru.
+
+SOAP ma faulty -- ważną rzecz w obiektowych językach (exception).
 
 Jeden ze sposobów na zdalne wywoływanie kodu to usługi internetowe. Korzystając z otwartych standardów takich jak XML, SOAP, WSDL i UDDI umożliwiają integrację aplikacji poprzez Internet. XML jest używany do etykietowania danych, SOAP do ich pakowania i transferu (alternatywnie można używać też RESTa lub JSONa), WSDL opisuje interfejs usługi, a UDDI dostarcza spisu dostępnych usług (on nie leży w naszym obszarze zainteresowań). SOAP i WSDL są zapisywane przy pomocy XML. Web servicy używane są najczęściej do komunikacji aplikacji komercyjnych (np. serwery, portale) ze sobą lub z klientami. Pozwalają organizacjom na wymianę danych nie wymagając wiedzy o wewnętrznej strukturze informatycznej za firewallem.
 
