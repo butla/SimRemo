@@ -100,13 +100,6 @@ Tutaj zostaną opisane platformy technologiczne, na których będzie działać m
 \subsection{Android}
 %moze dodac odniesienie do kilku rozdzialow learningandroid od razu przy tym rozdziale, a nie gdzies w tekscie? tak się robi?
 
-%Głównie pisze się w Javie, ale można też aplikacje natywne a i skryptowe. Poza tym jest to linux, więc z rootem można normalnie w C pisać. A i są jakieś Mono itp.
-%
-%Wizja systemu Android. Że to na telefony. Co w tej Javie jest, dlaczego tak jest, czego nie ma (właśnie tych bibliotek). Dalvik. Co jest w C (bionic)? Nowa maszyna (\url{http://www.dobreprogramy.pl/Google-testuje-nastepce-Dalvika-z-ARTem-Android-bedzie-dwukrotnie-szybszy,News,49129.html}) wirtualna na Androida.
-%Jak działa Java? Maszyna wirtualna, baza w C, teoretycznie ten sam kod powinien działać wszędzie, należy jednak dobrze zaimplementować podstawę wszystkich bibliotek (czyli maszynę). A czasem są np. rozbieżności (drobne) pomiędzy windowsem a Linuxem.
-%
-%Jak Androidowa Java współpracuje z innymi środowiskami.
-
 \subsubsection{Omówienie}
 Android jest kompletną, otwartą (open-source) platformą dla urządzeń mobilnych opartą o~Linux\cite{learningandroid}. Został stworzony przez organizację Open Handset Alliance. Organizacja skupia wielu operatorów komórkowych, producentów elektroniki, telefonów i~oprogramowania oraz firmy komercjalizacyjne \cite{oha}. Pomysłodawcą uformowania oraz liderem tej organizacji jest firma Google. Jej misją jest przyspieszenie innowacji na platformach mobilnych oraz dostarczenie konsumentom pełniejszego, tańszego i~ogólnie lepszego doznania z~korzystania z~telefonu. Wszystko to za sprawą Androida, który dodatkowo jest całkowicie otwarty.
 
@@ -181,7 +174,7 @@ Są też kompilatory tworzące kod bajtowy Dalvika z~języków inne niż standar
 Jednak zarówno SL4A i~Xamarin nie dają dostępu do wszystkich standardowych bibliotek. Jest tak dlatego, że użycie API Androida w~kodzie niestandardowego języka wymaga zmapowania do niego tychże API, co jest czasochłonne i~trudne do wykonania w~całości przez kogoś innego niż Google. Ponadto, niestandardowy dla Androida język, taki jak C\#, może mieć struktury, które nie dadzą się przetłumaczyć na kod bajtowy Javy. Tym samym nie będzie można go wykorzystać w~pełni. Odmiennym przypadkiem jest język Scala. Dzięki zgodności na poziomie kodu bajtowego (bo tak samo jak Java jest do niego kompilowana) Scala może być użyta do stworzenia kompletnego APK mającego dostęp do wszystkich bibliotek.
 
 %Może wypunktowana lista ze wspieranymi językami? Tu macie języki i jak mocno i przez co są wspierane (może tabelka? nazwa | czy można całą aplikację w tym zrobić | jakiś opis, przez co dostarczane, uwagi). Dalej co ważniejsze opisane. Oczywiście jest więcej.
-
+%\url{http://www.dobreprogramy.pl/Google-testuje-nastepce-Dalvika-z-ARTem-Android-bedzie-dwukrotnie-szybszy,News,49129.html}
 %\url{http://stackoverflow.com/questions/3316801/which-programming-languages-can-be-used-to-develop-in-android}
 %\url{http://en.wikipedia.org/wiki/Android_software_development}
 %https://github.com/jberkel/android-plugin
