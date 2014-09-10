@@ -185,8 +185,19 @@ Jednak zarówno SL4A i~Xamarin nie dają dostępu do wszystkich standardowych bi
 \subsubsection{Omówienie(TODO)}
 .NET to technologia wspomagająca tworzenie i~uruchamianie aplikacji (w~tym usług sieciowych), głównie dla systemu Microsoft Windows\cite{dotnetoverview}. Jego główne cele:
 \begin{itemize}
-	\item as
+	\item Zapewnić jednorodne środowisko do programowania obiektowego, zarówno dla kodu lokalnego wykonywanych lokalnie, kodu rozproszonego wykonywanego lokalnie, czy wykonywanego w~całości zdalnie.
+	\item Minimalizacja ilości zależności aplikacji oraz konfliktów wersji.
+	\item Krzewienie bezpiecznego wykonywania kodu, także od nieznanych lub częściowo zaufanych źródeł.
+	\item Zlikwidowanie problemów wydajnościowych skryptów oraz kodów interpretowanych (nienatywnych).
+	\item Zapewnić jednolity styl programowania na różnych platformach, np. przy aplikacjach okienkowych Windows i~aplikacjach internetowych.
+	\item Oparcie całej komunikacji o~obowiązujące standardy, aby kod napisany pod .NETem mógł się integrować z~dowolnym innym kodem.
 \end{itemize}
+
+Cała platforma składa się z~dwóch elementów -- środowiska uruchomieniowego języka wspólnego (ang. \emph{common language runtime}) oraz biblioteki klas. Środowisko uruchomieniowe jest podstawą całej platformy. Przypomina maszynę wirtualną Javy, będąc agentem, który zarządza kodem w~trakcie jego wykonywania, dostarczając przy okazji kluczową funkcjonalność jak zarządzanie pamięcią, wątkami, zdalne wywoływanie, wymuszanie bezpieczeństwa typów (ang. \emph{type safety}) i~innych form poprawności kodu zapewniających bezpieczeństwo i~solidność programów.
+
+Kod wykonujący się w~środowisku uruchomieniowym zwany jest kodem zarządzanym (ang. \emph{managed code}). Można go porównać do kodu bajtowego Javy. Pozostały kod, jak natywny, nazywany jest kodem niezarządanym (ang. \emph{unmanaged code}).
+
+Biblioteka klas jest obszernym zbiorem gotowych typów zgodnych z~zasadami programowania obiektowego, nadającymi się do włączenia do różnych aplikacji.
 
 \subsubsection{Programowanie(TODO)}
 W sumie jest maszyną wirtualną jak Java i dużo rzeczy, które on potrafi może też robić Java (wołanie Javy z C, wołanie C z javy, chociaż nie tak bezpośrednio jak unmanaged z .NEt)
@@ -208,14 +219,10 @@ Nie platforma a język, ale w sumie chodzi na wszystkim. I na windowsie, linuxie
 
 Wzmianka, że podstawowa implementacja pythona, której będę używał (albo i nie) nie korzysta z wielu procesorów.
 
-\section{Zdalne wywoływanie kodu(TODO)}
-Tu rozstaną opisane techniki umożliwiające zdalne wywoływanie kodu.
+\section{Serializacja (TODO)}
+\subsection{Ogólnie(TODO)}
+Zapisanie danych, obiektów w taki sposób, żeby się dało przesłać. Wymagane przy zdalnym wywoływaniu kodu.
 
-Zrób tak, żeby najpierw zarysować RPC, web servicy itp a dopiero potem wiązanie danych (żeby było wiadomo po co jest)
-
-Dane (argumenty metod i~wartości przez nie zwracane) wymieniane pomiędzy klientem a serwerem będą miały postać obiektów (programowanie obiektowe). To znaczy, że typy dziedziczące i implementujące ten sam interfejs będą polimorficzne (źródło!). Często normalnie nie jest tak łatwo to osiągnąć w heterogenicznych środowiskach - ciężko o zachowanie związków między klasami po mapowaniu na drugi język
-
-\subsection{Tłumaczenie danych}
 Jaka jest problematyka przetłumaczenia danych/obiektów z jednego języka, platformy na drugą?
 Nawet na niskim poziomie mamy little/big endian. Potem dochodzi jeszcze niezgodność kodów bajtowych platform wirtualnych.
 Nawet jak się zapisze w XML, JSONie czy czymś innym to możemy stosować inne formaty, czy coś. Bindingi.
@@ -226,40 +233,17 @@ Zgodność zapisu bajtowego obiektów w .NETcie, Javie i Dalviku (może inna ni�
 
 Niestety przekazywane obiekty nie mogą mieć żadnej większej logiki związanej z dostępem do swoich danych. O ile można zmapować pola klasy w jednym języku na pola w drugim, to przetłumaczenie metod dostępowych, które mają jakąś logikę (np. zmień licznik odczytań, kiedy czytam zmienną) w automatyczny sposób byłoby niemal niemożliwe (wymagałoby automatu rozumiejącego sens kodu -- programu programisty).
 
-\url{http://json-schema.org/}\\
+\subsection{Typy zapisu}
+XML, JSON, YAML, AXON (w sumie odmiany JSONa jak BSON też są)
+
 \url{http://bsonspec.org/}\\
-\url{http://json.codeplex.com/}\\
+\url{http://json.codeplex.com/} -- w sumie to to tylko przykład implementacji dla .NET\\
 
-\emph{JAKAŚ KSIĄŻKA O TYM?}
+\url{http://intellimath.bitbucket.org/blog/posts/axon_overcomes_json.html}\\
+\url{http://intellimath.bitbucket.org/blog/posts/axon_best_of_json_xml_yaml.html}\\
+Jakieś porównanie AXONa i JSONa. Jeśli AXON jest stabilny i wspierany na Androidzie i .NETcie (bardzo ważne) to powinienem go użyć, bo przecież parę problemów rozwiązuje.
 
-Ciężko o pełną swobodę w korzystaniu z obiektowości używanych przeze mnie języków, czyli Javy i C\#. Oba niby są obiektowe, ale przy przechodzeniu przez warstwę zdalną potrafią tracić tę właściwość.
-
-\subsubsection{Serializacja}
-
-\subsection{Transport danych}
-Też bardzo szeroka dziedzina. Jak już się przetłumaczy, to zawsze trzeba jakoś przetransportować. Jak możemy przekazywać w ramach jednego kompa, jak pomiędzy kompami lokalnie, jak globalnie.
-Celuję w globalnie, ale zwsze szerszą metodę można zastosować wężej (chociaż może nie być tak wydajna jak te węższe)
-
-\emph{TEŻ PRZYDAŁBY SIĘ JAKIŚ ARTYKUŁ CHOCIAŻ}
-
-\emph{TCP, PIPEy, SSL, HTTP, HTTPS, Webservicey, SOAP, REST, JSON}
-
-\url{http://stackoverflow.com/questions/12450404/json-pojo-consumer-of-polymorphic-objects}
-
-\subsection{RPC}
-Ogólnie trochę o RPC. Że wiele technologii to RPC (Web service'y, CORBA), że to zawiera i tłumaczenie i transport.
-Wywoływaniu kodu w innym procesie lub na innym kompie.
-
-Czym jest programowanie obiektowe napisać, co to polimorfizm i dlaczego ważny. Web-servicey, XML-RPC, REST z JSONem i XMLem.
-
-\url{http://www.infoq.com/articles/rest-soap-when-to-use-each}\\
-
-\url{http://xmlrpc.scripting.com/default.html XML RPC}\\
-\url{http://xmlrpc.scripting.com/spec.html}\\
-\url{http://effbot.org/zone/xmlrpc-errata.htm}\\
-Przejrzeć specyfikację, zobaczyć, z czym musieli sobie poradzić i wyczaić jak to wszystko mozna odwzorować w JSONie. Obczaić, jak sobie DataContractSerializer (też DataContractJsonSerializer) radzą. 
-
-Service oriented architecture a remote procedure call? Jakie różnice? Czym będzie moje? A same web services?
+Oznaczanie typów.
 
 \subsection{Binding}
 A może najlepszym rozwiązaniem będzie generator customizowalnych bindingów (może nawet do JSONa) z wygodną konfiguracj)? Raz by się generowało mapowanie i wszystko działa na zawsze. 
@@ -269,7 +253,44 @@ W WSDL poza opisami operacji realizowanych przez usługę znajdują się też pl
 
 Złożony problem pojawia się wtedy, kiedy servicy mają działać w obie strony wykorzystując te same klasy danych. W bardziej skomplikowanych systemach rozproszonych może się pojawiać taka sytuacja. Załóżmy istnienie dwóch aplikacji: A i B. Są one napisane w różnych językach. Każda z nich udostępnia usługę zwracającą obiekt danych X. A korzysta z usługi wystawianej przez B, a B korzysta z usługi wystawianej przez A. Mimo tego, że obiekt X w obu aplikacjach będzie zawierał te same dane, to jednak jego kod będzie inny. Dlatego nie można mówić o jednej klasie X, a o dwóch. Nazwijmy je XA i XB. TUTAJ DALEJ WYTŁUMACZENIE PRZYKŁADU AŻ W KOŃCU DOJDZIEMY DO TEGO, ŻE TRZEBA NAPISAĆ KLASĘ W JEDNYM JĘZYKU, POTEM ZROBIĆ JEJ BINDING DO XSD I Z XSD DO DRUGIEGO JĘZYKA.
 
-Problem przesyłania typów polimorficznych (coś przeczytać, może). 
+Problem przesyłania typów polimorficznych (coś przeczytać, może). Ogólnie raczej się opisuje co ma być powiązane w jakiś modelach.
+
+Ciężko o pełną swobodę w korzystaniu z obiektowości używanych przeze mnie języków, czyli Javy i C\#. Oba niby są obiektowe, ale przy przechodzeniu przez warstwę zdalną potrafią tracić tę właściwość
+
+\url{http://json-schema.org/}\\
+
+\subsection{SOAP}
+Wykorzystywny przy dużych web serviceach. Forma XMLa. Opisuje obficie całe wołanie i wykorzystywane dane.
+
+\section{Zdalne wywoływanie kodu(TODO)}
+Tu rozstaną opisane techniki umożliwiające zdalne wywoływanie kodu.
+
+Zrób tak, żeby najpierw zarysować RPC, web servicy itp a dopiero potem wiązanie danych (żeby było wiadomo po co jest)
+
+Dane (argumenty metod i~wartości przez nie zwracane) wymieniane pomiędzy klientem a serwerem będą miały postać obiektów (programowanie obiektowe). To znaczy, że typy dziedziczące i implementujące ten sam interfejs będą polimorficzne (źródło!). Często normalnie nie jest tak łatwo to osiągnąć w heterogenicznych środowiskach - ciężko o zachowanie związków między klasami po mapowaniu na drugi język
+
+Ogólnie trochę o RPC. Że wiele technologii to RPC (Web service'y, CORBA), że to zawiera i tłumaczenie i transport.
+Wywoływaniu kodu w innym procesie lub na innym kompie.
+
+\url{http://stackoverflow.com/questions/12450404/json-pojo-consumer-of-polymorphic-objects}
+
+Web-servicey, XML-RPC, REST z JSONem i XMLem. 
+
+\subsection{Transport danych}
+Też bardzo szeroka dziedzina. Jak już się przetłumaczy, to zawsze trzeba jakoś przetransportować. Jak możemy przekazywać w ramach jednego kompa, jak pomiędzy kompami lokalnie, jak globalnie.
+Celuję w globalnie, ale zwsze szerszą metodę można zastosować wężej (chociaż może nie być tak wydajna jak te węższe)
+
+Nie będę się więcej na tym skupiał, to zagadnienie dla telekomunikacji. Ogólnie ta tematyka będzie u mnie w pracy pomijana i będę korzystał tylko z gotowych klocków (warstw) bez głębszego zastanowienia nad nimi. 
+
+\emph{TEŻ PRZYDAŁBY SIĘ JAKIŚ ARTYKUŁ CHOCIAŻ}
+
+\emph{TCP, PIPEy, SSL, HTTP, HTTPS}
+
+\subsection{XML RPC}
+Podstawowy chyba obecnie przykład RPC. Proste to.
+\url{http://xmlrpc.scripting.com/default.html}\\
+\url{http://xmlrpc.scripting.com/spec.html}\\
+\url{http://effbot.org/zone/xmlrpc-errata.htm}\\
 
 \subsection{Web service'y i SOAP}
 W sumie to przykład tłumaczenia danych  i transpotru.
@@ -292,15 +313,11 @@ Ogólnie ujęte rozwiązanie dla powyższych problemów to serwer usług interne
 
 WCF to webservice'y, a jednocześnie rekomendcja microsoftu na komunikację między procesami (co prawda na innym bindingu), tak że web servicey są dość uniwersalne i dobre nie tylko w dużej sieci do komunikacji między aplikacjami.
 
-\subsection{JSON, YAML, AXON}
-\url{http://intellimath.bitbucket.org/blog/posts/axon_overcomes_json.html}\\
-\url{http://intellimath.bitbucket.org/blog/posts/axon_best_of_json_xml_yaml.html}\\
-Jakieś porównanie AXONa i JSONa. Jeśli AXON jest stabilny i wspierany na Androidzie i .NETcie (bardzo ważne) to powinienem go użyć, bo przecież parę problemów rozwiązuje.
-
-Oznaczanie typów.
-
 \subsection{REST}
 Cośtam o RESTcie \url{http://www.oracle.com/technetwork/articles/javase/index-137171.html}\\
 REST and POX \url{http://msdn.microsoft.com/en-us/library/vstudio/aa395208(v=vs.90).aspx}\\
 
+Korzysta z XMLa lub JSONa, ale raczej nie z SOAPa.
+
 Restful web services vs ``big'' web services: \url{http://www2008.org/papers/pdf/p805-pautassoA.pdf}\\
+\url{http://www.infoq.com/articles/rest-soap-when-to-use-each}\\
