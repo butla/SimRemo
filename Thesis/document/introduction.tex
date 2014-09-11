@@ -182,7 +182,6 @@ Jednak zarówno SL4A i~Xamarin nie dają dostępu do wszystkich standardowych bi
 %http://www.scala-sbt.org/release/tutorial/index.html
 
 \subsection{.NET (TODO)}
-\subsubsection{Omówienie(TODO)}
 .NET to technologia wspomagająca tworzenie i~uruchamianie aplikacji (w~tym usług sieciowych), głównie dla systemu Microsoft Windows\cite{dotnetoverview}. Jego główne cele:
 \begin{itemize}
 	\item Zapewnić jednorodne środowisko do programowania obiektowego, zarówno dla kodu lokalnego wykonywanych lokalnie, kodu rozproszonego wykonywanego lokalnie, czy wykonywanego w~całości zdalnie.
@@ -197,12 +196,27 @@ Cała platforma składa się z~dwóch elementów -- środowiska uruchomieniowego
 
 Kod wykonujący się w~środowisku uruchomieniowym zwany jest kodem zarządzanym (ang. \emph{managed code}). Można go porównać do kodu bajtowego Javy. Pozostały kod, jak natywny, nazywany jest kodem niezarządanym (ang. \emph{unmanaged code}).
 
-Biblioteka klas jest obszernym zbiorem gotowych typów zgodnych z~zasadami programowania obiektowego, nadającymi się do włączenia do różnych aplikacji.
+Biblioteka klas jest obszernym zbiorem gotowych typów zgodnych z~zasadami programowania obiektowego, mogących służyć za gotowe komponenty różnych aplikacji. Są tam elementy do tworzenia aplikacji graficznych (GUI), internetowych (ASP.NET, Web Forms), kryptograficznych, czy całych usług internetowych (\emph{web services}) i~wiele innych.
 
-\subsubsection{Programowanie(TODO)}
-W sumie jest maszyną wirtualną jak Java i dużo rzeczy, które on potrafi może też robić Java (wołanie Javy z C, wołanie C z javy, chociaż nie tak bezpośrednio jak unmanaged z .NEt)
+Środowisko uruchomieniowe .NET może być osadzane w~aplikacji niezarządzanej w~celu ładowania kodu zarządzanego, tym samym tworząc środowisko mogące korzystać z~cech zarówno niezarządzanego jak i~zarządzanego kodu. Platforma dostarcza kilku takich ``gospodarzy'' (\emph{hosts}) dla środowiska uruchomieniowego, wspomaga też ich tworzenie przez osoby trzecie.
+Warto zaznaczyć, że Java również może być w~podobny sposób osadzana.
+Przykładami gospodarzy dla środowiska .NET mogą być ASP.NET (``framework'' do budowy aplikacji internetowych) lub Internet Explorer.
 
-cośtam cośtam, ale głównie to chodzi mi o c\#
+Na rysunku \ref{fig:dotnet-ecosystem} przedstawione są zależności środowiska uruchomieniowego języka wspólnego (\emph{runtime}), biblioteki klas, systemu operacyjnego i~aplikacji użytkownika. Widać też gdzie działa kod zarządzany (\emph{managed code}) względem niezarządzanego (\emph{unamaged}).
+
+\begin{figure}
+	\centering
+		\includegraphics[scale=0.7]{img/dotnet-ecosystem.png}
+	\caption{Ekosystem .NETa, źródło: \cite{dotnetoverview}}
+	\label{fig:dotnet-ecosystem}
+\end{figure}
+
+(TODO)
+
+The runtime also enforces code robustness by implementing a strict type-and-code-verification infrastructure called the common type system (CTS). The CTS ensures that all managed code is self-describing. The various Microsoft and third-party language compilers generate managed code that conforms to the CTS. This means that managed code can consume other managed types and instances, while strictly enforcing type fidelity and type safety.
+
+The runtime also accelerates developer productivity. For example, programmers can write applications in their development language of choice, yet take full advantage of the runtime, the class library, and components written in other languages by other developers. Any compiler vendor who chooses to target the runtime can do so. Language compilers that target the .NET Framework make the features of the .NET Framework available to existing code written in that language, greatly easing the migration process for existing applications.
+Ja tu się np. będę skupiał na C\#, ale widać, że wszystko w sumie daje takie same efekty, chociaż zapis (a ten jest zależny od języka) jest ważny dla produktywności.
 
 Mono umożliwia odpalanie nie na Windowsie.
 można dzięki xamarinowi na Androida (dawniej mono dla androida) robić i mieć i .NET (chociaż nie cały) i api Androida.
