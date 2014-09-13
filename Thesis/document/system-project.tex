@@ -49,6 +49,75 @@ Unittesty wywoływania w obrębie jednej aplikacji z kilkoma wątkami - jako kan
 
 Na jakiś sprzęcie testuję.
 
+\section{Moje pomysły na rozwiązanie}
+Wymienić, zrobić POCe, porównać, wybrać i uzasadnić wybór. Wypracować jaką metodę odcięcia pracy na POCem? Że jak będę widział, że da się coś zrobić, ale jest to za trudne to kończyć pracę.
+
+Namespace'y są ważną rzeczą w SOAPie. Ja twierdzę, że nie są potrzebne w tak rozbudowanej formie. Może być jedno standardowe nazewnictwo z kropkami. Zakładam taki jakby jeden globalny namespace na oba runtime'y (klient i serwer). Fakt, że nawet jedna strona może mieć kilka przestrzeni nazw (parę class loaderów albo assembly cache'y) ale nie chcę tego robić z uwagi n utrudnienia w integracji (tu można napisać jakby to mogło wyglądać, ale nie trzeba, mogę po prostu to olać).
+
+Napisanie wszystkiego w C, Javie albo nawet Pythonie. Z czym by się to wiązało. Chcemy żeby było łatwo, co by trzeba było zrobić wtedy?
+Podłączanie się pod istniejące rozwiązania Axis w C, portowanie Pythona, tłumaczenie JibXem
+
+Zdecydowałem się to zrobić web servicami opartymi o SOAP, blabla, jednolite dla javy tej i normalnej
+Tu już konkretnie jakie biblioteki, jak konkretniej to będzie wyglądać
+
+Tyson? Typed JSON?
+
+a)	Rozpoznanie istniejących rozwiązań dotyczących wiązania danych (ang. data binding) z XML oraz wystawiania usług sieciowych (ang. web services) w językach Java oraz C++.
+Zaprojektowanie i wykonanie biblioteki pozwalającej na przyjmowanie, przetwarzanie, tworzenie i wysyłanie wiadomości SOAP, generowanie plików WSDL na bazie kodu oraz na wiązanie danych z języka C\# do języka Java z zakresem bibliotek dostępnym na Androidzie. Akceptowalne jest również stworzenie biblioteki, w której komunikacja oparta zostałaby o protokół TCP/IP i serializację obiektów do XML tak, by były rozumiane zarówno przez kod w języku Java, jak i w języku C\#.
+
+Użyć w Pythonie Flaska do tłumaczenia JSONa? Albo jakiegoś innego tłumacza python-JSON.
+
+Może zamiast tylu podsekcji najpierw wyliczenie, krótki opis i decyzja, czy należy się tym zajmować? Dopiero te, które wydawałyby się bardziej interesujące dostają swoją własną podsekcję.
+
+\subsection{własna metoda oparta o JSON z oznaczaniem typów}
+Póki co wiem, że będzie JSON z opisanymi typami. Kanał komunikacyjny powinien być dowolny. 
+
+Może zamiast równoważnych implementacji na pythona, C\# i javę zrobić tylko pythona i wrappery w jythonie i iron pythonie?
+
+\subsection{serwer web serviców z narzędziami do generacji kodu itp}
+Generator wsdl na Androida + tworzenie bindingów do xsd + Parsowanie SOAPów
+
+JiBX!!! Tworzenie klas ze schemy i robienie wsdl z javy
+Wsdl2Java: tworzenie klas z wsdl, głównie chodzi o klasy danych
+
+Weryfikacja: tworzę graf w xmlu. Są obiekty, które mogą mieć dzieci (tablice, listy). Próbuję wygenerować C\# dla porównania. Zapisuję grafy, które nie działają (w trakcie automatycznych testów). Zrobić wizualizator grafów.
+
+Co by trzeba było po kolei zrobić w normalnej javie? (tłumaczenia do xsd, ujednolicanie namespaców, mamy do czynienia z jakimiś ArrayOfString, dziedziczenie chyba słabo działa przy generacji, nie da się używać DataContractSerializera żeby nie serializować części klas ogólnie syf, ale wszystko udokumentować). 
+
+\subsection{Własny serwer REST}
+Tu dyskusja o implementacji serwera RESTowego na Androidzie \url{https://groups.google.com/forum/?fromgroups=#!topic/android-developers/vgkXg1P8iBg}
+
+\subsection{remoting przez serializację}
+Po prostu serializujemy tak samo/
+
+\subsection{portowanie rozwiązań w C na Androida?}
+Axis. Może częściowe używanie go spod javy. W sumie można sportować też jakieś inne rzeczy. Np.\ pythonowe web service'y (pyro, twisted).
+
+Sprawdzić Python Remote Objects (Pyro) na pythonie 2, 3 (też na warstwie skryptowej Androida). Porównać z Twistedem, napisać o próbach portowania wymaganych bibliotek w C na Androida. \url{http://pythonhosted.org/Pyro4/intro.html#performance}
+
+sl4a, py4a, kompilacja na ubuntu z użyciem NDK i Cythona
+distutils.core zamienić na setuptools w setup.py
+
+\subsection{Zcentralizowane pseudo web servicy (albo nawet i nie)}
+Też potrzebny serializator / deserializator + bindingi. To był ten pomysł, że to komp pinga serwer (Androida), żeby ten sobie pobrał rozkaz i to Android woła web service na kompie. Trzeba by było używać Ksoap albo innego ścierwa. Zobaczyć, czy to w ogóle miałoby sens. Czy tymi Ksoapami da się coś sensownie zrobić.
+
+\section{Wybór rozwiazania}
+Jak w ogóle dojść do tego  co i jak zrobić, żeby dało nam to, co mamy w celach? Jak się odnaleźć w tym wszystkim?
+Wyjaśnić jak wytaczałem sobie drogę działania i jak metodyki dobierałem
+
+Jak teoretycznie możnaby zrobić web service'y na Androidzie? Android jest tutaj przykładem ograniczonego systemu.
+W sumie jakiś powód musięli mieć, żeby ich nie zamieszać. Jakie jeszcze dodatkowe usprawnienia byłyby do zrobienia (tłumaczenie klas)?
+
+Najpierw zobaczmy, co jest.
+
+Napisać, co jest potrzebne dla remotingu: jakaś tożsamość, adres obiektu, oznaczenia metod, argumentów.
+
+Wprowadzenie nowego standardu nie jest dobrą rzeczą, chyba, że ma się ogromną rzeszę zwolenników lub poważne przesłanki. Kto wie, może takie mam. Ale na ogół lepiej kombinować istniejące rozwiązania tak, żeby zewnętrzne komponenty miały szansę na współpracę z nimi.
+
+A czemu nie MONO/Xamarin?
+
+Przejrzeć specyfikację, zobaczyć, z czym musieli sobie poradzić i wyczaić jak to wszystko mozna odwzorować w JSONie. Obczaić, jak sobie DataContractSerializer (też DataContractJsonSerializer) radzą.
+
 \section{Specyfikacja wymagań systemowych}
 Wymienić te wszystkie typy wymagań i wylistować.
 

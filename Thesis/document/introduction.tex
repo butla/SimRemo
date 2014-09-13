@@ -216,7 +216,8 @@ Na rysunku \ref{fig:dotnet-ecosystem} przedstawione są zależności środowiska
 The runtime also enforces code robustness by implementing a strict type-and-code-verification infrastructure called the common type system (CTS). The CTS ensures that all managed code is self-describing. The various Microsoft and third-party language compilers generate managed code that conforms to the CTS. This means that managed code can consume other managed types and instances, while strictly enforcing type fidelity and type safety.
 
 The runtime also accelerates developer productivity. For example, programmers can write applications in their development language of choice, yet take full advantage of the runtime, the class library, and components written in other languages by other developers. Any compiler vendor who chooses to target the runtime can do so. Language compilers that target the .NET Framework make the features of the .NET Framework available to existing code written in that language, greatly easing the migration process for existing applications.
-Ja tu się np. będę skupiał na C\#, ale widać, że wszystko w sumie daje takie same efekty, chociaż zapis (a ten jest zależny od języka) jest ważny dla produktywności.
+
+Ja tu się np. będę skupiał na C\#, ale widać, że wszystko w sumie daje takie same efekty, chociaż zapis (a ten jest zależny od języka) jest ważny dla produktywności. Krótko o jego cechach. W sumie przypomina Javę.
 
 Mono umożliwia odpalanie nie na Windowsie.
 można dzięki xamarinowi na Androida (dawniej mono dla androida) robić i mieć i .NET (chociaż nie cały) i api Androida.
@@ -255,6 +256,10 @@ Niestety przekazywane obiekty nie mogą mieć żadnej większej logiki związane
 
 \subsection{Typy zapisu}
 XML, JSON, YAML, AXON (w sumie odmiany JSONa jak BSON też są)
+
+SOAP 
+
+Jak się oznacza typy (że pole jest jakiejś klasy), np. w JSONie (JsonDataContractSerializer). W SOAPie są domyślnie, wszystko ma typ konkretny i jest bardzo ściśle.
 
 \url{http://bsonspec.org/}\\
 \url{http://json.codeplex.com/} -- w sumie to to tylko przykład implementacji dla .NET\\
@@ -314,7 +319,7 @@ Podstawowy chyba obecnie przykład RPC. Proste to.
 \url{http://xmlrpc.scripting.com/spec.html}\\
 \url{http://effbot.org/zone/xmlrpc-errata.htm}\\
 
-\subsection{Web service'y i SOAP}
+\subsection{Usługi internetowe (\emph{web services})}
 W sumie to przykład tłumaczenia danych  i transpotru.
 
 SOAP ma faulty -- ważną rzecz w obiektowych językach (exception).
