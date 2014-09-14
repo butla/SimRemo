@@ -237,19 +237,36 @@ Cała platforma .NET jest (słusznie\cite{dotnetrequirements}) kojarzona z~Windo
 
 \section{Serializacja (TODO)}
 \subsection{Ogólnie(TODO)}
-Zapisanie danych, obiektów w taki sposób, żeby się dało przesłać. Wymagane przy zdalnym wywoływaniu kodu.
+It lets you take an object or group of objects, put them on a disk or send them through a wire or wireless transport mechanism, then later, perhaps on another computer, reverse the process: resurrect the original object(s). The basic mechanisms are to flatten object(s) into a one-dimensional stream of bits, and to turn that stream of bits back into the original object(s).
+\url{http://www.parashift.com/c++-faq-lite/serialize-overview.html}
 
-Jaka jest problematyka przetłumaczenia danych/obiektów z jednego języka, platformy na drugą?
-Nawet na niskim poziomie mamy little/big endian. Potem dochodzi jeszcze niezgodność kodów bajtowych platform wirtualnych.
-Nawet jak się zapisze w XML, JSONie czy czymś innym to możemy stosować inne formaty, czy coś. Bindingi.
+Nie jest to trywialny proces i ma swoje problemy.
 
-problemy komunikacji w heterogenicznych środowiskach (inne formaty danych, inne dostępne klasy i zasady działania obiektów, np. Type erasure)
+Text format is easier to "desk check." That means you won't have to write extra tools to debug the input and output; you can open the serialized output with a text editor to see if it looks right.
+Binary format typically uses fewer CPU cycles. However that is relevant only if your application is CPU bound and you intend to do serialization and/or unserialization on an inner loop/bottleneck. Remember: 90% of the CPU time is spent in 10% of the code, which means there won't be any practical performance benefit unless your "CPU meter" is pegged at 100%, and your serialization and/or unserialization code is consuming a healthy portion of that 100%.
+Text format lets you ignore programming issues like sizeof and little-endian vs. big-endian.
+Binary format lets you ignore separations between adjacent values, since many values have fixed lengths.
+Text format can produce smaller results when most numbers are small and when you need to textually encode binary results, e.g., uuencode or Base64.
+Binary format can produce smaller results when most numbers are large or when you don't need to textually encode binary results
 
-Zgodność zapisu bajtowego obiektów w .NETcie, Javie i Dalviku (może inna niż w normalnej Javie, może pomiędzy maszynami wirtualnymi też różna). Gdyby wszystko było zgodne to nie trzeba by się było tak męczyć z szukaniem standardu opisu danych. Też type erasure wchodzi w grę (zapis bajtowy dwóch list różnych typów sprawdzić)
+Do tekstu (czytelne dla człowieka, np. XML) albo binarne (nieczytelne).
+Binarnie można teoretycznie zapisać obiekt z pamięci jakiegoś języka nie tracąc niby żadnych informacji (chociaż powiązania dalej są problemami).
+Mogą być bardziej uniwersalne binarne formaty. Mogą bić problemy little/big endian.
+Można jedną rzecz zapisać do XMLa na wiele różnych sposobów.
+
+Problemy, które trzeba rozwiązywać: (i tu wymienione cykle itp)
+Wiąże się z problemami cyklów i dużych sieci. Jak mamy obiekty powiązane, to jak poznamy, że są powiązane, a nie że są podobiektami większego i ten większy może się bez nich obyć?
+
+Rozwiązania tych problemów: (i tu jakieś techniki, ale to chyba się wszystko wiąże z bindingiem)
+Ręczne dopasowywanie serializacji. Customowe rozwiązania oraz własne dopasowywanie bindingu klas.
+Oznaczanie pól jako transient itp
+
+Mogą być formaty dopasowane do konretnego programu, języka albo bardziej uniwersalne.
+Może być dopasowan do jednego typu danych i jednego zastosowania (se sam napisałem jak moja klasa ma się zapisywać i odtwarzać), a może być bardziej dynamiczna i uniwersalna (binding w WCF albo JAX-WS)
+
+Obiekty danych mogą być przechowywane różnie w róznych językach, nie muszą być jednoznacznie przetłumaczalne (niezgodność kodów bajtowych platform wirtualnych). Przez tłumaczenie do formy pośredniej a potem z tej pośredniej na drugi język można często coś przetłumaczyć.
 
 Niestety przekazywane obiekty nie mogą mieć żadnej większej logiki związanej z dostępem do swoich danych. O ile można zmapować pola klasy w jednym języku na pola w drugim, to przetłumaczenie metod dostępowych, które mają jakąś logikę (np. zmień licznik odczytań, kiedy czytam zmienną) w automatyczny sposób byłoby niemal niemożliwe (wymagałoby automatu rozumiejącego sens kodu -- programu programisty).
-
-Dobrze, jakby powstawał uniwersalny format, który każdy język może sobie ogarnąć.
 
 \subsection{Typy zapisu}
 XML, JSON, YAML, AXON (w sumie odmiany JSONa jak BSON też są)
@@ -270,6 +287,7 @@ Oznaczanie typów, takie jawne, kiedy nie jest to pewne.
 Tu coś napisać może o tym, że nie wszystkie cechy obiektu, na jakie pozwala język dają się zapisać tymi metodami. Chociaż, może to bardziej rzeczy związane z klasą są ciężkie do opisu, a jak mamy klasy opisane w normalnych językach a tylko obiekty zapisujemy, to może być spoko.
 
 \subsection{Binding}
+\url{http://rpbourret.com/xml/XMLDataBinding.htm}\\
 A może najlepszym rozwiązaniem będzie generator customizowalnych bindingów (może nawet do JSONa) z wygodną konfiguracj)? Raz by się generowało mapowanie i wszystko działa na zawsze. 
 
 NA TYM BĘDZIE DZIAŁAŁO TŁUMACZENIE KLAS
@@ -280,6 +298,9 @@ Złożony problem pojawia się wtedy, kiedy servicy mają działać w obie stron
 Problem przesyłania typów polimorficznych (coś przeczytać, może). Ogólnie raczej się opisuje co ma być powiązane w jakiś modelach.
 
 Ciężko o pełną swobodę w korzystaniu z obiektowości używanych przeze mnie języków, czyli Javy i C\#. Oba niby są obiektowe, ale przy przechodzeniu przez warstwę zdalną potrafią tracić tę właściwość
+
+Może być różnie sparametryzowana i dawać rózne postaci dla takich samych obiektów, zależnie od tego, jak powiążemy xmla z klasą.\\
+\url{http://www.codeproject.com/Articles/483055/XML-Serialization-and-Deserialization-Part} w XML Serialization and Attributes\\
 
 \url{http://json-schema.org/}\\
 
