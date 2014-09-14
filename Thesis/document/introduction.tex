@@ -132,7 +132,7 @@ Jeśli jakiś producent sobie tego życzy, to może nie ujawniać części, któ
 Niektóre z~otwartych bibliotek, które były wcielone do systemu, zostały nawet przepisane specjalnie po to, aby objąć nadać im takie licencje.
 
 \subsubsection{Programowanie}
-System jest niejako nadbudówką na Linuxa, dojrzałą chlubę ruchu open-source. Android dziedziczy jego dobre (i~pozostałe) cechy jak bezpieczeństwo, przenośność, czy zespół solidnych zasad zarządzania zasobami, a~także bogaty asortyment rozwijanych latami narzędzi.
+System jest niejako nadbudówką na Linuxa, dojrzałą chlubę ruchu open-source. Android dziedziczy jego dobre (i~pozostałe) cechy jak bezpieczeństwo, przenośność, czy zespół solidnych (ang. \emph{robust}) zasad zarządzania zasobami, a~także bogaty asortyment rozwijanych latami narzędzi.
 
 Ma strukturę warstwową. Każda warstwa ma własną charakterystykę i~przeznaczenie. Nie są one, jednak, od siebie idealnie rozdzielone i~częściowo na siebie zachodzą.
 
@@ -149,7 +149,7 @@ Jeśli chodzi o~kod natywny(C/C++), to można na niego programować mniej więce
 
 Trzeba powiedzieć, że pisanie programów w~C nie jest zalecanym sposobem pisania aplikacji na Androida. Podstawowym językiem jest Java. API dla tego języka dostarczane przez Google pozwala na budowanie programów, które klasyfikowane są jako aplikacje Androidowe. Te aplikacje przyjmuję postać paczek APK (Application Package). Mogą one być łatwo instalowane i~wykorzystywane przez zwykłych użytkowników.
 
-Java, w~przeciwieństwie do np.~C nie jest kompilowana do kodu maszynowego, który może być wykonany przez procesor. Zamiast tego jest kompilowana do kodu bajtowego Javy (\emph{Java bytecode}), który abstrahuje od właściwości (takich jak architektura procesora) komputera, na którym ma być wykonany \cite{jvm}. Za wykonanie faktyczne wykonanie kodu na procesorze (zwane JIT -- z~ang. \emph{just-in-time compilation}) jest odpowiedzialna maszyna wirtualna Javy (ang.: \emph{Java Virtual Machine (JVM)}). JVM posiada różne wersje (wszystkie zgodne z~jedną specyfikacją) dopasowane do środowisk, w~których mają działać. Inna będzie potrzebna na Linuxa, inna na Windowsa. Ale każda z~nich powinna być w~stanie wykonać z~takim samym efektem taki sam kod Javy. Zatem teoretycznie można napisać jeden program, który bez żadnych modyfikacji będzie działał na całkowicie odmiennych systemach operacyjnych.
+Java, w~przeciwieństwie do np.~C nie jest kompilowana do kodu maszynowego, który może być wykonany przez procesor. Zamiast tego jest kompilowana do kodu bajtowego Javy (\emph{Java bytecode}), który abstrahuje od właściwości (takich jak architektura procesora) komputera, na którym ma być wykonany \cite{jvm}. Za przełożenie wykonywanego kodu na prawdziwe instrukcje procesora, zwane JIT -- z~ang. \emph{just-in-time compilation}, a~więc kompilacja w~samą porę, jest odpowiedzialna maszyna wirtualna Javy (ang.: \emph{Java Virtual Machine (JVM)}). JVM posiada różne wersje (wszystkie zgodne z~jedną specyfikacją) dopasowane do środowisk, w~których mają działać. Inna będzie potrzebna na Linuxa, inna na Windowsa. Ale każda z~nich powinna być w~stanie wykonać z~takim samym efektem taki sam kod Javy. Zatem teoretycznie można napisać jeden program, który bez żadnych modyfikacji będzie działał na całkowicie odmiennych systemach operacyjnych.
 
 Na potrzeby Androida stworzona została nowa, otwarta JVM o~nazwie Dalvik. Dalvik jest zoptymalizowany na urządzenia mobilne. Faktycznie operuje na innym niż standardowy kod bajtowy, ale kod dla Dalvika uzyskuje się przez dodatkową kompilację (optymalizację) zwykłego kodu bajtowego (zilustrowane na rysunku \ref{fig:dalvik-compilation}). Teoretycznie, każdy język kompilowany do kodu bajtowego Javy (a~jest ich kilka, np. Scala) powinien móc być wykonany na Dalviku.
 Poza tym, nowa maszyna wirtualna była potrzebna aby uniezależnić się od właściciela Javy (kiedyś Sun, obecnie Oracle). Narzędzia do język (jak kompilatory) i~standardowe odmiany JVM są darmowe, ale należą do Oracle, a~ich kod nie jest otwarty. Istnieją też, co prawda, alternatywne otwarte implementacje JVM, jak ta dostarczana z OpenJDK.
@@ -181,8 +181,8 @@ Jednak zarówno SL4A i~Xamarin nie dają dostępu do wszystkich standardowych bi
 %https://github.com/jberkel/android-plugin/wiki/getting-started
 %http://www.scala-sbt.org/release/tutorial/index.html
 
-\subsection{.NET (TODO)}
-.NET to technologia wspomagająca tworzenie i~uruchamianie aplikacji (w~tym usług sieciowych), głównie dla systemu Microsoft Windows\cite{dotnetoverview}. Jego główne cele:
+\subsection{.NET}
+.NET to technologia stworzona przez Microsoft, wspomagająca tworzenie i~uruchamianie aplikacji (w~tym usług sieciowych), głównie dla systemu Microsoft Windows\cite{dotnetoverview}. Jego główne cele:
 \begin{itemize}
 	\item Zapewnić jednorodne środowisko do programowania obiektowego, zarówno dla kodu lokalnego wykonywanych lokalnie, kodu rozproszonego wykonywanego lokalnie, czy wykonywanego w~całości zdalnie.
 	\item Minimalizacja ilości zależności aplikacji oraz konfliktów wersji.
@@ -192,9 +192,9 @@ Jednak zarówno SL4A i~Xamarin nie dają dostępu do wszystkich standardowych bi
 	\item Oparcie całej komunikacji o~obowiązujące standardy, aby kod napisany pod .NETem mógł się integrować z~dowolnym innym kodem.
 \end{itemize}
 
-Cała platforma składa się z~dwóch elementów -- środowiska uruchomieniowego języka wspólnego (ang. \emph{common language runtime}) oraz biblioteki klas. Środowisko uruchomieniowe jest podstawą całej platformy. Przypomina maszynę wirtualną Javy, będąc agentem, który zarządza kodem w~trakcie jego wykonywania, dostarczając przy okazji kluczową funkcjonalność jak zarządzanie pamięcią, wątkami, zdalne wywoływanie, wymuszanie bezpieczeństwa typów (ang. \emph{type safety}) i~innych form poprawności kodu zapewniających bezpieczeństwo i~solidność programów.
+Cała platforma składa się z~dwóch elementów -- środowiska uruchomieniowego języka wspólnego (ang. \emph{common language runtime}) oraz biblioteki klas. Środowisko uruchomieniowe jest podstawą całej platformy. Przypomina maszynę wirtualną Javy (można je też samo nazywać maszyną wirtualną), będąc agentem, który zarządza kodem w~trakcie jego wykonywania, dostarczając przy okazji kluczową funkcjonalność jak zarządzanie pamięcią, wątkami, zdalne wywoływanie, wymuszanie bezpieczeństwa typów (ang. \emph{type safety}) i~innych form poprawności kodu zapewniających bezpieczeństwo i~solidność programów.
 
-Kod wykonujący się w~środowisku uruchomieniowym zwany jest kodem zarządzanym (ang. \emph{managed code}). Można go porównać do kodu bajtowego Javy. Pozostały kod, jak natywny, nazywany jest kodem niezarządanym (ang. \emph{unmanaged code}).
+Kod wykonujący się w~środowisku uruchomieniowym zwany jest kodem zarządzanym (ang. \emph{managed code}). Pozostały kod, jak natywny, nazywany jest kodem niezarządanym (ang. \emph{unmanaged code}). Kod zarządzany jest kompilowany do Wspólnego Języka Pośredniego\cite{cil} (ang. \emph{Common Intermediate Language, CIL}), który można porównać do kodu bajtowego Javy, choć jest bardziej czytelny dla człowieka. Podobnie cechuje go niezależność od sprzętu i~systemu operacyjnego.
 
 Biblioteka klas jest obszernym zbiorem gotowych typów zgodnych z~zasadami programowania obiektowego, mogących służyć za gotowe komponenty różnych aplikacji. Są tam elementy do tworzenia aplikacji graficznych (GUI), internetowych (ASP.NET, Web Forms), kryptograficznych, czy całych usług internetowych (\emph{web services}) i~wiele innych.
 
@@ -206,21 +206,16 @@ Na rysunku \ref{fig:dotnet-ecosystem} przedstawione są zależności środowiska
 
 \begin{figure}
 	\centering
-		\includegraphics[scale=0.7]{img/dotnet-ecosystem.png}
+		\includegraphics[scale=0.6]{img/dotnet-ecosystem.png}
 	\caption{Ekosystem .NETa, źródło: \cite{dotnetoverview}}
 	\label{fig:dotnet-ecosystem}
 \end{figure}
 
-(TODO)
+.NET posiada restrykcyjną infrastrukturę weryfikującą poprawność typów i~kodu zwaną CTS (\emph{Common Type System}). CTS sprawia, że cały zarządzany kod jest samo-opisujący. Różne kompilatory, zarówno te stworzone przez Microsoft, jak i~przez inne firmy mogą generować kod zgodny z~CTS. Dzięki temu dowolny kod zarządzany może konsumować dowolne inne zarządzane typy i~obiekty, jednocześnie surowo dbając o~bezpieczeństwo typów. To daje dużą swobodę programistom, którzy pisząc w~dowolnym zarządzanym (w~sensie kompilowanym do kodu zarządzanego .NETa) języku mogą korzystać z~pełnej standardowej biblioteki klas oraz z~zewnętrznych komponentów napisanych w~innych zarządzanych językach.
 
-The runtime also enforces code robustness by implementing a strict type-and-code-verification infrastructure called the common type system (CTS). The CTS ensures that all managed code is self-describing. The various Microsoft and third-party language compilers generate managed code that conforms to the CTS. This means that managed code can consume other managed types and instances, while strictly enforcing type fidelity and type safety.
+Do zarządzanych języków należą m.in.\ C\#, Visual Basic .NET, J\#, C++ (specjalna zarządzana odmiana), czy Iron Python (Python kompilowany do CIL). Jednym z~języków platformy .NET jest C\#. Typowany, imperatywny, przypomina Javę, choć jest nowocześniejszy i~ma więcej możliwości(źródło o C\#). Jest to język w~którym będę pisał .NETowe części mojej biblioteki.
 
-The runtime also accelerates developer productivity. For example, programmers can write applications in their development language of choice, yet take full advantage of the runtime, the class library, and components written in other languages by other developers. Any compiler vendor who chooses to target the runtime can do so. Language compilers that target the .NET Framework make the features of the .NET Framework available to existing code written in that language, greatly easing the migration process for existing applications.
-
-Ja tu się np. będę skupiał na C\#, ale widać, że wszystko w sumie daje takie same efekty, chociaż zapis (a ten jest zależny od języka) jest ważny dla produktywności. Krótko o jego cechach. W sumie przypomina Javę.
-
-Mono umożliwia odpalanie nie na Windowsie.
-można dzięki xamarinowi na Androida (dawniej mono dla androida) robić i mieć i .NET (chociaż nie cały) i api Androida.
+Cała platforma .NET jest (słusznie\cite{dotnetrequirements}) kojarzona z~Windowsem, choć można uruchamiać napisane pod nią programy na innych systemach, jeśli tylko posiada się odpowiednią implementację środowiska uruchomieniowego, bo to ono tłumaczy wspólny kod (CIL) na natywne instrukcje (ponownie, znany z~Javy \emph{just-in-time compilation}). Niestety żadna z~alternatywnych implementacji nie wspiera wszystkich funkcji .NET. Dlatego nie można z~pełną swobodą, np. pisać w~C\# pod Linuxa. Jednak dla wielu programów poziom wsparcia jest wystarczający. Chyba najbardziej znana, nie pochodzą od Microsoftu implementacja -- Mono -- nie posiada kilka aspektów, takich jak WPF, WWF oraz ma ograniczone wersje WCF i~stosu asynchronicznego ASP.NET 4.5\cite{monocompatibility}. Ale za to jest dostępna dla kilku systemów operacyjnych, m.in. na Linuxa, Mac OS czy Solaris\cite{monosupportedplatforms}. Także, w~przeciwieństwie do standardowej maszyny wirtualnej Microsoftu, może działać na architekturach procesorów innych niż x86 i AMD64\cite{dotnetrequirements}, np. na ARM, PowerPC, SPARC.
 
 %\subsection{Odpowiedniość Javy i C\#}
 %Porównać zdolności obu języków, znaleźć cechy nieprzetłumaczalne. Jak dużą zgodność można uzyskać teoretycznie?
@@ -253,6 +248,8 @@ problemy komunikacji w heterogenicznych środowiskach (inne formaty danych, inne
 Zgodność zapisu bajtowego obiektów w .NETcie, Javie i Dalviku (może inna niż w normalnej Javie, może pomiędzy maszynami wirtualnymi też różna). Gdyby wszystko było zgodne to nie trzeba by się było tak męczyć z szukaniem standardu opisu danych. Też type erasure wchodzi w grę (zapis bajtowy dwóch list różnych typów sprawdzić)
 
 Niestety przekazywane obiekty nie mogą mieć żadnej większej logiki związanej z dostępem do swoich danych. O ile można zmapować pola klasy w jednym języku na pola w drugim, to przetłumaczenie metod dostępowych, które mają jakąś logikę (np. zmień licznik odczytań, kiedy czytam zmienną) w automatyczny sposób byłoby niemal niemożliwe (wymagałoby automatu rozumiejącego sens kodu -- programu programisty).
+
+Dobrze, jakby powstawał uniwersalny format, który każdy język może sobie ogarnąć.
 
 \subsection{Typy zapisu}
 XML, JSON, YAML, AXON (w sumie odmiany JSONa jak BSON też są)
@@ -304,8 +301,12 @@ Wywoływaniu kodu w innym procesie lub na innym kompie.
 Web-servicey, XML-RPC, REST z JSONem i XMLem. 
 
 \subsection{Transport danych}
+Potrzebny, żeby coś wywołać. Bo trzeba przetransportować chociażby oznaczenie, jaką metodę chcemy uruchomić. Można też przekazać parametry, oraz zwrócić wartość z~powrotem.
+
 Też bardzo szeroka dziedzina. Jak już się przetłumaczy, to zawsze trzeba jakoś przetransportować. Jak możemy przekazywać w ramach jednego kompa, jak pomiędzy kompami lokalnie, jak globalnie.
 Celuję w globalnie, ale zwsze szerszą metodę można zastosować wężej (chociaż może nie być tak wydajna jak te węższe)
+
+JAKIŚ OBRAZEK Z WARSTWAMI KOMUNIKACYJNYMI - FIZYCZNA, PAKIETY, TCP/IP, HTTP, SSL
 
 Nie będę się więcej na tym skupiał, to zagadnienie dla telekomunikacji. Ogólnie ta tematyka będzie u mnie w pracy pomijana i będę korzystał tylko z gotowych klocków (warstw) bez głębszego zastanowienia nad nimi. 
 
