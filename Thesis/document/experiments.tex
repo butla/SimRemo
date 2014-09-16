@@ -1,17 +1,24 @@
-\chapter{Eksperymenty}
-Musi być lista drzew obiektów z różnymi normalnymi i ciężkimi przypadkami. Ta lista będzie używana do sprawdzania jak idzie serializacja, czy nie są tracone żadne informacje. Test polega na tym, że wysyłamy w jedną stronę z C\# (bo tam jest dobra informacja o typach) potem tamta strona to odczytuje, serializuje i~wysyła z~powrotem. Jak to, co wróciło jest takie samo, to test zaliczony.
+\chapter{Eksperymenty (TODO)}
+Zabawy z tym, co stworzyłem. Jakiś sensowny przykład użycia. Porównanie możliwości z innymi istniejącymi rozwiązaniami. Opis konfiguracji sprzętowej, na której testuję.
 
-Udokumentować jak zestawiałem testy, podpinałem debuggery, zbierałem wyniki.
-Testy na Windowsie, Ubuntu i Androidzie
+%Musi być lista drzew obiektów z różnymi normalnymi i ciężkimi przypadkami. Ta lista będzie używana do sprawdzania jak idzie serializacja, czy nie są tracone żadne informacje. Test polega na tym, że wysyłamy w jedną stronę z C\# (bo tam jest dobra informacja o typach) potem tamta strona to odczytuje, serializuje i~wysyła z~powrotem. Jak to, co wróciło jest takie samo, to test zaliczony.
+%
+%Udokumentować jak zestawiałem testy, podpinałem debuggery, zbierałem wyniki.
+%Testy na Windowsie, Ubuntu i Androidzie
+%
+%Jak benchmarkować serwisy? Są jakieś kryteria, benchmarki? Trochę o błędności benchmarkowania
+%
+%Zrobić testy integracyjne w pythonie. Testy ze sleepami itd. maszyn zrobć przy pomocy automatyzacji Virtual Boxa.
 
-Jak benchmarkować serwisy? Są jakieś kryteria, benchmarki? Trochę o błędności benchmarkowania
+Na jakim sprzęcie testuję.
 
-Zrobić testy integracyjne w pythonie. Testy ze sleepami itd. maszyn zrobć przy pomocy automatyzacji Virtual Boxa.
+\section{Przykład zastosowania}
 
 \section{Porównanie funkcjonalności}
-Będzie tu też bezpieczeństwo, wznawianie połączeń, radzenie sobie z obiążeniem. Takie główne funkcjonalności już były omawiane wcześniej.
+Jak moja biblioteka wypada na tle innych w realizacji celów, które sobie postawiłem? Też będzie tu bezpieczeństwo, wznawianie połączeń itp.
 
 \section{Porównanie wydajności}
 Radzenie sobie z dużym obciążeniem, szybkość w różnych warunkach. Zużycie zasobów.
 
 \section{Porównanie nakładu pracy programisty}
+Jak szybko można zrobić aplikację? Ile pracy wymaga połączenie dwóch aplikacji, jednej na Androidzie, drugiej w .NETcie? Jak wypada to na tle konkurencji? Czy w ogóle konkurencja pozwala na coś takiego?

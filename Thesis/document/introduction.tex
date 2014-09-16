@@ -235,7 +235,7 @@ Cała platforma .NET jest (słusznie\cite{dotnetrequirements}) kojarzona z~Windo
 %
 %Wzmianka, że podstawowa implementacja pythona, której będę używał (albo i nie) nie korzysta z wielu procesorów.
 
-\section{Serializacja (TODO)}
+\section{Serializacja}
 \subsection{Ogólnie}
 Serializacja polega na przetworzeniu obiektu (lub grupy obiektów, lub innej struktury danych z~pamięci) w~postać nadającą się do zapisu na dysk albo do transportu przez sieć\cite{serializationbasics}. Nieodzownie łączy się też z~deserializacją -- odwrotnością serializacji, która odtwarza w~pamięci obiekt z~zapisu na dysku lub z~danych z~sieci. Kiedy będę używał określenia serializacja zazwyczaj w~domyśle będę mówił i~o~serializacji, i~o~deserializacji. Podstawową techniką serializacji jest ``spłaszczenie'' obiektu w~jednowymiarowy strumień bitów, a~następnie, w~ramach deserializacji, na odtworzenie z~tego strumienia oryginalnego obiektu.
 
@@ -265,7 +265,7 @@ Ale świadomość ograniczeń serializacji w~projektowaniu swoich obiektów oraz
 %http://stackoverflow.com/questions/770474/what-is-the-difference-between-serialization-and-marshaling
 % W sumie to prawie to samo co serializacja, ale wiąże się niejako z przekazem większego sensu. Ma, chyba, na celu odtworzyć obiekt z jego tożsamością, a nie tylko jego kopię.
 
-\subsection{Typy zapisu}
+\subsection{Typy zapisu(TODO)}
 Zarówno serializacja binarna i tekstowa ma wiele odmian, o różnym stopniu rozpowrzechnienia (a więc niejako tworzących standard). Tutaj niektóre zostaną przybliżone.
 
 Powiem tu tylko o tych bardziej standardowych. Np. jak Java sobie serializuje do bajtów mówić nie będę.
@@ -298,99 +298,105 @@ Oznaczanie typów, takie jawne, kiedy nie jest to pewne.
 
 Tu coś napisać może o tym, że nie wszystkie cechy obiektu, na jakie pozwala język dają się zapisać tymi metodami. Chociaż, może to bardziej rzeczy związane z klasą są ciężkie do opisu, a jak mamy klasy opisane w normalnych językach a tylko obiekty zapisujemy, to może być spoko.
 
-\subsection{Binding}
-\url{http://rpbourret.com/xml/XMLDataBinding.htm}\\
-Pomagają przy automatycznej serializacji.
+Co to SOAP? Wykorzystywny przy dużych web serviceach. Forma XMLa. Opisuje obficie całe wołanie i wykorzystywane dane.
 
+\subsection{Binding(TODO)}
+%\url{http://rpbourret.com/xml/XMLDataBinding.htm}\\
+%Pomagają przy automatycznej serializacji.
+%
+%A może najlepszym rozwiązaniem będzie generator customizowalnych bindingów (może nawet do JSONa) z wygodną konfiguracj)? Raz by się generowało mapowanie i wszystko działa na zawsze. 
+%
+%Czasem trzeba pomóc z palca, coś napisać, nadać etykietki, z czegoś zrezygnować. Czasem może działać automat. Zależy, jak zaprojektowane są dane, z jakiego języka pochodzą i jakich narzędzi używamy.
+%
+%NA TYM BĘDZIE DZIAŁAŁO TŁUMACZENIE KLAS
+%W WSDL poza opisami operacji realizowanych przez usługę znajdują się też pliki XSD opisujące wszystkie struktury danych (klasy), które będą wymieniane. Dla tego posiadając WSDL usługi możemy wygenerować wszystkie klasy potrzebne do stworzenia klienta usługi.
+%
+%Złożony problem pojawia się wtedy, kiedy servicy mają działać w obie strony wykorzystując te same klasy danych. W bardziej skomplikowanych systemach rozproszonych może się pojawiać taka sytuacja. Załóżmy istnienie dwóch aplikacji: A i B. Są one napisane w różnych językach. Każda z nich udostępnia usługę zwracającą obiekt danych X. A korzysta z usługi wystawianej przez B, a B korzysta z usługi wystawianej przez A. Mimo tego, że obiekt X w obu aplikacjach będzie zawierał te same dane, to jednak jego kod będzie inny. Dlatego nie można mówić o jednej klasie X, a o dwóch. Nazwijmy je XA i XB. TUTAJ DALEJ WYTŁUMACZENIE PRZYKŁADU AŻ W KOŃCU DOJDZIEMY DO TEGO, ŻE TRZEBA NAPISAĆ KLASĘ W JEDNYM JĘZYKU, POTEM ZROBIĆ JEJ BINDING DO XSD I Z XSD DO DRUGIEGO JĘZYKA.
+%
+%Problem przesyłania typów polimorficznych (coś przeczytać, może). Ogólnie raczej się opisuje co ma być powiązane w jakiś modelach.
+%
+%Ciężko o pełną swobodę w korzystaniu z obiektowości używanych przeze mnie języków, czyli Javy i C\#. Oba niby są obiektowe, ale przy przechodzeniu przez warstwę zdalną potrafią tracić tę właściwość
+%
+%Może być różnie sparametryzowana i dawać rózne postaci dla takich samych obiektów, zależnie od tego, jak powiążemy xmla z klasą.\\
+%\url{http://www.codeproject.com/Articles/483055/XML-Serialization-and-Deserialization-Part} w XML Serialization and Attributes\\
+%
+%\url{http://json-schema.org/}\\
 
-
-A może najlepszym rozwiązaniem będzie generator customizowalnych bindingów (może nawet do JSONa) z wygodną konfiguracj)? Raz by się generowało mapowanie i wszystko działa na zawsze. 
-
-Czasem trzeba pomóc z palca, coś napisać, nadać etykietki, z czegoś zrezygnować. Czasem może działać automat. Zależy, jak zaprojektowane są dane, z jakiego języka pochodzą i jakich narzędzi używamy.
-
-NA TYM BĘDZIE DZIAŁAŁO TŁUMACZENIE KLAS
-W WSDL poza opisami operacji realizowanych przez usługę znajdują się też pliki XSD opisujące wszystkie struktury danych (klasy), które będą wymieniane. Dla tego posiadając WSDL usługi możemy wygenerować wszystkie klasy potrzebne do stworzenia klienta usługi.
-
-Złożony problem pojawia się wtedy, kiedy servicy mają działać w obie strony wykorzystując te same klasy danych. W bardziej skomplikowanych systemach rozproszonych może się pojawiać taka sytuacja. Załóżmy istnienie dwóch aplikacji: A i B. Są one napisane w różnych językach. Każda z nich udostępnia usługę zwracającą obiekt danych X. A korzysta z usługi wystawianej przez B, a B korzysta z usługi wystawianej przez A. Mimo tego, że obiekt X w obu aplikacjach będzie zawierał te same dane, to jednak jego kod będzie inny. Dlatego nie można mówić o jednej klasie X, a o dwóch. Nazwijmy je XA i XB. TUTAJ DALEJ WYTŁUMACZENIE PRZYKŁADU AŻ W KOŃCU DOJDZIEMY DO TEGO, ŻE TRZEBA NAPISAĆ KLASĘ W JEDNYM JĘZYKU, POTEM ZROBIĆ JEJ BINDING DO XSD I Z XSD DO DRUGIEGO JĘZYKA.
-
-Problem przesyłania typów polimorficznych (coś przeczytać, może). Ogólnie raczej się opisuje co ma być powiązane w jakiś modelach.
-
-Ciężko o pełną swobodę w korzystaniu z obiektowości używanych przeze mnie języków, czyli Javy i C\#. Oba niby są obiektowe, ale przy przechodzeniu przez warstwę zdalną potrafią tracić tę właściwość
-
-Może być różnie sparametryzowana i dawać rózne postaci dla takich samych obiektów, zależnie od tego, jak powiążemy xmla z klasą.\\
-\url{http://www.codeproject.com/Articles/483055/XML-Serialization-and-Deserialization-Part} w XML Serialization and Attributes\\
-
-\url{http://json-schema.org/}\\
-
-\subsection{SOAP}
-Wykorzystywny przy dużych web serviceach. Forma XMLa. Opisuje obficie całe wołanie i wykorzystywane dane.
-
-\section{Zdalne wywoływanie kodu(TODO)}
+\section{Zdalne wywoływanie kodu (TODO)}
 Tu rozstaną opisane techniki umożliwiające zdalne wywoływanie kodu.
 
-Zrób tak, żeby najpierw zarysować RPC, web servicy itp a dopiero potem wiązanie danych (żeby było wiadomo po co jest)
-
-Dane (argumenty metod i~wartości przez nie zwracane) wymieniane pomiędzy klientem a serwerem będą miały postać obiektów (programowanie obiektowe). To znaczy, że typy dziedziczące i implementujące ten sam interfejs będą polimorficzne (źródło!). Często normalnie nie jest tak łatwo to osiągnąć w heterogenicznych środowiskach - ciężko o zachowanie związków między klasami po mapowaniu na drugi język
-
-Ogólnie trochę o RPC. Że wiele technologii to RPC (Web service'y, CORBA), że to zawiera i tłumaczenie i transport.
-Wywoływaniu kodu w innym procesie lub na innym kompie.
-
-\url{http://stackoverflow.com/questions/12450404/json-pojo-consumer-of-polymorphic-objects}
-
-Web-servicey, XML-RPC, REST z JSONem i XMLem. 
+%Zrób tak, żeby najpierw zarysować RPC, web servicy itp a dopiero potem wiązanie danych (żeby było wiadomo po co jest)
+%
+%Dane (argumenty metod i~wartości przez nie zwracane) wymieniane pomiędzy klientem a serwerem będą miały postać obiektów (programowanie obiektowe). To znaczy, że typy dziedziczące i implementujące ten sam interfejs będą polimorficzne (źródło!). Często normalnie nie jest tak łatwo to osiągnąć w heterogenicznych środowiskach - ciężko o zachowanie związków między klasami po mapowaniu na drugi język
+%
+%Ogólnie trochę o RPC. Że wiele technologii to RPC (Web service'y, CORBA), że to zawiera i tłumaczenie i transport.
+%Wywoływaniu kodu w innym procesie lub na innym kompie.
+%
+%\url{http://stackoverflow.com/questions/12450404/json-pojo-consumer-of-polymorphic-objects}
+%
+%Web-servicey, XML-RPC, REST z JSONem i XMLem. 
 
 \subsection{Transport danych}
 Potrzebny, żeby coś wywołać. Bo trzeba przetransportować chociażby oznaczenie, jaką metodę chcemy uruchomić. Można też przekazać parametry, oraz zwrócić wartość z~powrotem.
 
-Też bardzo szeroka dziedzina. Jak już się przetłumaczy, to zawsze trzeba jakoś przetransportować. Jak możemy przekazywać w ramach jednego kompa, jak pomiędzy kompami lokalnie, jak globalnie.
-Celuję w globalnie, ale zwsze szerszą metodę można zastosować wężej (chociaż może nie być tak wydajna jak te węższe)
-
-JAKIŚ OBRAZEK Z WARSTWAMI KOMUNIKACYJNYMI - FIZYCZNA, PAKIETY, TCP/IP, HTTP, SSL
-
-Nie będę się więcej na tym skupiał, to zagadnienie dla telekomunikacji. Ogólnie ta tematyka będzie u mnie w pracy pomijana i będę korzystał tylko z gotowych klocków (warstw) bez głębszego zastanowienia nad nimi. 
-
-\emph{TEŻ PRZYDAŁBY SIĘ JAKIŚ ARTYKUŁ CHOCIAŻ}
-
-\emph{TCP, PIPEy, SSL, HTTP, HTTPS}
+Też bardzo szeroka dziedzina. Obejmuje np. TCP, PIPEy, SSL, HTTP, HTTPS. Za dużo nie będę się tym zajmował, ponieważ będę tylko korzystał z istniejących warstw na możliwie największym poziomie abstrakcji, aby zapewnić ich wymienność.
+%Jak już się przetłumaczy, to zawsze trzeba jakoś przetransportować. Jak możemy przekazywać w ramach jednego kompa, jak pomiędzy kompami lokalnie, jak globalnie.
+%Celuję w globalnie, ale zwsze szerszą metodę można zastosować wężej (chociaż może nie być tak wydajna jak te węższe)
+%
+%JAKIŚ OBRAZEK Z WARSTWAMI KOMUNIKACYJNYMI - FIZYCZNA, PAKIETY, TCP/IP, HTTP, SSL
+%
+%Nie będę się więcej na tym skupiał, to zagadnienie dla telekomunikacji. Ogólnie ta tematyka będzie u mnie w pracy pomijana i będę korzystał tylko z gotowych klocków (warstw) bez głębszego zastanowienia nad nimi. 
+%
+%\emph{TEŻ PRZYDAŁBY SIĘ JAKIŚ ARTYKUŁ CHOCIAŻ}
+%
+%\emph{TCP, PIPEy, SSL, HTTP, HTTPS}
 
 \subsection{XML RPC}
-Podstawowy chyba obecnie przykład RPC. Proste to.
-\url{http://xmlrpc.scripting.com/default.html}\\
-\url{http://xmlrpc.scripting.com/spec.html}\\
-\url{http://effbot.org/zone/xmlrpc-errata.htm}\\
+Podstawowy chyba obecnie przykład RPC. Proste, dość przestarzałe. Jakie cechy? Przykład wywołania pokaż.
+%\url{http://xmlrpc.scripting.com/default.html}\\
+%\url{http://xmlrpc.scripting.com/spec.html}\\
+%\url{http://effbot.org/zone/xmlrpc-errata.htm}\\
 
 \subsection{Usługi internetowe (\emph{web services})}
-W sumie to przykład tłumaczenia danych  i transpotru.
+Popularne, szczególnie w dużych firmach. Dużo automatyzacji i dużo skomplikowania (dlatego te duże firmy). Ale popularne i znane.
 
-SOAP ma faulty -- ważną rzecz w obiektowych językach (exception).
+Główne założenia (bogate programowanie zdalne, automatyzacja). Jakie ma części? Jakie wady, jakie zalety.
 
-Jeden ze sposobów na zdalne wywoływanie kodu to usługi internetowe. Korzystając z otwartych standardów takich jak XML, SOAP, WSDL i UDDI umożliwiają integrację aplikacji poprzez Internet. XML jest używany do etykietowania danych, SOAP do ich pakowania i transferu (alternatywnie można używać też RESTa lub JSONa), WSDL opisuje interfejs usługi, a UDDI dostarcza spisu dostępnych usług (on nie leży w naszym obszarze zainteresowań). SOAP i WSDL są zapisywane przy pomocy XML. Web servicy używane są najczęściej do komunikacji aplikacji komercyjnych (np. serwery, portale) ze sobą lub z klientami. Pozwalają organizacjom na wymianę danych nie wymagając wiedzy o wewnętrznej strukturze informatycznej za firewallem.
-
-W przeciwieństwie do tradycyjnych modeli przetwarzania typu klient – serwer, takich jak np. system stron internetowych, usługi internetowe nie mają graficznego interfejsu użytkownika. Służą one do dzielenia logiki biznesowej, danych i procesów poprzez sieć, przy pomocy jednolitego interfejsu programistycznego. To aplikacje się komunikują, nie użytkownicy. Programiści mogą, co prawda, dodać usługę internetową do aplikacji, która posiada GUI (np. aplikacja okienkowa lub strona internetowa) aby zaoferować zwykłym użytkownikom jej funkcjonalność.
-
-Usługi internetowe pozwalają różnym aplikacjom wykonanych w różnych technologiach (np. całkowicie odmienne języki programowania) na porozumiewanie się ze sobą bez potrzeby czasochłonnego tworzenia kodu tłumaczącego. Nie ma też znaczenia to, czy obie aplikacje znajdują się na jednej maszynie, czy po drugiej stronie świata.
-Usługi sieciowe na platformie .NET realizowane są w ramach WCF. Javie obecnym standardem jest JAX-WS.
-
-co to webservicy i po co są?\\
-do czego mogą się przydać na androidzie?\\
-dlaczego ich nie ma? Chyba stwierdzili, że ogólne web servicey są za ciężkie i za bardzo obciążają (Windows phone też nie ma WCF)\\
-
-Druga rzecz, którą chcę uzyskać to możliwość łatwego tworzenia programów współpracujących między wyżej wymienionymi platformami. Kiedy wywołujemy zdalny kod często trzeba przekazać mu jakieś parametry, często też chcemy otrzymać wartości zwrotne. Pomijając sam fakt transportu danych z jednej platformy na drugą stajemy przed problemem niezgodności typów danych. Wiemy, że na obu końcach będą użyte dwa różne języki, więc struktury danych nie będą kompatybilne. Trzeba temu zaradzić.
-Ogólnie ujęte rozwiązanie dla powyższych problemów to serwer usług internetowych (ang. web services) wraz z narzędziami. Dzięki mechanizmowi usług sieciowych można wykonać dowolny kod na serwerze nie zależnie od technologii wykorzystywanych po obu stronach. Nie istnieje jeszcze (przynajmniej nie udało się znaleźć) serwer web service’ów dla Androida. Istnieją za to biblioteki pozwalające na przetłumaczenie klas z C\# na Javę.
-
-WCF to webservice'y, a jednocześnie rekomendcja microsoftu na komunikację między procesami (co prawda na innym bindingu), tak że web servicey są dość uniwersalne i dobre nie tylko w dużej sieci do komunikacji między aplikacjami.
-
-WSDL -- tylko on zapewnia używalność (cytat z RESTful).
+%W sumie to przykład tłumaczenia danych  i transpotru.
+%
+%SOAP ma faulty -- ważną rzecz w obiektowych językach (exception).
+%
+%Jeden ze sposobów na zdalne wywoływanie kodu to usługi internetowe. Korzystając z otwartych standardów takich jak XML, SOAP, WSDL i UDDI umożliwiają integrację aplikacji poprzez Internet. XML jest używany do etykietowania danych, SOAP do ich pakowania i transferu (alternatywnie można używać też RESTa lub JSONa), WSDL opisuje interfejs usługi, a UDDI dostarcza spisu dostępnych usług (on nie leży w naszym obszarze zainteresowań). SOAP i WSDL są zapisywane przy pomocy XML. Web servicy używane są najczęściej do komunikacji aplikacji komercyjnych (np. serwery, portale) ze sobą lub z klientami. Pozwalają organizacjom na wymianę danych nie wymagając wiedzy o wewnętrznej strukturze informatycznej za firewallem.
+%
+%W przeciwieństwie do tradycyjnych modeli przetwarzania typu klient – serwer, takich jak np. system stron internetowych, usługi internetowe nie mają graficznego interfejsu użytkownika. Służą one do dzielenia logiki biznesowej, danych i procesów poprzez sieć, przy pomocy jednolitego interfejsu programistycznego. To aplikacje się komunikują, nie użytkownicy. Programiści mogą, co prawda, dodać usługę internetową do aplikacji, która posiada GUI (np. aplikacja okienkowa lub strona internetowa) aby zaoferować zwykłym użytkownikom jej funkcjonalność.
+%
+%Usługi internetowe pozwalają różnym aplikacjom wykonanych w różnych technologiach (np. całkowicie odmienne języki programowania) na porozumiewanie się ze sobą bez potrzeby czasochłonnego tworzenia kodu tłumaczącego. Nie ma też znaczenia to, czy obie aplikacje znajdują się na jednej maszynie, czy po drugiej stronie świata.
+%Usługi sieciowe na platformie .NET realizowane są w ramach WCF. Javie obecnym standardem jest JAX-WS.
+%
+%co to webservicy i po co są?\\
+%do czego mogą się przydać na androidzie?\\
+%dlaczego ich nie ma? Chyba stwierdzili, że ogólne web servicey są za ciężkie i za bardzo obciążają (Windows phone też nie ma WCF)\\
+%
+%Druga rzecz, którą chcę uzyskać to możliwość łatwego tworzenia programów współpracujących między wyżej wymienionymi platformami. Kiedy wywołujemy zdalny kod często trzeba przekazać mu jakieś parametry, często też chcemy otrzymać wartości zwrotne. Pomijając sam fakt transportu danych z jednej platformy na drugą stajemy przed problemem niezgodności typów danych. Wiemy, że na obu końcach będą użyte dwa różne języki, więc struktury danych nie będą kompatybilne. Trzeba temu zaradzić.
+%Ogólnie ujęte rozwiązanie dla powyższych problemów to serwer usług internetowych (ang. web services) wraz z narzędziami. Dzięki mechanizmowi usług sieciowych można wykonać dowolny kod na serwerze nie zależnie od technologii wykorzystywanych po obu stronach. Nie istnieje jeszcze (przynajmniej nie udało się znaleźć) serwer web service’ów dla Androida. Istnieją za to biblioteki pozwalające na przetłumaczenie klas z C\# na Javę.
+%
+%WCF to webservice'y, a jednocześnie rekomendcja microsoftu na komunikację między procesami (co prawda na innym bindingu), tak że web servicey są dość uniwersalne i dobre nie tylko w dużej sieci do komunikacji między aplikacjami.
+%
+%WSDL -- tylko on zapewnia używalność (cytat z RESTful).
 
 \subsection{REST}
-Cośtam o RESTcie \url{http://www.oracle.com/technetwork/articles/javase/index-137171.html}\\
-REST and POX \url{http://msdn.microsoft.com/en-us/library/vstudio/aa395208(v=vs.90).aspx}\\
+Niejako konkurencja dla WS, chociaż ma inne cele. Również popularne. W sumie Internet dzieli się między REST a WS.
 
-Korzysta z XMLa lub JSONa, ale raczej nie z SOAPa.
+Główne założenia (Intuicyjność, prostota, ujednolicenie Internetu). Jakie ma części? Jakie wady, jakie zalety.
 
-Restful web services vs ``big'' web services: \url{http://www2008.org/papers/pdf/p805-pautassoA.pdf}\\
-\url{http://www.infoq.com/articles/rest-soap-when-to-use-each}\\
-
-WADL -- taki WSDL. Ale rzadko używany raczej. Cytat z restful web services.
-
-Błędy można zwracać wiadomościami HTTP, ale jak z ich obiektowym odczytywaniem?
+%Cośtam o RESTcie \url{http://www.oracle.com/technetwork/articles/javase/index-137171.html}\\
+%REST and POX \url{http://msdn.microsoft.com/en-us/library/vstudio/aa395208(v=vs.90).aspx}\\
+%
+%Korzysta z XMLa lub JSONa, ale raczej nie z SOAPa.
+%
+%Restful web services vs ``big'' web services: \url{http://www2008.org/papers/pdf/p805-pautassoA.pdf}\\
+%\url{http://www.infoq.com/articles/rest-soap-when-to-use-each}\\
+%
+%WADL -- taki WSDL. Ale rzadko używany raczej. Cytat z restful web services.
+%
+%Błędy można zwracać wiadomościami HTTP, ale jak z ich obiektowym odczytywaniem?

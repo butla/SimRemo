@@ -1,86 +1,97 @@
-\chapter{Pokrewne technologie}
-Tu o bibliotekach, frameworkach robiących to co chcemy albo rzeczy podobne.
+\chapter{Pokrewne technologie (TODO)}
+Tu o rozwiązaniach robiących to co chcemy albo rzeczy podobne. Przy użyciu każdego z tych frameworków spróbuję zrealizować mój cel, a więc dynamiczne web service'y na Androidzie. Czyli takie, jakie można robić przy pomocy WCF.
 
-Walnąć tabelę z obecnością każdej z poszukiwanych cech, może też z czasem isntalacji
-
-Opisać jedną wspólną procedurę oceny dla każdej biblioteki: znalezienie w necie, instalacja, stworzenie prostej aplikacji, stworzenie bardziej skomplikowanej aplikacji (jakaś wymieniająca kilka ustalonych skomplikowanych drzew obiektów) łączenie z .NETem?
-
-Konkretne porównania osiągów w rozdziale o eksperymentach (chociaż tutaj już zrobić porównanie wysiłku programisty, po prostu zamieścić je na końcu). Tutaj napisać o funkcjonalności żeby w ogóle wiedzieć, czy to czegoś warte i na ile mam się inspirować. Poza tym, może się okazać że jest już coś, co robi to, ca ja bym chciał zrobić.
-
-Te wszystkie do serializacji i soapów rzeczy to są, tutaj nic nie ma. Wszystko co by się chciało to jest, ale na dużą Javę, albo na pythona (ciężko przeportować, nie wiadomo, czy da się na pewno) Apache Thrift, Google Protocol Buffers, ZeroMQ (http://stackoverflow.com/questions/8062212/difference-between-apache-thrift-and-zeromq)
-
-Przy każdej technologii pokazać implementacje w WCF i Javie normalnej (bo ona będzie takim punktem odniesienia) i zrobić porównania prędkości, bezpieczeństwa itp.
-
-Każdy framework opisać ile plików, jaką objętość trzeba ściągnąć. Ile kroków instalacji, ile rzeczy trzeba zrobić, żeby wystawić jakiś helloWorld serwis i jakiś serwis z własnymi danymi. Zrobić zestawienie frameworków (tabelę), czy pozwalają na wystawianie serwisów, czy tylko korzystanie. Czy pozwalają na polimorficzne argumenty.
-
-GSOAP
-
-jakieś może znaleźć frameworki pozwalające oznakować klasy do serializacji (binding) do xmla albo jsona
-
-Python EVE (Rest framework)
-\url{http://www.blog.pythonlibrary.org/2014/08/13/jsonpickle-turning-python-pickles-into-json/}
-
-\url{http://www.webopedia.com/TERM/W/Web_Services.html}\\
-\url{http://thrift.apache.org/static/files/thrift-20070401.pdf}\\
-reliable sessions (w sumie też by mi się przydał jakiś mechanizm, który umożliwi komunikację w niestabilnym środowisku Internetu)\\
-\url{http://blogs.msdn.com/b/shycohen/archive/2006/02/20/535717.aspx}\\
-\url{http://wsme.readthedocs.org/en/latest/}\\
-
-Apache Thrift, Google Protocol Buffers, ZeroMQ (\url{http://stackoverflow.com/questions/8062212/difference-between-apache-thrift-and-zeromq})\\
-\url{http://thrift.apache.org/static/files/thrift-20070401.pdf}\\
-\url{http://blogs.msdn.com/b/shycohen/archive/2006/02/20/535717.aspx}\\
-
-Xamarin\\
-\url{http://docs.xamarin.com/guides/cross-platform/application_fundamentals/web_services/}\\
-Ddawniej mono dla androida, nie można robić web serviceów (czyli nie ma całego .NETa). Z api Androida nie wiem, jak jest.
-
-JiBX!!! Tworzenie klas ze schemy i robienie wsdl z javy\\
-Wsdl2Java: tworzenie klas z wsdl, głównie chodzi o klasy danych\\
-
-Serializacja:\\
-\url{http://simple.sourceforge.net/}\\
-\url{http://code.google.com/p/dbdroid-remoting/} - klient web serviców serializujący i deserializujący xmle\\
-Generacja javovego kodu z bindingu:\\
-XSD2Java – generuje kod java z xsd. Mocno niedorobione.\\
-Inne:\\
-\url{http://stackoverflow.com/questions/6920175/how-to-generate-java-classes-from-wsdl-file}\\
-\url{http://blog.tourgeek.com/2011/12/xml-data-binding-for-java-on-android.html}\\
-PODOBNE, ALE NIE PRZYDATNE:\\
-
-\url{http://forum.springsource.org/showthread.php?129058-Spring-Remoting-for-Android}\\
-\url{http://www.themidnightcoders.com/fileadmin/docs/java/v4/index.html?android}\\
-\url{http://developer.android.com/guide/components/aidl.html} - AIDL, androidowa komunikacja między procesami\\
-
+%Opisać jedną wspólną procedurę oceny dla każdej biblioteki: znalezienie w necie, instalacja, stworzenie prostej aplikacji, stworzenie bardziej skomplikowanej aplikacji (jakaś wymieniająca kilka ustalonych skomplikowanych drzew obiektów) łączenie z .NETem?
+%
+%Konkretne porównania osiągów w rozdziale o eksperymentach (chociaż tutaj już zrobić porównanie wysiłku programisty, po prostu zamieścić je na końcu). Tutaj napisać o funkcjonalności żeby w ogóle wiedzieć, czy to czegoś warte i na ile mam się inspirować. Poza tym, może się okazać że jest już coś, co robi to, ca ja bym chciał zrobić.
+%
+%Przy każdej technologii pokazać implementacje w WCF i Javie normalnej (bo ona będzie takim punktem odniesienia) i zrobić porównania prędkości, bezpieczeństwa itp.
+%
+%Każdy framework opisać ile plików, jaką objętość trzeba ściągnąć. Ile kroków instalacji, ile rzeczy trzeba zrobić, żeby wystawić jakiś helloWorld serwis i jakiś serwis z własnymi danymi. Zrobić zestawienie frameworków (tabelę), czy pozwalają na wystawianie serwisów, czy tylko korzystanie. Czy pozwalają na polimorficzne argumenty.
+%
+%jakieś może znaleźć frameworki pozwalające oznakować klasy do serializacji (binding) do xmla albo jsona
 
 \section{WCF}
-\url{http://msdn.microsoft.com/en-us/library/system.runtime.serialization.json.datacontractjsonserializer.aspx}\\
-Generowanie z JAX-WS nie do końca działało.
+Potężny framework Web Serviceów od Microsoftu. Może posłużyć za wzór jak wszystko może działać. Może dość dynamicznie tworzyć hierarchie obiektów, które mogą funkcjonować jako usługi.
+%\url{http://msdn.microsoft.com/en-us/library/system.runtime.serialization.json.datacontractjsonserializer.aspx}\\
+%Generowanie z JAX-WS nie do końca działało.
 
-Opisać o co chodzi z tym polimorfizmem, że w WCF trzeba wypisywać KnownType, co jest robieniem wzajemnych zależności, co jest straszną praktyką programowania (źródło).
+%Opisać o co chodzi z tym polimorfizmem, że w WCF trzeba wypisywać KnownType, co jest robieniem wzajemnych zależności, co jest straszną praktyką programowania (źródło).
 
 \section{JAX-WS}
-Niestandardowe podejście z użyciem JSONa zamiast XMLa\url{http://jax-ws-commons.java.net/json/}\\
+Standardowy framework Javy do Web Serviceów. Podobne możliwości co WCF. Ja też niby chcę web service'y w Javie, ale na Androidzie, któremu JAX-WS został wycięty.
+%Niestandardowe podejście z użyciem JSONa zamiast XMLa\url{http://jax-ws-commons.java.net/json/}\\
+
+\section{gSOAP}
+Pozwala tworzyć i konsumować Web Servicey z poziomu niezależnej biblioteki C++. Może będzie działać na Androidzie?
+%http://trac.e-technik.uni-rostock.de/projects/ws4d-gsoap/wiki/AndroidNDK
+
+\section{Xamarin}
+Pozwala tworzyć w .NETcie aplikacje na Androida. Nie wspiera całości .NET.
+
+%\url{http://docs.xamarin.com/guides/cross-platform/application_fundamentals/web_services/}\\
+%Ddawniej mono dla androida, nie można robić web serviceów (czyli nie ma całego .NETa). Z api Androida nie wiem, jak jest.
 
 \section{Jackson}
-\url{http://www.cowtowncoder.com/blog/archives/2010/03/entry_372.html}\\
-\url{http://stackoverflow.com/questions/8368873/deserialize-json-string-generated-from-net-using-jackson}
-\url{http://stackoverflow.com/questions/10329706/json-deserialization-into-another-class-hierarchy-using-jackson}
-\url{http://stackoverflow.com/questions/14454028/polymorphic-serialization-of-collections-with-custom-serializer-in-jackson}
-\url{http://stackoverflow.com/questions/12350571/how-can-i-change-global-type-information-format-in-jackson}
+Konfigurowalna i dopracowana biblioteki do serializacji do JSONa. To może się przydać przy komponowaniu wywołań RPC.
 
-sprawdzić jak się wymienia ze wszystkim opisanym adnotacjami (dodać jeszcze rozszerzenie defaulttyperesolvera), wtedy sprawdzić mixed iny; lista objectów, na którą wpakuję stringi i inty
+%\url{http://www.cowtowncoder.com/blog/archives/2010/03/entry_372.html}\\
+%\url{http://stackoverflow.com/questions/8368873/deserialize-json-string-generated-from-net-using-jackson}
+%\url{http://stackoverflow.com/questions/10329706/json-deserialization-into-another-class-hierarchy-using-jackson}
+%\url{http://stackoverflow.com/questions/14454028/polymorphic-serialization-of-collections-with-custom-serializer-in-jackson}
+%\url{http://stackoverflow.com/questions/12350571/how-can-i-change-global-type-information-format-in-jackson}
+%
+%sprawdzić jak się wymienia ze wszystkim opisanym adnotacjami (dodać jeszcze rozszerzenie defaulttyperesolvera), wtedy sprawdzić mixed iny; lista objectów, na którą wpakuję stringi i inty
 
-\section{Restlet}
-\url{http://restlet.org/learn/tutorial/2.1/#/docs_2.0/13-restlet/275-restlet/266-restlet.html}\\
-\url{http://wiki.fasterxml.com/JacksonHowToIgnoreUnknown}\\
+%\section{Restlet}
+%\url{http://restlet.org/learn/tutorial/2.1/#/docs_2.0/13-restlet/275-restlet/266-restlet.html}\\
+%\url{http://wiki.fasterxml.com/JacksonHowToIgnoreUnknown}\\
 
 \section{Spring}
-\section{Crest}
-\section{Ksoap}
+Javowy framework web serviceów.
+%\section{Crest}
+%\section{Ksoap}
+
+%http://trac.e-technik.uni-rostock.de/projects/ws4d-gsoap/wiki/AndroidNDK
 
 \section{I-jetty}
-Jest to serwer, może ma jakiś kontener Web-serviceów?
+Serwer webowy dla Androida. Niby port Jetty. Może ma jakiś kontener Web-serviceów?
+
+\section{Inne)}
+Chociaż wymienić pozostałe rozwiązania, które mogą być warte uwagi, choć raczej nie nadają się dla rozwiązania problemu tej pracy magisterskiej.
+
+%\url{http://www.webopedia.com/TERM/W/Web_Services.html}\\
+%\url{http://thrift.apache.org/static/files/thrift-20070401.pdf}\\
+%reliable sessions (w sumie też by mi się przydał jakiś mechanizm, który umożliwi komunikację w niestabilnym środowisku Internetu)\\
+%\url{http://blogs.msdn.com/b/shycohen/archive/2006/02/20/535717.aspx}\\
+%\url{http://wsme.readthedocs.org/en/latest/}\\
+%
+%Apache Thrift, Google Protocol Buffers, ZeroMQ (\url{http://stackoverflow.com/questions/8062212/difference-between-apache-thrift-and-zeromq})\\
+%\url{http://thrift.apache.org/static/files/thrift-20070401.pdf}\\
+%\url{http://blogs.msdn.com/b/shycohen/archive/2006/02/20/535717.aspx}\\
+%
+%
+%JiBX!!! Tworzenie klas ze schemy i robienie wsdl z javy\\
+%Wsdl2Java: tworzenie klas z wsdl, głównie chodzi o klasy danych\\
+%
+%Serializacja:\\
+%\url{http://simple.sourceforge.net/}\\
+%\url{http://code.google.com/p/dbdroid-remoting/} - klient web serviców serializujący i deserializujący xmle\\
+%Generacja javovego kodu z bindingu:\\
+%XSD2Java – generuje kod java z xsd. Mocno niedorobione.\\
+%Inne:\\
+%\url{http://stackoverflow.com/questions/6920175/how-to-generate-java-classes-from-wsdl-file}\\
+%\url{http://blog.tourgeek.com/2011/12/xml-data-binding-for-java-on-android.html}\\
+%PODOBNE, ALE NIE PRZYDATNE:\\
+%
+%\url{http://forum.springsource.org/showthread.php?129058-Spring-Remoting-for-Android}\\
+%\url{http://www.themidnightcoders.com/fileadmin/docs/java/v4/index.html?android}\\
+%\url{http://developer.android.com/guide/components/aidl.html} - AIDL, androidowa komunikacja między procesami\\
+
+%Python EVE (Rest framework)
+%\url{http://www.blog.pythonlibrary.org/2014/08/13/jsonpickle-turning-python-pickles-into-json/}
 
 \section{Porównanie możliwości tych technologii}
+Zestawienie ogólne -- czy można coś zrobić z tym na Androidzie, czy możliwe są metody polimorficzne (i jak z resztą poszukiwanych przeze mnie cech ze wstępu), jaka jest moja subiektywna ocena pracy z danym frameworkiem, jak ciężko się instaluje, na ile potrafią współpracować z innymi rozwiązaniami (jak bardzo trzymają się standardów).
 
-Jakieś niestandardowe (third-party) narzędzia tworzące WSDLa z Javy i .NETa i z WSDLa klasy? To samo do schemy i ze schemy?
+%Jakieś niestandardowe (third-party) narzędzia tworzące WSDLa z Javy i .NETa i z WSDLa klasy? To samo do schemy i ze schemy?
