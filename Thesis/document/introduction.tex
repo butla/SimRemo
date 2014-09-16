@@ -239,6 +239,8 @@ Cała platforma .NET jest (słusznie\cite{dotnetrequirements}) kojarzona z~Windo
 \subsection{Ogólnie}
 Serializacja polega na przetworzeniu obiektu (lub grupy obiektów, lub innej struktury danych z~pamięci) w~postać nadającą się do zapisu na dysk albo do transportu przez sieć\cite{serializationbasics}. Nieodzownie łączy się też z~deserializacją -- odwrotnością serializacji, która odtwarza w~pamięci obiekt z~zapisu na dysku lub z~danych z~sieci. Kiedy będę używał określenia serializacja zazwyczaj w~domyśle będę mówił i~o~serializacji, i~o~deserializacji. Podstawową techniką serializacji jest ``spłaszczenie'' obiektu w~jednowymiarowy strumień bitów, a~następnie, w~ramach deserializacji, na odtworzenie z~tego strumienia oryginalnego obiektu.
 
+Warto zaznaczyć, że możliwe jest przeniesienie obiektu z~jednej platformy programistycznej na drugą (przetłumaczenie z~jednego języka programawania na inny) przez jego serializację na platformie źródłowej, a~następnie deserializację na docelowej.
+
 Najczęściej kiedy mówi się o~serializacji nie ma się na myśli, jednak, tworzenia przenośnego (bo to cecha danych zserializowanych) ciągu bajtów. Zazwyczaj chodzi o~tekstowy zapis obiektu, mniej lub bardziej czytelny dla człowieka. Formy binarne wymagają raczej przetworzenia przez program aby sprawdzić poprawność lub ocenić, co reprezentują. W~przypadku reprezentacji tekstowej, człowiek może zidentyfikować zawartość i~poprawność po prostu czytając dokument (można tak nazwać wynik serializacji).
 
 Serializacja binarna (do strumienia bajtów/bitów) jest na ogół szybsza i~daje mniejsze rozmiary dokumentu\footnote{Można nawet uzyskać brak narzutu względem reprezentacji obiektu w~pamięci.} niż serializacja tekstowa.
@@ -252,8 +254,6 @@ Zapis przenośnej formy obiektów nie jest trywialny. Jeden obiekt może być po
 
 W~związku z~tymi problemami nie zawsze możliwe jest zachowanie pełni oryginalnych danych w~transporcie.
 Ale świadomość ograniczeń serializacji w~projektowaniu swoich obiektów oraz asortyment potężnych narzędzi (o~których będzie mowa w~tej pracy) pozwalają przenieść niemal wszystko.
-
-%Przez tłumaczenie do formy pośredniej a potem z tej pośredniej na drugi język można często coś przetłumaczyć.
 
 %Niestety przekazywane obiekty nie mogą mieć żadnej większej logiki związanej z dostępem do swoich danych. O ile można zmapować pola klasy w jednym języku na pola w drugim, to przetłumaczenie metod dostępowych, które mają jakąś logikę (np. zmień licznik odczytań, kiedy czytam zmienną) w automatyczny sposób byłoby niemal niemożliwe (wymagałoby automatu rozumiejącego sens kodu -- programu programisty).
 
