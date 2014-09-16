@@ -236,42 +236,54 @@ Cała platforma .NET jest (słusznie\cite{dotnetrequirements}) kojarzona z~Windo
 %Wzmianka, że podstawowa implementacja pythona, której będę używał (albo i nie) nie korzysta z wielu procesorów.
 
 \section{Serializacja (TODO)}
-\subsection{Ogólnie(TODO)}
-It lets you take an object or group of objects, put them on a disk or send them through a wire or wireless transport mechanism, then later, perhaps on another computer, reverse the process: resurrect the original object(s). The basic mechanisms are to flatten object(s) into a one-dimensional stream of bits, and to turn that stream of bits back into the original object(s).
-\url{http://www.parashift.com/c++-faq-lite/serialize-overview.html}
+\subsection{Ogólnie}
+Serializacja polega na przetworzeniu obiektu (lub grupy obiektów, lub innej struktury danych z~pamięci) w~postać nadającą się do zapisu na dysk albo do transportu przez sieć\cite{serializationbasics}. Nieodzownie łączy się też z~deserializacją -- odwrotnością serializacji, która odtwarza w~pamięci obiekt z~zapisu na dysku lub z~danych z~sieci. Kiedy będę używał określenia serializacja zazwyczaj w~domyśle będę mówił i~o~serializacji, i~o~deserializacji. Podstawową techniką serializacji jest ``spłaszczenie'' obiektu w~jednowymiarowy strumień bitów, a~następnie, w~ramach deserializacji, na odtworzenie z~tego strumienia oryginalnego obiektu.
 
-Nie jest to trywialny proces i ma swoje problemy.
+Najczęściej kiedy mówi się o~serializacji nie ma się na myśli, jednak, tworzenia przenośnego (bo to cecha danych zserializowanych) ciągu bajtów. Zazwyczaj chodzi o~tekstowy zapis obiektu, mniej lub bardziej czytelny dla człowieka. Formy binarne wymagają raczej przetworzenia przez program aby sprawdzić poprawność lub ocenić, co reprezentują. W~przypadku reprezentacji tekstowej, człowiek może zidentyfikować zawartość i~poprawność po prostu czytając dokument (można tak nazwać wynik serializacji).
 
-Text format is easier to "desk check." That means you won't have to write extra tools to debug the input and output; you can open the serialized output with a text editor to see if it looks right.
-Binary format typically uses fewer CPU cycles. However that is relevant only if your application is CPU bound and you intend to do serialization and/or unserialization on an inner loop/bottleneck. Remember: 90% of the CPU time is spent in 10% of the code, which means there won't be any practical performance benefit unless your "CPU meter" is pegged at 100%, and your serialization and/or unserialization code is consuming a healthy portion of that 100%.
-Text format lets you ignore programming issues like sizeof and little-endian vs. big-endian.
-Binary format lets you ignore separations between adjacent values, since many values have fixed lengths.
-Text format can produce smaller results when most numbers are small and when you need to textually encode binary results, e.g., uuencode or Base64.
-Binary format can produce smaller results when most numbers are large or when you don't need to textually encode binary results
+Serializacja binarna (do strumienia bajtów/bitów) jest na ogół szybsza i~daje mniejsze rozmiary dokumentu\footnote{Można nawet uzyskać brak narzutu względem reprezentacji obiektu w~pamięci.} niż serializacja tekstowa.
+Ale obiekty przez nią zapisane mogą być trudne do odtworzenia na innych systemach operacyjnych niż źródłowy, z~uwagi na możliwą niezgodność kolejności bajtów (ang.: \emph{endianness}). Wiele platform programistycznych, np. Java i~.NET, posiada zdolność serializacji binarnej, jednak tworzone zapisy nie są zgodne; strumień bajtów przedstawiający obiekt stworzony przez jedną platformę na ogół jest nieczytelny dla drugiej.
 
-Do tekstu (czytelne dla człowieka, np. XML) albo binarne (nieczytelne).
-Binarnie można teoretycznie zapisać obiekt z pamięci jakiegoś języka nie tracąc niby żadnych informacji (chociaż powiązania dalej są problemami).
-Mogą być bardziej uniwersalne binarne formaty. Mogą bić problemy little/big endian.
-Można jedną rzecz zapisać do XMLa na wiele różnych sposobów.
+Serializacja tekstowa jest dużo popularniejsza od binarnej, przynajmniej w~aplikacjach heterogenicznych i~internetowych. Jest łatwiejsza w~rzeczywistym (np. biznesowym) użyciu, szczególnie podczas korzystania z~języków wysokopoziomowych.
+Niestety wiąże się na ogół ze sporym narzutem rozmiaru danych\footnote{Szczególnie jeśli obiekt zawiera surowe dane binarne,np. w~formie tablicy bajtów, czy bitmapy.} i~prędkości ich przetwarzania.
+Ale za to można uzyskać prostotę i~przenośność obiektów na różne platformy programistyczne.
 
-Problemy, które trzeba rozwiązywać: (i tu wymienione cykle itp)
-Wiąże się z problemami cyklów i dużych sieci. Jak mamy obiekty powiązane, to jak poznamy, że są powiązane, a nie że są podobiektami większego i ten większy może się bez nich obyć?
+Zapis przenośnej formy obiektów nie jest trywialny. Jeden obiekt może być powiązany z~wielką siecią innych. Czasem te połączone obiekty faktycznie zawierają się w~serializowanym, są jego logiczną częścią. Niekiedy można natrafić na duży zbiór zależnych, równoważnych sobie obiektów. W~sieci powiązań mogą też pojawić się cykle, sprawiające problemy dla automatów trawersujących graf (właśnie w~takiej formie można przedstawić obiekt) obiektu.
 
-Rozwiązania tych problemów: (i tu jakieś techniki, ale to chyba się wszystko wiąże z bindingiem)
-Ręczne dopasowywanie serializacji. Customowe rozwiązania oraz własne dopasowywanie bindingu klas.
-Oznaczanie pól jako transient itp
+W~związku z~tymi problemami nie zawsze możliwe jest zachowanie pełni oryginalnych danych w~transporcie.
+Ale świadomość ograniczeń serializacji w~projektowaniu swoich obiektów oraz asortyment potężnych narzędzi (o~których będzie mowa w~tej pracy) pozwalają przenieść niemal wszystko.
+
+%Przez tłumaczenie do formy pośredniej a potem z tej pośredniej na drugi język można często coś przetłumaczyć.
+
+%Niestety przekazywane obiekty nie mogą mieć żadnej większej logiki związanej z dostępem do swoich danych. O ile można zmapować pola klasy w jednym języku na pola w drugim, to przetłumaczenie metod dostępowych, które mają jakąś logikę (np. zmień licznik odczytań, kiedy czytam zmienną) w automatyczny sposób byłoby niemal niemożliwe (wymagałoby automatu rozumiejącego sens kodu -- programu programisty).
+
+%Binarnie można teoretycznie zapisać obiekt z pamięci jakiegoś języka nie tracąc niby żadnych informacji (chociaż powiązania dalej są problemami).
+%Ale to nigdy nie będzie standardowe. Tekstowo też bym mógł w niestandardowy sposób zachować wszystko.
+
+%A Marshalling?
+%http://stackoverflow.com/questions/154185/what-is-object-marshalling
+%http://stackoverflow.com/questions/770474/what-is-the-difference-between-serialization-and-marshaling
+% W sumie to prawie to samo co serializacja, ale wiąże się niejako z przekazem większego sensu. Ma, chyba, na celu odtworzyć obiekt z jego tożsamością, a nie tylko jego kopię.
+
+\subsection{Typy zapisu}
+Zarówno serializacja binarna i tekstowa ma wiele odmian, o różnym stopniu rozpowrzechnienia (a więc niejako tworzących standard). Tutaj niektóre zostaną przybliżone.
+
+Powiem tu tylko o tych bardziej standardowych. Np. jak Java sobie serializuje do bajtów mówić nie będę.
+W sumie każdy z nich pozwala uzyskać ustrukturalizowane dane.
+
+O każdym kilka zdań - jaka jest ich główna misja:
+XML - ustrukturalizowany i w ogóle, chyba najpopularniejszy
+JSON - drugi pod względem popularności, czytelniejszy i lżejszy
+BSON - binarny, MongoDB
+YAML - ma też coś poprawiać, używa go Ansible
+AXON - ma być w ogóle super, ale mało popularny jeszcze
+
+Podać przykładowy obiekt w C\# i wypełnienie go danymi. Przedstawić jego reprezentacje w różnych formatach (dla XML może wyglądać różnie, bo mogą być elementy, mogą atrybuty).
 
 Mogą być formaty dopasowane do konretnego programu, języka albo bardziej uniwersalne.
 Może być dopasowan do jednego typu danych i jednego zastosowania (se sam napisałem jak moja klasa ma się zapisywać i odtwarzać), a może być bardziej dynamiczna i uniwersalna (binding w WCF albo JAX-WS)
 
-Obiekty danych mogą być przechowywane różnie w róznych językach, nie muszą być jednoznacznie przetłumaczalne (niezgodność kodów bajtowych platform wirtualnych). Przez tłumaczenie do formy pośredniej a potem z tej pośredniej na drugi język można często coś przetłumaczyć.
-
-Niestety przekazywane obiekty nie mogą mieć żadnej większej logiki związanej z dostępem do swoich danych. O ile można zmapować pola klasy w jednym języku na pola w drugim, to przetłumaczenie metod dostępowych, które mają jakąś logikę (np. zmień licznik odczytań, kiedy czytam zmienną) w automatyczny sposób byłoby niemal niemożliwe (wymagałoby automatu rozumiejącego sens kodu -- programu programisty).
-
-\subsection{Typy zapisu}
-XML, JSON, YAML, AXON (w sumie odmiany JSONa jak BSON też są)
-
-SOAP 
+SOAP, tutaj, czy potem?
 
 Jak się oznacza typy (że pole jest jakiejś klasy), np. w JSONie (JsonDataContractSerializer). W SOAPie są domyślnie, wszystko ma typ konkretny i jest bardzo ściśle.
 
@@ -288,7 +300,13 @@ Tu coś napisać może o tym, że nie wszystkie cechy obiektu, na jakie pozwala 
 
 \subsection{Binding}
 \url{http://rpbourret.com/xml/XMLDataBinding.htm}\\
+Pomagają przy automatycznej serializacji.
+
+
+
 A może najlepszym rozwiązaniem będzie generator customizowalnych bindingów (może nawet do JSONa) z wygodną konfiguracj)? Raz by się generowało mapowanie i wszystko działa na zawsze. 
+
+Czasem trzeba pomóc z palca, coś napisać, nadać etykietki, z czegoś zrezygnować. Czasem może działać automat. Zależy, jak zaprojektowane są dane, z jakiego języka pochodzą i jakich narzędzi używamy.
 
 NA TYM BĘDZIE DZIAŁAŁO TŁUMACZENIE KLAS
 W WSDL poza opisami operacji realizowanych przez usługę znajdują się też pliki XSD opisujące wszystkie struktury danych (klasy), które będą wymieniane. Dla tego posiadając WSDL usługi możemy wygenerować wszystkie klasy potrzebne do stworzenia klienta usługi.
@@ -362,6 +380,8 @@ Ogólnie ujęte rozwiązanie dla powyższych problemów to serwer usług interne
 
 WCF to webservice'y, a jednocześnie rekomendcja microsoftu na komunikację między procesami (co prawda na innym bindingu), tak że web servicey są dość uniwersalne i dobre nie tylko w dużej sieci do komunikacji między aplikacjami.
 
+WSDL -- tylko on zapewnia używalność (cytat z RESTful).
+
 \subsection{REST}
 Cośtam o RESTcie \url{http://www.oracle.com/technetwork/articles/javase/index-137171.html}\\
 REST and POX \url{http://msdn.microsoft.com/en-us/library/vstudio/aa395208(v=vs.90).aspx}\\
@@ -370,3 +390,7 @@ Korzysta z XMLa lub JSONa, ale raczej nie z SOAPa.
 
 Restful web services vs ``big'' web services: \url{http://www2008.org/papers/pdf/p805-pautassoA.pdf}\\
 \url{http://www.infoq.com/articles/rest-soap-when-to-use-each}\\
+
+WADL -- taki WSDL. Ale rzadko używany raczej. Cytat z restful web services.
+
+Błędy można zwracać wiadomościami HTTP, ale jak z ich obiektowym odczytywaniem?

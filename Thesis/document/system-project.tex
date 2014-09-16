@@ -47,9 +47,13 @@ Założyłem repozytorium na GitHubie, którego znam. Jest sławny i wygodny w u
 
 Unittesty wywoływania w obrębie jednej aplikacji z kilkoma wątkami - jako kanał komunikacji strumień w pamięci.
 
-Na jakiś sprzęcie testuję.
+Na jakim sprzęcie testuję.
+
+W generację WSDLa nie chcę się babrać - skomplikowane. A WADL nie jest tak potrzebny, bo REST może bez niego żyć. Chociaż, kurde, moje to będzie w sumie RPC z JSONem.
 
 \section{Moje pomysły na rozwiązanie}
+Chyba moje rozwiązanie będzie RPC z JSONem. Nie mogę się ograniczać do HTTP, bo chcę wspierać wiele transportów. Poza tym parsowanie adresów jest bardziej problematyczne niż proste pobieranie nazw.
+
 Wymienić, zrobić POCe, porównać, wybrać i uzasadnić wybór. Wypracować jaką metodę odcięcia pracy na POCem? Że jak będę widział, że da się coś zrobić, ale jest to za trudne to kończyć pracę.
 
 Namespace'y są ważną rzeczą w SOAPie. Ja twierdzę, że nie są potrzebne w tak rozbudowanej formie. Może być jedno standardowe nazewnictwo z kropkami. Zakładam taki jakby jeden globalny namespace na oba runtime'y (klient i serwer). Fakt, że nawet jedna strona może mieć kilka przestrzeni nazw (parę class loaderów albo assembly cache'y) ale nie chcę tego robić z uwagi n utrudnienia w integracji (tu można napisać jakby to mogło wyglądać, ale nie trzeba, mogę po prostu to olać).
