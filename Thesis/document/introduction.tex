@@ -266,39 +266,34 @@ Ale świadomość ograniczeń serializacji w~projektowaniu swoich obiektów oraz
 % W sumie to prawie to samo co serializacja, ale wiąże się niejako z przekazem większego sensu. Ma, chyba, na celu odtworzyć obiekt z jego tożsamością, a nie tylko jego kopię.
 
 \subsection{Typy zapisu(TODO)}
-Zarówno serializacja binarna i tekstowa ma wiele odmian, o różnym stopniu rozpowrzechnienia (a więc niejako tworzących standard). Tutaj niektóre zostaną przybliżone.
+Zarówno serializacja binarna i tekstowa ma wiele odmian, o różnym stopniu rozpowszechnienia. Te bardziej rozpowszechnione można nazywać standardowymi. Tutaj niektóre zostaną przybliżone.
 
 Powiem tu tylko o tych bardziej standardowych. Np. jak Java sobie serializuje do bajtów mówić nie będę.
 W sumie każdy z nich pozwala uzyskać ustrukturalizowane dane.
 
 O każdym kilka zdań - jaka jest ich główna misja:
-XML - ustrukturalizowany i w ogóle, chyba najpopularniejszy
-JSON - drugi pod względem popularności, czytelniejszy i lżejszy
-BSON - binarny, MongoDB
-YAML - ma też coś poprawiać, używa go Ansible
-AXON - ma być w ogóle super, ale mało popularny jeszcze
+XML -- ustrukturalizowany i w ogóle, chyba najpopularniejszy\\
+JSON -- drugi pod względem popularności, czytelniejszy i lżejszy\\
+BSON -- binarny, MongoDB\\
+YAML -- ma też coś poprawiać, używa go Ansible. Whitespace sensitive, czytelny dla człowieka.\\
+AXON -- ma być w ogóle super, ale mało popularny jeszcze\\
+SOAP -- owijka na XML, używane w web serviceach. Bogactwo informacji, dokładny opis danych (a także operacji na nich). Ciężki.\\
 
 Podać przykładowy obiekt w C\# i wypełnienie go danymi. Przedstawić jego reprezentacje w różnych formatach (dla XML może wyglądać różnie, bo mogą być elementy, mogą atrybuty).
 
-Mogą być formaty dopasowane do konretnego programu, języka albo bardziej uniwersalne.
-Może być dopasowan do jednego typu danych i jednego zastosowania (se sam napisałem jak moja klasa ma się zapisywać i odtwarzać), a może być bardziej dynamiczna i uniwersalna (binding w WCF albo JAX-WS)
-
-SOAP, tutaj, czy potem?
-
-Jak się oznacza typy (że pole jest jakiejś klasy), np. w JSONie (JsonDataContractSerializer). W SOAPie są domyślnie, wszystko ma typ konkretny i jest bardzo ściśle.
-
-\url{http://bsonspec.org/}\\
-\url{http://json.codeplex.com/} -- w sumie to to tylko przykład implementacji dla .NET\\
-
-\url{http://intellimath.bitbucket.org/blog/posts/axon_overcomes_json.html}\\
-\url{http://intellimath.bitbucket.org/blog/posts/axon_best_of_json_xml_yaml.html}\\
-Jakieś porównanie AXONa i JSONa. Jeśli AXON jest stabilny i wspierany na Androidzie i .NETcie (bardzo ważne) to powinienem go użyć, bo przecież parę problemów rozwiązuje.
-
-Oznaczanie typów, takie jawne, kiedy nie jest to pewne.
-
-Tu coś napisać może o tym, że nie wszystkie cechy obiektu, na jakie pozwala język dają się zapisać tymi metodami. Chociaż, może to bardziej rzeczy związane z klasą są ciężkie do opisu, a jak mamy klasy opisane w normalnych językach a tylko obiekty zapisujemy, to może być spoko.
-
-Co to SOAP? Wykorzystywny przy dużych web serviceach. Forma XMLa. Opisuje obficie całe wołanie i wykorzystywane dane.
+%Mogą być formaty dopasowane do konretnego programu, języka albo bardziej uniwersalne.
+%Może być dopasowan do jednego typu danych i jednego zastosowania (se sam napisałem jak moja klasa ma się zapisywać i odtwarzać), a może być bardziej dynamiczna i uniwersalna (binding w WCF albo JAX-WS)
+%
+%Jak się oznacza typy (że pole jest jakiejś klasy), np. w JSONie (JsonDataContractSerializer). W SOAPie są domyślnie, wszystko ma typ konkretny i jest bardzo ściśle. Oznaczanie typów, takie jawne, kiedy nie jest to pewne.
+%
+%\url{http://bsonspec.org/}\\
+%\url{http://json.codeplex.com/} -- w sumie to to tylko przykład implementacji dla .NET\\
+%
+%\url{http://intellimath.bitbucket.org/blog/posts/axon_overcomes_json.html}\\
+%\url{http://intellimath.bitbucket.org/blog/posts/axon_best_of_json_xml_yaml.html}\\
+%Jakieś porównanie AXONa i JSONa. Jeśli AXON jest stabilny i wspierany na Androidzie i .NETcie (bardzo ważne) to powinienem go użyć, bo przecież parę problemów rozwiązuje.
+%
+%Tu coś napisać może o tym, że nie wszystkie cechy obiektu, na jakie pozwala język dają się zapisać tymi metodami. Chociaż, może to bardziej rzeczy związane z klasą są ciężkie do opisu, a jak mamy klasy opisane w normalnych językach a tylko obiekty zapisujemy, to może być spoko.
 
 \subsection{Binding(TODO)}
 %\url{http://rpbourret.com/xml/XMLDataBinding.htm}\\
