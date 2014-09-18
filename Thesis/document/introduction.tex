@@ -49,10 +49,9 @@ Oprogramowanie które stworzę będzie miało postać kilku (dwóch lub więcej)
 \itemtitle{Wywoływanie kodu na Androidzie z~poziomu C\#}
 Cel główny, w~końcu to jest mój problem wyjściowy. Moje dzieło ma pozwolić na wywoływanie metod (i~otrzymanie od nich wartości zwrotnych) napisanych w~języku Java pod Androidem przez program napisany w C\#. Można powiedzieć, że jest to zarządzanie Androidem z Windowsa (bo C\# działa na .NET, a ten z kolei domyślnie działa na Windowsie).
 
+%Nie zapewnie polimorfizmu parametrycznego, czyli szblonów.
 \itemtitle{Polimorfizm zdalnych metod}
 Zdalne metody powinny być polimorficzne. To znaczy, że każdy z~ich argumentów (jeśli jest to metoda przyjmująca argumenty) nie jest ograniczony do przynależności do jednego typu\cite{polymorphism}. Będzie to osiągnięte na dwa sposoby. Pierwszy -- przeciążanie metod (polimorfizm ad-hoc), polega na tym, że może istnieć zbiór różnych metod o~tej samej nazwie, pod warunkiem, że przyjmują różne zestawy argumentów. Drugi -- to nadanie argumentom cechy nazywanej z~angielskiego \emph{inclusion polymorphism}. Można by to przetłumaczyć jako polimorfizm zawierania. Znaczy to tyle, że jeden typ posiada te same metody i~pola co inny typ (zawiera go); najczęściej posiada też właściwe dla siebie cechy (metody i~pola). W~językach obiektowych zazwyczaj taki polimorfizm realizowany jest przez dziedziczenie -- jeden typ dziedziczy po drugim, w ten sposób przejmując jego cechy. Dzięki temu typ dziedziczący może być traktowany tak samo, jak typ dziedziczony. Podsumowując, pod każdy argument zdalnej metody można podstawić zarówno wartość typu określonego przez nią oczekiwanego, jak i dowolnego typu dziedziczącego po nim.
-
-%Nie zapewnie polimorfizmu parametrycznego, czyli szblonów.
 
 \itemtitle{Swoboda rozszerzania kodu}
 Raz napisany kod zawierający moje zdalne metody powinien być rozszerzalny bez potrzeby jego zmiany \cite[str.~105]{designpatterns}. Jest to jedna z~podstaw obiektowego podejścia do programowania. Umożliwia jej działanie, między innymi, polimorfizm. Dla przykładu -- raz stworzonej zdalnej metodzie mogę przekazać argument nowego typu, który dziedziczy po spodziewanym. Przypuśćmy dalej, że metoda uruchamia jakąś metodę parametru, który otrzyma, a~ta metoda została rozszerzona w podtypie. Tym samym stara metoda zaowocuje uruchomieniem nowego kodu, a~ani jej, ani oryginalnego typu parametru nie trzeba było zmieniać.
@@ -263,7 +262,7 @@ Ale świadomość ograniczeń serializacji w~projektowaniu swoich obiektów oraz
 %A Marshalling?
 %http://stackoverflow.com/questions/154185/what-is-object-marshalling
 %http://stackoverflow.com/questions/770474/what-is-the-difference-between-serialization-and-marshaling
-% W sumie to prawie to samo co serializacja, ale wiąże się niejako z przekazem większego sensu. Ma, chyba, na celu odtworzyć obiekt z jego tożsamością, a nie tylko jego kopię.
+% W sumie to prawie to samo co serializacja, ale wiąże się niejako z przekazem większego sensu. Ma, chyba, na celu odtworzyć obiekt z jego tożsamością, a nie tylko jego kopię. Np. zmarszalowanie agenta w JADEie, przesłanie go przez sieć i odmarszalowanie w nowym kontenerze. Znika z pierwszego, pojawia się w drugim i tam już normalnie funkcjonuje; faktycznie można powiedzieć, że to ten sam obiekt, ale się przemieścił.
 
 \subsection{Typy zapisu(TODO)}
 Zarówno serializacja binarna i tekstowa ma wiele odmian, o różnym stopniu rozpowszechnienia. Te bardziej rozpowszechnione można nazywać standardowymi. Tutaj niektóre zostaną przybliżone.
@@ -383,6 +382,8 @@ Główne założenia (bogate programowanie zdalne, automatyzacja). Jakie ma czę
 Niejako konkurencja dla WS, chociaż ma inne cele. Również popularne. W sumie Internet dzieli się między REST a WS.
 
 Główne założenia (Intuicyjność, prostota, ujednolicenie Internetu). Jakie ma części? Jakie wady, jakie zalety.
+
+``Working with the web, not against it''. Czyli wykorzystanie potencjału drzemiącego w HTTP, żeby stworzyć łatwiejsze do zrozumienia, bardziej jednolite i proste w użyciu usługi.
 
 %Cośtam o RESTcie \url{http://www.oracle.com/technetwork/articles/javase/index-137171.html}\\
 %REST and POX \url{http://msdn.microsoft.com/en-us/library/vstudio/aa395208(v=vs.90).aspx}\\

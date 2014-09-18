@@ -1,17 +1,79 @@
 \chapter{Pokrewne technologie (TODO)}
 Tu o rozwiązaniach robiących to co chcemy albo rzeczy podobne. Przy użyciu każdego z tych frameworków spróbuję zrealizować mój cel, a więc dynamiczne web service'y na Androidzie. Czyli takie, jakie można robić przy pomocy WCF.
 
+Może nawet okaże się, że jest tutaj coś, co spełnia moje oczekiwania? Albo wymaga tylko pewnego opakowania, żeby robić to, co ja chce?
+Jeśli nie, to może chociaż mogę użyć jako moduł w swojej bibliotecę?
+
 Dla każdego obiecującego frameworku powinienem wykonać i opisać test, jaki wykonałem, żeby sprawdzić czy nadaje się dla moich celów.
 
-%Opisać jedną wspólną procedurę oceny dla każdej biblioteki: znalezienie w necie, instalacja, stworzenie prostej aplikacji, stworzenie bardziej skomplikowanej aplikacji (jakaś wymieniająca kilka ustalonych skomplikowanych drzew obiektów) łączenie z .NETem?
-%
-%Konkretne porównania osiągów w rozdziale o eksperymentach (chociaż tutaj już zrobić porównanie wysiłku programisty, po prostu zamieścić je na końcu). Tutaj napisać o funkcjonalności żeby w ogóle wiedzieć, czy to czegoś warte i na ile mam się inspirować. Poza tym, może się okazać że jest już coś, co robi to, ca ja bym chciał zrobić.
-%
 %Przy każdej technologii pokazać implementacje w WCF i Javie normalnej (bo ona będzie takim punktem odniesienia) i zrobić porównania prędkości, bezpieczeństwa itp.
-%
-%Każdy framework opisać ile plików, jaką objętość trzeba ściągnąć. Ile kroków instalacji, ile rzeczy trzeba zrobić, żeby wystawić jakiś helloWorld serwis i jakiś serwis z własnymi danymi. Zrobić zestawienie frameworków (tabelę), czy pozwalają na wystawianie serwisów, czy tylko korzystanie. Czy pozwalają na polimorficzne argumenty.
-%
+
 %jakieś może znaleźć frameworki pozwalające oznakować klasy do serializacji (binding) do xmla albo jsona
+
+%Konkretne porównania osiągów w rozdziale o eksperymentach (chociaż tutaj już zrobić porównanie wysiłku programisty, po prostu zamieścić je na końcu). Tutaj napisać o funkcjonalności żeby w ogóle wiedzieć, czy to czegoś warte i na ile mam się inspirować.
+\section{Metoda analizy technologii}
+Czyli z jakiej strony będę patrzył na frameworki, co będe sprawdzał, na co zwracał uwagę. Jak będzie jeden wzorzec to łatwiej zrobić tabelkę, czy coś.
+
+W sumie będę sprawdzał, czy każda z technologii ma cechy, które opisałem w \ref{lib_requirements}.
+
+\subsubsection{Użyteczność}
+\begin{itemize}
+	\item Jak przebiega instalacja? Jest oczywista, automatyczna? Wszystko łatwo znaleźć?
+	\item Jak można uruchomić helloWorld?
+	\item Na ile to elastyczne i potężne? Czyli jak łatwo można zrobić swoją robotę i to tak, jak się chce?
+\end{itemize}
+
+\subsubsection{Czy może być hostem}
+Czyli czy pozwala na wystawianie serwisu, czy może tylko być klientem. Czy może ani tym, ani tym? Tylko w czymś możee pomóc?
+
+\subsubsection{Sprawdzanie polimorfizmu}
+Jak sprawdzam polimorfizm?
+Przede wszystkim trzeba sprawdzić, czy metody spełniają założenia polimorfizmu. Poza tym templateowym, bo tego nie chce. Czyli jak z argumentami dziedziczącymi, jak z przeładowaniem metod. Jak z listami różnych elementów, które dziedziczą po typie bazowym.
+Potem przyjrzenie się liście rzeczy, które stworzyłem na bazie doświadczenia z ktorymi silniki serializacyjne maja problemy, a sa ta sensowne przypadki. Np. listy list, listy obiektów o różnych typach (też listach). Puste tablice.
+
+Przypadki testowe:
+Co? Dlaczego?
+Test podstawowy, którego będą wariacje:
+Metoda taka i taka. Jeden parametr. To samo zwraca, to samo przyjmuje.
+
+%algorithmic do kodu?
+
+Kod podstawowej klasy danych. Jej obiekty będę przekazywane i~zwracane w~większości testów.
+Szczegóły składni nie będą ważne, można traktować to jako pseudokod, ale faktycznie na ogół będzie to C\#.
+
+\begin{lstlisting}[frame=single, caption={Przykładowa klasa danych}, label=kod:testData]
+public class DaneA
+{
+	public int liczba;
+	public string tekst;
+}
+\end{lstlisting}
+
+Kod podstawowej metody testowej. Będzie ona wykonywana w~większości testów.
+Po prostu zwraca lekko zmodyfikowaną kopię parametru.
+
+\begin{lstlisting}[frame=single, caption={Przykładowa zdalna metoda}, label=kod:testMethod]
+public DaneA MetodaA(DaneA dane)
+{
+	DaneA noweDane = new DaneA();
+	noweDane.liczba = dane.liczba + 1;
+	noweDane.tekst = dane.tekst + "xxx";	
+	return noweDane;
+}
+\end{lstlisting}
+
+\begin{tabular}{ | l | l | }
+  \hline
+	\textbf{Test} & \textbf{Uzasadnienie} \\
+	\hline \hline
+  4 & 5 \\
+	\hline
+  7 & 8 \\
+	\hline
+\end{tabular}
+
+\subsubsection{Swoboda rozszerzania kodu}
+Czy na tym, co się stworzy danym narzędziem można dalej budować. Zgodnie z obiektową zasadą reuse?
 
 \section{WCF}
 Potężny framework Web Serviceów od Microsoftu. Może posłużyć za wzór jak wszystko może działać. Może dość dynamicznie tworzyć hierarchie obiektów, które mogą funkcjonować jako usługi.
@@ -61,7 +123,7 @@ Javowy framework web serviceów.
 \section{I-jetty}
 Serwer webowy dla Androida. Niby port Jetty. Może ma jakiś kontener Web-serviceów?
 
-\section{Inne)}
+\section{Inne}
 Chociaż wymienić pozostałe rozwiązania, które mogą być warte uwagi, choć raczej nie nadają się dla rozwiązania problemu tej pracy magisterskiej.
 
 %\url{http://www.webopedia.com/TERM/W/Web_Services.html}\\
