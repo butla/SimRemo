@@ -1,10 +1,12 @@
 \chapter{Wprowadzenie}
 \label{intro}
-Niniejsza praca magisterska jest próbą rozwiązania problemu napotkanego w~mojej pracy zawodowej. Polegała ona na rozwijaniu rozproszonego systemu przeznaczonego do tworzenia i~wykonywania zautomatyzowanych testów. Można przyjąć, że system ten miał architekturę klient-serwer. Serwer uruchamiał na sobie testowany kod sparametryzowany danymi przesyłanymi przez klienta i następnie zwracał mu wyniki. Oba te elementy działały na platformie .NET pod Windowsem (oczywiście na różnych maszynach) i~komunikowały się przy pomocy Windows Communication Foundation (WCF, czyli web service'y Microsoftu). Całe to rozwiązanie miało już swoje lata (zaczęte jeszcze w .NET 2), było ciężkie w~utrzymaniu i~mało modularne. Tylko wspomnę, że wszystkie technologie i~techniki wymieniane w~tym i~następnych akapitach będą szerzej przybliżone w~dalszej części pracy.
+Niniejsza praca magisterska jest próbą rozwiązania problemu napotkanego w~mojej pracy zawodowej. Polegała ona na rozwijaniu rozproszonego systemu przeznaczonego do tworzenia i~wykonywania zautomatyzowanych testów.
+Można przyjąć, że system ten miał architekturę klient-serwer. Serwer uruchamiał na sobie testowany kod sparametryzowany danymi przesyłanymi przez klienta i następnie zwracał mu wyniki. Oba te elementy działały na platformie .NET pod Windowsem (oczywiście na różnych maszynach) i~komunikowały się przy pomocy Windows Communication Foundation (WCF, czyli web service'y Microsoftu).
+Całe to rozwiązanie miało już swoje lata (zaczęte jeszcze w .NET 2), było ciężkie w~utrzymaniu i~mało modularne. Tylko wspomnę, że wszystkie technologie i~techniki wymieniane w~tym i~następnych akapitach będą szerzej przybliżone w~dalszej części pracy.
 
-Postawiono przede mną zadanie dodania do systemu możliwości uruchamiania testów na platformie Android. Wielki nacisk położono na kompatybilność wsteczną. Ponieważ w aplikacji klienta nie można było robić drastycznych zmian (takich jak przepisanie na inny język), nowy serwer na Androida (który miał zostać napisany w domyślnej dla tej platformy Javie) musiał tłumaczyć dane wejściowe i wyjściowe pomiędzy językami -- Javą a~C\#.  Właśnie to umożliwiają różne systemy zdalnego wywoływania kodu w środowiskach heterogenicznych, takie jak web service'y (jedną z~ich implementacji jest WCF). Niestety, Java na Androida -- a~ta różni się od standardowej -- nie ma żadnego odpowiednika serwera WCF. Trzeba go było stworzyć.
+Postawiono przede mną zadanie dodania do systemu możliwości uruchamiania testów na platformie Android. Wielki nacisk położono na kompatybilność wsteczną. Ponieważ w aplikacji klienta nie można było robić drastycznych zmian (takich jak przepisanie na inny język), nowy serwer na Androida (który miał zostać napisany w domyślnej dla tej platformy Javie) musiał tłumaczyć dane wejściowe i wyjściowe pomiędzy językami -- Javą a~C\#.  Właśnie to umożliwiają różne systemy zdalnego wywoływania kodu w środowiskach heterogenicznych, takie jak web service'y (jedną z~ich implementacji jest WCF). Niestety, Java na Androida -- a~ta różni się od standardowej -- nie ma żadnego odpowiednika serwera WCF\@. Trzeba go było stworzyć.
 
-Mój system do RPC (\emph{Remote Procedure Call}, z~ang.\ zdalne wywoływanie metody) nie musiał się przejmować dużą częścią bolączek istniejących przemysłowych rozwiązań, takich jak kolejkowanie wiadomości, równoległa obsługa wielu klientów, czy bezpieczeństwo komunikacji. To dlatego, że model użycia był stosunkowo prosty -- na raz łączyły się tylko dwa węzły (klient i~serwer), a wszystkie dane (podróżujące w zaufanej wewnętrznej sieci) miały być łatwo podglądanie, aby wspierać debugowanie. Głównym problemem pozostało tłumaczenie danych. Udało mi się je zrealizować przez napisanie kodu w~Javie który serializował obiekty do XML w~taki sam sposób jak .NET (przy użyciu klasy DataContractSerializer) oraz potrafił deserializować XMLe od niego otrzymane. Ponieważ nie mogłem znaleźć żadnych zasad opisujących XMLe tworzone przez DataContractSerializer, sam musiałem je wydedukować poprzez analizę wyjścia dla różnych drzew obiektów, np. tablic, list, obiektów zawierających listy list itp. Takie podejście nie dawało, niestety, pewności, że program będzie działał poprawnie (a więc tak samo, jak .NET) dla wszystkich możliwych danych. Ale dla wszystkich z~jakimi został sprawdzony oraz dla tych które podawali użytkownicy (programiści piszący testy bazujące na naszym frameworku) działał, więc projekt został uznany za sukces.
+Mój system do RPC (\emph{Remote Procedure Call}, z~ang.\ zdalne wywoływanie metody) nie musiał się przejmować dużą częścią bolączek istniejących przemysłowych rozwiązań, takich jak kolejkowanie wiadomości, równoległa obsługa wielu klientów, czy bezpieczeństwo komunikacji. To dlatego, że model użycia był stosunkowo prosty -- na raz łączyły się tylko dwa węzły (klient i~serwer), a wszystkie dane (podróżujące w zaufanej wewnętrznej sieci) miały być łatwo podglądanie, aby wspierać debugowanie. Głównym problemem pozostało tłumaczenie danych. Udało mi się je zrealizować przez napisanie kodu w~Javie który serializował obiekty do XML w~taki sam sposób jak .NET (przy użyciu klasy DataContractSerializer) oraz potrafił deserializować XMLe od niego otrzymane. Ponieważ nie mogłem znaleźć żadnych zasad opisujących XMLe tworzone przez DataContractSerializer, sam musiałem je wydedukować poprzez analizę wyjścia dla różnych drzew obiektów, np.\ tablic, list, obiektów zawierających listy list itp. Takie podejście nie dawało, niestety, pewności, że program będzie działał poprawnie (a więc tak samo, jak .NET) dla wszystkich możliwych danych. Ale dla wszystkich z~jakimi został sprawdzony oraz dla tych które podawali użytkownicy (programiści piszący testy bazujące na naszym frameworku) działał, więc projekt został uznany za sukces.
 
 Sukces ten jednak nie był bardzo satysfakcjonujący. Po pierwsze przez wspomnianą niepewność poprawności działania, po drugie przez to, że kod był słabej jakości. Co prawda działał poprawnie, ale był mało czytelny i zagmatwany. Po części to wina pośpiechu przy jego tworzeniu, po części tego, że kilka razy już po jego wprowadzeniu do użytku odkrywano nowe przypadki serializacji, które nieraz zmieniały założeniu już istniejące. Oczywiste stało się, że rozwiązanie trzeba było przepisać aby mogło żyć dalej i~stać się produktem, na którym można polegać. Co więcej tym razem trzeba było się dużo poważniej zastanowić nad miejscem mojej biblioteki w~ekosystemie systemów rozproszonych i nad uzasadnieniem jej stworzenia. Bo może jednak jest gdzieś na świecie coś, co spełniałoby nasz scenariusz użycia a~wcześniej zostało przeoczone. Albo przez ostatnie dwa lata, czyli od skończenia mojej pracy nad starym projektem, ktoś coś takiego stworzył.
 
@@ -25,7 +27,7 @@ W tym miejscu zdefiniowane i uzasadnione zostaną cele niniejszej pracy.
 %Każdy punkt powinien mieć dwie podsekcje - co? (wyjaśnia co dokładnie będzie zrobione) i dlaczego? (moje pobódki, co mi i innym to da). Jak? Po co? dla każdego celu zostanie odpowiedziane już w pracy.
 
 \subsection{Przybliżenie tematyki}
-Aby dało się zrozumieć pobudki, wywody oraz produkty tej pracy należy zaznajomić się z~tematyką zdalnego wywoływania kodu oraz charakterystyką docelowych platform. Zrobienie tego w~stopniu wystarczającym powinien umożliwić rozdział \ref{intro}.
+Aby dało się zrozumieć pobudki, wywody oraz produkty tej pracy należy zaznajomić się z~tematyką zdalnego wywoływania kodu oraz charakterystyką docelowych platform. Zrobienie tego w~stopniu wystarczającym powinien umożliwić rozdział~\ref{intro}.
 
 \subsection{Porównanie istniejącego oprogramowania}
 Przybliżone i~porównane zostaną co bardziej interesujące (dla mojego zastosowania) istniejące biblioteki oraz frameworki z~dziedziny RPC i~serializacji. Będzie to obszerna i~bardzo ważna część tej pracy.
@@ -34,7 +36,7 @@ Tylko przez takie badania można stwierdzić, że mój produkt znajdzie dla sieb
 
 Technologie będą rozpatrywane w kategoriach:
 \begin{itemize}
-	\item obecności pożądanych przeze mnie cech (wymienianych w \ref{lib_requirements}),
+	\item obecności pożądanych przeze mnie cech (wymienianych w~\ref{lib-requirements}),
 	\item spełniania obietnic, co do swoich możliwości,
 	\item zdolności współpracy z~innymi technologiami.
 \end{itemize}
@@ -42,7 +44,7 @@ Technologie będą rozpatrywane w kategoriach:
 Po tej analizie stwierdzę na których rozwiązaniach mogę się wzorować lub wykorzystać jako elementy swojego.
 
 \subsection{Stworzenie wieloplatformowej biblioteki}
-\label{lib_requirements}
+\label{lib-requirements}
 Oprogramowanie które stworzę będzie miało postać kilku (dwóch lub więcej) bibliotek na różne systemy. Każda z~nich będzie miała analogiczny interfejs i~taką samą funkcjonalność. Poniżej wyliczone są cechy, których obecność ma definiować moje rozwiązanie.
 
 \begin{description}
@@ -54,7 +56,7 @@ Cel główny, w~końcu to jest mój problem wyjściowy. Moje dzieło ma pozwoli�
 Zdalne metody powinny być polimorficzne. To znaczy, że każdy z~ich argumentów (jeśli jest to metoda przyjmująca argumenty) nie jest ograniczony do przynależności do jednego typu\cite{polymorphism}. Będzie to osiągnięte na dwa sposoby. Pierwszy -- przeciążanie metod (polimorfizm ad-hoc), polega na tym, że może istnieć zbiór różnych metod o~tej samej nazwie, pod warunkiem, że przyjmują różne zestawy argumentów. Drugi -- to nadanie argumentom cechy nazywanej z~angielskiego \emph{inclusion polymorphism}. Można by to przetłumaczyć jako polimorfizm zawierania. Znaczy to tyle, że jeden typ posiada te same metody i~pola co inny typ (zawiera go); najczęściej posiada też właściwe dla siebie cechy (metody i~pola). W~językach obiektowych zazwyczaj taki polimorfizm realizowany jest przez dziedziczenie -- jeden typ dziedziczy po drugim, w ten sposób przejmując jego cechy. Dzięki temu typ dziedziczący może być traktowany tak samo, jak typ dziedziczony. Podsumowując, pod każdy argument zdalnej metody można podstawić zarówno wartość typu określonego przez nią oczekiwanego, jak i dowolnego typu dziedziczącego po nim.
 
 \itemtitle{Swoboda rozszerzania kodu}
-Raz napisany kod zawierający moje zdalne metody powinien być rozszerzalny bez potrzeby jego zmiany \cite[str.~105]{designpatterns}. Jest to jedna z~podstaw obiektowego podejścia do programowania. Umożliwia jej działanie, między innymi, polimorfizm. Dla przykładu -- raz stworzonej zdalnej metodzie mogę przekazać argument nowego typu, który dziedziczy po spodziewanym. Przypuśćmy dalej, że metoda uruchamia jakąś metodę parametru, który otrzyma, a~ta metoda została rozszerzona w podtypie. Tym samym stara metoda zaowocuje uruchomieniem nowego kodu, a~ani jej, ani oryginalnego typu parametru nie trzeba było zmieniać.
+Raz napisany kod zawierający moje zdalne metody powinien być rozszerzalny bez potrzeby jego zmiany \cite[str.~105]{design-patterns}. Jest to jedna z~podstaw obiektowego podejścia do programowania. Umożliwia jej działanie, między innymi, polimorfizm. Dla przykładu -- raz stworzonej zdalnej metodzie mogę przekazać argument nowego typu, który dziedziczy po spodziewanym. Przypuśćmy dalej, że metoda uruchamia jakąś metodę parametru, który otrzyma, a~ta metoda została rozszerzona w podtypie. Tym samym stara metoda zaowocuje uruchomieniem nowego kodu, a~ani jej, ani oryginalnego typu parametru nie trzeba było zmieniać.
 
 \itemtitle{Prostota użycia}
 Moja biblioteka powinna pozwalać na szybkie tworzenie zdalnych metod w~prosty sposób. Jej instalacja ma być oczywista, API przejrzyste. Jeśli wymagana będzie konfiguracja to powinna być krótka i~zrozumiała. Jeśli trzeba będzie tworzyć opisy umożliwiające tłumaczenie obiektów danych (przedstawicieli klasy bez metod) z~jednego języka na odpowiadające obiekty w~drugim języku drugi, to powinny być one generowane automatycznie przy minimalnej ilości parametrów. Moje oprogramowanie może także mieć możliwość wygenerowania kodu klasy (danych) w~jednym języku na bazie kodu klasy napisanej w~drugim. Ogólnie powinno zdejmować z~programisty możliwie dużo trosk (zadań), które nie wymagają interwencji istoty obdarzonej zdolnością abstrakcyjnego myślenia i~mogą być rozwiązane przez automat.
@@ -67,7 +69,7 @@ Istnieją zagadnienia ważne dla aplikacji rozproszonych, które będą przeze m
 
 \begin{description}
 \itemtitle{Bezpieczeństwo komunikacji}
-Krytyczny czynnik dla aplikacji rozproszonych \cite[str.~21]{webservices}. Polega na zapewnienie poufności, uwierzytelniania (i~autoryzacji) i~spójności/nienaruszalności. Spójność można rozważać zarówno w~kontekscie zapewnienia poprawności danych przesyłanych przez sieć \cite{dataintegrity}, jak i~zagwarantowaniu, że odbiorca będzie mógł zidentyfikować i~odrzucić wiadomość, która została przez kogoś celowo zmodyfikowana po wyjściu od nadawcy \cite{datasignature}. Nie będę starał się ich zapewnić, ale jako osoba praktykująca nie mogę całkiem o~nich zapomnieć. Dlatego jeśli nie będzie mnie to spowalniać, będę zostawiał miejsca, w~których będzie można zapewnić bezpieczeństwo przez dodanie lub wymianę modułu aplikacji. Na przykład przez zastąpienie zwykłych połączeń TCP (które i~tak zamierzam traktować abstrakcyjnie) połączeniami TLS (które tak naprawdę są nakładką na TCP \cite[str.~47]{tls}).
+Krytyczny czynnik dla aplikacji rozproszonych \cite[str.~21]{web-services}. Polega na zapewnienie poufności, uwierzytelniania (i~autoryzacji) i~spójności/nienaruszalności. Spójność można rozważać zarówno w~kontekscie zapewnienia poprawności danych przesyłanych przez sieć \cite{data-integrity}, jak i~zagwarantowaniu, że odbiorca będzie mógł zidentyfikować i~odrzucić wiadomość, która została przez kogoś celowo zmodyfikowana po wyjściu od nadawcy \cite{data-signature}. Nie będę starał się ich zapewnić, ale jako osoba praktykująca nie mogę całkiem o~nich zapomnieć. Dlatego jeśli nie będzie mnie to spowalniać, będę zostawiał miejsca, w~których będzie można zapewnić bezpieczeństwo przez dodanie lub wymianę modułu aplikacji. Na przykład przez zastąpienie zwykłych połączeń TCP (które i~tak zamierzam traktować abstrakcyjnie) połączeniami TLS (które tak naprawdę są nakładką na TCP \cite[str.~47]{tls}).
 
 \itemtitle{Wydajność}
 Jest niezmiernie ważna dla wszystkich serwerów, ponieważ muszą obsługiwać wielu klientów na raz. Jednak moja aplikacja nie musi być tak wydajna, nie muszę przejmować się ``odmową usługi'' \cite{dos}(z~ang. DoS, \emph{Denial of Service}) przez serwer. Z~doświadczenia wiem, że program typu tworzonego przeze mnie, rozmawiający na raz z~kilkoma--kilkunastoma klientami nie powinien mieć problemów z~nadążeniem, jeśli nie będzie w~nim rażących błędów. Taka ilość połączeń póki co całkowicie mnie zadowala. Tym bardziej, że mój system wyjściowo miał działać przy połączeniu ``1 do 1'', jako most między dwiema aplikacjami. Zajmuję w~tym przypadku podobną postawę wobec wydajności, co wobec bezpieczeństwa -- mimo ich pomijania dalej jestem świadom problemów z~nią związanych i~jeśli nie będzie to w~żaden sposób problematyczne będę zapewniał względną (względem czytelności) optymalność kodu.
@@ -97,10 +99,10 @@ Jest niezmiernie ważna dla wszystkich serwerów, ponieważ muszą obsługiwać 
 Tutaj zostaną opisane platformy technologiczne, na których będzie działać moja biblioteka.
 
 \subsection{Android}
-%moze dodac odniesienie do kilku rozdzialow learningandroid od razu przy tym rozdziale, a nie gdzies w tekscie? tak się robi?
+%moze dodac odniesienie do kilku rozdzialow learning-android od razu przy tym rozdziale, a nie gdzies w tekscie? tak się robi?
 
 \subsubsection{Omówienie}
-Android jest kompletną, otwartą (open-source) platformą dla urządzeń mobilnych opartą o~Linux\cite{learningandroid}. Został stworzony przez organizację Open Handset Alliance. Organizacja skupia wielu operatorów komórkowych, producentów elektroniki, telefonów i~oprogramowania oraz firmy komercjalizacyjne \cite{oha}. Pomysłodawcą uformowania oraz liderem tej organizacji jest firma Google. Jej misją jest przyspieszenie innowacji na platformach mobilnych oraz dostarczenie konsumentom pełniejszego, tańszego i~ogólnie lepszego doznania z~korzystania z~telefonu. Wszystko to za sprawą Androida, który dodatkowo jest całkowicie otwarty.
+Android jest kompletną, otwartą (open-source) platformą dla urządzeń mobilnych opartą o~Linux\cite{learning-android}. Został stworzony przez organizację Open Handset Alliance. Organizacja skupia wielu operatorów komórkowych, producentów elektroniki, telefonów i~oprogramowania oraz firmy komercjalizacyjne \cite{oha}. Pomysłodawcą uformowania oraz liderem tej organizacji jest firma Google. Jej misją jest przyspieszenie innowacji na platformach mobilnych oraz dostarczenie konsumentom pełniejszego, tańszego i~ogólnie lepszego doznania z~korzystania z~telefonu. Wszystko to za sprawą Androida, który dodatkowo jest całkowicie otwarty.
 
 Krótka historia systemu, która powinna rzucić na niego trochę światła:
 \begin{itemize}
@@ -111,16 +113,16 @@ Krótka historia systemu, która powinna rzucić na niego trochę światła:
 	\item 2009, telefony z Androidem coraz powszechniejsze (ponad 20 modeli), współistnieje wiele wersji systemu: Cupcake(1.5), Donut(1.6), Eclair(2.0, 2.1).
 	\item maj 2010, Android jest drugim (po Blackberry) pod względem popularności systemem dla smartfonów; wypuszczenie Froyo(2.2) i~ponad 60 modeli telefonów go posiadających.
 	\item grudzień 2010, wielkie zmiany (poprawki) w~interfejsie użytkownika wprowadzone w~wersji Gingerbread(2.3).
-	\item luty 2011, wydanie Honeycomb(3.0)\cite{androidhistory}. Został wydany tylko na tablety, co przeczyło założeniu systemu uniwersalnego dla różnych urządzeń. Jego źródła nie zostały otwarte tym samym łamiąc obietnice całkowitej otwartości.
+	\item luty 2011, wydanie Honeycomb(3.0)\cite{android-history}. Został wydany tylko na tablety, co przeczyło założeniu systemu uniwersalnego dla różnych urządzeń. Jego źródła nie zostały otwarte tym samym łamiąc obietnice całkowitej otwartości.
 	\item październik 2011, Ice Cream Sandwich(4.0) wraca do ideałów będąc otwartym systemem zarówno na telefony, jak i~tablety (i~dowolne inne urzdzenia)
-	\item 2014, zapowiedź Androida L, który ma znacznie zwiększyć wydajność (dzięki nowemu podejściu do kompilacji aplikacji\cite{androidart}), poprawić interfejs użytkownika i~wspierać aplikacje 64-bitowe\cite{androidlogolnie}.
+	\item 2014, zapowiedź Androida L, który ma znacznie zwiększyć wydajność (dzięki nowemu podejściu do kompilacji aplikacji\cite{android-art}), poprawić interfejs użytkownika i~wspierać aplikacje 64-bitowe\cite{android-l-ogolnie}.
 \end{itemize}
 
 Jako że Android jest przeznaczony dla urządzeń mobilnych, jego twórcy musieli wziąć pod uwagę ograniczenia, które miały być względnie niezmienne w~przewidywalnym czasie.
 To, że telefony są zasilane z~baterii (których pojemność bardzo się nie zmienia) oraz nieduży rozmiar, ograniczają moc procesora i~możliwą pamięć. Mimo tego, użytkownik powinien być zadowolony z~szybkości urządzenia, tak samo jak w~przypadku zasobożernych komputerów osobistych.
 Rozwiązanie tego problemu wymaga dużej pomysłowości i~musi owocować pewnymi kosztami.
 
-Ten system zrewolucjonizował rynek mobilny (i~nie tylko). Pierwszy raz otwarta platforma rozdziela sprzęt od oprogramowania na nim działającego. Ponieważ jej rdzeń jest przenośny i~nie ma założeń co do sprzętu, pozwala dużo większej niż do tej pory liczbie urządzeń na uruchamianie tych samych aplikacji i~tworzy bogatsze środowisko, zarówno dla programistów, jak i~konsumentów. Nie ogranicza się tylko do telefonów, tabletów, i~laptopów, ale zaczyna występować nawet w~telewizorach, samochodach i, zdaje się, wszystkich innych urządzeniach w~których można osadzić mikrokomputer\footnote{Np. w~lodówkach \url{http://venturebeat.com/2013/01/11/samsung-smart-fridge-it-runs-android-apps-like-evernote-video-demo/}}.
+Ten system zrewolucjonizował rynek mobilny (i~nie tylko). Pierwszy raz otwarta platforma rozdziela sprzęt od oprogramowania na nim działającego. Ponieważ jej rdzeń jest przenośny i~nie ma założeń co do sprzętu, pozwala dużo większej niż do tej pory liczbie urządzeń na uruchamianie tych samych aplikacji i~tworzy bogatsze środowisko, zarówno dla programistów, jak i~konsumentów. Nie ogranicza się tylko do telefonów, tabletów, i~laptopów, ale zaczyna występować nawet w~telewizorach, samochodach i, zdaje się, wszystkich innych urządzeniach w~których można osadzić mikrokomputer\footnote{Np.\ w~lodówkach \url{http://venturebeat.com/2013/01/11/samsung-smart-fridge-it-runs-android-apps-like-evernote-video-demo/}}.
 
 Użytkownicy zauważą, że działa w~pełni od razu po zakupie urządzenia, bez potrzeby skomplikowanej konfiguracji. Mogą też go mocno zmodyfikować dopasowując go do swoich potrzeb.
 Programistom dostarcza kompletny zbiór narzędzi -- Android SDK (Software Development Kit) -- potrzebnych do łatwego i~szybkiego tworzenia aplikacji. Nie ma nawet potrzeby posiadania fizycznego urządzenia, ponieważ Android SDK zawiera emulator.
@@ -135,12 +137,12 @@ System jest niejako nadbudówką na Linuxa, dojrzałą chlubę ruchu open-source
 
 Ma strukturę warstwową. Każda warstwa ma własną charakterystykę i~przeznaczenie. Nie są one, jednak, od siebie idealnie rozdzielone i~częściowo na siebie zachodzą.
 
-Android jest platformą kompletną (ang. \emph{comprehensive platform}), co znaczy, że zawiera pełny stos oprogramowania dla urządzenia mobilnego. Stos ten zawiera wszystko od niskopoziomowych modułów jądra Linuxa, przez biblioteki natywne, platformę aplikacji (ang. \emph{framework}) po same aplikacje (widoczny na rysunku \ref{fig:android_architecture}).
+Android jest platformą kompletną (ang. \emph{comprehensive platform}), co znaczy, że zawiera pełny stos oprogramowania dla urządzenia mobilnego. Stos ten zawiera wszystko od niskopoziomowych modułów jądra Linuxa, przez biblioteki natywne, platformę aplikacji (ang. \emph{framework}) po same aplikacje (widoczny na rysunku~\ref{fig:android_architecture}).
 
 \begin{figure}
 	\centering
 		\includegraphics[scale=0.7]{img/android_architecture.jpg}
-	\caption{Stos Androida, źródło: \cite{androidstack}}
+	\caption{Stos Androida, źródło: \cite{android-stack}}
 	\label{fig:android_architecture}	
 \end{figure}
 
@@ -150,27 +152,29 @@ Trzeba powiedzieć, że pisanie programów w~C nie jest zalecanym sposobem pisan
 
 Java, w~przeciwieństwie do np.~C nie jest kompilowana do kodu maszynowego, który może być wykonany przez procesor. Zamiast tego jest kompilowana do kodu bajtowego Javy (\emph{Java bytecode}), który abstrahuje od właściwości (takich jak architektura procesora) komputera, na którym ma być wykonany \cite{jvm}. Za przełożenie wykonywanego kodu na prawdziwe instrukcje procesora, zwane JIT -- z~ang. \emph{just-in-time compilation}, a~więc kompilacja w~samą porę, jest odpowiedzialna maszyna wirtualna Javy (ang.: \emph{Java Virtual Machine (JVM)}). JVM posiada różne wersje (wszystkie zgodne z~jedną specyfikacją) dopasowane do środowisk, w~których mają działać. Inna będzie potrzebna na Linuxa, inna na Windowsa. Ale każda z~nich powinna być w~stanie wykonać z~takim samym efektem taki sam kod Javy. Zatem teoretycznie można napisać jeden program, który bez żadnych modyfikacji będzie działał na całkowicie odmiennych systemach operacyjnych.
 
-Na potrzeby Androida stworzona została nowa, otwarta JVM o~nazwie Dalvik. Dalvik jest zoptymalizowany na urządzenia mobilne. Faktycznie operuje na innym niż standardowy kod bajtowy, ale kod dla Dalvika uzyskuje się przez dodatkową kompilację (optymalizację) zwykłego kodu bajtowego (zilustrowane na rysunku \ref{fig:dalvik-compilation}). Teoretycznie, każdy język kompilowany do kodu bajtowego Javy (a~jest ich kilka, np. Scala) powinien móc być wykonany na Dalviku.
+Na potrzeby Androida stworzona została nowa, otwarta JVM o~nazwie Dalvik. Dalvik jest zoptymalizowany na urządzenia mobilne. Faktycznie operuje na innym niż standardowy kod bajtowy, ale kod dla Dalvika uzyskuje się przez dodatkową kompilację (optymalizację) zwykłego kodu bajtowego (zilustrowane na rysunku~\ref{fig:dalvik-compilation}). Teoretycznie, każdy język kompilowany do kodu bajtowego Javy (a~jest ich kilka, np. Scala) powinien móc być wykonany na Dalviku.
 Poza tym, nowa maszyna wirtualna była potrzebna aby uniezależnić się od właściciela Javy (kiedyś Sun, obecnie Oracle). Narzędzia do język (jak kompilatory) i~standardowe odmiany JVM są darmowe, ale należą do Oracle, a~ich kod nie jest otwarty. Istnieją też, co prawda, alternatywne otwarte implementacje JVM, jak ta dostarczana z OpenJDK.
 
 \begin{figure}
 	\centering
 		\includegraphics[scale=0.75]{img/dalvik-compilation.jpg}
-	\caption{Porównanie standardowej kompilacji Javy z~kompilacją dla Dalvika. Źródło: \cite{learningandroid}}
+	\caption{Porównanie standardowej kompilacji Javy z~kompilacją dla Dalvika. Źródło: \cite{learning-android}}
 	\label{fig:dalvik-compilation}
 \end{figure}
 
-Aktualnie istnieje już następca Dalvika -- Android Runtime (ART). Wprowadzono go jako alternatywną maszynę wirtualną w~ostatnim Androidzie (4.4)\cite{androidart}. W~kolejnej wersji systemu -- Androidzie L -- będzie już domyślny\cite{androidlpreview}. Jego głównym celem jest przyspieszenie wykonywania aplikacji. Osiąga to przez usprawnione odśmiecanie pamięcie (ang. \emph{garbage collection}) oraz przez wprowadzenie techniki określanej jako \emph{ahead-of-time compilation} (AOT), czyli kompilacja przed czasem (kontrast dla JIT). AOT polega na tym, że w~trakcie instalacji aplikacja (skompilowana do kodu Dalvika) jest kompilowana jeszcze raz, już na kod maszynowy dopasowany do urządzenia, na którym odbywa się instalacja. Przez to zużywane jest dodatkowe miejsce, ale aplikacja może się wykonywać szybciej, ponieważ jej kod nie musi być interpretowany przez JVM.
+Aktualnie istnieje już następca Dalvika -- Android Runtime (ART). Wprowadzono go jako alternatywną maszynę wirtualną w~ostatnim Androidzie (4.4)\cite{android-art}. W~kolejnej wersji systemu -- Androidzie L -- będzie już domyślny\cite{android-l-preview}. Jego głównym celem jest przyspieszenie wykonywania aplikacji. Osiąga to przez usprawnione odśmiecanie pamięcie (ang. \emph{garbage collection}) oraz przez wprowadzenie techniki określanej jako \emph{ahead-of-time compilation} (AOT), czyli kompilacja przed czasem (kontrast dla JIT). AOT polega na tym, że w~trakcie instalacji aplikacja (skompilowana do kodu Dalvika) jest kompilowana jeszcze raz, już na kod maszynowy dopasowany do urządzenia, na którym odbywa się instalacja. Przez to zużywane jest dodatkowe miejsce, ale aplikacja może się wykonywać szybciej, ponieważ jej kod nie musi być interpretowany przez JVM.
 
-Java która jest dostępna na Androidzie niestety nie ma pełnego zbioru standardowych bibliotek (z~Javy SE). Między innymi, brakuje wielu części pakietu \emph{javax}. Niektóre rzeczy, za które były one odpowiedzialne to świadczenie i~konsumowanie usług internetowych (bycie serwerem lub klientem dla web service'ów), czy interfejsy użytkownika (Swing, AWT). W~zamian zostały dodane pakiety ułatwiające pisanie aplikacji pod Androida. Umożliwiają one komunikację aplikacji między sobą i~z~systemem, składowanie danych, dostęp do sensorów i~funkcji telefonu oraz wiele inne przydatnych działań\cite{androidpackage}. Wśród nich są też biblioteki odpowiedzialne za GUI Androida. Dzięki nim wszystkim ekosystem (programów) jest dość jednorodny i~ustandaryzowany.
+Java która jest dostępna na Androidzie niestety nie ma pełnego zbioru standardowych bibliotek (z~Javy SE). Między innymi, brakuje wielu części pakietu \emph{javax}. Niektóre rzeczy, za które były one odpowiedzialne to świadczenie i~konsumowanie usług internetowych (bycie serwerem lub klientem dla web service'ów), czy interfejsy użytkownika (Swing, AWT). W~zamian zostały dodane pakiety ułatwiające pisanie aplikacji pod Androida. Umożliwiają one komunikację aplikacji między sobą i~z~systemem, składowanie danych, dostęp do sensorów i~funkcji telefonu oraz wiele inne przydatnych działań\cite{android-package}. Wśród nich są też biblioteki odpowiedzialne za GUI Androida. Dzięki nim wszystkim ekosystem (programów) jest dość jednorodny i~ustandaryzowany.
 
-Od jakiegoś czasu Java nie jest jedynym językiem, w którym można pisać aplikacje. Co prawda już kiedyś można dodać do APK bibliotekę C/C++ (pisaną przy użyciu NDK -- Native Development Kit\cite{androidndk}) i~wołać ją z~Javy, ale zawsze potrzebny był Javowy szkielet. Teraz można oznaczyć, że APK korzysta z~\emph{NativeActivity}\cite{androidnativeactivity}, co pozwala całość zaimplementować natywnie. 
+Od jakiegoś czasu Java nie jest jedynym językiem, w którym można pisać aplikacje. Co prawda już kiedyś można dodać do APK bibliotekę C/C++ (pisaną przy użyciu NDK -- Native Development Kit\cite{android-ndk}) i~wołać ją z~Javy, ale zawsze potrzebny był Javowy szkielet. Teraz można oznaczyć, że APK korzysta z~\emph{NativeActivity}\cite{android-native-activity}, co pozwala całość zaimplementować natywnie. 
 
-Warto też powiedzieć, że każda aplikacja instalowana z~APK jest identyfikowana jako odrębny Unixowy użytkownik\cite{androidpermissions}. Dzięki temu można precyzyjnie zarządzać tym, do czego dana aplikacja ma dostęp, co zwiększa ogólne bezpieczeństwo systemu. W~systemach instalowanych na telefonach standardowo jest blokowane konto administratora systemu (\emph{root}). Użytkownik może je odblokować przez zabieg zwany rootowaniem.
+Warto też powiedzieć, że każda aplikacja instalowana z~APK jest identyfikowana jako odrębny Unixowy użytkownik\cite{android-permissions}. Dzięki temu można precyzyjnie zarządzać tym, do czego dana aplikacja ma dostęp, co zwiększa ogólne bezpieczeństwo systemu. W~systemach instalowanych na telefonach standardowo jest blokowane konto administratora systemu (\emph{root}). Użytkownik może je odblokować przez zabieg zwany rootowaniem.
 
-Android nie ogranicza się do uruchamiania jedynie kodu napisanego w~C, C++ lub Javie (uznajmy je za języki ``standardowe''). Istnieje aplikacja działająca jako interpreter innych języków -- SL4A\cite{androidsl4a} -- która pozwala wykonywać skrypty napisane w~kilku językach, m.in.\ Python, Perl, Lua, JavaScript.\footnote{Inną aplikacją tego typu jest QPython (\url{http://qpython.com/}), która zawiera SL4A.}
-Są też kompilatory tworzące kod bajtowy Dalvika z~języków inne niż standardowe (dla Androida). Tu przykładem jest Xamarin \footnote{\url{http://xamarin.com/}}, rozwiązanie umożliwiające pisanie w~C\# aplikacji na kilka platform, w~tym Androida.
+Android nie ogranicza się do uruchamiania jedynie kodu napisanego w~C, C++ lub Javie (uznajmy je za języki ``standardowe''). Istnieje aplikacja działająca jako interpreter innych języków -- SL4A\cite{android-sl4a} -- która pozwala wykonywać skrypty napisane w~kilku językach, m.in.\ Python, Perl, Lua, JavaScript.\footnote{Inną aplikacją tego typu jest QPython (\url{http://qpython.com/}), która zawiera SL4A.}
+Są też kompilatory tworzące kod bajtowy Dalvika z~języków inne niż standardowe (dla Androida). Tu przykładem jest Xamarin\footnote{\url{http://xamarin.com/}}, rozwiązanie umożliwiające pisanie w~C\# aplikacji na kilka platform, w~tym Androida.
 Jednak zarówno SL4A i~Xamarin nie dają dostępu do wszystkich standardowych bibliotek. Jest tak dlatego, że użycie API Androida w~kodzie niestandardowego języka wymaga zmapowania do niego tychże API, co jest czasochłonne i~trudne do wykonania w~całości przez kogoś innego niż Google. Ponadto, niestandardowy dla Androida język, taki jak C\#, może mieć struktury, które nie dadzą się przetłumaczyć na kod bajtowy Javy. Tym samym nie będzie można go wykorzystać w~pełni. Odmiennym przypadkiem jest język Scala. Dzięki zgodności na poziomie kodu bajtowego (bo tak samo jak Java jest do niego kompilowana) Scala może być użyta do stworzenia kompletnego APK mającego dostęp do wszystkich bibliotek.
+
+% W sumie jakiś powód musięli mieć, żeby nie dawać web serviceów.
 
 %Może wypunktowana lista ze wspieranymi językami? Tu macie języki i jak mocno i przez co są wspierane (może tabelka? nazwa | czy można całą aplikację w tym zrobić | jakiś opis, przez co dostarczane, uwagi). Dalej co ważniejsze opisane. Oczywiście jest więcej.
 %\url{http://www.dobreprogramy.pl/Google-testuje-nastepce-Dalvika-z-ARTem-Android-bedzie-dwukrotnie-szybszy,News,49129.html}
@@ -181,13 +185,13 @@ Jednak zarówno SL4A i~Xamarin nie dają dostępu do wszystkich standardowych bi
 %http://www.scala-sbt.org/release/tutorial/index.html
 
 \subsection{.NET}
-.NET to technologia stworzona przez Microsoft, wspomagająca tworzenie i~uruchamianie aplikacji (w~tym usług sieciowych), głównie dla systemu Microsoft Windows\cite{dotnetoverview}. Jego główne cele:
+.NET to technologia stworzona przez Microsoft, wspomagająca tworzenie i~uruchamianie aplikacji (w~tym usług sieciowych), głównie dla systemu Microsoft Windows\cite{dot-net-overview}. Jego główne cele:
 \begin{itemize}
 	\item Zapewnić jednorodne środowisko do programowania obiektowego, zarówno dla kodu lokalnego wykonywanych lokalnie, kodu rozproszonego wykonywanego lokalnie, czy wykonywanego w~całości zdalnie.
 	\item Minimalizacja ilości zależności aplikacji oraz konfliktów wersji.
 	\item Krzewienie bezpiecznego wykonywania kodu, także od nieznanych lub częściowo zaufanych źródeł.
 	\item Zlikwidowanie problemów wydajnościowych skryptów oraz kodów interpretowanych (nienatywnych).
-	\item Zapewnić jednolity styl programowania na różnych platformach, np. przy aplikacjach okienkowych Windows i~aplikacjach internetowych.
+	\item Zapewnić jednolity styl programowania na różnych platformach, np.\ przy aplikacjach okienkowych Windows i~aplikacjach internetowych.
 	\item Oparcie całej komunikacji o~obowiązujące standardy, aby kod napisany pod .NETem mógł się integrować z~dowolnym innym kodem.
 \end{itemize}
 
@@ -201,20 +205,22 @@ Biblioteka klas jest obszernym zbiorem gotowych typów zgodnych z~zasadami progr
 Warto zaznaczyć, że Java również może być w~podobny sposób osadzana.
 Przykładami gospodarzy dla środowiska .NET mogą być ASP.NET (``framework'' do budowy aplikacji internetowych) lub Internet Explorer.
 
-Na rysunku \ref{fig:dotnet-ecosystem} przedstawione są zależności środowiska uruchomieniowego języka wspólnego (\emph{runtime}), biblioteki klas, systemu operacyjnego i~aplikacji użytkownika. Widać też gdzie działa kod zarządzany (\emph{managed code}) względem niezarządzanego (\emph{unamaged}).
+Na rysunku~\ref{fig:dotnet-ecosystem} przedstawione są zależności środowiska uruchomieniowego języka wspólnego (\emph{runtime}), biblioteki klas, systemu operacyjnego i~aplikacji użytkownika. Widać też gdzie działa kod zarządzany (\emph{managed code}) względem niezarządzanego (\emph{unamaged}).
 
 \begin{figure}
 	\centering
 		\includegraphics[scale=0.6]{img/dotnet-ecosystem.png}
-	\caption{Ekosystem .NETa, źródło: \cite{dotnetoverview}}
+	\caption{Ekosystem .NETa, źródło: \cite{dot-net-overview}}
 	\label{fig:dotnet-ecosystem}
 \end{figure}
 
-.NET posiada restrykcyjną infrastrukturę weryfikującą poprawność typów i~kodu zwaną CTS (\emph{Common Type System}). CTS sprawia, że cały zarządzany kod jest samo-opisujący. Różne kompilatory, zarówno te stworzone przez Microsoft, jak i~przez inne firmy mogą generować kod zgodny z~CTS. Dzięki temu dowolny kod zarządzany może konsumować dowolne inne zarządzane typy i~obiekty, jednocześnie surowo dbając o~bezpieczeństwo typów. To daje dużą swobodę programistom, którzy pisząc w~dowolnym zarządzanym (w~sensie kompilowanym do kodu zarządzanego .NETa) języku mogą korzystać z~pełnej standardowej biblioteki klas oraz z~zewnętrznych komponentów napisanych w~innych zarządzanych językach.
+.NET posiada restrykcyjną infrastrukturę weryfikującą poprawność typów i~kodu zwaną CTS (\emph{Common Type System}). CTS sprawia, że cały zarządzany kod jest samo-opisujący. Różne kompilatory, zarówno te stworzone przez Microsoft, jak i~przez inne firmy mogą generować kod zgodny z~CTS\@. Dzięki temu dowolny kod zarządzany może konsumować dowolne inne zarządzane typy i~obiekty, jednocześnie surowo dbając o~bezpieczeństwo typów. To daje dużą swobodę programistom, którzy pisząc w~dowolnym zarządzanym (w~sensie kompilowanym do kodu zarządzanego .NETa) języku mogą korzystać z~pełnej standardowej biblioteki klas oraz z~zewnętrznych komponentów napisanych w~innych zarządzanych językach.
 
 Do zarządzanych języków należą m.in.\ C\#, Visual Basic .NET, J\#, C++ (specjalna zarządzana odmiana), czy Iron Python (Python kompilowany do CIL). Jednym z~języków platformy .NET jest C\#. Typowany, imperatywny, przypomina Javę, choć jest nowocześniejszy i~ma więcej możliwości(źródło o C\#). Jest to język w~którym będę pisał .NETowe części mojej biblioteki.
 
-Cała platforma .NET jest (słusznie\cite{dotnetrequirements}) kojarzona z~Windowsem, choć można uruchamiać napisane pod nią programy na innych systemach, jeśli tylko posiada się odpowiednią implementację środowiska uruchomieniowego, bo to ono tłumaczy wspólny kod (CIL) na natywne instrukcje (ponownie, znany z~Javy \emph{just-in-time compilation}). Niestety żadna z~alternatywnych implementacji nie wspiera wszystkich funkcji .NET. Dlatego nie można z~pełną swobodą, np. pisać w~C\# pod Linuxa. Jednak dla wielu programów poziom wsparcia jest wystarczający. Chyba najbardziej znana, nie pochodzą od Microsoftu implementacja -- Mono -- nie posiada kilka aspektów, takich jak WPF, WWF oraz ma ograniczone wersje WCF i~stosu asynchronicznego ASP.NET 4.5\cite{monocompatibility}. Ale za to jest dostępna dla kilku systemów operacyjnych, m.in. na Linuxa, Mac OS czy Solaris\cite{monosupportedplatforms}. Także, w~przeciwieństwie do standardowej maszyny wirtualnej Microsoftu, może działać na architekturach procesorów innych niż x86 i AMD64\cite{dotnetrequirements}, np. na ARM, PowerPC, SPARC.
+Cała platforma .NET jest (słusznie\cite{dot-net-requirements}) kojarzona z~Windowsem, choć można uruchamiać napisane pod nią programy na innych systemach, jeśli tylko posiada się odpowiednią implementację środowiska uruchomieniowego, bo to ono tłumaczy wspólny kod (CIL) na natywne instrukcje (ponownie, znany z~Javy \emph{just-in-time compilation}). Niestety żadna z~alternatywnych implementacji nie wspiera wszystkich funkcji .NET\@.
+Dlatego nie można z~pełną swobodą, np.\ pisać w~C\# pod Linuxa. Jednak dla wielu programów poziom wsparcia jest wystarczający.
+Chyba najbardziej znana, nie pochodzą od Microsoftu implementacja -- Mono -- nie posiada kilka aspektów, takich jak WPF, WWF oraz ma ograniczone wersje WCF i~stosu asynchronicznego ASP.NET 4.5\cite{mono-compatibility}. Ale za to jest dostępna dla kilku systemów operacyjnych, m.in.\ na Linuxa, Mac OS czy Solaris\cite{mono-supported-platforms}. Także, w~przeciwieństwie do standardowej maszyny wirtualnej Microsoftu, może działać na architekturach procesorów innych niż x86 i AMD64\cite{dot-net-requirements}, np.\ na ARM, PowerPC, SPARC.
 
 %\subsection{Odpowiedniość Javy i C\#}
 %Porównać zdolności obu języków, znaleźć cechy nieprzetłumaczalne. Jak dużą zgodność można uzyskać teoretycznie?
@@ -223,7 +229,7 @@ Cała platforma .NET jest (słusznie\cite{dotnetrequirements}) kojarzona z~Windo
 %\url{http://en.wikipedia.org/wiki/Comparison_of_C_Sharp_and_Java} tu wyjątkowo zacytuję Wikipedię, bo dobry artykuł\\
 %\url{http://msdn.microsoft.com/pl-pl/library/ms836794.aspx} porównanie microsoftu
 %
-%Po prostu jest trochę różnic i nie wszystko się będzie dało przetłumaczyć 1 w 1. Ale i tak wszystkie cechy języka trudno będzie przetłumczyć. Np. propertiesy, adnotacje
+%Po prostu jest trochę różnic i nie wszystko się będzie dało przetłumaczyć 1 w 1. Ale i tak wszystkie cechy języka trudno będzie przetłumczyć. Np.\ propertiesy, adnotacje
 %
 %\subsection{Python}
 %Pierwsza platforma jaką rozważałbym jako alternatywę dla podstawowych (Androida i .NETa) do implementacji mojej biblioteki. A to dlatego, że jest moją ulubioną. I może chodzić praktycznie na wszystkim.
@@ -236,17 +242,17 @@ Cała platforma .NET jest (słusznie\cite{dotnetrequirements}) kojarzona z~Windo
 
 \section{Serializacja}
 \subsection{Ogólnie}
-Serializacja polega na przetworzeniu obiektu (lub grupy obiektów, lub innej struktury danych z~pamięci) w~postać nadającą się do zapisu na dysk albo do transportu przez sieć\cite{serializationbasics}. Nieodzownie łączy się też z~deserializacją -- odwrotnością serializacji, która odtwarza w~pamięci obiekt z~zapisu na dysku lub z~danych z~sieci. Kiedy będę używał określenia serializacja zazwyczaj w~domyśle będę mówił i~o~serializacji, i~o~deserializacji. Podstawową techniką serializacji jest ``spłaszczenie'' obiektu w~jednowymiarowy strumień bitów, a~następnie, w~ramach deserializacji, na odtworzenie z~tego strumienia oryginalnego obiektu.
+Serializacja polega na przetworzeniu obiektu (lub grupy obiektów, lub innej struktury danych z~pamięci) w~postać nadającą się do zapisu na dysk albo do transportu przez sieć\cite{serialization-basics}. Nieodzownie łączy się też z~deserializacją -- odwrotnością serializacji, która odtwarza w~pamięci obiekt z~zapisu na dysku lub z~danych z~sieci. Kiedy będę używał określenia serializacja zazwyczaj w~domyśle będę mówił i~o~serializacji, i~o~deserializacji. Podstawową techniką serializacji jest ``spłaszczenie'' obiektu w~jednowymiarowy strumień bitów, a~następnie, w~ramach deserializacji, na odtworzenie z~tego strumienia oryginalnego obiektu.
 
 Warto zaznaczyć, że możliwe jest przeniesienie obiektu z~jednej platformy programistycznej na drugą (przetłumaczenie z~jednego języka programawania na inny) przez jego serializację na platformie źródłowej, a~następnie deserializację na docelowej.
 
 Najczęściej kiedy mówi się o~serializacji nie ma się na myśli, jednak, tworzenia przenośnego (bo to cecha danych zserializowanych) ciągu bajtów. Zazwyczaj chodzi o~tekstowy zapis obiektu, mniej lub bardziej czytelny dla człowieka. Formy binarne wymagają raczej przetworzenia przez program aby sprawdzić poprawność lub ocenić, co reprezentują. W~przypadku reprezentacji tekstowej, człowiek może zidentyfikować zawartość i~poprawność po prostu czytając dokument (można tak nazwać wynik serializacji).
 
 Serializacja binarna (do strumienia bajtów/bitów) jest na ogół szybsza i~daje mniejsze rozmiary dokumentu\footnote{Można nawet uzyskać brak narzutu względem reprezentacji obiektu w~pamięci.} niż serializacja tekstowa.
-Ale obiekty przez nią zapisane mogą być trudne do odtworzenia na innych systemach operacyjnych niż źródłowy, z~uwagi na możliwą niezgodność kolejności bajtów (ang.: \emph{endianness}). Wiele platform programistycznych, np. Java i~.NET, posiada zdolność serializacji binarnej, jednak tworzone zapisy nie są zgodne; strumień bajtów przedstawiający obiekt stworzony przez jedną platformę na ogół jest nieczytelny dla drugiej.
+Ale obiekty przez nią zapisane mogą być trudne do odtworzenia na innych systemach operacyjnych niż źródłowy, z~uwagi na możliwą niezgodność kolejności bajtów (ang.: \emph{endianness}). Wiele platform programistycznych, np.\ Java i~.NET, posiada zdolność serializacji binarnej, jednak tworzone zapisy nie są zgodne; strumień bajtów przedstawiający obiekt stworzony przez jedną platformę na ogół jest nieczytelny dla drugiej.
 
-Serializacja tekstowa jest dużo popularniejsza od binarnej, przynajmniej w~aplikacjach heterogenicznych i~internetowych. Jest łatwiejsza w~rzeczywistym (np. biznesowym) użyciu, szczególnie podczas korzystania z~języków wysokopoziomowych.
-Niestety wiąże się na ogół ze sporym narzutem rozmiaru danych\footnote{Szczególnie jeśli obiekt zawiera surowe dane binarne,np. w~formie tablicy bajtów, czy bitmapy.} i~prędkości ich przetwarzania.
+Serializacja tekstowa jest dużo popularniejsza od binarnej, przynajmniej w~aplikacjach heterogenicznych i~internetowych. Jest łatwiejsza w~rzeczywistym (np.\ biznesowym) użyciu, szczególnie podczas korzystania z~języków wysokopoziomowych.
+Niestety wiąże się na ogół ze sporym narzutem rozmiaru danych\footnote{Szczególnie jeśli obiekt zawiera surowe dane binarne,np.\ w~formie tablicy bajtów, czy bitmapy.} i~prędkości ich przetwarzania.
 Ale za to można uzyskać prostotę i~przenośność obiektów na różne platformy programistyczne.
 
 Zapis przenośnej formy obiektów nie jest trywialny. Jeden obiekt może być powiązany z~wielką siecią innych. Czasem te połączone obiekty faktycznie zawierają się w~serializowanym, są jego logiczną częścią. Niekiedy można natrafić na duży zbiór zależnych, równoważnych sobie obiektów. W~sieci powiązań mogą też pojawić się cykle, sprawiające problemy dla automatów trawersujących graf (właśnie w~takiej formie można przedstawić obiekt) obiektu.
@@ -254,7 +260,10 @@ Zapis przenośnej formy obiektów nie jest trywialny. Jeden obiekt może być po
 W~związku z~tymi problemami nie zawsze możliwe jest zachowanie pełni oryginalnych danych w~transporcie.
 Ale świadomość ograniczeń serializacji w~projektowaniu swoich obiektów oraz asortyment potężnych narzędzi (o~których będzie mowa w~tej pracy) pozwalają przenieść niemal wszystko.
 
-%Niestety przekazywane obiekty nie mogą mieć żadnej większej logiki związanej z dostępem do swoich danych. O ile można zmapować pola klasy w jednym języku na pola w drugim, to przetłumaczenie metod dostępowych, które mają jakąś logikę (np. zmień licznik odczytań, kiedy czytam zmienną) w automatyczny sposób byłoby niemal niemożliwe (wymagałoby automatu rozumiejącego sens kodu -- programu programisty).
+%Wielkie porównanie różnych formatów.
+%http://en.wikipedia.org/wiki/Comparison_of_data_serialization_formats
+
+%Niestety przekazywane obiekty nie mogą mieć żadnej większej logiki związanej z dostępem do swoich danych. O ile można zmapować pola klasy w jednym języku na pola w drugim, to przetłumaczenie metod dostępowych, które mają jakąś logikę (np.\ zmień licznik odczytań, kiedy czytam zmienną) w automatyczny sposób byłoby niemal niemożliwe (wymagałoby automatu rozumiejącego sens kodu -- programu programisty).
 
 %Binarnie można teoretycznie zapisać obiekt z pamięci jakiegoś języka nie tracąc niby żadnych informacji (chociaż powiązania dalej są problemami).
 %Ale to nigdy nie będzie standardowe. Tekstowo też bym mógł w niestandardowy sposób zachować wszystko.
@@ -262,12 +271,12 @@ Ale świadomość ograniczeń serializacji w~projektowaniu swoich obiektów oraz
 %A Marshalling?
 %http://stackoverflow.com/questions/154185/what-is-object-marshalling
 %http://stackoverflow.com/questions/770474/what-is-the-difference-between-serialization-and-marshaling
-% W sumie to prawie to samo co serializacja, ale wiąże się niejako z przekazem większego sensu. Ma, chyba, na celu odtworzyć obiekt z jego tożsamością, a nie tylko jego kopię. Np. zmarszalowanie agenta w JADEie, przesłanie go przez sieć i odmarszalowanie w nowym kontenerze. Znika z pierwszego, pojawia się w drugim i tam już normalnie funkcjonuje; faktycznie można powiedzieć, że to ten sam obiekt, ale się przemieścił.
+% W sumie to prawie to samo co serializacja, ale wiąże się niejako z przekazem większego sensu. Ma, chyba, na celu odtworzyć obiekt z jego tożsamością, a nie tylko jego kopię. Np.\ zmarszalowanie agenta w JADEie, przesłanie go przez sieć i odmarszalowanie w nowym kontenerze. Znika z pierwszego, pojawia się w drugim i tam już normalnie funkcjonuje; faktycznie można powiedzieć, że to ten sam obiekt, ale się przemieścił.
 
 \subsection{Typy zapisu(TODO)}
 Zarówno serializacja binarna i tekstowa ma wiele odmian, o różnym stopniu rozpowszechnienia. Te bardziej rozpowszechnione można nazywać standardowymi. Tutaj niektóre zostaną przybliżone.
 
-Powiem tu tylko o tych bardziej standardowych. Np. jak Java sobie serializuje do bajtów mówić nie będę.
+Powiem tu tylko o tych bardziej standardowych. Np.\ jak Java sobie serializuje do bajtów mówić nie będę.
 W sumie każdy z nich pozwala uzyskać ustrukturalizowane dane.
 
 O każdym kilka zdań - jaka jest ich główna misja:
@@ -333,7 +342,7 @@ Tu rozstaną opisane techniki umożliwiające zdalne wywoływanie kodu.
 \subsection{Transport danych}
 Potrzebny, żeby coś wywołać. Bo trzeba przetransportować chociażby oznaczenie, jaką metodę chcemy uruchomić. Można też przekazać parametry, oraz zwrócić wartość z~powrotem.
 
-Też bardzo szeroka dziedzina. Obejmuje np. TCP, PIPEy, SSL, HTTP, HTTPS. Za dużo nie będę się tym zajmował, ponieważ będę tylko korzystał z istniejących warstw na możliwie największym poziomie abstrakcji, aby zapewnić ich wymienność.
+Też bardzo szeroka dziedzina. Obejmuje np. TCP, PIPEy, SSL, HTTP, HTTPS\@. Za dużo nie będę się tym zajmował, ponieważ będę tylko korzystał z istniejących warstw na możliwie największym poziomie abstrakcji, aby zapewnić ich wymienność.
 %Jak już się przetłumaczy, to zawsze trzeba jakoś przetransportować. Jak możemy przekazywać w ramach jednego kompa, jak pomiędzy kompami lokalnie, jak globalnie.
 %Celuję w globalnie, ale zwsze szerszą metodę można zastosować wężej (chociaż może nie być tak wydajna jak te węższe)
 %
@@ -346,7 +355,7 @@ Też bardzo szeroka dziedzina. Obejmuje np. TCP, PIPEy, SSL, HTTP, HTTPS. Za du�
 %\emph{TCP, PIPEy, SSL, HTTP, HTTPS}
 
 \subsection{XML RPC}
-Podstawowy chyba obecnie przykład RPC. Proste, dość przestarzałe. Jakie cechy? Przykład wywołania pokaż.
+Podstawowy chyba obecnie przykład RPC\@. Proste, dość przestarzałe. Jakie cechy? Przykład wywołania pokaż.
 %\url{http://xmlrpc.scripting.com/default.html}\\
 %\url{http://xmlrpc.scripting.com/spec.html}\\
 %\url{http://effbot.org/zone/xmlrpc-errata.htm}\\

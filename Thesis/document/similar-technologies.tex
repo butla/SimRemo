@@ -6,46 +6,46 @@ Jeśli nie, to może chociaż mogę użyć jako moduł w swojej bibliotecę?
 
 Dla każdego obiecującego frameworku powinienem wykonać i opisać test, jaki wykonałem, żeby sprawdzić czy nadaje się dla moich celów.
 
-%Przy każdej technologii pokazać implementacje w WCF i Javie normalnej (bo ona będzie takim punktem odniesienia) i zrobić porównania prędkości, bezpieczeństwa itp.
-
-%jakieś może znaleźć frameworki pozwalające oznakować klasy do serializacji (binding) do xmla albo jsona
-
 %Konkretne porównania osiągów w rozdziale o eksperymentach (chociaż tutaj już zrobić porównanie wysiłku programisty, po prostu zamieścić je na końcu). Tutaj napisać o funkcjonalności żeby w ogóle wiedzieć, czy to czegoś warte i na ile mam się inspirować.
 \section{Metoda analizy technologii}
 Czyli z jakiej strony będę patrzył na frameworki, co będe sprawdzał, na co zwracał uwagę. Jak będzie jeden wzorzec to łatwiej zrobić tabelkę, czy coś.
 
-W sumie będę sprawdzał, czy każda z technologii ma cechy, które opisałem w \ref{lib_requirements}.
+W sumie będę sprawdzał, czy każda z technologii ma cechy, które opisałem w~\ref{lib-requirements}.
 
 Wyjaśnić ogólną zasadę działania dla każdego.
 
 Dla każdego wypisać wady i zalety względem moich celów.
 
-\subsubsection{Użyteczność}
+\subsection{Użyteczność}
 \begin{itemize}
 	\item Jak przebiega instalacja? Jest oczywista, automatyczna? Wszystko łatwo znaleźć?
 	\item Jak można uruchomić helloWorld?
 	\item Na ile to elastyczne i potężne? Czyli jak łatwo można zrobić swoją robotę i to tak, jak się chce?
 \end{itemize}
 
-\subsubsection{Czy może być hostem}
+\subsection{Czy może być hostem}
 Czyli czy pozwala na wystawianie serwisu, czy może tylko być klientem. Czy może ani tym, ani tym? Tylko w czymś możee pomóc?
 
-\subsubsection{Sprawdzanie polimorfizmu}
+\subsection{Współpraca}
+Można tym połączyć Androida z C\#?
+Łączy się jakoś standardowo, czy własne łączniki po obu stronach implementować? Czy wystarczy skonfigurować istniejące?
+
+\subsection{Sprawdzanie polimorfizmu}
 Jak sprawdzam polimorfizm?
 Przede wszystkim trzeba sprawdzić, czy metody spełniają założenia polimorfizmu. Poza tym templateowym, bo tego nie chce. Czyli jak z argumentami dziedziczącymi, jak z przeładowaniem metod. Jak z listami różnych elementów, które dziedziczą po typie bazowym.
-Potem przyjrzenie się liście rzeczy, które stworzyłem na bazie doświadczenia z ktorymi silniki serializacyjne maja problemy, a sa ta sensowne przypadki. Np. listy list, listy obiektów o różnych typach (też listach). Puste tablice.
+Potem przyjrzenie się liście rzeczy, które stworzyłem na bazie doświadczenia z ktorymi silniki serializacyjne maja problemy, a sa ta sensowne przypadki. Np.\ listy list, listy obiektów o różnych typach (też listach). Puste tablice.
 
-Przypadki testowe:
-Co? Dlaczego?
-Test podstawowy, którego będą wariacje:
-Metoda taka i taka. Jeden parametr. To samo zwraca, to samo przyjmuje.
+\subsubsection{Testy polimorfizmu}
+Odpowiedzialne za tę weryfikacje będą testy polegające na stworzeniu opisanych zdalnych metod przy pomocy sprawdzanego narzędzia i~próby jej wywołania. Nawet jeśli metoda się wykona, to mogła nie zwrócić odpowiedniego wyniku, dlatego go też trzeba będzie weryfikować. No i~tym testom będą podlegać tylko biblioteki, którą pozwalają tworzyć zdalne metody, nie te, które tylko je konsumują.
 
-%algorithmic do kodu?
+CHYBA JEDNAK TE ``PODSTAWOWE'' METODY I DANE TO BEZSENS. KAŻDE DANE I METODE OPISAĆ OSOBNO. TEST POLEGA NA ODPALENIU METODY I DOSTANIU SPODZIEWANEGO WYNIKU (PODAĆ INPUT I OUTPUT). KODY Z TESTÓW W REPO JAKO ZAŁĄCZNIKI.
+
+Przy opisach testów pewna metoda i pewien typ danych będą uznawane za podstawowe. Opisy będą się odnosiły do tych ``podstawowych'' definicji. A~one są opisane poniżej.
 
 Kod podstawowej klasy danych. Jej obiekty będę przekazywane i~zwracane w~większości testów.
 Szczegóły składni nie będą ważne, można traktować to jako pseudokod, ale faktycznie na ogół będzie to C\#.
 
-\begin{lstlisting}[frame=single, caption={Przykładowa klasa danych}, label=kod:testData]
+\begin{lstlisting}[frame=single, caption={Przykładowa klasa danych używana w testach polimorfizmu zdalnych metod}, label=kod:testData]
 public class DaneA
 {
 	public int liczba;
@@ -56,7 +56,7 @@ public class DaneA
 Kod podstawowej metody testowej. Będzie ona wykonywana w~większości testów.
 Po prostu zwraca lekko zmodyfikowaną kopię parametru.
 
-\begin{lstlisting}[frame=single, caption={Przykładowa zdalna metoda}, label=kod:testMethod]
+\begin{lstlisting}[frame=single, caption={Przykładowa zdalna metoda testowana pod kątem polimorfizmu}, label=kod:testMethod]
 public DaneA MetodaA(DaneA dane)
 {
 	DaneA noweDane = new DaneA();
@@ -66,114 +66,137 @@ public DaneA MetodaA(DaneA dane)
 }
 \end{lstlisting}
 
-\begin{tabular}{ | l | l | }
-  \hline
-	\textbf{Test} & \textbf{Uzasadnienie} \\
-	\hline \hline
-  4 & 5 \\
-	\hline
-  7 & 8 \\
-	\hline
-\end{tabular}
-
-\subsubsection{Swoboda rozszerzania kodu}
+\subsection{Swoboda rozszerzania kodu}
 Czy na tym, co się stworzy danym narzędziem można dalej budować. Zgodnie z obiektową zasadą reuse?
+
+Też testy tutaj. Tylko jakie?
 
 \section{WCF}
 Potężny framework Web Serviceów od Microsoftu. Może posłużyć za wzór jak wszystko może działać. Może dość dynamicznie tworzyć hierarchie obiektów, które mogą funkcjonować jako usługi.
-%\url{http://msdn.microsoft.com/en-us/library/system.runtime.serialization.json.datacontractjsonserializer.aspx}\\
-%Generowanie z JAX-WS nie do końca działało.
 
-%Opisać o co chodzi z tym polimorfizmem, że w WCF trzeba wypisywać KnownType, co jest robieniem wzajemnych zależności, co jest straszną praktyką programowania (źródło).
+Można robić JSONa: \url{http://msdn.microsoft.com/en-us/library/system.runtime.serialization.json.datacontractjsonserializer.aspx}\\
+
+Generowanie z JAX-WS przy pomocy wsdl toola nie do końca działało.
+
+Opisać o co chodzi z tym polimorfizmem, że w WCF trzeba wypisywać KnownType, co jest robieniem wzajemnych zależności, co jest straszną praktyką programowania (źródło).
 
 \section{JAX-WS}
-Standardowy framework Javy do Web Serviceów. Podobne możliwości co WCF. Ja też niby chcę web service'y w Javie, ale na Androidzie, któremu JAX-WS został wycięty.
+Standardowy framework Javy do Web Serviceów. Podobne możliwości co WCF\@. Ja też niby chcę web service'y w Javie, ale na Androidzie, któremu JAX-WS został wycięty.
 %Niestandardowe podejście z użyciem JSONa zamiast XMLa\url{http://jax-ws-commons.java.net/json/}\\
 
-W JVM jest mały serwerek, który może hostować, można to też robić z jakiegoś Glassfisha albo innego serwera Javy EE. Podobnie ma WCF.
+W JVM jest mały serwerek, który może hostować, można to też robić z jakiegoś Glassfisha albo innego serwera Javy EE\@. Podobnie ma WCF.
+
+Co by trzeba było po kolei zrobić w normalnej javie żeby połączyć z~WCF? (tłumaczenia do xsd, ujednolicanie namespaców, mamy do czynienia z jakimiś ArrayOfString, dziedziczenie chyba słabo działa przy generacji, nie da się używać DataContractSerializera żeby nie serializować części klas ogólnie syf, ale wszystko udokumentować). 
 
 \section{gSOAP}
 Pozwala tworzyć i konsumować Web Servicey z poziomu niezależnej biblioteki C++. Może będzie działać na Androidzie?
-%http://trac.e-technik.uni-rostock.de/projects/ws4d-gsoap/wiki/AndroidNDK
+\url{http://trac.e-technik.uni-rostock.de/projects/ws4d-gsoap/wiki/AndroidNDK}\\
 
 \section{Xamarin}
 Pozwala tworzyć w .NETcie aplikacje na Androida. Nie wspiera całości .NET.
 
 Testowałem sobie na emulatorze, opis dopiero w dziale z implementacją, bo do całości pracy to się przydało.
 
-%\url{http://docs.xamarin.com/guides/cross-platform/application_fundamentals/web_services/}\\
-%Ddawniej mono dla androida, nie można robić web serviceów (czyli nie ma całego .NETa). Z api Androida nie wiem, jak jest.
+\url{http://docs.xamarin.com/guides/cross-platform/application_fundamentals/web_services/}\\
+Ddawniej mono dla androida, nie można robić web serviceów (czyli nie ma całego .NETa). Z api Androida nie wiem, jak jest.
 
-\section{android-json-rpc}
-Też na android-xml-rpc spojrzeć.
+\section{android-xmlrpc}
+W jednym wątku na Google Groups \cite{android-rpc-thread} mówili, że niby zrobili serwer. I faktycznie na to wygląda.
 
-Tutaj nawet ktoś coś zrobił chyba: \url{https://groups.google.com/forum/#!topic/android-developers/PKcQSWwnknc}
+Też na android-json-rpc(\url{https://code.google.com/p/android-json-rpc/}). Albo nie, tylko po prostu na JSON-RPC (\url{https://github.com/RitwikSaikia/jsonrpc}) spojrzeć. Wygląda, jakby też potrafił być serwerem.
+
+\section{Thrift}
+\url{http://thrift.apache.org/static/files/thrift-20070401.pdf}\\
+
+\section{Google Protocol Buffers}
+\url{http://stackoverflow.com/questions/8062212/difference-between-apache-thrift-and-zeromq}\\
+A co to ZeroMQ?\\
 
 \section{Jackson}
 Konfigurowalna i dopracowana biblioteki do serializacji do JSONa. To może się przydać przy komponowaniu wywołań RPC.
 
-%\url{http://www.cowtowncoder.com/blog/archives/2010/03/entry_372.html}\\
-%\url{http://stackoverflow.com/questions/8368873/deserialize-json-string-generated-from-net-using-jackson}
-%\url{http://stackoverflow.com/questions/10329706/json-deserialization-into-another-class-hierarchy-using-jackson}
-%\url{http://stackoverflow.com/questions/14454028/polymorphic-serialization-of-collections-with-custom-serializer-in-jackson}
-%\url{http://stackoverflow.com/questions/12350571/how-can-i-change-global-type-information-format-in-jackson}
-%
+Polimorfizm w Jacksonie:
+\url{http://www.cowtowncoder.com/blog/archives/2010/03/entry_372.html}\\
+\url{http://stackoverflow.com/questions/14454028/polymorphic-serialization-of-collections-with-custom-serializer-in-jackson}\\
+
+Informacja o typach w Jacksonie:
+\url{http://stackoverflow.com/questions/12350571/how-can-i-change-global-type-information-format-in-jackson}\\
 %sprawdzić jak się wymienia ze wszystkim opisanym adnotacjami (dodać jeszcze rozszerzenie defaulttyperesolvera), wtedy sprawdzić mixed iny; lista objectów, na którą wpakuję stringi i inty
 
-%\section{Restlet}
-%\url{http://restlet.org/learn/tutorial/2.1/#/docs_2.0/13-restlet/275-restlet/266-restlet.html}\\
-%\url{http://wiki.fasterxml.com/JacksonHowToIgnoreUnknown}\\
+Jackson i .NET:
+\url{http://stackoverflow.com/questions/8368873/deserialize-json-string-generated-from-net-using-jackson}\\
+
+Ogólne:
+\url{http://stackoverflow.com/questions/10329706/json-deserialization-into-another-class-hierarchy-using-jackson}\\
+\url{http://wiki.fasterxml.com/JacksonHowToIgnoreUnknown}\\
 
 \section{Pyro}
 Pythonowe, niby obiektowe. Ale dla pythona będzie łatwo uzyskać polimorfizm, bo nie ma ostrego typowania. Także może sobie luźno traktować XMLa lub JSONa.
 
 \section{Spring}
 Javowy framework web serviceów.
-%\section{Crest}
-%\section{Ksoap}
 
-%http://trac.e-technik.uni-rostock.de/projects/ws4d-gsoap/wiki/AndroidNDK
+\url{http://forum.springsource.org/showthread.php?129058-Spring-Remoting-for-Android}\\
+
 
 \section{I-jetty}
 Serwer webowy dla Androida. Niby port Jetty. Może ma jakiś kontener Web-serviceów?
 
+\section{Wrappery pythonowe}
+Może zamiast równoważnych implementacji na pythona, C\# i javę zrobić tylko pythona i wrappery w jythonie i iron pythonie?
+
+
 \section{Inne}
 Chociaż wymienić pozostałe rozwiązania, które mogą być warte uwagi, choć raczej nie nadają się dla rozwiązania problemu tej pracy magisterskiej.
 
-Apache Avro, google protocol buffers.
+\subsection{Apache Avro}
 
-%\url{http://www.webopedia.com/TERM/W/Web_Services.html}\\
-%\url{http://thrift.apache.org/static/files/thrift-20070401.pdf}\\
-%reliable sessions (w sumie też by mi się przydał jakiś mechanizm, który umożliwi komunikację w niestabilnym środowisku Internetu)\\
-%\url{http://blogs.msdn.com/b/shycohen/archive/2006/02/20/535717.aspx}\\
-%\url{http://wsme.readthedocs.org/en/latest/}\\
-%
-%Apache Thrift, Google Protocol Buffers, ZeroMQ (\url{http://stackoverflow.com/questions/8062212/difference-between-apache-thrift-and-zeromq})\\
-%\url{http://thrift.apache.org/static/files/thrift-20070401.pdf}\\
-%\url{http://blogs.msdn.com/b/shycohen/archive/2006/02/20/535717.aspx}\\
-%
-%
-%JiBX!!! Tworzenie klas ze schemy i robienie wsdl z javy\\
-%Wsdl2Java: tworzenie klas z wsdl, głównie chodzi o klasy danych\\
-%
-%Serializacja:\\
-%\url{http://simple.sourceforge.net/}\\
-%\url{http://code.google.com/p/dbdroid-remoting/} - klient web serviców serializujący i deserializujący xmle\\
-%Generacja javovego kodu z bindingu:\\
-%XSD2Java – generuje kod java z xsd. Mocno niedorobione.\\
-%Inne:\\
-%\url{http://stackoverflow.com/questions/6920175/how-to-generate-java-classes-from-wsdl-file}\\
-%\url{http://blog.tourgeek.com/2011/12/xml-data-binding-for-java-on-android.html}\\
-%PODOBNE, ALE NIE PRZYDATNE:\\
-%
-%\url{http://forum.springsource.org/showthread.php?129058-Spring-Remoting-for-Android}\\
-%\url{http://www.themidnightcoders.com/fileadmin/docs/java/v4/index.html?android}\\
-%\url{http://developer.android.com/guide/components/aidl.html} - AIDL, androidowa komunikacja między procesami\\
+\subsection{Restlet}
+\url{http://restlet.org/learn/tutorial/2.1/#/docs_2.0/13-restlet/275-restlet/266-restlet.html}\\
 
-%Python EVE (Rest framework)
-%\url{http://www.blog.pythonlibrary.org/2014/08/13/jsonpickle-turning-python-pickles-into-json/}
+\subsection{Jakieś pythonowe}
+WSME: \url{http://wsme.readthedocs.org/en/latest/}\\
+Python EVE (Rest framework)\\
 
+\subsection{Jeśli chciałbym się bawić w schemy}
+To może poszukać jakiś frameworków pozwalających oznakować klasy do serializacji (binding) do xmla albo jsona (a może nawet WSDL).
+W końcu jak mamy schemę po obu stronach, to można przetłumaczyć z Javy do XMLa a dalej do C\# i z powrotem.
+
+JiBX!!! Tworzenie klas ze schemy i robienie wsdl z javy\\
+Wsdl2Java: tworzenie klas z wsdl, głównie chodzi o klasy danych\\
+
+Generacja javovego kodu z bindingu:\\
+XSD2Java – generuje kod java z xsd. Mocno niedorobione.\\
+
+\url{http://stackoverflow.com/questions/6920175/how-to-generate-java-classes-from-wsdl-file}\\
+\url{http://blog.tourgeek.com/2011/12/xml-data-binding-for-java-on-android.html}\\
+
+\subsection{Jakieś serializacje}
+\url{http://simple.sourceforge.net/}\\
+\url{http://code.google.com/p/dbdroid-remoting/} - klient web serviców serializujący i deserializujący xmle\\
+
+\subsection{Crest}
+\subsection{Ksoap}
+
+
+
+%Może przerzucić to na początek i uwzględnić więcej technologii? Takich pobierznie przejrzanych?
 \section{Porównanie możliwości tych technologii}
 Zestawienie ogólne -- czy można coś zrobić z tym na Androidzie, czy możliwe są metody polimorficzne (i jak z resztą poszukiwanych przeze mnie cech ze wstępu), jaka jest moja subiektywna ocena pracy z danym frameworkiem, jak ciężko się instaluje, na ile potrafią współpracować z innymi rozwiązaniami (jak bardzo trzymają się standardów).
 
-%Jakieś niestandardowe (third-party) narzędzia tworzące WSDLa z Javy i .NETa i z WSDLa klasy? To samo do schemy i ze schemy?
+\begin{table}[htbp]
+	\centering
+		\begin{tabular}{ | c || c | c | c | c | c | c |}
+			\hline
+				Technologia & Android & Hostowanie & Współpraca & Polimorfizm & Rozszerzalność & Prostota  \\
+				\hline \hline
+				WCF & & + & + & + & &\\
+				\hline
+				JAX-WS & & + & +/- & + & &\\
+				\hline
+				JSON-RPC & + & + & & & &\\
+				\hline
+		\end{tabular}
+	\caption[Podsumowanie możliwości frameworków.]{Podsumowanie możliwości frameworków. ``+'' oznacza ``tak'', puste miejsce oznacza ``nie''. We współpracy chodzi o to, czy może współpracować z .NETem bez jakiś dedykowanych klientów.}
+	\label{tab:frameworks-summary}
+\end{table}
