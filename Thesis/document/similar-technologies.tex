@@ -16,6 +16,10 @@ Czyli z jakiej strony będę patrzył na frameworki, co będe sprawdzał, na co 
 
 W sumie będę sprawdzał, czy każda z technologii ma cechy, które opisałem w \ref{lib_requirements}.
 
+Wyjaśnić ogólną zasadę działania dla każdego.
+
+Dla każdego wypisać wady i zalety względem moich celów.
+
 \subsubsection{Użyteczność}
 \begin{itemize}
 	\item Jak przebiega instalacja? Jest oczywista, automatyczna? Wszystko łatwo znaleźć?
@@ -86,6 +90,8 @@ Potężny framework Web Serviceów od Microsoftu. Może posłużyć za wzór jak
 Standardowy framework Javy do Web Serviceów. Podobne możliwości co WCF. Ja też niby chcę web service'y w Javie, ale na Androidzie, któremu JAX-WS został wycięty.
 %Niestandardowe podejście z użyciem JSONa zamiast XMLa\url{http://jax-ws-commons.java.net/json/}\\
 
+W JVM jest mały serwerek, który może hostować, można to też robić z jakiegoś Glassfisha albo innego serwera Javy EE. Podobnie ma WCF.
+
 \section{gSOAP}
 Pozwala tworzyć i konsumować Web Servicey z poziomu niezależnej biblioteki C++. Może będzie działać na Androidzie?
 %http://trac.e-technik.uni-rostock.de/projects/ws4d-gsoap/wiki/AndroidNDK
@@ -97,6 +103,11 @@ Testowałem sobie na emulatorze, opis dopiero w dziale z implementacją, bo do c
 
 %\url{http://docs.xamarin.com/guides/cross-platform/application_fundamentals/web_services/}\\
 %Ddawniej mono dla androida, nie można robić web serviceów (czyli nie ma całego .NETa). Z api Androida nie wiem, jak jest.
+
+\section{android-json-rpc}
+Też na android-xml-rpc spojrzeć.
+
+Tutaj nawet ktoś coś zrobił chyba: \url{https://groups.google.com/forum/#!topic/android-developers/PKcQSWwnknc}
 
 \section{Jackson}
 Konfigurowalna i dopracowana biblioteki do serializacji do JSONa. To może się przydać przy komponowaniu wywołań RPC.
@@ -113,6 +124,9 @@ Konfigurowalna i dopracowana biblioteki do serializacji do JSONa. To może się 
 %\url{http://restlet.org/learn/tutorial/2.1/#/docs_2.0/13-restlet/275-restlet/266-restlet.html}\\
 %\url{http://wiki.fasterxml.com/JacksonHowToIgnoreUnknown}\\
 
+\section{Pyro}
+Pythonowe, niby obiektowe. Ale dla pythona będzie łatwo uzyskać polimorfizm, bo nie ma ostrego typowania. Także może sobie luźno traktować XMLa lub JSONa.
+
 \section{Spring}
 Javowy framework web serviceów.
 %\section{Crest}
@@ -125,6 +139,8 @@ Serwer webowy dla Androida. Niby port Jetty. Może ma jakiś kontener Web-servic
 
 \section{Inne}
 Chociaż wymienić pozostałe rozwiązania, które mogą być warte uwagi, choć raczej nie nadają się dla rozwiązania problemu tej pracy magisterskiej.
+
+Apache Avro, google protocol buffers.
 
 %\url{http://www.webopedia.com/TERM/W/Web_Services.html}\\
 %\url{http://thrift.apache.org/static/files/thrift-20070401.pdf}\\
