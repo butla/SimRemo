@@ -103,17 +103,30 @@ Z jacksona trzeba jeszcze wziąć core i~annotation (po prostu wszystko). I~potr
 
 Zrobiłem sobie przykładowego klienta i~serwer (kody powinny być załączone do pracy). Oba działają lokalnie. Chwilkę musiałem się zastanowić jak to złożyć bez żadnych serwletów, ale kod jest logicznie ustrukturalizowany i~elastyczny, dlatego zrobienie takiego klienta jakiego chciałem.
 
+Nie da się, niestety tak skonfigurować ``serwera strumieniowego'', żeby działał w~jednym procesie na strumieniach w~pamięci. Trzeba użyć socketów.
+Na szczęście wszystko jest na tyle otwarte, że da się dobrać do socketu klienta i~przekierować to, co jest na niego nadawane (i~z~niego odbierane). Dzięki temu będę widział, jak wyglądają słane wiadomości.
+
 \subsection{Testy}
 Teraz pora sprawdzić te obietnice i~poddać bibliotekę testom.
 
 Zobaczyć, jak wygląda wiadomość, w~której powinny być oznaczone typy.
 
-Prosty test, że polimorfizm działa -- zwrócenie. To dlaczego chcę polimorfizm nie jest tak ważne -- można z~tym robić wiele rzeczy, każdy może mieć różne zastosowania. Np. kiedy przerzuca się obiekt, który będzie analizowany refleksją, albo posiadający przeładowane metody.
+Prosty test, że polimorfizm działa.  Np. kiedy przerzuca się obiekt, który będzie analizowany refleksją, albo posiadający przeładowane metody.
 
-Dostałem
-%Exception in thread "main" java.lang.IllegalArgumentException: No serializer found for class jsonrpc4jtestse.TestDataB and no properties discovered to create BeanSerializer (to avoid exception, disable SerializationConfig.SerializationFeature.FAIL_ON_EMPTY_BEANS) )
-Na wstępie jak tylko chciałem przekazać dziedziczący argument.
+Ok, prosty test z przekazaniem dziedziczącego argumentu wywala się z~uwagi na nierozpoznanie dodatkowego pola parametru. Nie wie, że to inny typ.
+%{"id":"3199114083297069103","jsonrpc":"2.0","method":"testDataA","params":[{"numberA":13,"stringA":"domyslny","numberB":5.25}]}
+%Unrecognized field "numberB" (class jsonrpc4jtestse.TestDataA), not marked as ignorable (2 known properties: , "numberA", "stringA"])
+
+Readme nic o~tym nie mówi, dokumentacji nie ma. Ale w~błędzie jackson, więc trzeba się udać do Jacksona.
 Najwyraźniej potrzeba dodatkowych informacji, żeby serializacja mogła się udać. Z~pomocą przychodzi funkcja oznaczania typów obiektów we wiadomości\cite{jackson-polymorphic}.
+Nawet mimo tego są jakieś problemy... Robi się to irytujące.
+
+Używa valueToTree zamiast po prostu write i~przez to nie chce przejść z~oznaczaniem typów.
+
+A po dodaniu do klasy głównej danych znacznika nakazującego oznaczenie typów wszystko działa.
+%{"id":"4653019993893876656","jsonrpc":"2.0","method":"testDataA","params":[{"@class":"jsonrpc4jtestse.TestDataB","numberA":13,"stringA":"domyslny","numberB":5.25}]}
+%{"jsonrpc":"2.0","id":"4653019993893876656","result":{"@class":"jsonrpc4jtestse.TestDataB","numberA":14,"stringA":"domyslny dodałem coś!","numberB":5.25}}
+Wraca obiekt o poprawnym typie. Dodanie jednego znacznika do głównej klasy w~hierarchii nie jest straszne, ale sprawdźmy jeszcze domyślne typowanie z~najnowszą wersją Jacksona (bo do jsonrpc4j zrobiła się jakaś 2.0.2).
 
 
 Polimorfizm kolekcji.
