@@ -13,7 +13,8 @@ Jak w ogóle dojść do tego  co i jak zrobić, żeby dało nam to, co mamy w ce
 
 
 \section{Wymagane składniki rozwiązania}
-Musi być serializacja (po obu stronach taka sama), przesył, oznaczanie typów, logika kierowania żądań, wiedza o typach po obu stronach (albo dynamiczne typy lub przesyłanie ze schemą).
+Musi być serializacja (po obu stronach taka sama), przesył, oznaczanie typów, logika kierowania żądań, wiedza o typach po obu stronach (albo dynamiczne typy lub przesyłanie ze schemą), i~czymś zarządzającym wieloinstancyjnością (bo chyba ją chcę, id w~JSON-RPC za to odpowiada).
+Zrobić z~tego taki schemat przepływu (albo akcji, czy jak to się tam nazywało) przedstawiający wszystkie te główne etapy po kolei na dwóch maszynach, z transportem przez sieć.
 
 Napisać, co jest potrzebne dla remotingu: jakaś tożsamość, adres obiektu, oznaczenia metod, argumentów. Ogólnie to jest dość proste.
 
