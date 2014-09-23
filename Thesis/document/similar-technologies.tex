@@ -6,6 +6,8 @@ Jeśli nie, to może chociaż mogę użyć jako moduł w swojej bibliotecę?
 
 Dla każdego obiecującego frameworku powinienem wykonać i opisać test, jaki wykonałem, żeby sprawdzić czy nadaje się dla moich celów.
 
+Jak ogólnie wygląda oznaczanie typów -- może być spójne między różnymi frameworkami.
+
 %Konkretne porównania osiągów w rozdziale o eksperymentach (chociaż tutaj już zrobić porównanie wysiłku programisty, po prostu zamieścić je na końcu). Tutaj napisać o funkcjonalności żeby w ogóle wiedzieć, czy to czegoś warte i na ile mam się inspirować.
 \section{Metoda analizy technologii}
 Czyli z jakiej strony będę patrzył na frameworki, co będe sprawdzał, na co zwracał uwagę. Jak będzie jeden wzorzec to łatwiej zrobić tabelkę, czy coś.
@@ -107,9 +109,7 @@ Nie da się, niestety tak skonfigurować ``serwera strumieniowego'', żeby dzia�
 Na szczęście wszystko jest na tyle otwarte, że da się dobrać do socketu klienta i~przekierować to, co jest na niego nadawane (i~z~niego odbierane). Dzięki temu będę widział, jak wyglądają słane wiadomości.
 
 \subsection{Testy}
-Teraz pora sprawdzić te obietnice i~poddać bibliotekę testom.
-
-Zobaczyć, jak wygląda wiadomość, w~której powinny być oznaczone typy.
+Teraz pora sprawdzić te obietnice i~poddać bibliotekę testom. Odpalenie tych testów daje zrozumienie jak trudno lub łatwo można realizować bardziej skomplikowane zdalne metody.
 
 Prosty test, że polimorfizm działa.  Np. kiedy przerzuca się obiekt, który będzie analizowany refleksją, albo posiadający przeładowane metody.
 
@@ -126,18 +126,41 @@ Używa valueToTree zamiast po prostu write i~przez to nie chce przejść z~oznac
 A po dodaniu do klasy głównej danych znacznika nakazującego oznaczenie typów wszystko działa.
 %{"id":"4653019993893876656","jsonrpc":"2.0","method":"testDataA","params":[{"@class":"jsonrpc4jtestse.TestDataB","numberA":13,"stringA":"domyslny","numberB":5.25}]}
 %{"jsonrpc":"2.0","id":"4653019993893876656","result":{"@class":"jsonrpc4jtestse.TestDataB","numberA":14,"stringA":"domyslny dodałem coś!","numberB":5.25}}
-Wraca obiekt o poprawnym typie. Dodanie jednego znacznika do głównej klasy w~hierarchii nie jest straszne, ale sprawdźmy jeszcze domyślne typowanie z~najnowszą wersją Jacksona (bo do jsonrpc4j zrobiła się jakaś 2.0.2).
+Wraca obiekt o poprawnym typie. Bez ustawiania czegokolwiek w~Mapperach.
+Dodanie jednego znacznika do głównej klasy w~hierarchii nie jest straszne, ale sprawdźmy jeszcze domyślne typowanie z~najnowszą wersją Jacksona (bo do jsonrpc4j zrobiła się jakaś 2.0.2).
 
+Ściągnąłem 2.4.2, nową wersje w~której powinien ten problem być już naprawiony. I faktycznie, działa teraz bez oznaczeń na klasie. Ale za to trzeba i~serwer, i~klienta stworzyć z~ObjectMapperem, w~którym włączy się enableDefaultTyping(). W moim przypadku było to
+%mapper.enableDefaultTyping(
+                %ObjectMapper.DefaultTyping.NON_FINAL,
+                %JsonTypeInfo.As.PROPERTY);
+Które dodaje informację o~klasie jako dodatkowe pole obiektu (\emph{property}), przy wszystkich obiektach, które nie są oznaczone jako final (takie, po których się nie da dziedziczyć).
+%{"id":"-6659082740394205036","jsonrpc":"2.0","method":"testDataA","params":[{"@class":"jsonrpc4jtestse.TestDataB","numberA":13,"stringA":"domyslny","numberB":5.25}]}
+Wygląda tak samo, jak przy oznaczaniu w~klasie. Warto zaznaczyć, że są inne style dodawania informacji o~klasach niż dodawanie nowego pola. Można je zobaczyć tu (link!)
 
-Polimorfizm kolekcji.
+Polimorfizm kolekcji -- też działa. Przy tablicach najwyraźniej nie ma wyboru stylu oznaczeń typów.
 
 
 \subsection{Jakieś spostrzeżenia?}
-No wymaga tych samych interfejsów po obu stronach.
+Wszystko super. Sam standard JSON-RPC powinien zapewniać zgodność elementów z~różnych technologii. Niestety sam standard nie jest przemyślany pod kontem polimorfizmu. W tym przypadku może działać dzięki Jacksonowi.
+Może też być zgodny ze wszystkim innym, co używa Jacksona. Ale albo trzeba mieć te same pliki klas po obu stronach albo takie same mappery.
 
 \subsection{Podsumowanie}
 Wymienienie plusów i minusów. Może zrobić itemize, gdzie jedna lista ma duże minusy jako znaczki, a~druga plusy?
 
+
+
+\section{Xamarin}
+\subsection{Opis}
+Pozwala tworzyć w .NETcie aplikacje na Androida. Nie wspiera całości .NET.
+
+Testowałem sobie na emulatorze, opis dopiero w dziale z implementacją, bo do całości pracy to się przydało.
+
+\url{http://docs.xamarin.com/guides/cross-platform/application_fundamentals/web_services/}\\
+Ddawniej mono dla androida, nie można robić web serviceów (czyli nie ma całego .NETa). Z api Androida nie wiem, jak jest.
+
+\subsection{Instalacja i~hello world}
+\subsection{Testy}
+\subsection{Jakieś spostrzeżenia?}
 
 
 \section{JsonRpc}
@@ -221,13 +244,7 @@ Napisać jak łatwo można zrobić to, co chcę mieć.
 Pozwala tworzyć i konsumować Web Servicey z poziomu niezależnej biblioteki C++. Może będzie działać na Androidzie?
 \url{http://trac.e-technik.uni-rostock.de/projects/ws4d-gsoap/wiki/AndroidNDK}\\
 
-\section{Xamarin}
-Pozwala tworzyć w .NETcie aplikacje na Androida. Nie wspiera całości .NET.
 
-Testowałem sobie na emulatorze, opis dopiero w dziale z implementacją, bo do całości pracy to się przydało.
-
-\url{http://docs.xamarin.com/guides/cross-platform/application_fundamentals/web_services/}\\
-Ddawniej mono dla androida, nie można robić web serviceów (czyli nie ma całego .NETa). Z api Androida nie wiem, jak jest.
 
 \section{Thrift}
 \url{http://thrift.apache.org/static/files/thrift-20070401.pdf}\\
@@ -278,6 +295,7 @@ Chociaż wymienić pozostałe rozwiązania, które mogą być warte uwagi, choć
 
 \subsection{Restlet}
 \url{http://restlet.org/learn/tutorial/2.1/#/docs_2.0/13-restlet/275-restlet/266-restlet.html}\\
+Używa Jacksona, nieciekawy. Ale coś restowego by się przydało.
 
 \subsection{Jakieś pythonowe}
 WSME: \url{http://wsme.readthedocs.org/en/latest/}\\
