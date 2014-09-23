@@ -8,6 +8,8 @@ Dla każdego obiecującego frameworku powinienem wykonać i opisać test, jaki w
 
 Jak ogólnie wygląda oznaczanie typów -- może być spójne między różnymi frameworkami.
 
+Wszystkie instalacje robię na Windowsie 7 Professional x64.
+
 %Konkretne porównania osiągów w rozdziale o eksperymentach (chociaż tutaj już zrobić porównanie wysiłku programisty, po prostu zamieścić je na końcu). Tutaj napisać o funkcjonalności żeby w ogóle wiedzieć, czy to czegoś warte i na ile mam się inspirować.
 \section{Metoda analizy technologii}
 Czyli z jakiej strony będę patrzył na frameworki, co będe sprawdzał, na co zwracał uwagę. Jak będzie jeden wzorzec to łatwiej zrobić tabelkę, czy coś.
@@ -86,6 +88,7 @@ Też testy tutaj. Tylko jakie?
 \url{https://github.com/briandilley/jsonrpc4j}
 
 Używa Jacksona, który sam w~sobie jest ciekawą biblioteką do serializacji.
+% Dopisz dwa zdania o Jacksonie
 
 Niby ma działać na Androidzie zarówno klient jak i~serwer.
 
@@ -135,7 +138,7 @@ Dodanie jednego znacznika do głównej klasy w~hierarchii nie jest straszne, ale
                 %JsonTypeInfo.As.PROPERTY);
 Które dodaje informację o~klasie jako dodatkowe pole obiektu (\emph{property}), przy wszystkich obiektach, które nie są oznaczone jako final (takie, po których się nie da dziedziczyć).
 %{"id":"-6659082740394205036","jsonrpc":"2.0","method":"testDataA","params":[{"@class":"jsonrpc4jtestse.TestDataB","numberA":13,"stringA":"domyslny","numberB":5.25}]}
-Wygląda tak samo, jak przy oznaczaniu w~klasie. Warto zaznaczyć, że są inne style dodawania informacji o~klasach niż dodawanie nowego pola. Można je zobaczyć tu (link!)
+Wygląda tak samo, jak przy oznaczaniu w~klasie. Warto zaznaczyć, że są inne style dodawania informacji o~klasach niż dodawanie nowego pola. Można je zobaczyć tu (link!). Przestawić JSOny z nimi.
 
 Polimorfizm kolekcji -- też działa. Przy tablicach najwyraźniej nie ma wyboru stylu oznaczeń typów.
 
@@ -150,17 +153,35 @@ Wymienienie plusów i minusów. Może zrobić itemize, gdzie jedna lista ma duż
 
 
 \section{Xamarin}
-\subsection{Opis}
-Pozwala tworzyć w .NETcie aplikacje na Androida. Nie wspiera całości .NET.
+\subsection{Opis (DONE)}
+Xamarin jest środowiskiem do tworzenia aplikacji mobilnych na platformy Android, iOS i~Windows\cite{xamarin-overview}.
+Pozwala na stworzenie jednego kodu w~C\#z~którego może powstać aplikacja na dowolny z~wcześniej wymienionych systemów. Tylko nieznaczna część aplikacji musi być świadoma, a~zatem zależna od systemu operacyjnego.
+Twórcy twierdzą, że C\# jest najlepszym językiem do tworzenia aplikacji mobilnych, posiadając cechy takie jak lekkość składni, silne typowanie, operacje asynchroniczne, czy wyrażenia lambda\footnote{Dostępne dopiero w~Javie 8\cite{java-8-features}, podczas gdy Android ma co najwyżej 7\cite{android-java-7}} .
+
+Xamarin daje programistom dostęp zarówno do biblioteki .NET, jak i~API charakterystycznych dla danej platformy. Skupię się tutaj na Androidzie, bo ze wszystkich wspieranych platform tylko on mnie interesuje.
+Wykonywanie kodu po stronie Androida odbywa się dzięki silnikowi Mono\footnote{O~którym była już mowa w~rozdziale \ref{android}}\cite{xamarin-android-arch}.
+Podobnie jak przy użyciu Mono\cite{mono-compatibility}, nie można korzystać z~pełni możliwości .NET\cite{xamarin-dot-net}.
+
+Na korzyść Xamarina może przemawiać to, że znalazł użytek wśród znanych organizacji, takich jak Bosch, Github czy Dow Jones\cite{xamarin-overview}.
+Ponadto, jego twórcy współpracują z~Microsoftem.
+
+%\url{http://docs.xamarin.com/guides/cross-platform/application_fundamentals/web_services/}\\
+
+\subsection{Instalacja i~hello world}
+Ściąga się łatwo z~głównej strony. Jedyne, co zwalnia ten proces to podawanie swoich danych.
+Bardzo chwalę sprytny instalator, który tłumaczy dokładnie jakie elementy są potrzebne. Mam Javę i~Android SDK, ale mówi, czego w~Android SDK mi brakuje i~że Java 6 konkretnie jest potrzebna. Bardzo ładnie.
+
+Teraz trochę mieli. Ale czas nie jest ważny, ważny jest wysiłek programisty.
+
+Widać, że inwestują w~komunikację z~programistą. Prowadzą za rękę i~pomagają.
 
 Testowałem sobie na emulatorze, opis dopiero w dziale z implementacją, bo do całości pracy to się przydało.
 
-\url{http://docs.xamarin.com/guides/cross-platform/application_fundamentals/web_services/}\\
-Ddawniej mono dla androida, nie można robić web serviceów (czyli nie ma całego .NETa). Z api Androida nie wiem, jak jest.
+Możliwości na innych osach nie będą mnie interesować.
 
-\subsection{Instalacja i~hello world}
 \subsection{Testy}
 \subsection{Jakieś spostrzeżenia?}
+Ma ciekawe techniki łączenia Javy i C\#. Może warto będzie przyjrzeć się im niezleżnie.
 
 
 \section{JsonRpc}

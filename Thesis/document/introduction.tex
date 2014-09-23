@@ -99,7 +99,7 @@ Jest niezmiernie ważna dla wszystkich serwerów, ponieważ muszą obsługiwać 
 Tutaj zostaną opisane platformy technologiczne, na których będzie działać moja biblioteka.
 
 \subsection{Android}
-%moze dodac odniesienie do kilku rozdzialow learning-android od razu przy tym rozdziale, a nie gdzies w tekscie? tak się robi?
+\label{android}
 
 \subsubsection{Omówienie}
 Android jest kompletną, otwartą (open-source) platformą dla urządzeń mobilnych opartą o~Linux\cite{learning-android}. Został stworzony przez organizację Open Handset Alliance. Organizacja skupia wielu operatorów komórkowych, producentów elektroniki, telefonów i~oprogramowania oraz firmy komercjalizacyjne \cite{oha}. Pomysłodawcą uformowania oraz liderem tej organizacji jest firma Google. Jej misją jest przyspieszenie innowacji na platformach mobilnych oraz dostarczenie konsumentom pełniejszego, tańszego i~ogólnie lepszego doznania z~korzystania z~telefonu. Wszystko to za sprawą Androida, który dodatkowo jest całkowicie otwarty.
@@ -118,7 +118,7 @@ Krótka historia systemu, która powinna rzucić na niego trochę światła:
 	\item 2014, zapowiedź Androida L, który ma znacznie zwiększyć wydajność (dzięki nowemu podejściu do kompilacji aplikacji\cite{android-art}), poprawić interfejs użytkownika i~wspierać aplikacje 64-bitowe\cite{android-l-ogolnie}.
 \end{itemize}
 
-Jako że Android jest przeznaczony dla urządzeń mobilnych, jego twórcy musieli wziąć pod uwagę ograniczenia, które miały być względnie niezmienne w~przewidywalnym czasie.
+Jako że Android jest przeznaczony dla urządzeń mobilnych, jego twórcy musieli wziąć pod uwagę ograniczenia, które miały być względnie niezmienne w~przewidywalnym czasie\cite{learning-android}.
 To, że telefony są zasilane z~baterii (których pojemność bardzo się nie zmienia) oraz nieduży rozmiar, ograniczają moc procesora i~możliwą pamięć. Mimo tego, użytkownik powinien być zadowolony z~szybkości urządzenia, tak samo jak w~przypadku zasobożernych komputerów osobistych.
 Rozwiązanie tego problemu wymaga dużej pomysłowości i~musi owocować pewnymi kosztami.
 
@@ -146,9 +146,9 @@ Android jest platformą kompletną (ang. \emph{comprehensive platform}), co znac
 	\label{fig:android_architecture}	
 \end{figure}
 
-Jeśli chodzi o~kod natywny(C/C++), to można na niego programować mniej więcej tak, jak na ``standardowego'' Linuxa. Ma podobny zestaw bibliotek. Część została włączona do systemu bez zmian. Ważnym wyjątkiem jest Bionic -- alternatywna implementacja biblioteki standardowej C (\emph{libc}). Google zdecydował się na jej przepisanie aby zoptymalizować ją pod urządzenia z~ograniczonymi zasobami oraz żeby uniknąć problemów licencyjnych związanych z~``infekcją'' przez licencję GPL (którą objęta jest \emph{libc}).
+Jeśli chodzi o~kod natywny(C/C++), to można na niego programować mniej więcej tak, jak na ``standardowego'' Linuxa\cite{learning-android}. Ma podobny zestaw bibliotek. Część została włączona do systemu bez zmian. Ważnym wyjątkiem jest Bionic -- alternatywna implementacja biblioteki standardowej C (\emph{libc}). Google zdecydował się na jej przepisanie aby zoptymalizować ją pod urządzenia z~ograniczonymi zasobami oraz żeby uniknąć problemów licencyjnych związanych z~``infekcją'' przez licencję GPL (którą objęta jest \emph{libc}).
 
-Trzeba powiedzieć, że pisanie programów w~C nie jest zalecanym sposobem pisania aplikacji na Androida. Podstawowym językiem jest Java. API dla tego języka dostarczane przez Google pozwala na budowanie programów, które klasyfikowane są jako aplikacje Androidowe. Te aplikacje przyjmuję postać paczek APK (Application Package). Mogą one być łatwo instalowane i~wykorzystywane przez zwykłych użytkowników.
+Trzeba powiedzieć, że pisanie programów w~C nie jest zalecanym sposobem pisania aplikacji na Androida. Podstawowym językiem jest Java 6, chociaż pojawia się już wsparcie dla siódmej wersji języka\cite{android-java-7}. API dla tego języka dostarczane przez Google pozwala na budowanie programów, które klasyfikowane są jako aplikacje Androidowe\cite{learning-android}. Te aplikacje przyjmuję postać paczek APK (Application Package). Mogą one być łatwo instalowane i~wykorzystywane przez zwykłych użytkowników.
 
 Java, w~przeciwieństwie do np.~C nie jest kompilowana do kodu maszynowego, który może być wykonany przez procesor. Zamiast tego jest kompilowana do kodu bajtowego Javy (\emph{Java bytecode}), który abstrahuje od właściwości (takich jak architektura procesora) komputera, na którym ma być wykonany \cite{jvm}. Za przełożenie wykonywanego kodu na prawdziwe instrukcje procesora, zwane JIT -- z~ang. \emph{just-in-time compilation}, a~więc kompilacja w~samą porę, jest odpowiedzialna maszyna wirtualna Javy (ang.: \emph{Java Virtual Machine (JVM)}). JVM posiada różne wersje (wszystkie zgodne z~jedną specyfikacją) dopasowane do środowisk, w~których mają działać. Inna będzie potrzebna na Linuxa, inna na Windowsa. Ale każda z~nich powinna być w~stanie wykonać z~takim samym efektem taki sam kod Javy. Zatem teoretycznie można napisać jeden program, który bez żadnych modyfikacji będzie działał na całkowicie odmiennych systemach operacyjnych.
 
