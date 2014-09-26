@@ -150,6 +150,8 @@ Może też być zgodny ze wszystkim innym, co używa Jacksona. Ale albo trzeba m
 \subsection{Podsumowanie}
 Wymienienie plusów i minusów. Może zrobić itemize, gdzie jedna lista ma duże minusy jako znaczki, a~druga plusy?
 
+Jest rozszerzalność. Jak raz oznaczyłem klasę bazową, albo jak ustawiłem serializator to mogłem dodawać więcej klas dziedziczących i~się nie martwić.
+
 
 
 \section{Xamarin}
@@ -175,13 +177,132 @@ Teraz trochę mieli. Ale czas nie jest ważny, ważny jest wysiłek programisty.
 
 Widać, że inwestują w~komunikację z~programistą. Prowadzą za rękę i~pomagają.
 
-Testowałem sobie na emulatorze, opis dopiero w dziale z implementacją, bo do całości pracy to się przydało.
+Możliwości na innych OSach nie będą mnie interesować. Zrobię tylko n Androidzie. Wszystko jest bardzo intuicyjne dla kogoś, kto korzystał z~IDE takich jak Visual Studio, Netbeans itp.
+Tworzę projekt Androidowy.
+Ponieważ miałem już stworzone AVD\footnote{O~emulatorze piszę w~punkcie~\ref{android-emulator}} widzę je już do wyboru do odpalenia.
+Może trzeba mieć doświadczenie z~emulatorem minimalne. Żeby wiedzieć, że jest osobna aplikacja zarządzająca nim.
+Po prostu odpalam Run na świeżo uruchomionym projkecie.
 
-Możliwości na innych osach nie będą mnie interesować.
+Musi się zainstalować jeszcze Mono, żeby aplikacja mogła działać. Dzieje się to automatycznie.
+Oj... odpalenie nie powiodło się, bo rzekomo mój Android nie jest w~wersji wystarczającej dla aplikacji.
+Automatycznie brało najnowszą, oznaczoną jako 4.4, ale niby była za nowa. Jak przestawiłem ręcznie na 4.4 to zaczęło działać. Pewnie brało 4.4W, a~więc nowszą, ale źle sygnalizowało. Już jest minus, bo jeślibym nic nie wiedział o~Androidach, to mógłbym się speszyć.
+
+Ale poza tym działa.
 
 \subsection{Testy}
+Ponieważ nie ma serwerów WCF (jak napisano... gdzieśtam), użyję innego podejścia do zdalnego wywołania.
+Teraz mam .NET na Androidzie, czyli komunikacja z~.NETem na PC powinna być bardzo łatwa. Może nawet mogę zserializować binarnie jakąś domyślną serializatorką .NETa i~przepchnąć przez socket? To by było moje RPC całe. No potrzeba jeszcze jakiś ID obiektu i~metody, ale to jest banalne do uzyskania, jeśli po obu stronach mamy, np. takie same biblioteki .NET.
+
+Ponieważ .NET po stronie Androida może wysyłać wołania do systemu i~wołać biblioteki Javowe (przy użyciu jakiś bindingów, LINK) to mogłoby się to liczyć jako wywoływanie kodu w~Javie, a~więc cel mojej magisterki.
+Trzeba to sprawdzić.
+
+Żeby tylko dostępne typy serializacji mogły przenieść informacje o~niepewnych typach\ldots
+Chociaż może domyślna, jakaś wewnętrzna (nie chcemy tego wysyłać na inną platformę, wszystko zostaje wewnątrz .NET) zachowuje wszystkie informacje o~obiekcie?
+
+Zobaczymy. Ogólnie trzeba zserializować takie same rzeczy, jak w~przypadku innych testów (takie rzeczy, jak argumenty testowych metod zdalnych), przesłać, zdeserializować i~zobaczyć, czy informacja o typie się zachowała.
+Problem taki, że teraz muszę przesłać z~mojego Windowsa na emulator, żeby sprawdzić, czy można mieć te same biblioteki .NET (zawierające jakieś klasy, których chcemy przesyłać) na PC i~na Androidzie z~Mono. Właściwie, to nie muszę. Wystarczy stworzyć raz bibliotekę, podczepić ją pod dwa projekty i sprawdzić, czy tak samo serializuje i deserializuje.
+
+TESTY:
+\begin{itemize}
+	\item Czy mogę otworzyć inną aplikację w~Androidzie?
+	\item Czy mogę odpalić jakieś metody z~Jara?
+	\item Można zachować informacja o~typie przy serializacji (obiekt i~tablica)?
+	\item Mogę mieć wykorzystać te same biblioteki .NET i~na PC i~na Androidzie?
+	\item Przesłać w~jedną i~w drugą polimorficzne rzeczy (tylko sprawdzać dla remotingów jakiś, normalnie przesłanie jest banalne).
+\end{itemize}
+
+\subsubsection{Serializacja} 
+Zobaczę najpierw serializację lokalnie wewnątrz Mono. Skupię się na serializatorach wbudowanych w~.NET. Można by używać innych, ale nie ma potrzeby. Trzeba się będzie pomęczyć z~DataContractSerializerem tak samo, jak w~WCF. Można też JsonContractSerializer sprawdzić, czy jak mu tam.
+
+Standardowo używa się DataContract, ale nie trzeba.
+DataContractSerializerowi trzeba dać informacje o~wszystkich typach, jakich ma się spodziewać. Albo zrobić oznaczenia. Oznaczenia blokują rozwijanie kodu. Podawanie wszystkich klas też trzeba jakoś rozwiązać, np. przez analizę bibliotek i~ładowanie wszystkich możliwych klas (DataContractów).
+
+%Jest TestDataA, bo to jest mój podstawowy serializowany typ
+%﻿<TestDataA xmlns:i="http://www.w3.org/2001/XMLSchema-instance" i:type="TestDataB" xmlns="http://schemas.datacontract.org/2004/07/XamarinRemotingTest"><numberA>13</numberA><numberB>5.25</numberB><stringA>domyslny</stringA></TestDataA>
+
+Można użyć też DataContractJsonSerializera do serializacji do JSONa.
+Niestety Json potrzebuje dodatkowego ustawienia, żeby zapamiętać typ. A~to ustawienie niesie za sobą potrzebę większej konfiguracji, ogólnie da się wykminić, ale nie musiałoby tak być. Niektóre rzeczy, które, jak by się mogło wydawać, powinny działać nie działają (i~to exception nic nie mówi).
+%There was an error during serialization for object of type XamarinRemotingTest.TestDataB
+% Ten error przy takim ustawieniu
+%var jsonSettings = new DataContractJsonSerializerSettings ();
+			%jsonSettings.RootName = "root";
+			%jsonSettings.KnownTypes = knownTypes;
+			%jsonSettings.EmitTypeInformation = EmitTypeInformation.AsNeeded;
+			%DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(TestDataA), jsonSettings);
+
+Hm... Dla normalnego .NETa 4.5 wszystko działa i daje zapis taki
+%{"__type":"TestDataB:#XamarinRemotingTest","numberA":13,"stringA":"domyslny","numberB":5.25}
+Może to problem samego .NETa? Xamarin ogólnie stoi na poziomie 3.5, a~biblioteki serializacyjne ma zgodne z~silverlightem\cite{xamarin-dot-net}.
+Nie będę sobie tym więcej głowy zawracał i~skupię się na XMLu, w~takim razie. Jeśliby Xamarin był bardzo obiecujący to wrócę do JSONa.
+
+Jeszcze tablice.
+Zserializowało niby ładnie, ale zdeserializowało już całkiem błędnie. Niby przeszło, ale zwróciło jakiś uszkodzony TestDataA zamist tablicy.
+%<TestDataA xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/XamarinRemotingTest">
+	%<anyType xmlns:d2p1="http://www.w3.org/2001/XMLSchema" i:type="d2p1:int" xmlns="http://schemas.microsoft.com/2003/10/Serialization/Arrays">28</anyType>
+	%<anyType xmlns:d2p1="http://www.w3.org/2001/XMLSchema" i:type="d2p1:string" xmlns="http://schemas.microsoft.com/2003/10/Serialization/Arrays">jakis tekst</anyType>
+	%<anyType xmlns:d2p1="http://schemas.datacontract.org/2004/07/XamarinRemotingTest" i:type="d2p1:TestDataA" xmlns="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+		%<d2p1:numberA>13</d2p1:numberA>
+		%<d2p1:stringA>domyslny</d2p1:stringA>
+	%</anyType>
+	%<anyType xmlns:d2p1="http://schemas.datacontract.org/2004/07/XamarinRemotingTest" i:type="d2p1:TestDataB" xmlns="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+		%<d2p1:numberA>13</d2p1:numberA>
+		%<d2p1:numberB>5.25</d2p1:numberB>
+		%<d2p1:stringA>domyslny</d2p1:stringA>
+	%</anyType>
+%</TestDataA>
+
+W normalnym przypadku dla .NET wygląda to tak:
+%<TestDataA i:type="a:ArrayOfanyType" xmlns="http://schemas.datacontract.org/2004/07/CSharpTest" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:a="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+	%<a:anyType i:type="b:int" xmlns:b="http://www.w3.org/2001/XMLSchema">28</a:anyType>
+	%<a:anyType i:type="b:string" xmlns:b="http://www.w3.org/2001/XMLSchema">jakis tekst</a:anyType>
+	%<a:anyType i:type="TestDataA">
+		%<numberA>13</numberA>
+		%<stringA>domyslny</stringA>
+	%</a:anyType>
+	%<a:anyType i:type="TestDataB">
+		%<numberA>13</numberA>
+		%<stringA>domyslny</stringA>
+		%<numberB>5.25</numberB>
+	%</a:anyType>
+%</TestDataA>
+Niby te same informacje, ale inaczej (lżej) oznaczone. I nie dodaje to pierwsze informacji o typie do głównego obiektu.
+
+Normalny .NET wywala błąd, także są jakieś rozbieżności w~nich najwyraźniej. Ale może można skonfigurować, żeby było dobrze.
+Do serializatora normalnego .NETa wystarczyło dodać typ tablicy obiektów (bo to faktycznie jest przesyłane).
+Na Xamarinie nie pomogło to, ani dodanie jeszcze inta i~Stringa.
+
+Czyli polimorfizm jest częściowy.
+Jeśli przejdzie test odpalania tych samych bibliotek na dwóch środowiskach, to zawsze będzie można używać jednej biblioteki serializacyjnej po obu stronach.
+
+A~jeszcze serializacja binarna.
+Każdy obiekt z hierarchii klas serializowanego oraz każdy obiekt w~grafie musi posiadać atrybut Serializable (\url{http://msdn.microsoft.com/pl-pl/library/system.serializableattribute(v=vs.110).aspx}), jak nie będzie błąd serializacji. Już to trochę ogranicza pole manewru. Np.\ jeśli chcielibyśmy przesyłać klasę, którą zrobiliśmy z~dziedziczenia jakiejś zewnętrznej, do której kodu nie mamy dostępu.
+
+Poza tym, serializacja binarna zachowuje pełnię informacji. A~zserializowna tablica zajmuje 254 bajty. Zserializowana tekstowo ma 623 znaki. Jeśli jest to UTF-8, to może to być większe niż 623 bajty bo może zawierać większe znaki.
+Niestety, binarne zapisy z .NETa 4.5 i~3.5 (który powinien być najbliższy) są niezgodne.
+
+\subsubsection{Użycie zewnętrznej biblioteki .NET (dzielenie się klasami)} 
+Xamarin.Android is not ABI compatible with existing assemblies compiled for a different profile. You must recompile your source code to generate assemblies targeting the Xamarin.Android profile (just as you need to recompile source code to target Silverlight and .NET 3.5 separately).\cite{xamarin-dot-net}
+
+W~sumie przy okazji testów kompilowałem ten sam kod. Widać, że są różnice w~działaniu niektórych rzeczy, ale biblioteki bez skomplikowanych (źle działających) zależności powinny te same źródła (np.\ klasy danych) działać tak samo.
+
+\subsubsection{Czy mogę otworzyć inną aplikację w~Androidzie}
+Można znaleźć na to oficjalny przykład (krótki prosty kod wyglądający tak samo, jak na normalnym androidzie).
+
+W sumie chodzi o wyslanie intentu, to takie androidowe wiadomosci (źródło, z książki o androidzie).
+Dzięki nim aplikacje komunikują się z~systemem i~ze sobą nawzajem.
+Wysyłając intent można też uruchomić inną aplikację.
+Skoro odpalenie aplikacji działa, to działają intenty i~można zarządzać całym systemem (jeśli aplikacja ma odpowiednie prawa) (może w tej książce jest o tym).
+
+\subsubsection{Czy mogę odpalić jakieś metody z~Jara}
+%http://developer.xamarin.com/guides/android/advanced_topics/java_integration_overview/binding_a_java_library_(.jar)/
+Do tej pory nas nie okłamali i wątpię, żeby nie działało coś tak dokładnie opisywanego, więc sprawdzał nie będę. Przedstawili sprawozdanie z prawdziwego użycia.
+
 \subsection{Jakieś spostrzeżenia?}
-Ma ciekawe techniki łączenia Javy i C\#. Może warto będzie przyjrzeć się im niezleżnie.
+Ma ciekawe techniki generowania wrapperów (bindingów) na Javę do użycia z~C\#. Może warto będzie przyjrzeć się im niezleżnie.
+
+Podstawowa serializacja .NETa jest ograniczona i nie można zachowywać pełni danych o typach. Serializacja binarna nie jest zgodna z normalnym .NETem. Pewnie trzeba by było użyć jakiejś zewnętrznej biblioteki po obu stronach, żeby mogło to działać.
+
+Można zarządzać Androidem i wywoływać kod Javowy z jarów, ale system pewnie nie byłby polimorficznym RPC, a czymś bardziej nieporęcznym. Trzeba by serializować rzeczy w jednym .NETcie, przekazywać do Mono i tam do Javy przez wrappery. Mało eleganckie, ale może mogłoby ładnie działać.
 
 
 \section{JsonRpc}
@@ -351,6 +472,8 @@ Crest, Ksoap \\
 \section{Porównanie możliwości tych technologii}
 Zestawienie ogólne -- czy można coś zrobić z tym na Androidzie, czy możliwe są metody polimorficzne (i jak z resztą poszukiwanych przeze mnie cech ze wstępu), jaka jest moja subiektywna ocena pracy z danym frameworkiem, jak ciężko się instaluje, na ile potrafią współpracować z innymi rozwiązaniami (jak bardzo trzymają się standardów).
 
+%współpraca powinna być polem opisowym; powinny być dwa, na współpracę przewidywan przez twórców (albo jakąkolwiek) i na polimorficzną
+
 \begin{table}[htbp]
 	\centering
 		\begin{tabular}{ | c || c | c | c | c | c | c |}
@@ -367,3 +490,5 @@ Zestawienie ogólne -- czy można coś zrobić z tym na Androidzie, czy możliwe
 	\caption[Podsumowanie możliwości frameworków.]{Podsumowanie możliwości frameworków. ``+'' oznacza ``tak'', puste miejsce oznacza ``nie''. We współpracy chodzi o to, czy może współpracować z .NETem bez jakiś dedykowanych klientów.}
 	\label{tab:frameworks-summary}
 \end{table}
+
+%powinienem dodać plik z licencjmi używanych bibliotek
