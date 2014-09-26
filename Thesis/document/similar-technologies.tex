@@ -31,6 +31,9 @@ Głównie zależy mi na serwerach dla Androida i~klientach na .NET\@. Ale też j
 	\item Na ile to elastyczne i potężne? Czyli jak łatwo można zrobić swoją robotę i to tak, jak się chce?
 \end{itemize}
 
+Może bez zborczej tabeli na końcu, a~tabelka na koniec każdego frameworku z tym jakie nadzieje (pod kontem użycia u mnie) spełnia?
+Albo taka tabela tych moich nadzei i w niej w rubryczkach powpisywane frameworki, które mogą je spełnić.
+
 \subsection{Czy może być hostem}
 Czyli czy pozwala na wystawianie serwisu, czy może tylko być klientem. Czy może ani tym, ani tym? Tylko w czymś możee pomóc?
 
@@ -305,6 +308,47 @@ Podstawowa serializacja .NETa jest ograniczona i nie można zachowywać pełni d
 Można zarządzać Androidem i wywoływać kod Javowy z jarów, ale system pewnie nie byłby polimorficznym RPC, a czymś bardziej nieporęcznym. Trzeba by serializować rzeczy w jednym .NETcie, przekazywać do Mono i tam do Javy przez wrappery. Mało eleganckie, ale może mogłoby ładnie działać.
 
 
+
+\section{Sharpen}
+\subsection{Opis}
+Wtyczka do IDE Eclipse tłumacząca kod w~Javie do C\#.
+Polecana przez Xamarina (\url{http://developer.xamarin.com/guides/android/advanced_topics/java_integration_overview/}).
+
+Nie jest dynamicznie rozwijany. Mimo wszystko jest polecany.
+
+Generowałbym raczej kod z~Javy do C\#, bo w~Javie będzie większość logiki zdalnych metod.
+
+\subsection{Instalacja i hello world}
+Istnieje kilka wersji w~różnych miejscach, co wprowadza w~zakłopotanie. (\url{https://github.com/slluis/sharpen}, \url{https://github.com/xamarin/XobotOS/tree/master/sharpen} i~\url{http://community.versant.com/documentation/reference/db4o-7.12/java/reference/html/Content/sharpen/how_to_setup_sharpen.html})
+
+Ale znalazłem poradę tu \url{http://pauldb.tumblr.com/post/14916717048/a-guide-to-sharpen-a-great-tool-for-converting-java} i~ściągnąłem gotowego Jara, bez problemów z~niezrozumiałym sposobem budowania.
+Ale to, że nie ma od razu jasno powiedziane jak to zainstalować to źle.
+
+W każdym razie dodałem po prostu wtyczkę do eclipse.
+
+Stworzyłem przykładowy projekt z~klasą, którą będę chciał przetłumaczyć. Tylko jedną na razie, żeby zobaczyć, że działa.
+Do projektu configi. Widać, że nie jest to całkiem proste, ale przynajmniej jest konfigurowalne.
+Zmapowałem namespace do docelowego.
+
+Jeszcze trochę zmagania się z~problemami przy buildzie\ldots{} No jednak nie chce mi zacząć działać. Skoro tyle problemów z~prostą rzeczą, to chyba nie jest to dosć dojrzały projekt i~trzeba znaleźć coś lepszego.
+
+\subsection{Testy}
+\begin{itemize}
+	\item Przetłumaczenie klasy zawierającej podstawowe typy, listy, tablicy, mapy, jakąś inną klasę, domyślne wartości.
+	\item Przetłumaczenie prostej metody (chociaż na tym mi nie zależy, bo to transport danych; mogą być niby accesory zmieniające coś przy czytaniu, ale cóż -- zbyt wydziwiane to jest)
+\end{itemize}
+
+\subsection{Jakieś spostrzeżenia?}
+Wydaje się przestarzały lekko. Nie jest jakimś automatem, ale można go raz skonfigurować i już nie mieć problemów.
+
+Nie jest bardzo trudny, nie jest też bardzo prosty.
+
+Zdaje się, że ja tego będę używał dużo bardziej trywialnie, niż można. Bo tylko chcę obiekty danych dla zdalnych metod tłumaczyć.
+
+Ale ostatecznie nie wykorzystałem tego, bo zbyt niedopracowane i~przestarzałe.
+\ldots{}Albo jeszcze spróbuję
+
+
 \section{JsonRpc}
 \subsection{Opis}
 Przez autora przedstawiony jako łatwy i~lekki klient/serwer RPC oparty o~JSON (``Easy and lightweight Json-Rpc Client/Server'')\cite{json-rpc}.
@@ -442,6 +486,12 @@ Używa Jacksona, nieciekawy. Ale coś restowego by się przydało.
 \subsection{Jakieś pythonowe}
 WSME: \url{http://wsme.readthedocs.org/en/latest/}\\
 Python EVE (Rest framework)\\
+
+\subsection{Java to C\# itp.}
+\url{http://sourceforge.net/projects/ikvm/}
+\url{http://jni4net.com/} -- most, nie translator kodu, aktywnie utrzymywany \\
+\url{http://sourceforge.net/projects/j2cstranslator/}\\
+Przejście do schemy a~potem na inny kod może być alternatywą dla tych rzeczy.
 
 \subsection{Jeśli chciałbym się bawić w schemy}
 To może poszukać jakiś frameworków pozwalających oznakować klasy do serializacji (binding) do xmla albo jsona (a może nawet WSDL).
