@@ -20,7 +20,9 @@ Wyjaśnić ogólną zasadę działania dla każdego.
 
 Dla każdego wypisać wady i zalety względem moich celów.
 
-Najpierw przedstawiam każdy framework ``cytując'' jego słowa (README). A~więc przedstawiam jego obietnice. Potem testy sucho powiedzieć co zrobiłem i~jak wyszło. Potem użyteczność -- jakie miałem problemy przy instalacji, na ile jest ona łatwa, jak ciężko było zrobić coś więcej. Na ile łatwo się odnaleźć przy instalacji? (ważne dla programisty). Rozszerzalność -- jak ciężko jest dodawać nowe podklasy do parametrów metod? 
+Najpierw przedstawiam każdy framework ``cytując'' jego słowa (README). A~więc przedstawiam jego obietnice. Potem testy sucho powiedzieć co zrobiłem i~jak wyszło. Potem użyteczność -- jakie miałem problemy przy instalacji, na ile jest ona łatwa, jak ciężko było zrobić coś więcej. Na ile łatwo się odnaleźć przy instalacji? (ważne dla programisty). Rozszerzalność -- jak ciężko jest dodawać nowe podklasy do parametrów metod?
+
+Integracja istniejących bibliotek w~Javie i~C\# też jest ważna (chyba zmodyfikować cele pracy trzeba).
 
 Głównie zależy mi na serwerach dla Androida i~klientach na .NET\@. Ale też jakieś frameworki obrazujące jakieś założenia albo wiodące w~przemyśle przez popularność.
 
@@ -354,6 +356,8 @@ Zdaje się, że ja tego będę używał dużo bardziej trywialnie, niż można. 
 
 Nie wspierane, za stare. Najwyraźniej dwa lata to za dużo dla Eclipsowej wtyczki. Nikt nie sprawuje nad tym Sharpenem kontroli. Taki bezpański projekt.
 
+Ale coś takiego pewnie by się przydało w~moim ostatecznym rozwiązaniu. Może nie jako nierozerwalny element, ale jako coś, co przygotuje spójne klasy po obu stronach.
+
 
 \section{JsonRpc}
 \subsection{Opis}
@@ -441,9 +445,58 @@ Pozwala tworzyć i konsumować Web Servicey z poziomu niezależnej biblioteki C+
 \section{Thrift}
 \url{http://thrift.apache.org/static/files/thrift-20070401.pdf}\\
 
-\section{Google Protocol Buffers}
-\url{http://stackoverflow.com/questions/8062212/difference-between-apache-thrift-and-zeromq}\\
-A co to ZeroMQ?\\
+Thrift is a software library and set of code-generation tools developed
+at Facebook to expedite development and implementation of
+efficient and scalable backend services. Its primary goal is to enable
+efficient and reliable communication across programming languages
+by abstracting the portions of each language that tend to
+require the most customization into a common library that is implemented
+in each language. Specifically, Thrift allows developers to
+define datatypes and service interfaces in a single language-neutral
+file and generate all the necessary code to build RPC clients and
+servers.
+
+%Też się z tym zgadzam i chciałbym, żeby tak w moim było
+The same application code should be able to run against TCP stream sockets, raw data in memory, or files on disk.
+
+Rozdzielony transport od serializacji, ale wsparte strumieniowanie.
+
+Niestety nie można podłączać innych bibliotek.
+
+Łatwe rozszerzanie istniejącego kodu też nie jest za bardzo możliwe, po dodaniu jakiś typów trzeba wszystko przegenerować (a w innych przypadkach trzeba dostarczyć nowe klasy na drugą stronę -- zawsze trzeba coś dodać).
+Czy jest jakiś polimorfizm?
+
+Daje możliwość zrobienia jednego kodu na dwie platformy.
+
+Pozwala na asynchroniczność -- coś, czego nie przewidywałem dla mojej biblioteki, ale też może być przydatne.
+
+Służy do robienia i klienta i serwera. Nie można np.\ zrobić serwera, do którego inni będą mogli wołać jakimś standardowym kanałem. Muszą mieć konkretny, wygenerowany kod klienta (no ewentualnie mogą zrobić swój kod korzystając z API Thrift). Moje może tak wyjść.
+
+Ale może można zrobić serwer na Androidzie?
+
+Jest polimorfizm?
+
+\subsection{Testy}
+\subsection{Wrażenia}
+\subsubsection{Instalacja / Hello world}
+\subsubsection{Przeprowadzanie testów}
+\subsection{Podsumowanie}
+
+
+
+\section{JSON-RPC.NET}
+\url{https://github.com/Astn/JSON-RPC.NET} \\
+Wygląda na ciekawą sprawę. JSON.NET, którego ta biblioteka używa ma chodzić nawet na Mono na Androidzie. Ten Json.NET ma JsonSchemę.
+
+Tylko nie wiem, czy ma klienta.
+
+
+
+\section{gSOAP}
+Web Service'y i REST w C/C++. Pytanie, czy można posadzić serwer na Androidzie i połączyć z Javą.
+Pewnie by się dało przez JNI, ale tłumaczenie danych pełne byłoby bolesne. I wołanie rzeczy w Androidzie.
+
+
 
 \section{Jackson}
 Konfigurowalna i dopracowana biblioteki do serializacji do JSONa. To może się przydać przy komponowaniu wywołań RPC.
@@ -464,6 +517,23 @@ Ogólne:
 \url{http://stackoverflow.com/questions/10329706/json-deserialization-into-another-class-hierarchy-using-jackson}\\
 \url{http://wiki.fasterxml.com/JacksonHowToIgnoreUnknown}\\
 
+
+
+\section{GSON}
+Gson is a Java library that can be used to convert Java Objects into their JSON representation. It can also be used to convert a JSON string to an equivalent Java object. Gson can work with arbitrary Java objects including pre-existing objects that you do not have source-code of.
+
+Provide simple toJson() and fromJson() methods to convert Java objects to JSON and vice-versa
+Allow pre-existing unmodifiable objects to be converted to and from JSON
+Extensive support of Java Generics
+Allow custom representations for objects
+Support arbitrarily complex objects (with deep inheritance hierarchies and extensive use of generic types)
+
+
+
+\section{Jakiś framework REST}
+
+
+
 \section{Pyro}
 Pythonowe, niby obiektowe. Ale dla pythona będzie łatwo uzyskać polimorfizm, bo nie ma ostrego typowania. Także może sobie luźno traktować XMLa lub JSONa.
 
@@ -482,6 +552,19 @@ Może zamiast równoważnych implementacji na pythona, C\# i javę zrobić tylko
 
 \section{Inne}
 Chociaż wymienić pozostałe rozwiązania, które mogą być warte uwagi, choć raczej nie nadają się dla rozwiązania problemu tej pracy magisterskiej.
+
+\subsection{Google Protocol Buffers}
+\url{https://developers.google.com/protocol-buffers/docs/overview}
+Podobne do Apache Thrift, ale źródła zamknięte. Od Googla. Służy do wyabstrachowania wiadomości (danych w nich zawartych) przesyłanych między częściami twojej aplikacji.
+Nie ma tu mowy o serwisach jak w Thrifcie, tylko wiadomości, czyli właściwie dane.
+Też jest generowanie do kilku języków i~jeden odmienny język wspólny, z którego robi się tę generację. Przez to podobne wady, jak Thrift.
+
+Forma tekstowa przypomina JSONa.
+
+\subsection{ZeroMQ}
+\url{http://zguide.zeromq.org/page:all}
+\url{http://stackoverflow.com/questions/8062212/difference-between-apache-thrift-and-zeromq}\\
+ØMQ (also known as ZeroMQ, 0MQ, or zmq) looks like an embeddable networking library but acts like a concurrency framework. It gives you sockets that carry atomic messages across various transports like in-process, inter-process, TCP, and multicast. You can connect sockets N-to-N with patterns like fan-out, pub-sub, task distribution, and request-reply. It's fast enough to be the fabric for clustered products. Its asynchronous I/O model gives you scalable multicore applications, built as asynchronous message-processing tasks. It has a score of language APIs and runs on most operating systems. ØMQ is from iMatix and is LGPLv3 open source.
 
 \subsection{Apache Avro}
 
