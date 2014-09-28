@@ -1,72 +1,91 @@
 \chapter{Pokrewne technologie (TODO)}
-Tu o rozwiązaniach robiących to co chcemy albo rzeczy podobne. Przy użyciu każdego z tych frameworków spróbuję zrealizować mój cel, a więc dynamiczne web service'y na Androidzie. Czyli takie, jakie można robić przy pomocy WCF.
+W~tym rozdziale przeanalizuję technologie, które według mnie są powiązane z~projektem tworzonym w~niniejszej pracy.
 
-Może nawet okaże się, że jest tutaj coś, co spełnia moje oczekiwania? Albo wymaga tylko pewnego opakowania, żeby robić to, co ja chce?
-Jeśli nie, to może chociaż mogę użyć jako moduł w swojej bibliotecę?
-
-Dla każdego obiecującego frameworku powinienem wykonać i opisać test, jaki wykonałem, żeby sprawdzić czy nadaje się dla moich celów.
-
-Jak ogólnie wygląda oznaczanie typów -- może być spójne między różnymi frameworkami.
-
-Wszystkie instalacje robię na Windowsie 7 Professional x64.
-
-%Konkretne porównania osiągów w rozdziale o eksperymentach (chociaż tutaj już zrobić porównanie wysiłku programisty, po prostu zamieścić je na końcu). Tutaj napisać o funkcjonalności żeby w ogóle wiedzieć, czy to czegoś warte i na ile mam się inspirować.
 \section{Metoda analizy technologii}
-Czyli z jakiej strony będę patrzył na frameworki, co będe sprawdzał, na co zwracał uwagę. Jak będzie jeden wzorzec to łatwiej zrobić tabelkę, czy coś.
 
-W sumie będę sprawdzał, czy każda z technologii ma cechy, które opisałem w~\ref{lib-requirements}.
+Będą one poddane testom, które sprawdzą obecność pożądanych przeze mnie cech (opisanych w~punkcie~\ref{lib-requirements}).
+Niektóre własności, takie jak np.\ łatwość instalacji będą poddane bardziej subiektywnej ocenie.
+Nie wszystkie testowane kryteria będą dotyczyć wszystkich technologii, ponieważ te należą do różnych dziedzin.
+Testy przedstawione są w~tabeli~\ref{tab:frameworks-criteria}.
 
-Wyjaśnić ogólną zasadę działania dla każdego.
+\begin{table}[htbp]
+	\centering
+		\begin{tabular}{ | c | c | p{8cm} |}
+			\hline
+				\textbf{Nazwa} & \textbf{Dziedzina} & \textbf{Opis}\\
+				\hline \hline
+				Polimorfizm danych & Serializacja, RPC & Sprowadza się do zachowania informacji o~typach w~serializowanych danych. Sprawdzane przez serializację i~deserializację jednego obiektu (TestDataB widocznego jako TestDataA) a~następnie sprawdzenie, czy jest taki sam.\\
+				\hline
+				Polimorfizm metod & RPC & Czy zdalne metody mogą być przeładowywane?\\
+				\hline
+				Integracja z~Androidem & RPC & Dotyczy serwerów RPC na Androida. Czy można na zewnątrz wystawić możliwość komunikacji z systemem operacyjnym? Np.\ uruchamianie innych aplikacji?\\
+				\hline
+				Modularność & RPC & Czy można do serwera i~klienta dodać moduł, np. z~nowymi klasami danych dziedziczącymi istniejące i~używać ich ze starymi metodami?\\
+				\hline
+				\emph{Code reuse} & Ogólna & Czy można do danej technologii podpiąć, albo wykorzystać z~nią jakieś istniejące biblioteki napisane na tę samą platformę? Np. dla technologii Javowych -- Jary.\\
+				\hline
+				Współpraca & Ogólna & Czy technologia dopuszcza zgodność po obu stronach przy moim użyciu? Czyli na Androidzie i C\#. Łączy się jakoś standardowo, czy własne łączniki po obu stronach implementować? Czy wystarczy skonfigurować istniejące?\\
+				\hline
+				Standardowość & Ogólna & Uogólnienie kryterium ,,Współpraca''. Czy technologia, przy moim użyciu jest zgodna z~jakimś szeroko przyjętym standardem?\\
+				\hline
+				Docelowa platforma & Ogólna & Czy technologia działa na platformie docelowej (Android, .NET)? Której?\\
+				\hline
+				Łatwość instalacji & Ogólna & Na ile intuicyjne i mało czasochłonne jest zinstalowane danego narzędzia/biblioteki? Na ile łatwo można go użyć, żeby zweryfikować, że działa?  Wyznacznik użyteczności.\\
+				\hline
+				Łatwość użycia & Ogólna & Dotyczy bardziej sensownego wykorzystania technologii. U mnie to będzie przedstawiać jak trudno było wykonać testy polimorfizmu. Wyznacznik użyteczności.\\
+				\hline
+				Klasyfikacja & Ogólna & Czym dana technologia jest, co potrafi (z mojej dziedziny zainteresowania)? Czy tłumaczy kod, czy serializuje, czy może być klientem RPC, czy może być serwerem RPC?\\
+				\hline
+		\end{tabular}
+	\caption[Kryteria oceny technologii.]{Kryteria oceny technologii.}
+	\label{tab:frameworks-criteria}
+\end{table}
 
-Dla każdego wypisać wady i zalety względem moich celów.
+Większość testów wykonywana jest na systemie Windows 7 Professional x64.
+Te, które tego wymagają odbywają się na emulowanym (w~Windowsie) Androidzie 4.4.2, który szerzej jest opisany w~punkcie~\ref{android-emulator}.
 
-Najpierw przedstawiam każdy framework ``cytując'' jego słowa (README). A~więc przedstawiam jego obietnice. Potem testy sucho powiedzieć co zrobiłem i~jak wyszło. Potem użyteczność -- jakie miałem problemy przy instalacji, na ile jest ona łatwa, jak ciężko było zrobić coś więcej. Na ile łatwo się odnaleźć przy instalacji? (ważne dla programisty). Rozszerzalność -- jak ciężko jest dodawać nowe podklasy do parametrów metod?
+Wśród wszystkich bibliotek i~narzędzi, będę szukał takich, które mogę wkomponować w~moje rozwiązanie.
 
-Integracja istniejących bibliotek w~Javie i~C\# też jest ważna (chyba zmodyfikować cele pracy trzeba).
+Testy polimorfizmu danych:
+Tylko zserializowanie i odtworzenie hardcorowej talblicy.
 
-Głównie zależy mi na serwerach dla Androida i~klientach na .NET\@. Ale też jakieś frameworki obrazujące jakieś założenia albo wiodące w~przemyśle przez popularność.
+Będą dwa testy, różniące się tylko wejściowymi danymi. ,,Dane'' to tak naprawdę jeden obiekt.
+Kroki testu:
+\begin{enumerate}
+	\item Serializacja obiektu (w sumie powinno się go serializować w jakimś kontekście).
+	\item Stworzenie nowego obiektu przez deserializację zapisu pierwszego obiektu.
+	\item Porównanie nowego i~odtworzonego obiektu. Oba powinny być identyczne pod względem typu i~zawartości.
+\end{enumerate}
 
-\subsection{Użyteczność}
-\begin{itemize}
-	\item Jak przebiega instalacja? Jest oczywista, automatyczna? Wszystko łatwo znaleźć?
-	\item Jak można uruchomić helloWorld?
-	\item Na ile to elastyczne i potężne? Czyli jak łatwo można zrobić swoją robotę i to tak, jak się chce?
-\end{itemize}
+Te obiekty:
+\begin{lstlisting}[frame=single, caption={Przykładowa klasa danych używana w testach polimorfizmu zdalnych metod}, label=kod:testDataA]
+public class DaneA
+{
+	public int liczbaA = 13;
+	public string tekst = "cokolwiek";
+}
+\end{lstlisting}
 
-Może bez zborczej tabeli na końcu, a~tabelka na koniec każdego frameworku z tym jakie nadzieje (pod kontem użycia u mnie) spełnia?
-Albo taka tabela tych moich nadzei i w niej w rubryczkach powpisywane frameworki, które mogą je spełnić.
+\begin{lstlisting}[frame=single, caption={Przykładowa klasa danych używana w testach polimorfizmu zdalnych metod}, label=kod:testDataB]
+public class DaneB extends DaneA
+{
+	public double liczbaB = 5.25;
+}
+\end{lstlisting}
 
-\subsection{Czy może być hostem}
-Czyli czy pozwala na wystawianie serwisu, czy może tylko być klientem. Czy może ani tym, ani tym? Tylko w czymś możee pomóc?
+Testy polimorfizmu metod:
+Przekazanie obiektu dziedziczącego w miejsce konkretnego argumentu.
+Zwrócenie tablicy.
+Metoda przeciążona.
 
-\subsection{Współpraca}
-Można tym połączyć Androida z C\#?
-Łączy się jakoś standardowo, czy własne łączniki po obu stronach implementować? Czy wystarczy skonfigurować istniejące?
-
-Może łączyć analizy dwóch technologii, np.\ JAX-WS i~WCF, jsonrpc4j z~jakimś JSON-RPC dla .NET\@.
-
-\subsection{Sprawdzanie polimorfizmu}
-Jak sprawdzam polimorfizm?
-Przede wszystkim trzeba sprawdzić, czy metody spełniają założenia polimorfizmu. Poza tym templateowym, bo tego nie chce. Czyli jak z argumentami dziedziczącymi, jak z przeładowaniem metod. Jak z listami różnych elementów, które dziedziczą po typie bazowym.
-Potem przyjrzenie się liście rzeczy, które stworzyłem na bazie doświadczenia z ktorymi silniki serializacyjne maja problemy, a sa ta sensowne przypadki. Np.\ listy list, listy obiektów o różnych typach (też listach). Puste tablice.
-
-\subsubsection{Testy polimorfizmu}
+OPISAĆ TESTY POLIMORFIZMU (KLASY, STRUKTURY, METODY)
 Odpowiedzialne za tę weryfikacje będą testy polegające na stworzeniu opisanych zdalnych metod przy pomocy sprawdzanego narzędzia i~próby jej wywołania. Nawet jeśli metoda się wykona, to mogła nie zwrócić odpowiedniego wyniku, dlatego go też trzeba będzie weryfikować. No i~tym testom będą podlegać tylko biblioteki, którą pozwalają tworzyć zdalne metody, nie te, które tylko je konsumują.
 
-CHYBA JEDNAK TE ``PODSTAWOWE'' METODY I DANE TO BEZSENS. KAŻDE DANE I METODE OPISAĆ OSOBNO. TEST POLEGA NA ODPALENIU METODY I DOSTANIU SPODZIEWANEGO WYNIKU (PODAĆ INPUT I OUTPUT). KODY Z TESTÓW W REPO JAKO ZAŁĄCZNIKI.
-
-Przy opisach testów pewna metoda i pewien typ danych będą uznawane za podstawowe. Opisy będą się odnosiły do tych ``podstawowych'' definicji. A~one są opisane poniżej.
 
 Kod podstawowej klasy danych. Jej obiekty będę przekazywane i~zwracane w~większości testów.
 Szczegóły składni nie będą ważne, można traktować to jako pseudokod, ale faktycznie na ogół będzie to C\#.
 
-\begin{lstlisting}[frame=single, caption={Przykładowa klasa danych używana w testach polimorfizmu zdalnych metod}, label=kod:testData]
-public class DaneA
-{
-	public int liczba;
-	public string tekst;
-}
-\end{lstlisting}
+
 
 Kod podstawowej metody testowej. Będzie ona wykonywana w~większości testów.
 Po prostu zwraca lekko zmodyfikowaną kopię parametru.
@@ -80,6 +99,22 @@ public DaneA MetodaA(DaneA dane)
 	return noweDane;
 }
 \end{lstlisting}
+
+%Jak ogólnie wygląda oznaczanie typów -- może być spójne między różnymi frameworkami.
+
+
+Dla każdego wypisać wady i zalety względem moich celów. Jakieś podsumowanie do czego może być
+
+Najpierw przedstawiam każdy framework ``cytując'' jego słowa (README). A~więc przedstawiam jego obietnice. Potem testy sucho powiedzieć co zrobiłem i~jak wyszło. Potem użyteczność -- jakie miałem problemy przy instalacji, na ile jest ona łatwa, jak ciężko było zrobić coś więcej. Na ile łatwo się odnaleźć przy instalacji? (ważne dla programisty). Rozszerzalność -- jak ciężko jest dodawać nowe podklasy do parametrów metod?
+
+
+\subsection{Sprawdzanie polimorfizmu}
+%Chyba to za duże, wystarczy dziedziczący obiekt i generyczna tablica (int, string, obiekt A, obiekt B, tablica)
+Jak sprawdzam polimorfizm?
+Przede wszystkim trzeba sprawdzić, czy metody spełniają założenia polimorfizmu. Poza tym templateowym, bo tego nie chce. Czyli jak z argumentami dziedziczącymi, jak z przeładowaniem metod. Jak z listami różnych elementów, które dziedziczą po typie bazowym.
+Potem przyjrzenie się liście rzeczy, które stworzyłem na bazie doświadczenia z ktorymi silniki serializacyjne maja problemy, a sa ta sensowne przypadki. Np.\ listy list, listy obiektów o różnych typach (też listach). Puste tablice.
+
+
 
 \subsection{Swoboda rozszerzania kodu}
 Czy na tym, co się stworzy danym narzędziem można dalej budować. Zgodnie z obiektową zasadą reuse?
@@ -605,7 +640,8 @@ Crest, Ksoap \\
 \url{http://software.dzhuvinov.com/json-rpc-2.0-server.html} -- też jakiś niby niezależny serwer. \\ 
 \url{http://en.wikipedia.org/wiki/JSON-RPC#Implementations} -- cała lista implementacji JSON-RPC
 
-
+%Może bez zborczej tabeli na końcu, a~tabelka na koniec każdego frameworku z tym jakie nadzieje (pod kontem użycia u mnie) spełnia?
+%Albo taka tabela tych moich nadzei i w niej w rubryczkach powpisywane frameworki, które mogą je spełnić.
 
 %Może przerzucić to na początek i uwzględnić więcej technologii? Takich pobierznie przejrzanych?
 \section{Porównanie możliwości tych technologii}
