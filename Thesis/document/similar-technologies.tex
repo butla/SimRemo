@@ -1,8 +1,8 @@
 \chapter{Pokrewne technologie (TODO)}
 W~tym rozdziale przeanalizuję technologie, które według mnie są powiązane z~projektem tworzonym w~niniejszej pracy.
+Wśród nich będę szukał takich, które mogę wkomponować w~moje rozwiązanie.
 
 \section{Metoda analizy technologii}
-
 Będą one poddane testom, które sprawdzą obecność pożądanych przeze mnie cech (opisanych w~punkcie~\ref{lib-requirements}).
 Niektóre własności, takie jak np.\ łatwość instalacji będą poddane bardziej subiektywnej ocenie.
 Nie wszystkie testowane kryteria będą dotyczyć wszystkich technologii, ponieważ te należą do różnych dziedzin.
@@ -41,24 +41,13 @@ Testy przedstawione są w~tabeli~\ref{tab:frameworks-criteria}.
 	\label{tab:frameworks-criteria}
 \end{table}
 
-Większość testów wykonywana jest na systemie Windows 7 Professional x64.
-Te, które tego wymagają odbywają się na emulowanym (w~Windowsie) Androidzie 4.4.2, który szerzej jest opisany w~punkcie~\ref{android-emulator}.
+Większość testów wykonywana będzie na systemie Windows 7 Professional x64.
+Te, które będą tego wymagać będą uruchamiane na emulowanym (w~Windowsie) Androidzie 4.4.2, który szerzej jest opisany w~punkcie~\ref{android-emulator}.
 
-Wśród wszystkich bibliotek i~narzędzi, będę szukał takich, które mogę wkomponować w~moje rozwiązanie.
 
-Testy polimorfizmu danych:
-Tylko zserializowanie i odtworzenie hardcorowej talblicy.
-
-Będą dwa testy, różniące się tylko wejściowymi danymi. ,,Dane'' to tak naprawdę jeden obiekt.
-Kroki testu:
-\begin{enumerate}
-	\item Serializacja obiektu (w sumie powinno się go serializować w jakimś kontekście).
-	\item Stworzenie nowego obiektu przez deserializację zapisu pierwszego obiektu.
-	\item Porównanie nowego i~odtworzonego obiektu. Oba powinny być identyczne pod względem typu i~zawartości.
-\end{enumerate}
-
-Te obiekty:
-\begin{lstlisting}[frame=single, caption={Przykładowa klasa danych używana w testach polimorfizmu zdalnych metod}, label=kod:testDataA]
+\subsection{Dane do testów polimorfizmu}
+W~testach polimorfizmu będą brały dwie klasy danych. Obie są zapisane poniżej w~Javie, chociaż ich odpowiedniki będą tworzone też w~innych językach. Posiadają one domyślne wartości pól, które będą przydatne w~trakcie weryfikacji wyników testów. Wszystkie dalsze pseudokody będą zbliżone do Javy.
+\begin{lstlisting}[frame=single, caption={Pierwsza testowa klasa danych}, label=kod:testDataA]
 public class DaneA
 {
 	public int liczbaA = 13;
@@ -66,25 +55,40 @@ public class DaneA
 }
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single, caption={Przykładowa klasa danych używana w testach polimorfizmu zdalnych metod}, label=kod:testDataB]
+\begin{lstlisting}[frame=single, caption={Druga testowa klasa danych, dziedzicząca pierwszą}, label=kod:testDataB]
 public class DaneB extends DaneA
 {
 	public double liczbaB = 5.25;
 }
 \end{lstlisting}
 
-Testy polimorfizmu metod:
-Przekazanie obiektu dziedziczącego w miejsce konkretnego argumentu.
-Zwrócenie tablicy.
-Metoda przeciążona.
 
-OPISAĆ TESTY POLIMORFIZMU (KLASY, STRUKTURY, METODY)
+\subsection{Testowanie serializacji}
+W~przypadku samej serializacji będzie tylko jeden test, operujący na jednym obiekcie danych -- generycznej tablicy zawierającej obiekty różnego typu.
+Sposób jej tworzenia został opisany we fragmencie kodu \ref{kod:testArray}.
+Test sprawdza, czy informacja o~typach obiektu przeżywa serializację.
+Jest to niezbędne aby uzyskać polimorfizm parametrów zdalnych metod.
+Właściwe kroki testu:
+\begin{enumerate}
+	\item Serializacja obiektu (w sumie powinno się go serializować w jakimś kontekście).
+	\item Stworzenie nowego obiektu przez deserializację zapisu pierwszego obiektu.
+	\item Porównanie nowego i~odtworzonego obiektu. Oba powinny być identyczne pod względem typu i~zawartości.
+\end{enumerate}
+
+\begin{lstlisting}[frame=single, caption={Tablica obiektów różnych typów służąca do sprawdzenia, czy informacja o~typie zostaje zachowana.}, label=kod:testArray]
+Object[] testowaTablica =
+		new Object[]{28, "tekst", new DaneA(), new DaneB()};
+\end{lstlisting}
+
+\subsection{Testowanie polimorfizmu metod zdalnych}
+Testy polimorfizmu metod zdalnych będą weryfikować trzy rzeczy.
+\begin{enumerate}
+	\item Czy metoda potrafi poprawnie zidentyfikować argument typu dziędziczącego typ spodziewany?
+	\item Czy można przeciążać zdalne metody?
+	\item Czy dane wchodzące i~wychodzące z~metody są poprawnie serializowane i~deserializowane?
+\end{enumerate}
+
 Odpowiedzialne za tę weryfikacje będą testy polegające na stworzeniu opisanych zdalnych metod przy pomocy sprawdzanego narzędzia i~próby jej wywołania. Nawet jeśli metoda się wykona, to mogła nie zwrócić odpowiedniego wyniku, dlatego go też trzeba będzie weryfikować. No i~tym testom będą podlegać tylko biblioteki, którą pozwalają tworzyć zdalne metody, nie te, które tylko je konsumują.
-
-
-Kod podstawowej klasy danych. Jej obiekty będę przekazywane i~zwracane w~większości testów.
-Szczegóły składni nie będą ważne, można traktować to jako pseudokod, ale faktycznie na ogół będzie to C\#.
-
 
 
 Kod podstawowej metody testowej. Będzie ona wykonywana w~większości testów.
@@ -100,7 +104,7 @@ public DaneA MetodaA(DaneA dane)
 }
 \end{lstlisting}
 
-%Jak ogólnie wygląda oznaczanie typów -- może być spójne między różnymi frameworkami.
+
 
 
 Dla każdego wypisać wady i zalety względem moich celów. Jakieś podsumowanie do czego może być
@@ -108,20 +112,7 @@ Dla każdego wypisać wady i zalety względem moich celów. Jakieś podsumowanie
 Najpierw przedstawiam każdy framework ``cytując'' jego słowa (README). A~więc przedstawiam jego obietnice. Potem testy sucho powiedzieć co zrobiłem i~jak wyszło. Potem użyteczność -- jakie miałem problemy przy instalacji, na ile jest ona łatwa, jak ciężko było zrobić coś więcej. Na ile łatwo się odnaleźć przy instalacji? (ważne dla programisty). Rozszerzalność -- jak ciężko jest dodawać nowe podklasy do parametrów metod?
 
 
-\subsection{Sprawdzanie polimorfizmu}
-%Chyba to za duże, wystarczy dziedziczący obiekt i generyczna tablica (int, string, obiekt A, obiekt B, tablica)
-Jak sprawdzam polimorfizm?
-Przede wszystkim trzeba sprawdzić, czy metody spełniają założenia polimorfizmu. Poza tym templateowym, bo tego nie chce. Czyli jak z argumentami dziedziczącymi, jak z przeładowaniem metod. Jak z listami różnych elementów, które dziedziczą po typie bazowym.
-Potem przyjrzenie się liście rzeczy, które stworzyłem na bazie doświadczenia z ktorymi silniki serializacyjne maja problemy, a sa ta sensowne przypadki. Np.\ listy list, listy obiektów o różnych typach (też listach). Puste tablice.
-
-
-
-\subsection{Swoboda rozszerzania kodu}
-Czy na tym, co się stworzy danym narzędziem można dalej budować. Zgodnie z obiektową zasadą reuse?
-
-Też testy tutaj. Tylko jakie?
-
-
+%Jak ogólnie wygląda oznaczanie typów -- może być spójne między różnymi frameworkami.
 
 \section{JSON-RPC for Java (jsonrpc4j)}
 \subsection{Opis}
