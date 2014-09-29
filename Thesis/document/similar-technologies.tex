@@ -14,19 +14,7 @@ Testy przedstawione są w~tabeli~\ref{tab:frameworks-criteria}.
 			\hline
 				\textbf{Nazwa} & \textbf{Dziedzina} & \textbf{Opis}\\
 				\hline \hline
-				Polimorfizm danych & Serializacja, RPC & Sprowadza się do zachowania informacji o~typach w~serializowanych danych. Sprawdzane przez serializację i~deserializację jednego obiektu (TestDataB widocznego jako TestDataA) a~następnie sprawdzenie, czy jest taki sam.\\
-				\hline
-				Polimorfizm metod & RPC & Czy zdalne metody mogą być przeładowywane?\\
-				\hline
-				Integracja z~Androidem & RPC & Dotyczy serwerów RPC na Androida. Czy można na zewnątrz wystawić możliwość komunikacji z systemem operacyjnym? Np.\ uruchamianie innych aplikacji?\\
-				\hline
-				Modularność & RPC & Czy można do serwera i~klienta dodać moduł, np. z~nowymi klasami danych dziedziczącymi istniejące i~używać ich ze starymi metodami?\\
-				\hline
-				\emph{Code reuse} & Ogólna & Czy można do danej technologii podpiąć, albo wykorzystać z~nią jakieś istniejące biblioteki napisane na tę samą platformę? Np. dla technologii Javowych -- Jary.\\
-				\hline
-				Współpraca & Ogólna & Czy technologia dopuszcza zgodność po obu stronach przy moim użyciu? Czyli na Androidzie i C\#. Łączy się jakoś standardowo, czy własne łączniki po obu stronach implementować? Czy wystarczy skonfigurować istniejące?\\
-				\hline
-				Standardowość & Ogólna & Uogólnienie kryterium ,,Współpraca''. Czy technologia, przy moim użyciu jest zgodna z~jakimś szeroko przyjętym standardem?\\
+				Klasyfikacja & Ogólna & Czym dana technologia jest, co potrafi (z mojej dziedziny zainteresowania)? Czy tłumaczy kod, czy serializuje, czy może być klientem RPC, czy może być serwerem RPC? Poza tym, do których dziedzin z~tej tabeli się zalicza?\\
 				\hline
 				Docelowa platforma & Ogólna & Czy technologia działa na platformie docelowej (Android, .NET)? Której?\\
 				\hline
@@ -34,7 +22,19 @@ Testy przedstawione są w~tabeli~\ref{tab:frameworks-criteria}.
 				\hline
 				Łatwość użycia & Ogólna & Dotyczy bardziej sensownego wykorzystania technologii. U mnie to będzie przedstawiać jak trudno było wykonać testy polimorfizmu. Wyznacznik użyteczności.\\
 				\hline
-				Klasyfikacja & Ogólna & Czym dana technologia jest, co potrafi (z mojej dziedziny zainteresowania)? Czy tłumaczy kod, czy serializuje, czy może być klientem RPC, czy może być serwerem RPC?\\
+				Współpraca & Ogólna & Czy technologia dopuszcza zgodność po obu stronach przy moim użyciu? Czyli na Androidzie i C\#. Łączy się jakoś standardowo, czy własne łączniki po obu stronach implementować? Czy wystarczy skonfigurować istniejące?\\
+				\hline
+				Standardowość & Ogólna & Uogólnienie kryterium ,,Współpraca''. Czy technologia, przy moim użyciu jest zgodna z~jakimś szeroko przyjętym standardem?\\
+				\hline
+				\emph{Code reuse} & Ogólna & Czy można do danej technologii podpiąć, albo wykorzystać z~nią jakieś istniejące biblioteki napisane na tę samą platformę? Np. dla technologii Javowych -- Jary.\\
+				\hline
+				Modularność & RPC & Czy można do serwera i~klienta dodać moduł, np. z~nowymi klasami danych dziedziczącymi istniejące i~używać ich ze starymi metodami?\\
+				\hline
+				Integracja z~Androidem & RPC & Dotyczy serwerów RPC na Androida. Czy można na zewnątrz wystawić możliwość komunikacji z systemem operacyjnym? Np.\ uruchamianie innych aplikacji?\\
+				\hline
+				Polimorfizm metod & RPC & Czy zdalne metody mogą być przeładowywane?\\
+				\hline
+				Polimorfizm danych & Serializacja, RPC & Sprowadza się do zachowania informacji o~typach w~serializowanych danych. Sprawdzane przez serializację i~deserializację jednego obiektu (TestDataB widocznego jako TestDataA) a~następnie sprawdzenie, czy jest taki sam.\\
 				\hline
 		\end{tabular}
 	\caption[Kryteria oceny technologii.]{Kryteria oceny technologii.}
@@ -46,16 +46,15 @@ Te, które będą tego wymagać będą uruchamiane na emulowanym (w~Windowsie) A
 
 
 \subsection{Dane do testów polimorfizmu}
-W~testach polimorfizmu będą brały dwie klasy danych. Obie są zapisane poniżej w~Javie, chociaż ich odpowiedniki będą tworzone też w~innych językach. Posiadają one domyślne wartości pól, które będą przydatne w~trakcie weryfikacji wyników testów. Wszystkie dalsze pseudokody będą zbliżone do Javy.
-\begin{lstlisting}[frame=single, caption={Pierwsza testowa klasa danych}, label=kod:testDataA]
+W~testach polimorfizmu będą brały dwie klasy danych. Obie są zapisane w~Javie, we fragmencie~\ref{code:testData}, chociaż ich odpowiedniki będą tworzone też w~innych językach. Posiadają one domyślne wartości pól, które będą przydatne w~trakcie weryfikacji wyników testów. Wszystkie dalsze pseudokody będą zbliżone do Javy.
+
+\begin{lstlisting}[float, frame=single, caption={Testowe klasy danych; jedna dziedzicząca drugą.}, label=code:testData]
 public class DaneA
 {
 	public int liczbaA = 13;
-	public string tekst = "cokolwiek";
+	public string tekstA = "cokolwiek";
 }
-\end{lstlisting}
 
-\begin{lstlisting}[frame=single, caption={Druga testowa klasa danych, dziedzicząca pierwszą}, label=kod:testDataB]
 public class DaneB extends DaneA
 {
 	public double liczbaB = 5.25;
@@ -65,7 +64,7 @@ public class DaneB extends DaneA
 
 \subsection{Testowanie serializacji}
 W~przypadku samej serializacji będzie tylko jeden test, operujący na jednym obiekcie danych -- generycznej tablicy zawierającej obiekty różnego typu.
-Sposób jej tworzenia został opisany we fragmencie kodu \ref{kod:testArray}.
+Sposób jej tworzenia został opisany we fragmencie kodu \ref{code:testArray}.
 Test sprawdza, czy informacja o~typach obiektu przeżywa serializację.
 Jest to niezbędne aby uzyskać polimorfizm parametrów zdalnych metod.
 Właściwe kroki testu:
@@ -75,7 +74,7 @@ Właściwe kroki testu:
 	\item Porównanie nowego i~odtworzonego obiektu. Oba powinny być identyczne pod względem typu i~zawartości.
 \end{enumerate}
 
-\begin{lstlisting}[frame=single, caption={Tablica obiektów różnych typów służąca do sprawdzenia, czy informacja o~typie zostaje zachowana.}, label=kod:testArray]
+\begin{lstlisting}[frame=single, caption={Tablica obiektów różnych typów służąca do sprawdzenia, czy informacja o~typie zostaje zachowana.}, label=code:testArray]
 Object[] testowaTablica =
 		new Object[]{28, "tekst", new DaneA(), new DaneB()};
 \end{lstlisting}
@@ -88,34 +87,63 @@ Testy polimorfizmu metod zdalnych będą weryfikować trzy rzeczy.
 	\item Czy dane wchodzące i~wychodzące z~metody są poprawnie serializowane i~deserializowane?
 \end{enumerate}
 
-Odpowiedzialne za tę weryfikacje będą testy polegające na stworzeniu opisanych zdalnych metod przy pomocy sprawdzanego narzędzia i~próby jej wywołania. Nawet jeśli metoda się wykona, to mogła nie zwrócić odpowiedniego wyniku, dlatego go też trzeba będzie weryfikować. No i~tym testom będą podlegać tylko biblioteki, którą pozwalają tworzyć zdalne metody, nie te, które tylko je konsumują.
+Odpowiedzialne za tę weryfikacje będą testy polegające na stworzeniu zdalnych metod przy pomocy sprawdzanego narzędzia i~próby ich wywołania.
+Nawet jeśli metoda się wykona, to mogła nie zwrócić odpowiedniego wyniku, dlatego go też trzeba będzie weryfikować.
+Tym testom będą podlegać tylko biblioteki, którą pozwalają tworzyć lub konsumować zdalne metody.
+Kody klasy zawierającej testowe zdalne metody (zwanej też serwisem) oraz jej interfejsu znajdują się we fragmencie~\ref{code:testService}
 
-
-Kod podstawowej metody testowej. Będzie ona wykonywana w~większości testów.
-Po prostu zwraca lekko zmodyfikowaną kopię parametru.
-
-\begin{lstlisting}[frame=single, caption={Przykładowa zdalna metoda testowana pod kątem polimorfizmu}, label=kod:testMethod]
-public DaneA MetodaA(DaneA dane)
+\begin{lstlisting}[float, frame=single, caption={Przykładowa zdalna metoda testowana pod kątem polimorfizmu}, label=code:testService]
+public interface ITestowySerwis
 {
-	DaneA noweDane = new DaneA();
-	noweDane.liczba = dane.liczba + 1;
-	noweDane.tekst = dane.tekst + "xxx";	
-	return noweDane;
+	String testPodstawowy();		
+	String testPodstawowy(String argument);    
+	DaneA testPolimorfizmuA(DaneA testowyObiekt);    
+	Object[] testPolimorfizmuB(Object[] testowaTablica);
+}
+
+public class TestowySerwis implements ITestowySerwis
+{
+	String testPodstawowy()
+	{
+		return "Dziala!";
+	}
+		
+	String testPodstawowy(String argument)
+	{
+		return "Dostalem " + argument;
+	}
+	
+	DaneA testPolimorfizmuA(DaneA testowyObiekt)
+	{
+		testowyObiekt.liczbaA += 1;
+		testowyObiekt.tekstA += " cos dodano!";
+		return testowyObiekt;
+	}
+	
+	Object[] testPolimorfizmuB(Object[] testowaTablica)
+	{
+		int dlugoscTablicy = testowaTablica.length;
+		Object[] nowaTablica = new Object[dlugoscTablicy+1];
+		for(int i = 0; i < dlugoscTablicy; i++)
+		{
+			nowaTablic[i] = testowaTablica[i];
+		}
+		nowaTablica[dlugoscTablicy] = 3.14;
+	}
 }
 \end{lstlisting}
 
+%Dla każdego wypisać wady i zalety względem moich celów. Jakieś podsumowanie do czego może być
 
-
-
-Dla każdego wypisać wady i zalety względem moich celów. Jakieś podsumowanie do czego może być
-
-Najpierw przedstawiam każdy framework ``cytując'' jego słowa (README). A~więc przedstawiam jego obietnice. Potem testy sucho powiedzieć co zrobiłem i~jak wyszło. Potem użyteczność -- jakie miałem problemy przy instalacji, na ile jest ona łatwa, jak ciężko było zrobić coś więcej. Na ile łatwo się odnaleźć przy instalacji? (ważne dla programisty). Rozszerzalność -- jak ciężko jest dodawać nowe podklasy do parametrów metod?
-
+%Najpierw przedstawiam każdy framework ``cytując'' jego słowa (README). A~więc przedstawiam jego obietnice. Potem testy sucho powiedzieć co zrobiłem i~jak wyszło. Potem użyteczność -- jakie miałem problemy przy instalacji, na ile jest ona łatwa, jak ciężko było zrobić coś więcej. Na ile łatwo się odnaleźć przy instalacji? (ważne dla programisty). Rozszerzalność -- jak ciężko jest dodawać nowe podklasy do parametrów metod?
 
 %Jak ogólnie wygląda oznaczanie typów -- może być spójne między różnymi frameworkami.
 
+
+
 \section{JSON-RPC for Java (jsonrpc4j)}
-\subsection{Opis}
+(TODO)
+Biblioteka umożliwiająca działanie jako serwer lub klient JSON-RPC 2.0 napisana w~Javie.
 \url{https://github.com/briandilley/jsonrpc4j}
 
 Używa Jacksona, który sam w~sobie jest ciekawą biblioteką do serializacji.
@@ -123,7 +151,7 @@ Używa Jacksona, który sam w~sobie jest ciekawą biblioteką do serializacji.
 
 Niby ma działać na Androidzie zarówno klient jak i~serwer.
 
-\subsection{Instalacja i~hello world}
+\subsection{Wrażenia}
 Ściągam z~Githuba (repozytorium Gita).
 Buduję Mavenem.
 Wczepiłem do projektu Androidowego zrobionego Eclipsem z~ADT.
@@ -142,8 +170,10 @@ Zrobiłem sobie przykładowego klienta i~serwer (kody powinny być załączone d
 Nie da się, niestety tak skonfigurować ``serwera strumieniowego'', żeby działał w~jednym procesie na strumieniach w~pamięci. Trzeba użyć socketów.
 Na szczęście wszystko jest na tyle otwarte, że da się dobrać do socketu klienta i~przekierować to, co jest na niego nadawane (i~z~niego odbierane). Dzięki temu będę widział, jak wyglądają słane wiadomości.
 
-\subsection{Testy}
-Teraz pora sprawdzić te obietnice i~poddać bibliotekę testom. Odpalenie tych testów daje zrozumienie jak trudno lub łatwo można realizować bardziej skomplikowane zdalne metody.
+
+
+\subsection{Testy (TODO -- odpal jeszcze raz)}
+
 
 Prosty test, że polimorfizm działa.  Np. kiedy przerzuca się obiekt, który będzie analizowany refleksją, albo posiadający przeładowane metody.
 
@@ -173,17 +203,40 @@ Wygląda tak samo, jak przy oznaczaniu w~klasie. Warto zaznaczyć, że są inne 
 
 Polimorfizm kolekcji -- też działa. Przy tablicach najwyraźniej nie ma wyboru stylu oznaczeń typów.
 
-
-\subsection{Jakieś spostrzeżenia?}
-Wszystko super. Sam standard JSON-RPC powinien zapewniać zgodność elementów z~różnych technologii. Niestety sam standard nie jest przemyślany pod kontem polimorfizmu. W tym przypadku może działać dzięki Jacksonowi.
-Może też być zgodny ze wszystkim innym, co używa Jacksona. Ale albo trzeba mieć te same pliki klas po obu stronach albo takie same mappery.
+\subsection{Ocena}
+%Może przerobić to na tabelę? Cecha / Ocena / Komentarz
+\begin{description}
+\itemtitle{Klasyfikacja}
+Klient RPC, Serwer PRC, Serializacja
+\itemtitle{Docelowa platforma}
+Poza obszarem zainteresowania -- Java SE. Android teoretycznie powinien być możliwy, ale nie jest.
+\itemtitle{Łatwość instalacji}
+Może być... chyba muszę jeszcze przejrzeć notki.
+\itemtitle{Łatwość użycia}
+Sensowne i łatwe, ale może nie oczywiste.
+\itemtitle{Standardowość}
+Niby jest, ale jak chcemy używać z polimorfizmem to druga strona musi tak samo kodować typy jak nasza konfiguracja Jacksona.
+\itemtitle{Współpraca}
+To samo, co w ,,Standardowości''.
+\itemtitle{Code reuse}
+Jest -- można podłączać zewnętrzne biblioteki i używać klas z nich w naszych metodach. Jeśli tylko są jakoś serializowalne.
+\itemtitle{Modularność}
+Jest -- mogę dodać nowe klasy dziedziczące po argumentach zdalnej metody i~metoda może je obsługiwać, jeśli tylko podczepimy te klasy po obu stronach.
+\itemtitle{Integracja z Androidem}
+Jest.
+\itemtitle{Polimorfizm metod}
+TODO -- sprawdź przeładowania.
+\itemtitle{Polimorfizm danych}
+Jest.
+\end{description}
 
 \subsection{Podsumowanie}
-Wymienienie plusów i minusów. Może zrobić itemize, gdzie jedna lista ma duże minusy jako znaczki, a~druga plusy?
+Wszystko super. Sam standard JSON-RPC powinien zapewniać zgodność elementów z~różnych technologii. Niestety sam standard nie jest przemyślany pod kątem polimorfizmu. W tym przypadku może działać dzięki Jacksonowi.
+Może też być zgodny ze wszystkim innym, co używa Jacksona. Ale albo trzeba mieć te same pliki klas po obu stronach albo takie same mappery.
 
 Jest rozszerzalność. Jak raz oznaczyłem klasę bazową, albo jak ustawiłem serializator to mogłem dodawać więcej klas dziedziczących i~się nie martwić.
 
-
+Może zrobię forka i~dopasuję do Androida. Wtedy jest to mój faworyt na wykorzystanie.
 
 \section{Xamarin}
 \subsection{Opis (DONE)}
@@ -414,7 +467,7 @@ Będę używał tego pełnego dla prostoty.
 Ze zbudowaną biblioteką spróbujmy zbudować aplikację na Androida.
 
 Coś nie widać do końca jak to hostowanie powinno wyglądać. Odpalę sobie taki przykładowy kod z~readme (ale nie będę używał Calculatora, a~jakiś swój interfejs i~implementację):
-\begin{lstlisting}[frame=single, caption={Przykładowy sposób wystawiania serwera bez użycia serwletów}, label=kod:bla]
+\begin{lstlisting}[frame=single, caption={Przykładowy sposób wystawiania serwera bez użycia serwletów}, label=code:bla]
 private JsonRpcExecutor bind() {
    JsonRpcExecutor executor = new JsonRpcExecutor();
 
