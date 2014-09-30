@@ -239,16 +239,16 @@ Umożliwia wywoływanie zdalnych metod nie tylko przez HTTP, ale też przez sock
 Informacje na jego temat oraz jego kod źródłowy dostępne są na jego oficjalnej stronie w~serwisie Github: \url{https://github.com/briandilley/jsonrpc4j}
 
 \subsection{Ocena}
+
 \begin{description}
 \itemtitle{Klasyfikacja}
 Klient i~serwer RPC. Otwarty kod. Serializacja dostarczana przez zewnętrzną bibliotekę -- Jackson.
 
 \itemtitle{Docelowa platforma}
-Java SE. Teoretycznie na Androidzie powinien działać zarówno klient jak i~serwer.
-
-JsonRpcServer -- jest zależny od rzeczy z~javax od serwletów, a~tego na Androidzie nie ma. Wywala się w~trakcie ładowania klasy. Android Lint od razu przestrzega, że to nie jest.
-
-Wczepiłem do projektu Androidowego zrobionego Eclipsem z~ADT.
+Java SE.
+Teoretycznie na Androidzie powinien działać zarówno klient jak i~serwer (taka informacja znajduje się w~README).
+Jest tak dlatego, że biblioteka zawiera referencje do klas z~klasycznej wersji Javy (w~tym Javy EE).
+Standardowe środowisko deweloperskie (Eclipse z~wtyczką ADT) do aplikacji na Androida wykrywa to jako znany błąd.
 
 \itemtitle{Łatwość instalacji}
 Średnia.
@@ -336,6 +336,45 @@ Na korzyść Xamarina może przemawiać to, że znalazł użytek wśród znanych
 Ponadto, jego twórcy współpracują z~Microsoftem.
 
 %\url{http://docs.xamarin.com/guides/cross-platform/application_fundamentals/web_services/}\\
+
+\subsection{Ocena}
+
+\begin{description}
+\itemtitle{Klasyfikacja}
+Jest to port platformy .NET, a~więc powinien zapewniać, m.in.\ możliwość serializacji, tworzenia i~konsumowania zdalnych metod.
+Kod źródłowy nie jest dostępny.
+
+\itemtitle{Docelowa platforma}
+Android, iOS i~mobilne wersje Windows. W~tej analizie skupiam się tylko na Androidzie. 
+
+\itemtitle{Łatwość instalacji}
+Łatwe. Jedyne wyzwanie to stworzenie odpowiedniej wirtualnej maszyny (AVD, \emph{Android Virtual Device}) pod emulator Androida.
+Instalacja wymaga także podania swoich danych osobowych. 
+
+\itemtitle{Łatwość użycia}
+
+\itemtitle{Zgodność}
+
+\itemtitle{\emph{Code reuse}}
+Biblioteki .NET trzeba przekompilowywać pod Xamarina, a~więc ogranicza się to do tych z~otwartym kodem.
+
+\itemtitle{Modularność (taka rozszerzalność)}
+
+\itemtitle{Integracja z Androidem}
+
+Można zarządzać Androidem i wywoływać kod Javowy z jarów, ale system pewnie nie byłby polimorficznym RPC, a czymś bardziej nieporęcznym. Trzeba by serializować rzeczy w jednym .NETcie, przekazywać do Mono i tam do Javy przez wrappery. Mało eleganckie, ale może mogłoby ładnie działać.
+
+\itemtitle{Polimorfizm metod}
+
+\itemtitle{Polimorfizm danych}
+Podstawowa serializacja .NETa jest ograniczona i nie można zachowywać pełni danych o typach. Serializacja binarna nie jest zgodna z normalnym .NETem. Pewnie trzeba by było użyć jakiejś zewnętrznej biblioteki po obu stronach, żeby mogło to działać.
+
+\end{description}
+
+\subsection{Podsumowanie}
+Ma ciekawe techniki generowania owijek (\emph{bindings}) w~C\# na Javę. Może warto by przyjrzeć się im niezależnie.
+
+
 
 \subsection{Instalacja i~hello world}
 Ściąga się łatwo z~głównej strony. Jedyne, co zwalnia ten proces to podawanie swoich danych.
@@ -464,13 +503,6 @@ Skoro odpalenie aplikacji działa, to działają intenty i~można zarządzać ca
 \subsubsection{Czy mogę odpalić jakieś metody z~Jara}
 %http://developer.xamarin.com/guides/android/advanced_topics/java_integration_overview/binding_a_java_library_(.jar)/
 Do tej pory nas nie okłamali i wątpię, żeby nie działało coś tak dokładnie opisywanego, więc sprawdzał nie będę. Przedstawili sprawozdanie z prawdziwego użycia.
-
-\subsection{Jakieś spostrzeżenia?}
-Ma ciekawe techniki generowania wrapperów (bindingów) na Javę do użycia z~C\#. Może warto będzie przyjrzeć się im niezleżnie.
-
-Podstawowa serializacja .NETa jest ograniczona i nie można zachowywać pełni danych o typach. Serializacja binarna nie jest zgodna z normalnym .NETem. Pewnie trzeba by było użyć jakiejś zewnętrznej biblioteki po obu stronach, żeby mogło to działać.
-
-Można zarządzać Androidem i wywoływać kod Javowy z jarów, ale system pewnie nie byłby polimorficznym RPC, a czymś bardziej nieporęcznym. Trzeba by serializować rzeczy w jednym .NETcie, przekazywać do Mono i tam do Javy przez wrappery. Mało eleganckie, ale może mogłoby ładnie działać.
 
 
 
