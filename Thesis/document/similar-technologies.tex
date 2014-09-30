@@ -17,7 +17,7 @@ Testy przedstawione są w~tabeli~\ref{tab:frameworks-criteria}.
 			\hline
 				\textbf{Nazwa} & \textbf{Dziedzina} & \textbf{Opis}\\
 				\hline \hline
-				Klasyfikacja & Ogólna & Czym dana technologia jest, co potrafi (z mojej dziedziny zainteresowania)? Czy tłumaczy kod, czy serializuje, czy może być klientem RPC, czy może być serwerem RPC? Poza tym, do których dziedzin z~tej tabeli się zalicza?\\
+				Klasyfikacja & Ogólna & Czym dana technologia jest, co potrafi (z mojej dziedziny zainteresowania)? Czy tłumaczy kod, czy serializuje, czy może być klientem RPC, czy może być serwerem RPC? Poza tym, do których dziedzin z~tej tabeli się zalicza? Czy jej kod jest otwarty?\\
 				\hline
 				Docelowa platforma & Ogólna & Czy technologia działa na platformie docelowej (Android, .NET)? Której?\\
 				\hline
@@ -143,6 +143,7 @@ public class TestowySerwis implements ITestowySerwis
 
 
 \section{Jackson}
+\label{jackson}
 Jackson to zestaw narzędzi do przetwarzania danych stworzony dla Javy (i~platformy JVM).
 Wspiera wiele kodowań: JSON, Avro, CBOR, CSV, Smile, XML i~YAML.
 Najbardziej znany jego komponent to biblioteka do parsowania i~generacji danych w~formacie JSON.
@@ -160,8 +161,8 @@ Serializator JSON pod Javę. Otwarty kod.
 Działa na Androidzie. Skierowane pod maszynę wirtualną Javy (JVM).
 
 \itemtitle{Łatwość instalacji}
-Średnia.
-Wymaga odnalezienia się w~dużej ilości przestarzałych stron, zawierających sprzeczne informacje.
+Łatwa, ale nie banalna.
+Wymaga odnalezienia się pośród kilku przestarzałych stron, zawierających sprzeczne informacje.
 Na właściwej stronie głównej, potrzebne biblioteki mogłyby być wyraźniej wskazane.
 To, że wszystko narzędzie jest do pobrania z~Githuba może być odebrane dwojako; z~jednej strony trzeba się z~nim przez chwilę zaznajomić, z~drugiej, jest to popularna platforma standaryzująca dystrybucję wielu bibliotek i~dla niektórych może być bardziej intuicyjna niż osobna, unikatowa strona domowa projektu.
 
@@ -188,6 +189,9 @@ Jest. Realizowany przy pomocy wpisywania dodatkowych danych o~typach wtedy, gdy 
 Sposób wpisywania tej informacji może być konfigurowany.
 Jednym sposobem jest dodanie do obiektu specjalnego pola; jak we fragmencie kodu~\ref{code:typeInfoField}, gdzie obiekt typu DaneB był w~kontekście sugerującym DaneA i~musiało to być oznaczone.
 Innym sposobem jest owinięcie obiektu w~tablicę i~dodanie nazwy typu jako jej pierwszy element, jak w~kodzie~\ref{code:typeInfoArray}.
+Zastrzeżeniem jest serializacja tablic -- w~tym przypadku można to zrobić tylko przez owijanie w~kolejną tablicę.
+
+Trzeba zaznaczyć, że dodawanie informacji o~typach nie jest zachowaniem domyślnym. Aby to osiągnąć należy odpowiednio skonfigurować klasę odpowiedzialną za serializację i~deserializację (\texttt{ObjectMapper}) lub dodać adnotację \texttt{JsonTypeInfo} do konkretnego typu danych (przykład na fragmencie~\ref{code:typeInfoAnnotation}). Wszystkie klasy dziedziczącej po klasie z~\texttt{JsonTypeInfo} będą, w~przypadku serializacji, opisywane w~analogiczny sposób.
 
 \begin{lstlisting}[float, frame=single, caption={Oznaczanie typu przez dodatkowe pole.}, label=code:typeInfoField]
 {
@@ -210,6 +214,16 @@ Innym sposobem jest owinięcie obiektu w~tablicę i~dodanie nazwy typu jako jej 
     ]
 }
 \end{lstlisting}
+
+\begin{lstlisting}[float, frame=single, caption={Parametryzacja przekazywania informacji o~typie w~definicji klasy.}, label=code:typeInfoAnnotation]
+@JsonTypeInfo(
+    use=JsonTypeInfo.Id.CLASS,
+    include=JsonTypeInfo.As.PROPERTY,
+    property="@class")
+public class DaneA
+{
+    ...
+\end{lstlisting}
 \end{description}
 
 \subsection{Podsumowanie}
@@ -219,105 +233,92 @@ Dlatego ma dużą szansę na wykorzystanie w~Androidowej części mojego projekt
 
 
 \section{JSON-RPC for Java (jsonrpc4j)}
-(TODO)
-Biblioteka umożliwiająca działanie jako serwer lub klient JSON-RPC 2.0 napisana w~Javie.
-\url{https://github.com/briandilley/jsonrpc4j}
-
-%Osobno Jackson
-Używa Jacksona, który sam w~sobie jest ciekawą biblioteką do serializacji.
-% Dopisz dwa zdania o Jacksonie
-
-Niby ma działać na Androidzie zarówno klient jak i~serwer.
-
-\subsection{Wrażenia}
-Ściągam z~Githuba (repozytorium Gita).
-Buduję Mavenem.
-Wczepiłem do projektu Androidowego zrobionego Eclipsem z~ADT.
-Dodałem jacksona (databind), którego Jar i~tak zbudował się w~trakcie budowania Mavenem (leży sobie w~lokalnym repozytorium, c:\textbackslash{}Users\textbackslash{}Butla\textbackslash{}m2).
-
-Dalej jadę za najprostszym przykładem bez Springa i~serwera webowego, czyli korzystając z~czegoś, co nazywa się StreamServer.
-
-I~nie działa. JsonRpcServer -- jest zależny od rzeczy z~javax od serwletów, a~tego na Androidzie nie ma. Wywala się w~trakcie ładowania klasy. Android Lint od razu przestrzega, że to nie jest.
-
-Napisałem do twórcy, zobaczymy co odpowie, a~tymczasem zrobię testy na normalnej Javie.
-
-Z jacksona trzeba jeszcze wziąć core i~annotation (po prostu wszystko). I~potrzeba javax.servlet-api (też zostaje przy buildzie w~repo mavena), żeby były klasy od servletów (ogólnie szkoda, że nie ma o~tym mowy).
-
-Zrobiłem sobie przykładowego klienta i~serwer (kody powinny być załączone do pracy). Oba działają lokalnie. Chwilkę musiałem się zastanowić jak to złożyć bez żadnych serwletów, ale kod jest logicznie ustrukturalizowany i~elastyczny, dlatego zrobienie takiego klienta jakiego chciałem.
-
-Nie da się, niestety tak skonfigurować ``serwera strumieniowego'', żeby działał w~jednym procesie na strumieniach w~pamięci. Trzeba użyć socketów.
-Na szczęście wszystko jest na tyle otwarte, że da się dobrać do socketu klienta i~przekierować to, co jest na niego nadawane (i~z~niego odbierane). Dzięki temu będę widział, jak wyglądają słane wiadomości.
-
-
-
-\subsection{Testy (TODO -- odpal jeszcze raz)}
-
-
-Prosty test, że polimorfizm działa.  Np. kiedy przerzuca się obiekt, który będzie analizowany refleksją, albo posiadający przeładowane metody.
-
-Ok, prosty test z przekazaniem dziedziczącego argumentu wywala się z~uwagi na nierozpoznanie dodatkowego pola parametru. Nie wie, że to inny typ.
-%{"id":"3199114083297069103","jsonrpc":"2.0","method":"testDataA","params":[{"numberA":13,"stringA":"domyslny","numberB":5.25}]}
-%Unrecognized field "numberB" (class jsonrpc4jtestse.TestDataA), not marked as ignorable (2 known properties: , "numberA", "stringA"])
-
-Readme nic o~tym nie mówi, dokumentacji nie ma. Ale w~błędzie jackson, więc trzeba się udać do Jacksona.
-Najwyraźniej potrzeba dodatkowych informacji, żeby serializacja mogła się udać. Z~pomocą przychodzi funkcja oznaczania typów obiektów we wiadomości\cite{jackson-polymorphic}.
-Nawet mimo tego są jakieś problemy... Robi się to irytujące.
-
-Używa valueToTree zamiast po prostu write i~przez to nie chce przejść z~oznaczaniem typów.
-
-A po dodaniu do klasy głównej danych znacznika nakazującego oznaczenie typów wszystko działa.
-%{"id":"4653019993893876656","jsonrpc":"2.0","method":"testDataA","params":[{"@class":"jsonrpc4jtestse.TestDataB","numberA":13,"stringA":"domyslny","numberB":5.25}]}
-%{"jsonrpc":"2.0","id":"4653019993893876656","result":{"@class":"jsonrpc4jtestse.TestDataB","numberA":14,"stringA":"domyslny dodałem coś!","numberB":5.25}}
-Wraca obiekt o poprawnym typie. Bez ustawiania czegokolwiek w~Mapperach.
-Dodanie jednego znacznika do głównej klasy w~hierarchii nie jest straszne, ale sprawdźmy jeszcze domyślne typowanie z~najnowszą wersją Jacksona (bo do jsonrpc4j zrobiła się jakaś 2.0.2).
-
-Ściągnąłem 2.4.2, nową wersje w~której powinien ten problem być już naprawiony. I faktycznie, działa teraz bez oznaczeń na klasie. Ale za to trzeba i~serwer, i~klienta stworzyć z~ObjectMapperem, w~którym włączy się enableDefaultTyping(). W moim przypadku było to
-%mapper.enableDefaultTyping(
-                %ObjectMapper.DefaultTyping.NON_FINAL,
-                %JsonTypeInfo.As.PROPERTY);
-Które dodaje informację o~klasie jako dodatkowe pole obiektu (\emph{property}), przy wszystkich obiektach, które nie są oznaczone jako final (takie, po których się nie da dziedziczyć).
-%{"id":"-6659082740394205036","jsonrpc":"2.0","method":"testDataA","params":[{"@class":"jsonrpc4jtestse.TestDataB","numberA":13,"stringA":"domyslny","numberB":5.25}]}
-Wygląda tak samo, jak przy oznaczaniu w~klasie. Warto zaznaczyć, że są inne style dodawania informacji o~klasach niż dodawanie nowego pola. Można je zobaczyć tu (link!). Przestawić JSOny z nimi.
-
-Polimorfizm kolekcji -- też działa. Przy tablicach najwyraźniej nie ma wyboru stylu oznaczeń typów.
-
-%Dodać ogólnie open source do klasyfikacji
-
-Jest rozszerzalność. Jak raz oznaczyłem klasę bazową, albo jak ustawiłem serializator to mogłem dodawać więcej klas dziedziczących i~się nie martwić.
+Biblioteko umożliwiająca łatwą implementacji standardu JSON-RPC 2.0 w~języku Java.
+jsonrpc4j używa biblioteki Jackson do konwersji pomiędzy obiektami Javy a~dokumentami JSONa oraz do innych czynności związanych z~JSON-RPC.
+Umożliwia wywoływanie zdalnych metod nie tylko przez HTTP, ale też przez sockety TCP.
+Informacje na jego temat oraz jego kod źródłowy dostępne są na jego oficjalnej stronie w~serwisie Github: \url{https://github.com/briandilley/jsonrpc4j}
 
 \subsection{Ocena}
-%Może przerobić to na tabelę? Cecha / Ocena / Komentarz
 \begin{description}
 \itemtitle{Klasyfikacja}
-Klient RPC, Serwer PRC, Serializacja, Open Source.
+Klient i~serwer RPC. Otwarty kod. Serializacja dostarczana przez zewnętrzną bibliotekę -- Jackson.
+
 \itemtitle{Docelowa platforma}
-Poza obszarem zainteresowania -- Java SE. Android teoretycznie powinien być możliwy, ale nie jest.
+Java SE. Teoretycznie na Androidzie powinien działać zarówno klient jak i~serwer.
+
+JsonRpcServer -- jest zależny od rzeczy z~javax od serwletów, a~tego na Androidzie nie ma. Wywala się w~trakcie ładowania klasy. Android Lint od razu przestrzega, że to nie jest.
+
+Wczepiłem do projektu Androidowego zrobionego Eclipsem z~ADT.
+
 \itemtitle{Łatwość instalacji}
-Może być... chyba muszę jeszcze przejrzeć notki.
+Średnia.
+Bibliotekę trzeba ściągnąć w~formie kodu (używając Gita lub ściągając paczkę), a~następnie zbudować korzystając z~narzędzia Maven.
+Nie wszyscy mają na swoich systemach Mavena, a~jego instalacja także wymaga kilku czynności (co prawda nieskomplikowanych).
+
+Napisanego pierwszego programu nie uda się najprawdopodobniej uruchomić za pierwszym razem, z~powodu braku niektórych klas.
+Należy czytać błędy, dedukować jakich bibliotek brakuje po pełnych nazwach klas, a~następnie ściągać i~dodawać te biblioteki do programu.
+Biblioteki, których brakuje to trzon Jacksona (\texttt{jackson-core}, \texttt{jackson-databind}, \texttt{jackson-annotations}) oraz \texttt{javax.servlet-api}.
+
 \itemtitle{Łatwość użycia}
-Sensowne i łatwe, ale może nie oczywiste.
-%Może zamiast standardowość i współpraca zrobić pole zgodność?
-\itemtitle{Standardowość}
+Użycie jest łatwe. Kod jest logicznie ustrukturalizowany i~elastyczny.
+Dobrze rozdzielone są warstwy tłumacząca dane i~komunikacyjna.
+Na głównej stronie projektu można znaleźć przykłady, dzięki którym można szybko rozpocząć pracę.
+
+Przeprowadziłem testy wzorując się na najprostszym przykładzie niekorzystającym z~frameworku Spring, wykorzystując klasę \texttt{StreamServer}.
+W~moim zastosowaniu zarówno klient jak i~serwer działały lokalnie na jednej maszynie. Dodatkowo, serwer musiał być niezależną aplikacją niekorzystającą z~kontenera Javy EE\footnote{Przykładem takiego kontenera mogą być Glassfish lub serwer Apache.}.
+Takiego przypadku nie było w~przykładach, ale dzięki sensownej strukturze biblioteki szybko rozwiązałem mój problem odpowiednio konfigurując klasy.0
+
+Nie da się, niestety, tak skonfigurować ,,serwera strumieniowego''(\texttt{StreamServer}), żeby działał w~jednym procesie na strumieniach w~pamięci. Trzeba użyć socketów. Nie jest to duży problem, ale wymaga większej finezji przy przechwytywaniu wiadomości w~celu analizy. Chociaż warto znowu pochwalić budowę biblioteki za to, że takie przechwytywanie jest w~ogóle możliwe.
+
+%Można jeszcze zaznaczyć, że wersja Jacksona, którą ściąga Maven w~trakcie budowania tego projektu, ma błąd w~domyślnym typowaniu korzystając z metody valueToTree (można używać innej, która działa). Trzeba ściągnąć nowszą.
+
+\itemtitle{Zgodność}
 Jest zgodność ze standardem JSON-RPC 2.0. Ale standard ten nie mówi nic o~danych zawierających dodatkowe informacje o typach.
-Dlatego zgodność z~drugą stroną możliwa jest tylko w~przypadku, gdy tak samo koduje ona informacje o~typach. Jest to możliwe chociażby wtedy, kiedy używałaby tak samo skonfigurowanego Jacksona do serializacji.
-\itemtitle{Współpraca}
-To samo, co w ,,Standardowości''.
-\itemtitle{Code reuse}
-Jest -- można podłączać zewnętrzne biblioteki i używać klas z nich w naszych metodach. Jeśli tylko są jakoś serializowalne.
+Dlatego zgodność z~drugą stroną możliwa jest tylko w~przypadku analogicznie skonfigurowanej warstwy serializacyjnej (więcej informacji w~punkcie~\ref{jackson}).
+
+\itemtitle{\emph{Code reuse}}
+Jest -- można używać klas z~zewnętrznych bibliotek jako danych w~metodach zdalnych, można też wystawiać je jako serwisy (obiekty wystawiające na zewnątrz zdalne metody).
+
 \itemtitle{Modularność (taka rozszerzalność)}
-Jest -- mogę dodać nowe klasy dziedziczące po argumentach zdalnej metody i~metoda może je obsługiwać, jeśli tylko podczepimy te klasy po obu stronach.
+Jest -- można dodać nowe klasy dziedziczące po argumentach zdalnej metody i~ta metoda może je obsługiwać. Nie wymaga to żadnych zmian w~kodzie samej metody. Nowe klasy muszą się znaleźć na kliencie i~na serwerze.
+
 \itemtitle{Integracja z Androidem}
-Jest.
+Nie ma, ponieważ serwer nie działa na Androidzie. Gdyby jednak działał, to jako aplikacja Javowa nie miałby żadnych przeszkód w~komunikowaniu się z~systemem.
+
 \itemtitle{Polimorfizm metod}
-TODO -- sprawdź przeładowania.
-\itemtitle{Polimorfizm danych}
 Jest.
+
+\itemtitle{Polimorfizm danych}
+Jest. Zależny od Jacksona, można odnieść się do jego opisu w~punkcie~\ref{jackson}.
 \end{description}
 
 \subsection{Podsumowanie}
 Ta biblioteka to poważny kandydat na wykorzystanie w~moim projekcie.
 Jest kompletna, zrozumiała i~łatwa w~użyciu.
-Niestety, mimo obietnicy twórcy, nie można na Androidzie stworzyć serwera, ale zdaje się, że można by to naprawić przez wycięcie fragmentów kodu (można to zrobić, bo kod jest otwarty), które i~tak nie są potrzebne w~moim scenariuszu użycia.
+Może też współpracować z~klientem JSON-RPC w~.NET, którego serializator będzie tak samo skonfigurowany, jak Jackson po stronie Androida.
+Niestety, mimo obietnicy twórcy, nie można na Androidzie stworzyć serwera\footnote{Zgłosiłem ten problem na oficjalnej stronie.}, ale zdaje się, że można by to naprawić przez wycięcie fragmentów kodu, które i~tak nie są potrzebne w~moim scenariuszu użycia.
+
+%Ok, prosty test z przekazaniem dziedziczącego argumentu wywala się z~uwagi na nierozpoznanie dodatkowego pola parametru. Nie wie, że to inny typ.
+%%{"id":"3199114083297069103","jsonrpc":"2.0","method":"testDataA","params":[{"numberA":13,"stringA":"domyslny","numberB":5.25}]}
+%%Unrecognized field "numberB" (class jsonrpc4jtestse.TestDataA), not marked as ignorable (2 known properties: , "numberA", "stringA"])
+
+%Readme nic o~tym nie mówi, dokumentacji nie ma. Ale w~błędzie jackson, więc trzeba się udać do Jacksona.
+%Najwyraźniej potrzeba dodatkowych informacji, żeby serializacja mogła się udać. Z~pomocą przychodzi funkcja oznaczania typów obiektów we wiadomości\cite{jackson-polymorphic}.
+%Nawet mimo tego są jakieś problemy... Robi się to irytujące.
+%Używa valueToTree zamiast po prostu write i~przez to nie chce przejść z~oznaczaniem typów.
+
+%A po dodaniu do klasy głównej danych znacznika nakazującego oznaczenie typów wszystko działa.
+%%{"id":"4653019993893876656","jsonrpc":"2.0","method":"testDataA","params":[{"@class":"jsonrpc4jtestse.TestDataB","numberA":13,"stringA":"domyslny","numberB":5.25}]}
+%%{"jsonrpc":"2.0","id":"4653019993893876656","result":{"@class":"jsonrpc4jtestse.TestDataB","numberA":14,"stringA":"domyslny dodałem coś!","numberB":5.25}}
+%Wraca obiekt o poprawnym typie. Bez ustawiania czegokolwiek w~Mapperach.
+%Dodanie jednego znacznika do głównej klasy w~hierarchii nie jest straszne, ale sprawdźmy jeszcze domyślne typowanie z~najnowszą wersją Jacksona (bo do jsonrpc4j zrobiła się jakaś 2.0.2).
+%Z wersją 2.4.2, działa teraz bez oznaczeń na klasie. Ale za to trzeba i~serwer, i~klienta stworzyć z~ObjectMapperem, w~którym włączy się enableDefaultTyping(). W moim przypadku było to
+%%mapper.enableDefaultTyping(
+                %%ObjectMapper.DefaultTyping.NON_FINAL,
+                %%JsonTypeInfo.As.PROPERTY);
+%Które dodaje informację o~klasie jako dodatkowe pole obiektu (\emph{property}), przy wszystkich obiektach, które nie są oznaczone jako final (takie, po których się nie da dziedziczyć).
+%%{"id":"-6659082740394205036","jsonrpc":"2.0","method":"testDataA","params":[{"@class":"jsonrpc4jtestse.TestDataB","numberA":13,"stringA":"domyslny","numberB":5.25}]}
+%Wygląda tak samo, jak przy oznaczaniu w~klasie.
 
 
 
