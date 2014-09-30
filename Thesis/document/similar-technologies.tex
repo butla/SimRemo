@@ -1,3 +1,6 @@
+%podsekcje nie trafią do spisu treści
+\addtocontents{toc}{\protect\setcounter{tocdepth}{1}}
+
 \chapter{Pokrewne technologie (TODO)}
 W~tym rozdziale przeanalizuję technologie, które według mnie są powiązane z~projektem tworzonym w~niniejszej pracy.
 Wśród nich będę szukał takich, które mogę wkomponować w~moje rozwiązanie.
@@ -95,41 +98,41 @@ Kody klasy zawierającej testowe zdalne metody (zwanej też serwisem) oraz jej i
 \begin{lstlisting}[float, frame=single, caption={Przykładowa zdalna metoda testowana pod kątem polimorfizmu}, label=code:testService]
 public interface ITestowySerwis
 {
-	String testPodstawowy();		
-	String testPodstawowy(String argument);    
-	DaneA testPolimorfizmuA(DaneA testowyObiekt);    
-	Object[] testPolimorfizmuB(Object[] testowaTablica);
+    String testPodstawowy();
+    String testPodstawowy(String argument);    
+    DaneA testPolimorfizmuA(DaneA testowyObiekt);    
+    Object[] testPolimorfizmuB(Object[] testowaTablica);
 }
 
 public class TestowySerwis implements ITestowySerwis
 {
-	String testPodstawowy()
-	{
-		return "Dziala!";
-	}
-		
-	String testPodstawowy(String argument)
-	{
-		return "Dostalem " + argument;
-	}
-	
-	DaneA testPolimorfizmuA(DaneA testowyObiekt)
-	{
-		testowyObiekt.liczbaA += 1;
-		testowyObiekt.tekstA += " cos dodano!";
-		return testowyObiekt;
-	}
-	
-	Object[] testPolimorfizmuB(Object[] testowaTablica)
-	{
-		int dlugoscTablicy = testowaTablica.length;
-		Object[] nowaTablica = new Object[dlugoscTablicy+1];
-		for(int i = 0; i < dlugoscTablicy; i++)
-		{
-			nowaTablic[i] = testowaTablica[i];
-		}
-		nowaTablica[dlugoscTablicy] = 3.14;
-	}
+    String testPodstawowy()
+    {
+        return "Dziala!";
+    }
+        
+    String testPodstawowy(String argument)
+    {
+        return "Dostalem " + argument;
+    }
+    
+    DaneA testPolimorfizmuA(DaneA testowyObiekt)
+    {
+        testowyObiekt.liczbaA += 1;
+        testowyObiekt.tekstA += " cos dodano!";
+        return testowyObiekt;
+    }
+    
+    Object[] testPolimorfizmuB(Object[] testowaTablica)
+    {
+        int dlugoscTablicy = testowaTablica.length;
+        Object[] nowaTablica = new Object[dlugoscTablicy+1];
+        for(int i = 0; i < dlugoscTablicy; i++)
+        {
+            nowaTablic[i] = testowaTablica[i];
+        }
+        nowaTablica[dlugoscTablicy] = 3.14;
+    }
 }
 \end{lstlisting}
 
@@ -137,7 +140,81 @@ public class TestowySerwis implements ITestowySerwis
 
 %Najpierw przedstawiam każdy framework ``cytując'' jego słowa (README). A~więc przedstawiam jego obietnice. Potem testy sucho powiedzieć co zrobiłem i~jak wyszło. Potem użyteczność -- jakie miałem problemy przy instalacji, na ile jest ona łatwa, jak ciężko było zrobić coś więcej. Na ile łatwo się odnaleźć przy instalacji? (ważne dla programisty). Rozszerzalność -- jak ciężko jest dodawać nowe podklasy do parametrów metod?
 
-%Jak ogólnie wygląda oznaczanie typów -- może być spójne między różnymi frameworkami.
+
+
+\section{Jackson}
+Jackson to zestaw narzędzi do przetwarzania danych stworzony dla Javy (i~platformy JVM).
+Wspiera wiele kodowań: JSON, Avro, CBOR, CSV, Smile, XML i~YAML.
+Najbardziej znany jego komponent to biblioteka do parsowania i~generacji danych w~formacie JSON.
+Można jej używać jako narzędzia do serializacji i~deserializacji obiektów.
+Spośród całego zastawu przyglądał się będę tylko jej.
+Więcej informacji na temat Jacksona można znaleźć na jego oficjalnej stronie w~serwisie Github: \url{https://github.com/FasterXML/jackson}.
+
+\subsection{Ocena}
+
+\begin{description}
+\itemtitle{Klasyfikacja}
+Serializator JSON pod Javę. Otwarty kod.
+
+\itemtitle{Docelowa platforma}
+Działa na Androidzie. Skierowane pod maszynę wirtualną Javy (JVM).
+
+\itemtitle{Łatwość instalacji}
+Średnia.
+Wymaga odnalezienia się w~dużej ilości przestarzałych stron, zawierających sprzeczne informacje.
+Na właściwej stronie głównej, potrzebne biblioteki mogłyby być wyraźniej wskazane.
+To, że wszystko narzędzie jest do pobrania z~Githuba może być odebrane dwojako; z~jednej strony trzeba się z~nim przez chwilę zaznajomić, z~drugiej, jest to popularna platforma standaryzująca dystrybucję wielu bibliotek i~dla niektórych może być bardziej intuicyjna niż osobna, unikatowa strona domowa projektu.
+
+\itemtitle{Łatwość użycia}
+Sensowne i łatwe, ale może nie oczywiste. Niektóre bardziej zaawansowane cechy, np. zmiana stylu oznaczania typów słabo udokumentowana.
+
+%Może zamiast standardowość i współpraca zrobić pole zgodność?
+\itemtitle{Standardowość}
+JSON jest znanym standardem, a~Jackson się do niego stosuje.
+Co prawda, JSON nie przewiduje zawierania informacji o~typach.
+Jackson musi robić to na własną rękę, dodając informację o~typach do zapisywanych grafów. Oczywiście, musi być w~stanie także je odczytać.
+Jednak styl oznaczania typów jest konfigurowalny, dlatego teoretycznie można go dopasować do innego stylu oznaczeń, np.\ tego stosowanego przez klasę \texttt{DataContractJsonSerializer} z~.NET\@.
+To pozwalałoby na używanie różnych silników serializacyjnych po obu stronach kanału komunikacyjnego, jednocześnie zachowując informację o~typach.
+
+\itemtitle{Współpraca}
+To samo, co w~,,Standardowości''.
+
+\itemtitle{Code reuse}
+Jest -- można serializować i~deserializować klasy wzięte z~zewnętrznych bibliotek.
+
+%Może jakaś sekcja ze spostrzeżeniami albo każda z tych ocen jako osobne subsubsection?
+\itemtitle{Polimorfizm danych}
+Jest. Realizowany przy pomocy wpisywania dodatkowych danych o~typach wtedy, gdy nie wynika on jasno z~kontekstu\footnote{Faktycznie to jedno z~możliwych ustawień. Generalnie można konfigurować kiedy ma być dodawana informacja o~typach.}.
+Sposób wpisywania tej informacji może być konfigurowany.
+Jednym sposobem jest dodanie do obiektu specjalnego pola; jak we fragmencie kodu~\ref{code:typeInfoField}, gdzie obiekt typu DaneB był w~kontekście sugerującym DaneA i~musiało to być oznaczone.
+Innym sposobem jest owinięcie obiektu w~tablicę i~dodanie nazwy typu jako jej pierwszy element, jak w~kodzie~\ref{code:typeInfoArray}.
+
+\begin{lstlisting}[float, frame=single, caption={Oznaczanie typu przez dodatkowe pole.}, label=code:typeInfoField]
+{
+    "@class":"test.DaneB",
+    "liczbaA":13,
+    "tekstA":"domyslny",
+    "liczbaB":5.25
+}
+\end{lstlisting}
+
+\begin{lstlisting}[float, frame=single, caption={Oznaczanie typu przez owinięcie w~tablicę i~dodanie do niej elementu.}, label=code:typeInfoArray]
+{
+    [
+        "test.DaneB",
+        {
+            "liczbaA":13,
+            "tekstA":"domyslny",
+            "liczbaB":5.25
+        }
+    ]
+}
+\end{lstlisting}
+\end{description}
+
+\subsection{Podsumowanie}
+Jackson to solidna i~konfigurowalna biblioteka serializacyjna dla Javy, dodatkowo działająca na Androidzie.
+Dlatego ma dużą szansę na wykorzystanie w~Androidowej części mojego projektu.
 
 
 
@@ -146,6 +223,7 @@ public class TestowySerwis implements ITestowySerwis
 Biblioteka umożliwiająca działanie jako serwer lub klient JSON-RPC 2.0 napisana w~Javie.
 \url{https://github.com/briandilley/jsonrpc4j}
 
+%Osobno Jackson
 Używa Jacksona, który sam w~sobie jest ciekawą biblioteką do serializacji.
 % Dopisz dwa zdania o Jacksonie
 
@@ -203,24 +281,30 @@ Wygląda tak samo, jak przy oznaczaniu w~klasie. Warto zaznaczyć, że są inne 
 
 Polimorfizm kolekcji -- też działa. Przy tablicach najwyraźniej nie ma wyboru stylu oznaczeń typów.
 
+%Dodać ogólnie open source do klasyfikacji
+
+Jest rozszerzalność. Jak raz oznaczyłem klasę bazową, albo jak ustawiłem serializator to mogłem dodawać więcej klas dziedziczących i~się nie martwić.
+
 \subsection{Ocena}
 %Może przerobić to na tabelę? Cecha / Ocena / Komentarz
 \begin{description}
 \itemtitle{Klasyfikacja}
-Klient RPC, Serwer PRC, Serializacja
+Klient RPC, Serwer PRC, Serializacja, Open Source.
 \itemtitle{Docelowa platforma}
 Poza obszarem zainteresowania -- Java SE. Android teoretycznie powinien być możliwy, ale nie jest.
 \itemtitle{Łatwość instalacji}
 Może być... chyba muszę jeszcze przejrzeć notki.
 \itemtitle{Łatwość użycia}
 Sensowne i łatwe, ale może nie oczywiste.
+%Może zamiast standardowość i współpraca zrobić pole zgodność?
 \itemtitle{Standardowość}
-Niby jest, ale jak chcemy używać z polimorfizmem to druga strona musi tak samo kodować typy jak nasza konfiguracja Jacksona.
+Jest zgodność ze standardem JSON-RPC 2.0. Ale standard ten nie mówi nic o~danych zawierających dodatkowe informacje o typach.
+Dlatego zgodność z~drugą stroną możliwa jest tylko w~przypadku, gdy tak samo koduje ona informacje o~typach. Jest to możliwe chociażby wtedy, kiedy używałaby tak samo skonfigurowanego Jacksona do serializacji.
 \itemtitle{Współpraca}
 To samo, co w ,,Standardowości''.
 \itemtitle{Code reuse}
 Jest -- można podłączać zewnętrzne biblioteki i używać klas z nich w naszych metodach. Jeśli tylko są jakoś serializowalne.
-\itemtitle{Modularność}
+\itemtitle{Modularność (taka rozszerzalność)}
 Jest -- mogę dodać nowe klasy dziedziczące po argumentach zdalnej metody i~metoda może je obsługiwać, jeśli tylko podczepimy te klasy po obu stronach.
 \itemtitle{Integracja z Androidem}
 Jest.
@@ -231,12 +315,11 @@ Jest.
 \end{description}
 
 \subsection{Podsumowanie}
-Wszystko super. Sam standard JSON-RPC powinien zapewniać zgodność elementów z~różnych technologii. Niestety sam standard nie jest przemyślany pod kątem polimorfizmu. W tym przypadku może działać dzięki Jacksonowi.
-Może też być zgodny ze wszystkim innym, co używa Jacksona. Ale albo trzeba mieć te same pliki klas po obu stronach albo takie same mappery.
+Ta biblioteka to poważny kandydat na wykorzystanie w~moim projekcie.
+Jest kompletna, zrozumiała i~łatwa w~użyciu.
+Niestety, mimo obietnicy twórcy, nie można na Androidzie stworzyć serwera, ale zdaje się, że można by to naprawić przez wycięcie fragmentów kodu (można to zrobić, bo kod jest otwarty), które i~tak nie są potrzebne w~moim scenariuszu użycia.
 
-Jest rozszerzalność. Jak raz oznaczyłem klasę bazową, albo jak ustawiłem serializator to mogłem dodawać więcej klas dziedziczących i~się nie martwić.
 
-Może zrobię forka i~dopasuję do Androida. Wtedy jest to mój faworyt na wykorzystanie.
 
 \section{Xamarin}
 \subsection{Opis (DONE)}
@@ -709,5 +792,8 @@ Zestawienie ogólne -- czy można coś zrobić z tym na Androidzie, czy możliwe
 	\caption[Podsumowanie możliwości frameworków.]{Podsumowanie możliwości frameworków. ``+'' oznacza ``tak'', puste miejsce oznacza ``nie''. We współpracy chodzi o to, czy może współpracować z .NETem bez jakiś dedykowanych klientów.}
 	\label{tab:frameworks-summary}
 \end{table}
+
+%podsekcje znowu będą trafiać do spisu treści
+\addtocontents{toc}{\protect\setcounter{tocdepth}{2}}
 
 %powinienem dodać plik z licencjmi używanych bibliotek
