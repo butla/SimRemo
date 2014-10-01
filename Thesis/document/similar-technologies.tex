@@ -28,10 +28,10 @@ Testy przedstawione są w~tabeli~\ref{tab:frameworks-criteria}.
 				Zgodność & Ogólna & Z~jakimi technologiami dany projekt projekt może współpracować? Na jakich zasadach? Jeśli projekt jest klientem/serwerem RPC to z~jakimi klientami/serwerami może działać? Jak (czy w~ogóle?) to się zmienia po wymuszeniu polimorfizmu? \\
 				\hline
 				%Może to nazwać Zewnętrzne moduły
-				\emph{Code reuse} & Ogólna & Czy można do danej technologii podpiąć, albo wykorzystać z~nią jakieś istniejące biblioteki napisane na tę samą platformę? Np. dla technologii Javowych -- Jary.\\
+				Zewnętrzne moduły & Ogólna & Czy można do danej technologii podpiąć, albo wykorzystać z~nią jakieś istniejące biblioteki napisane na tę samą platformę? Np. dla technologii Javowych -- Jary.\\
 				\hline
 				%Może to nazwać rozszerzalność?
-				Modularność & RPC & Czy można do serwera i~klienta dodać moduł, np. z~nowymi klasami danych dziedziczącymi istniejące i~używać ich ze starymi metodami?\\
+				Rozszerzalność & RPC & Czy można do serwera i~klienta dodać moduł, np. z~nowymi klasami danych dziedziczącymi istniejące i~używać ich ze starymi metodami?\\
 				\hline
 				Integracja z~Androidem & RPC & Dotyczy serwerów RPC na Androida. Czy można na zewnątrz wystawić możliwość komunikacji z systemem operacyjnym? Np.\ uruchamianie innych aplikacji?\\
 				\hline
@@ -138,6 +138,12 @@ public class TestowySerwis implements ITestowySerwis
 }
 \end{lstlisting}
 
+\subsection{Testowanie tłumaczenia danych}
+\begin{enumerate}
+	\item Przetłumaczenie klasy zawierającej podstawowe typy, listy, tablicy, mapy, jakąś inną klasę, domyślne wartości.
+	\item Przetłumaczenie prostej metody. To nie jest priorytetem, ponieważ głównie zależy mi na tłumaczenia klas danych, które będą służyć za argumenty metod zdalnych.
+\end{enumerate}
+
 
 
 \section{Jackson}
@@ -174,8 +180,8 @@ Jackson musi robić to na własną rękę, dodając informację o~typach do zapi
 Jednak styl oznaczania typów jest konfigurowalny, dlatego teoretycznie można go dopasować do innego stylu oznaczeń, np.\ tego stosowanego przez klasę \texttt{DataContractJsonSerializer} z~.NET\@.
 To pozwalałoby na używanie różnych silników serializacyjnych po obu stronach kanału komunikacyjnego, jednocześnie zachowując informację o~typach.
 
-\itemtitle{Code reuse}
-Jest -- można serializować i~deserializować klasy wzięte z~zewnętrznych bibliotek.
+\itemtitle{Zewnętrzne moduły}
+Można serializować i~deserializować klasy wzięte z~zewnętrznych bibliotek.
 
 %Może jakaś sekcja ze spostrzeżeniami albo każda z tych ocen jako osobne subsubsection?
 \itemtitle{Polimorfizm danych}
@@ -224,6 +230,22 @@ public class DaneA
 Jackson to solidna i~konfigurowalna biblioteka serializacyjna dla Javy, dodatkowo działająca na Androidzie.
 Dlatego ma dużą szansę na wykorzystanie w~Androidowej części mojego projektu.
 
+%Polimorfizm w Jacksonie:
+%\url{http://wiki.fasterxml.com/JacksonPolymorphicDeserialization}\\
+%\url{http://www.cowtowncoder.com/blog/archives/2010/03/entry_372.html}\\
+%\url{http://stackoverflow.com/questions/14454028/polymorphic-serialization-of-collections-with-custom-serializer-in-jackson}\\
+%
+%Informacja o typach w Jacksonie:
+%\url{http://stackoverflow.com/questions/12350571/how-can-i-change-global-type-information-format-in-jackson}\\
+%%sprawdzić jak się wymienia ze wszystkim opisanym adnotacjami (dodać jeszcze rozszerzenie defaulttyperesolvera), wtedy sprawdzić mixed iny; lista objectów, na którą wpakuję stringi i inty
+%
+%Jackson i .NET:
+%\url{http://stackoverflow.com/questions/8368873/deserialize-json-string-generated-from-net-using-jackson}\\
+%
+%Ogólne:
+%\url{http://stackoverflow.com/questions/10329706/json-deserialization-into-another-class-hierarchy-using-jackson}\\
+%\url{http://wiki.fasterxml.com/JacksonHowToIgnoreUnknown}\\
+
 
 
 \section{JSON-RPC for Java (jsonrpc4j)}
@@ -241,7 +263,7 @@ Klient i~serwer RPC. Otwarty kod. Serializacja dostarczana przez zewnętrzną bi
 \itemtitle{Docelowa platforma}
 Java SE.
 Teoretycznie na Androidzie powinien działać zarówno klient jak i~serwer (taka informacja znajduje się w~README).
-Jest tak dlatego, że biblioteka zawiera referencje do klas z~klasycznej wersji Javy (w~tym Javy EE).
+Tak jednak nie jest, a~to dlatego, że biblioteka zawiera referencje do klas z~klasycznej wersji Javy (w~tym Javy EE).
 Standardowe środowisko deweloperskie (Eclipse z~wtyczką ADT) do aplikacji na Androida wykrywa to jako znany błąd.
 
 \itemtitle{Łatwość instalacji}
@@ -270,10 +292,10 @@ Nie da się, niestety, tak skonfigurować ,,serwera strumieniowego''(\texttt{Str
 Jest zgodność ze standardem JSON-RPC 2.0. Ale standard ten nie mówi nic o~danych zawierających dodatkowe informacje o typach.
 Dlatego zgodność z~drugą stroną możliwa jest tylko w~przypadku analogicznie skonfigurowanej warstwy serializacyjnej (więcej informacji w~punkcie~\ref{jackson}).
 
-\itemtitle{\emph{Code reuse}}
-Jest -- można używać klas z~zewnętrznych bibliotek jako danych w~metodach zdalnych, można też wystawiać je jako serwisy (obiekty wystawiające na zewnątrz zdalne metody).
+\itemtitle{Zewnętrzne moduły}
+Można używać klas z~zewnętrznych bibliotek jako danych w~metodach zdalnych, można też wystawiać je jako serwisy (obiekty wystawiające na zewnątrz zdalne metody).
 
-\itemtitle{Modularność (taka rozszerzalność)}
+\itemtitle{Rozszerzalność}
 Jest -- można dodać nowe klasy dziedziczące po argumentach zdalnej metody i~ta metoda może je obsługiwać. Nie wymaga to żadnych zmian w~kodzie samej metody. Nowe klasy muszą się znaleźć na kliencie i~na serwerze.
 
 \itemtitle{Integracja z Androidem}
@@ -498,146 +520,7 @@ Współpraca z~zewnętrznymi bibliotekami, mimo, że z~założenia możliwa, wym
 
 
 
-\section{Sharpen}
-\subsection{Opis}
-Wtyczka do IDE Eclipse tłumacząca kod w~Javie do C\#.
-Polecana przez Xamarina (\url{http://developer.xamarin.com/guides/android/advanced_topics/java_integration_overview/}).
-
-Nie jest dynamicznie rozwijany. Mimo wszystko jest polecany.
-
-Generowałbym raczej kod z~Javy do C\#, bo w~Javie będzie większość logiki zdalnych metod.
-
-\subsection{Instalacja i hello world}
-Istnieje kilka wersji w~różnych miejscach, co wprowadza w~zakłopotanie. (\url{https://github.com/slluis/sharpen}, \url{https://github.com/xamarin/XobotOS/tree/master/sharpen} i~\url{http://community.versant.com/documentation/reference/db4o-7.12/java/reference/html/Content/sharpen/how_to_setup_sharpen.html})
-
-Ale znalazłem poradę tu \url{http://pauldb.tumblr.com/post/14916717048/a-guide-to-sharpen-a-great-tool-for-converting-java} i~ściągnąłem gotowego Jara, bez problemów z~niezrozumiałym sposobem budowania.
-Ale to, że nie ma od razu jasno powiedziane jak to zainstalować to źle.
-
-W każdym razie dodałem po prostu wtyczkę do eclipse.
-
-Stworzyłem przykładowy projekt z~klasą, którą będę chciał przetłumaczyć. Tylko jedną na razie, żeby zobaczyć, że działa.
-Do projektu configi. Widać, że nie jest to całkiem proste, ale przynajmniej jest konfigurowalne.
-Zmapowałem namespace do docelowego.
-
-Jeszcze trochę zmagania się z~problemami przy buildzie\ldots{} No jednak nie chce mi zacząć działać. Skoro tyle problemów z~prostą rzeczą, to chyba nie jest to dosć dojrzały projekt i~trzeba znaleźć coś lepszego.
-
-Walczę dalej, teraz korzystając z pomocy tego \url{http://stackoverflow.com/questions/10539105/using-sharpen-and-eclipse-error-application-sharpen-core-application-could}
-
-Nie, to koniec. Jest to już za stare i~nie wspierane. Strony z~dokumentacją zostały zdjęte. Ludzie od Xamarina używają jakiejś swojej, dopasowanej wersji.
-
-Aaaalbo jeszcze sprawdzę to \url{https://github.com/xamarin/XobotOS/tree/master/sharpen}, wersję Sharpena o której pisali w blogu xamarina (\url{http://blog.xamarin.com/android-in-c-sharp/})
-No nic, nie działa. Ten projekt też ma dwa lata, może to za dużo dla wtyczki do Eclipsa. Koniec.
-
-\subsection{Testy}
-\begin{itemize}
-	\item Przetłumaczenie klasy zawierającej podstawowe typy, listy, tablicy, mapy, jakąś inną klasę, domyślne wartości.
-	\item Przetłumaczenie prostej metody (chociaż na tym mi nie zależy, bo to transport danych; mogą być niby accesory zmieniające coś przy czytaniu, ale cóż -- zbyt wydziwiane to jest)
-\end{itemize}
-
-\subsection{Jakieś spostrzeżenia?}
-Wydaje się przestarzały lekko. Nie jest jakimś automatem, ale można go raz skonfigurować i już nie mieć problemów.
-
-Nie jest bardzo trudny, nie jest też bardzo prosty.
-
-Zdaje się, że ja tego będę używał dużo bardziej trywialnie, niż można. Bo tylko chcę obiekty danych dla zdalnych metod tłumaczyć.
-
-Nie wspierane, za stare. Najwyraźniej dwa lata to za dużo dla Eclipsowej wtyczki. Nikt nie sprawuje nad tym Sharpenem kontroli. Taki bezpański projekt.
-
-Ale coś takiego pewnie by się przydało w~moim ostatecznym rozwiązaniu. Może nie jako nierozerwalny element, ale jako coś, co przygotuje spójne klasy po obu stronach.
-
-
-\section{JsonRpc}
-\subsection{Opis}
-Przez autora przedstawiony jako łatwy i~lekki klient/serwer RPC oparty o~JSON (,,Easy and lightweight Json-Rpc Client/Server'')\cite{json-rpc}.
-Oparcie o~JSONa oznacza, że wiadomości, zawierające zserializowane obiekty, przesyłane między klientem a~serwerem zapisane są JSONem. Biblioteka powinnna działać dla Androida, Google App Engine i~aplikacji Javascript.
-
-Jest napisany w~Javie.
-API klienta i~serwera jest zaprojektowane tak, aby programista nie musiał być świadomy szczegółów protokołu komunikacyjnego.
-Aby stworzyć zdalną metodę wystarczy zarejestrować klasę zawierającą tę metodę po stronie serwera, a~następnie po stronie klienta dynamicznie\footnote{Dosłownie ,,w locie'', z~ang. \emph{,,on the fly''}} stworzyć do niej proxy.
-
-Serializacja do JSONa (i~deserializacja z~niego) najprawdopodobniej nie jest zaimplementowana w~samym JsonRpc, a~przez bibliotekę Gson, która wchodzi w~skład JsonRpc. Gson\footnote{\url{https://code.google.com/p/google-gson/}} jest serializatorem napisanym w~Javie przez Google.
- 
-\subsection{Instalacja i~hello world}
-Hostowane jest to na Githubie.
-
-Niby jest jakiś zbudowany release, ale jest to starsza wersja. Release okazuje się naprawdę być tylko spakowanymi źródłami. Dziwne i~wprowadzające w błąd.
-Więc muszę ściągnąć najnowsze źródła, żeby mieć najnowsze funkcjonalności.
-Wymaga to klienta Gita, ale nie jest to duży problem. 
-
-Nie ma za bardzo instrukcji jak to zbudować. Są jakieś skrypy, ale są tylko pod Linuxa. Są w~readme jakieś fragmenty Mavena, sugerujące chyba co zrobić, w~zależności od tego, jaki build chce się uzyskać (wkleić je, pokazać, jak wygląda folder, może jakimś wydrukiem z command line). Ale nic nie jest jasne.
-Jest też Mavenowy POM. Nie jestem doświadczony z Mavenem, ale spróbuję go zbudować. Ogólnie już duży minus -- muszę kombinować, żeby w ogóle to zbudować.
-
-Najpierw zainstalowałem Mavena -- też nie automatyczny proces dla Windowsa, ale przebiega bez problemów. Build prostym poleceniem \texttt{mvn~clean~install}. Wydaje się, że działa.
-Powstało wiele jarów.
-Znowu nie ma jasnych informacji, ale wydaje się, że jest jeden (\texttt{jsonrpc-1.1.jar}), który zawiera całość biblioteki, czyli klienta i~serwer. Tego będę używał dalej. Są też wersje dedykowane dla serwera (\texttt{jsonrpc-1.1-server.jar}) i~dedykowane dla klienta (\texttt{jsonrpc-1.1-client.jar}). Część klas się zazębia.
-Będę używał tego pełnego dla prostoty.
-
-Ze zbudowaną biblioteką spróbujmy zbudować aplikację na Androida.
-
-Coś nie widać do końca jak to hostowanie powinno wyglądać. Odpalę sobie taki przykładowy kod z~readme (ale nie będę używał Calculatora, a~jakiś swój interfejs i~implementację):
-\begin{lstlisting}[frame=single, caption={Przykładowy sposób wystawiania serwera bez użycia serwletów}, label=code:bla]
-private JsonRpcExecutor bind() {
-   JsonRpcExecutor executor = new JsonRpcExecutor();
-
-   Calculator calcImpl = new SimpleCalculatorImpl();
-   executor.addHandler("calc", calcImpl, Calculator.class); 
-
-   // add more services here
-
-   return executor;
-}
-\end{lstlisting}
-
-O... jednak nie ma żadnej implementacji serwera podstawowej. Olewam to.
-
-
-
-\section{android-xml-rpc}
-W jednym wątku na Google Groups \cite{android-rpc-thread} mówili, że niby zrobili serwer. I faktycznie na to wygląda.
-Też na android-json-rpc(\url{https://code.google.com/p/android-json-rpc/}).
-
-
-
-\section{WCF}
-Potężny framework Web Serviceów od Microsoftu. Może posłużyć za wzór jak wszystko może działać. Może dość dynamicznie tworzyć hierarchie obiektów, które mogą funkcjonować jako usługi.
-
-Poza frameworkiem są też narzędzia do generacji kodu ze schemy i wsdl.
-
-Można robić JSONa: \url{http://msdn.microsoft.com/en-us/library/system.runtime.serialization.json.datacontractjsonserializer.aspx}\\
-
-Generowanie z JAX-WS przy pomocy wsdl toola nie do końca działało.
-
-Opisać o co chodzi z tym polimorfizmem, że w WCF trzeba wypisywać KnownType, co jest robieniem wzajemnych zależności, co jest straszną praktyką programowania (źródło).
-
-Napisać jak łatwo można zrobić to, co chcę mieć.
-
-%\subsection{Rozszerzalność}
-%Standardowo używa się DataContract, ale nie trzeba.
-%DataContractSerializerowi trzeba dać informacje o~wszystkich typach, jakich ma się spodziewać. Albo zrobić oznaczenia. Oznaczenia blokują rozwijanie kodu. Podawanie wszystkich klas też trzeba jakoś rozwiązać, np. przez analizę bibliotek i~ładowanie wszystkich możliwych klas (DataContractów).
-
-
-
-\section{JAX-WS}
-Standardowy framework Javy do Web Serviceów. Podobne możliwości co WCF\@. Ja też niby chcę web service'y w Javie, ale na Androidzie, któremu JAX-WS został wycięty.
-%Niestandardowe podejście z użyciem JSONa zamiast XMLa\url{http://jax-ws-commons.java.net/json/}\\
-
-Poza frameworkiem są też narzędzia do generacji kodu ze schemy i wsdl.
-
-W JVM jest mały serwerek, który może hostować, można to też robić z jakiegoś Glassfisha albo innego serwera Javy EE\@. Podobnie ma WCF.
-
-Co by trzeba było po kolei zrobić w normalnej javie żeby połączyć z~WCF? (tłumaczenia do xsd, ujednolicanie namespaców, mamy do czynienia z jakimiś ArrayOfString, dziedziczenie chyba słabo działa przy generacji, nie da się używać DataContractSerializera żeby nie serializować części klas ogólnie syf, ale wszystko udokumentować). 
-
-Napisać jak łatwo można zrobić to, co chcę mieć.
-
-
-
-\section{gSOAP}
-Pozwala tworzyć i konsumować Web Servicey z poziomu niezależnej biblioteki C++. Może będzie działać na Androidzie?
-\url{http://trac.e-technik.uni-rostock.de/projects/ws4d-gsoap/wiki/AndroidNDK}\\
-
-
-
-\section{Thrift}
+\section{Thrift (TODO)}
 \url{http://thrift.apache.org/static/files/thrift-20070401.pdf}\\
 
 Thrift is a software library and set of code-generation tools developed
@@ -673,11 +556,163 @@ Jest polimorfizm?
 
 \subsection{Ocena}
 \subsection{Podsumowanie}
-Gdyby tylko można było jakoś podłączać zewnętrzne biblioteki i~tworzyć kod Thrifta z~gotowych klas w~Javie lub C\# to byłby idealnym i~kompletnym rozwiązaniem (jeśli działa na Androidzie). 
+Gdyby tylko można było jakoś podłączać zewnętrzne biblioteki i~tworzyć kod Thrifta z~gotowych klas w~Javie lub C\# to byłby idealnym i~kompletnym rozwiązaniem (jeśli działa na Androidzie).
 
 
 
-\section{JSON-RPC.NET}
+\section{Sharpen (TODO)}
+Wtyczka do IDE Eclipse tłumacząca kod w~Javie do C\#.
+Nie jest dynamicznie rozwijany. Mimo to polecana przez Xamarina (\url{http://developer.xamarin.com/guides/android/advanced_topics/java_integration_overview/}).
+Istnieje kilka jego wersji rozsianych po kilku stronach. Wszystkie różnią się nieco kodem, ponieważ są rozwijane niezależnie.
+
+Strony, na których można znaleźć informacje o~nim to: BLABLABN LA
+
+\subsection{Ocena}
+
+\begin{description}
+\itemtitle{Klasyfikacja}
+Narzędzie do tłumaczenia kodu z~Javy na C\#.
+
+\itemtitle{Docelowa platforma}
+Tworzony jest kod skierowany na platformę .NET\@. Dane wejściowe to kod Java (w~formie źródeł), niezależny od żadnej konkretnej platformy.
+
+\itemtitle{Łatwość instalacji}
+Instalacja trudna na tyle, że nie udało mi się jej przeprowadzić. Może jest to możliwe, ale w~tej chwili nie chcę na to tracić więcej czasu.
+
+Przewodników po instalacji (i~użycia) jest kilka różnych, co wprowadza w~zakłopotanie: \\
+\url{https://github.com/slluis/sharpen}\\
+\url{https://github.com/xamarin/XobotOS/tree/master/sharpen}\\
+\url{http://blog.xamarin.com/android-in-c-sharp/}\\
+\url{http://community.versant.com/documentation/reference/db4o-7.12/java/reference/html/Content/sharpen/how_to_setup_sharpen.html}\\
+\url{http://pauldb.tumblr.com/post/14916717048/a-guide-to-sharpen-a-great-tool-for-converting-java}\\
+
+\itemtitle{Łatwość użycia}
+Średnio trudne.
+Trzeba przeprowadzić dużą konfigurację, ale jest ona zrozumiała i~dość elastyczna. Można też zdobyć gotowe pliki, które można  szybko dopasować do potrzeb.
+
+To niestety tylko teoria, bo nie udało mi się sprawić, żeby narzędzie działało.
+Nieważne z~jakich porad korzystałem, dostawałem błędy przy generacji kodu.
+Po poszukiwaniach w~Internecie widać, że nie jestem jedyną osobą z~takimi problemami\footnote{\url{http://stackoverflow.com/questions/10539105/using-sharpen-and-eclipse-error-application-sharpen-core-application-could}}.
+Niestety nie mają one ogólnego rowiązania.
+
+\itemtitle{Zgodność}
+Produkowany kod powinien dać się skompilować i~działać pod .NET\@.
+Tłumaczone powinny być nie tylko struktury danych, ale działająca logika. Można to zrealizować dzięki precyzyjnej konfiguracji narzędzia pozwalającej też na tłumaczenie wywołań charakterystycznych metod, np.\ pisania do konsoli, tworzenia map itp.
+
+\itemtitle{Zewnętrzne moduły (Code reuse)}
+Można tłumaczyć dowolny kod Javowy. Ale trzeba mieć dostęp do źródeł.
+
+\itemtitle{Tłumaczenie kodu}
+Wystarczy raz skonfigurować i~jest spokój. Kod można rozwijać, bo ponownie wygenerowanie jest proste.
+Konfiguracja to kilka ustawień ogólnych i~rozległy plik z~parami zawierającymi klasy, metody itp. Javy i~ich odpowiedniki w~C\#.
+
+Żeby przetestować stworzyłem przykładowy projekt z~klasą, którą będę chciał przetłumaczyć. Tylko jedną na razie, żeby zobaczyć, że działa.
+Do projektu dodałem pliki konfiguracyjne, zgodnie z~jednym z~poradników. Zmapowałem też \emph{namespace} do docelowego.
+\end{description}
+
+\subsection{Podsumowanie}
+Nie udało mi się użyć. Najwyraźniej dwa lata, a~z~tego, co widać to tyle minęło od większych aktualizacji kodu, to za dużo dla wtyczki do Eclipse'a\footnote{Ofiara zjawiska \emph{bit rot}.}.
+Nie ma dobrego wsparcia, ponieważ jest to ,,bezpański'' projekt, nad którym nie nie sprawuje faktycznej kontroli.
+Dziwne, że Xamarin cały czas go poleca. Może ich wersja kodu Sharpena pasuje do ich zastosowania.
+
+Generowanie kodu C\# ze źródeł Javy mogłoby się bardzo przydać w~moim projekcie. Konwersja w~tę stronę jest preferowana, ponieważ w~Javie będzie logika metod zdalnych, w~tym komunikacja z~Androidem, a~to coś, czego raczej nie da się automatycznie przełożyć z~C\#.
+Natomiast przeniesienie typów danych używanych przez te metody z~Javy powinno być stosunkowo mało skomplikowane.
+
+
+
+\section{JsonRpc (Ritwik Saikia) (TODO)}
+\subsection{Opis}
+Przez autora przedstawiony jako łatwy i~lekki klient/serwer RPC oparty o~JSON (,,Easy and lightweight Json-Rpc Client/Server'')\cite{json-rpc-lib}.
+Oparcie o~JSONa oznacza, że wiadomości, zawierające zserializowane obiekty, przesyłane między klientem a~serwerem zapisane są JSONem. Biblioteka powinnna działać dla Androida, Google App Engine i~aplikacji Javascript.
+
+Jest to jedna z~wielu bibliotek, a~jej nazwa pokrywa się (konkretna pisownia może być inna) z~nazwą standardu. To może być mylące. 
+
+\subsection{Ocena}
+
+\begin{description}
+\itemtitle{Klasyfikacja}
+Klient i~serwer RPC. Otwarty kod. Serializacja dostarczana (najprawdopodobniej) przez zewnętrzną bibliotekę -- Gson.
+
+\itemtitle{Docelowa platforma}
+Java. Autor twierdzi, że działa też na Androidzie.
+
+\itemtitle{Łatwość instalacji}
+Średnia.
+Źródła trzeba ściągnąć Gitem ze strony na Gihubie (nieduży problem), a~następnie zbudować Mavenem (jeśli ktoś nie ma zainstalowanego to wymaga to chwili pracy). Nie jest to jasno opisane, wszystkiego trzeba się domyślić.
+
+Nie ma także mowy o~tym co konkretnie zawiera się w~bibliotekach powstających w~wyniku zbudowania projektu, ale jest to intuicyjne. Plik \texttt{jsonrpc-1.1.jar} zdaje się zawierać całość klas projektu, pliki \texttt{jsonrpc-1.1-server.jar}) i~\texttt{jsonrpc-1.1-client.jar} zawierają odpowiednio klasy potrzebne do stworzenia serwera i~klienta. Jest też część wspólna 
+
+\itemtitle{Łatwość użycia}
+Średnie. Teoretycznie powinno się łatwo korzystać z~tej biblioteki, ale w~moim przypadku (nie mogę tego zrobić jako servlet) musiałbym sam zaimplementować serwer, co jest czasochłonne.
+Nie zrobiłem tego, dlatego nie mam więcej danych na temat tej biblioteki.
+
+Według autora API klienta i~serwera jest zaprojektowane tak, aby programista nie musiał być świadomy szczegółów protokołu komunikacyjnego.
+Aby stworzyć zdalną metodę wystarczy zarejestrować klasę zawierającą tę metodę po stronie serwera, a~następnie po stronie klienta dynamicznie\footnote{Dosłownie ,,w locie'', z~ang. \emph{,,on the fly''}} stworzyć do niej proxy.
+
+\itemtitle{Zgodność}
+
+
+\itemtitle{Zewnętrzne moduły}
+
+
+\itemtitle{Rozszerzalność}
+
+
+\itemtitle{Integracja z Androidem}
+
+
+\itemtitle{Polimorfizm metod}
+
+\itemtitle{Polimorfizm danych}
+Serializacja do JSONa (i~deserializacja z~niego) najprawdopodobniej nie jest zaimplementowana w~samym JsonRpc, a~przez bibliotekę Gson, która wchodzi w~skład JsonRpc. Gson\footnote{\url{https://code.google.com/p/google-gson/}} jest serializatorem napisanym w~Javie przez Google.
+
+Trzeba przeanalizować, jak sobie radzi Gson.
+
+\end{description}
+
+\subsection{Podsumowanie}
+Ponieważ nie ma dostarczonej implementacji serwera, która mogłaby działać na Androidzie nie mogłem przeprowadzić testów.
+Stąd nie mam żadnych godnych uwagi wniosków.
+Ale nie zapowiada się, żeby ta biblioteka była lepsza niż jsonrpc4j. Chociaż faktycznie ani jednej z~nich nie uruchomiłem jeszcze na Androidzie.
+
+%Nie ma za bardzo instrukcji jak to zbudować. Są jakieś skrypy, ale są tylko pod Linuxa. Są w~readme jakieś fragmenty Mavena, sugerujące chyba co zrobić, w~zależności od tego, jaki build chce się uzyskać (wkleić je, pokazać, jak wygląda folder, może jakimś wydrukiem z command line).
+
+
+
+\section{WCF (TODO)}
+Potężny framework Web Serviceów od Microsoftu. Może posłużyć za wzór jak wszystko może działać. Może dość dynamicznie tworzyć hierarchie obiektów, które mogą funkcjonować jako usługi.
+
+Poza frameworkiem są też narzędzia do generacji kodu ze schemy i wsdl.
+
+Można robić JSONa: \url{http://msdn.microsoft.com/en-us/library/system.runtime.serialization.json.datacontractjsonserializer.aspx}\\
+
+Generowanie z JAX-WS przy pomocy wsdl toola nie do końca działało.
+
+Opisać o co chodzi z tym polimorfizmem, że w WCF trzeba wypisywać KnownType, co jest robieniem wzajemnych zależności, co jest straszną praktyką programowania (źródło).
+
+Napisać jak łatwo można zrobić to, co chcę mieć.
+
+%\subsection{Rozszerzalność}
+%Standardowo używa się DataContract, ale nie trzeba.
+%DataContractSerializerowi trzeba dać informacje o~wszystkich typach, jakich ma się spodziewać. Albo zrobić oznaczenia. Oznaczenia blokują rozwijanie kodu. Podawanie wszystkich klas też trzeba jakoś rozwiązać, np. przez analizę bibliotek i~ładowanie wszystkich możliwych klas (DataContractów).
+
+
+
+\section{JAX-WS (TODO)}
+Standardowy framework Javy do Web Serviceów. Podobne możliwości co WCF\@. Ja też niby chcę web service'y w Javie, ale na Androidzie, któremu JAX-WS został wycięty.
+%Niestandardowe podejście z użyciem JSONa zamiast XMLa\url{http://jax-ws-commons.java.net/json/}\\
+
+Poza frameworkiem są też narzędzia do generacji kodu ze schemy i wsdl.
+
+W JVM jest mały serwerek, który może hostować, można to też robić z jakiegoś Glassfisha albo innego serwera Javy EE\@. Podobnie ma WCF.
+
+Co by trzeba było po kolei zrobić w normalnej javie żeby połączyć z~WCF? (tłumaczenia do xsd, ujednolicanie namespaców, mamy do czynienia z jakimiś ArrayOfString, dziedziczenie chyba słabo działa przy generacji, nie da się używać DataContractSerializera żeby nie serializować części klas ogólnie syf, ale wszystko udokumentować). 
+
+Napisać jak łatwo można zrobić to, co chcę mieć.
+
+
+
+\section{JSON-RPC.NET (TODO)}
 \url{https://github.com/Astn/JSON-RPC.NET} \\
 Wygląda na ciekawą sprawę. JSON.NET, którego ta biblioteka używa ma chodzić nawet na Mono na Androidzie. Ten Json.NET ma JsonSchemę.
 
@@ -685,66 +720,24 @@ Tylko nie wiem, czy ma klienta.
 
 
 
-\section{gSOAP}
-Web Service'y i REST w C/C++. Pytanie, czy można posadzić serwer na Androidzie i połączyć z Javą.
+\section{gSOAP (TODO)}
+Web Service'y i REST w C/C++. Pytanie, czy można posadzić serwer na Androidzie i połączyć z Javą?
 Pewnie by się dało przez JNI, ale tłumaczenie danych pełne byłoby bolesne. I wołanie rzeczy w Androidzie.
+\url{http://trac.e-technik.uni-rostock.de/projects/ws4d-gsoap/wiki/AndroidNDK}\\ 
 
 
 
-\section{Jackson}
-Konfigurowalna i dopracowana biblioteki do serializacji do JSONa. To może się przydać przy komponowaniu wywołań RPC.
-
-Polimorfizm w Jacksonie:
-\url{http://wiki.fasterxml.com/JacksonPolymorphicDeserialization}\\
-\url{http://www.cowtowncoder.com/blog/archives/2010/03/entry_372.html}\\
-\url{http://stackoverflow.com/questions/14454028/polymorphic-serialization-of-collections-with-custom-serializer-in-jackson}\\
-
-Informacja o typach w Jacksonie:
-\url{http://stackoverflow.com/questions/12350571/how-can-i-change-global-type-information-format-in-jackson}\\
-%sprawdzić jak się wymienia ze wszystkim opisanym adnotacjami (dodać jeszcze rozszerzenie defaulttyperesolvera), wtedy sprawdzić mixed iny; lista objectów, na którą wpakuję stringi i inty
-
-Jackson i .NET:
-\url{http://stackoverflow.com/questions/8368873/deserialize-json-string-generated-from-net-using-jackson}\\
-
-Ogólne:
-\url{http://stackoverflow.com/questions/10329706/json-deserialization-into-another-class-hierarchy-using-jackson}\\
-\url{http://wiki.fasterxml.com/JacksonHowToIgnoreUnknown}\\
-
-
-
-\section{GSON}
-Gson is a Java library that can be used to convert Java Objects into their JSON representation. It can also be used to convert a JSON string to an equivalent Java object. Gson can work with arbitrary Java objects including pre-existing objects that you do not have source-code of.
-
-Provide simple toJson() and fromJson() methods to convert Java objects to JSON and vice-versa
-Allow pre-existing unmodifiable objects to be converted to and from JSON
-Extensive support of Java Generics
-Allow custom representations for objects
-Support arbitrarily complex objects (with deep inheritance hierarchies and extensive use of generic types)
-
-
-
-\section{Jakiś framework REST}
-
-
-
-\section{Pyro}
-Pythonowe, niby obiektowe. Ale dla pythona będzie łatwo uzyskać polimorfizm, bo nie ma ostrego typowania. Także może sobie luźno traktować XMLa lub JSONa.
-
-\section{Spring}
-Javowy framework web serviceów.
-
-\url{http://forum.springsource.org/showthread.php?129058-Spring-Remoting-for-Android}\\
-
-
-\section{I-jetty}
-Serwer webowy dla Androida. Niby port Jetty. Może ma jakiś kontener Web-serviceów?
-
-\section{Wrappery pythonowe}
-Może zamiast równoważnych implementacji na pythona, C\# i javę zrobić tylko pythona i wrappery w jythonie i iron pythonie?
-
-
-\section{Inne}
+\section{Inne (TODO)}
 Chociaż wymienić pozostałe rozwiązania, które mogą być warte uwagi, choć raczej nie nadają się dla rozwiązania problemu tej pracy magisterskiej.
+
+\subsection{android-xml-rpc}
+W~jednym wątku na Google Groups \cite{android-rpc-thread} mówili, że niby zrobili serwer. I faktycznie na to wygląda.
+Też na android-json-rpc(\url{https://code.google.com/p/android-json-rpc/}).
+
+
+\subsection{Apache Avro}
+Otwarty system serializacji danych
+
 
 \subsection{Google Protocol Buffers}
 \url{https://developers.google.com/protocol-buffers/docs/overview}
@@ -754,26 +747,53 @@ Też jest generowanie do kilku języków i~jeden odmienny język wspólny, z kt�
 
 Forma tekstowa przypomina JSONa.
 
-\subsection{ZeroMQ}
-\url{http://zguide.zeromq.org/page:all}
-\url{http://stackoverflow.com/questions/8062212/difference-between-apache-thrift-and-zeromq}\\
-ØMQ (also known as ZeroMQ, 0MQ, or zmq) looks like an embeddable networking library but acts like a concurrency framework. It gives you sockets that carry atomic messages across various transports like in-process, inter-process, TCP, and multicast. You can connect sockets N-to-N with patterns like fan-out, pub-sub, task distribution, and request-reply. It's fast enough to be the fabric for clustered products. Its asynchronous I/O model gives you scalable multicore applications, built as asynchronous message-processing tasks. It has a score of language APIs and runs on most operating systems. ØMQ is from iMatix and is LGPLv3 open source.
 
-\subsection{Apache Avro}
+\subsection{GSON}
+Gson is a Java library that can be used to convert Java Objects into their JSON representation. It can also be used to convert a JSON string to an equivalent Java object. Gson can work with arbitrary Java objects including pre-existing objects that you do not have source-code of.
+
+Provide simple toJson() and fromJson() methods to convert Java objects to JSON and vice-versa
+Allow pre-existing unmodifiable objects to be converted to and from JSON
+Extensive support of Java Generics
+Allow custom representations for objects
+Support arbitrarily complex objects (with deep inheritance hierarchies and extensive use of generic types)
+
+
+\subsection{I-jetty}
+Serwer webowy dla Androida. Niby port Jetty. Może ma jakiś kontener Web-serviceów?
+
+
+\subsection{Pyro}
+Pythonowe, niby obiektowe. Ale dla pythona będzie łatwo uzyskać polimorfizm, bo nie ma ostrego typowania. Także może sobie luźno traktować XMLa lub JSONa.
+
 
 \subsection{Restlet}
 \url{http://restlet.org/learn/tutorial/2.1/#/docs_2.0/13-restlet/275-restlet/266-restlet.html}\\
 Używa Jacksona, nieciekawy. Ale coś restowego by się przydało.
 
+
+\subsection{Spring}
+Javowy framework web serviceów.
+\url{http://forum.springsource.org/showthread.php?129058-Spring-Remoting-for-Android}\\
+
+
+\subsection{ZeroMQ}
+\url{http://zguide.zeromq.org/page:all}
+\url{http://stackoverflow.com/questions/8062212/difference-between-apache-thrift-and-zeromq}\\
+ØMQ (also known as ZeroMQ, 0MQ, or zmq) looks like an embeddable networking library but acts like a concurrency framework. It gives you sockets that carry atomic messages across various transports like in-process, inter-process, TCP, and multicast. You can connect sockets N-to-N with patterns like fan-out, pub-sub, task distribution, and request-reply. It's fast enough to be the fabric for clustered products. Its asynchronous I/O model gives you scalable multicore applications, built as asynchronous message-processing tasks. It has a score of language APIs and runs on most operating systems. ØMQ is from iMatix and is LGPLv3 open source.
+
+
+
 \subsection{Jakieś pythonowe}
 WSME: \url{http://wsme.readthedocs.org/en/latest/}\\
 Python EVE (Rest framework)\\
+
 
 \subsection{Java to C\# itp.}
 \url{http://sourceforge.net/projects/ikvm/}
 \url{http://jni4net.com/} -- most, nie translator kodu, aktywnie utrzymywany \\
 \url{http://sourceforge.net/projects/j2cstranslator/}\\
 Przejście do schemy a~potem na inny kod może być alternatywą dla tych rzeczy.
+
 
 \subsection{Jeśli chciałbym się bawić w schemy}
 To może poszukać jakiś frameworków pozwalających oznakować klasy do serializacji (binding) do xmla albo jsona (a może nawet WSDL).
@@ -792,37 +812,39 @@ XSD2Java – generuje kod java z xsd. Mocno niedorobione.\\
 \url{http://simple.sourceforge.net/}\\
 \url{http://code.google.com/p/dbdroid-remoting/} - klient web serviców serializujący i deserializujący xmle\\
 
+
 \subsection{Reszta}
 Crest, Ksoap \\
 \url{https://code.google.com/p/android-json-rpc/} -- bazuje na JSON-RPC, wspomaga w~robieniu klientów na Androida.\\
 \url{http://software.dzhuvinov.com/json-rpc-2.0-server.html} -- też jakiś niby niezależny serwer. \\ 
 \url{http://en.wikipedia.org/wiki/JSON-RPC#Implementations} -- cała lista implementacji JSON-RPC
 
-%Może bez zborczej tabeli na końcu, a~tabelka na koniec każdego frameworku z tym jakie nadzieje (pod kontem użycia u mnie) spełnia?
-%Albo taka tabela tych moich nadzei i w niej w rubryczkach powpisywane frameworki, które mogą je spełnić.
+%\section{Wrappery pythonowe}
+%Może zamiast równoważnych implementacji na pythona, C\# i javę zrobić tylko pythona i wrappery w jythonie i iron pythonie?
 
-%Może przerzucić to na początek i uwzględnić więcej technologii? Takich pobierznie przejrzanych?
-\section{Porównanie możliwości tych technologii}
-Zestawienie ogólne -- czy można coś zrobić z tym na Androidzie, czy możliwe są metody polimorficzne (i jak z resztą poszukiwanych przeze mnie cech ze wstępu), jaka jest moja subiektywna ocena pracy z danym frameworkiem, jak ciężko się instaluje, na ile potrafią współpracować z innymi rozwiązaniami (jak bardzo trzymają się standardów).
 
-%współpraca powinna być polem opisowym; powinny być dwa, na współpracę przewidywan przez twórców (albo jakąkolwiek) i na polimorficzną
 
-\begin{table}[htbp]
-	\centering
-		\begin{tabular}{ | c || c | c | c | c | c | c |}
-			\hline
-				Technologia & Android & Hostowanie & Współpraca & Polimorfizm & Rozszerzalność & Prostota  \\
-				\hline \hline
-				WCF & & + & + & + & &\\
-				\hline
-				JAX-WS & & + & +/- & + & &\\
-				\hline
-				JSON-RPC & + & + & & & &\\
-				\hline
-		\end{tabular}
-	\caption[Podsumowanie możliwości frameworków.]{Podsumowanie możliwości frameworków. ,,+'' oznacza ,,tak'', puste miejsce oznacza ,,nie''. We współpracy chodzi o to, czy może współpracować z .NETem bez jakiś dedykowanych klientów.}
-	\label{tab:frameworks-summary}
-\end{table}
+%\section{Porównanie możliwości tych technologii}
+%Zestawienie ogólne -- czy można coś zrobić z tym na Androidzie, czy możliwe są metody polimorficzne (i jak z resztą poszukiwanych przeze mnie cech ze wstępu), jaka jest moja subiektywna ocena pracy z danym frameworkiem, jak ciężko się instaluje, na ile potrafią współpracować z innymi rozwiązaniami (jak bardzo trzymają się standardów).
+%
+%%Jeśli ta tabela przejdzie, to powinna zawierać cechy podobne do tych z tabeli kryteriów, ale tak zmienione, żeby można było odpowiedzieć: jest, nie ma, nie dotyczy
+%
+%\begin{table}[htbp]
+	%\centering
+		%\begin{tabular}{ | c || c | c | c | c | c | c |}
+			%\hline
+				%Technologia & Android & Hostowanie & Współpraca & Polimorfizm & Rozszerzalność & Prostota  \\
+				%\hline \hline
+				%WCF & & + & + & + & &\\
+				%\hline
+				%JAX-WS & & + & +/- & + & &\\
+				%\hline
+				%JSON-RPC & + & + & & & &\\
+				%\hline
+		%\end{tabular}
+	%\caption[Podsumowanie możliwości frameworków.]{Podsumowanie możliwości frameworków. ,,+'' oznacza ,,tak'', puste miejsce oznacza ,,nie''. We współpracy chodzi o to, czy może współpracować z .NETem bez jakiś dedykowanych klientów.}
+	%\label{tab:frameworks-summary}
+%\end{table}
 
 %podsekcje znowu będą trafiać do spisu treści
 \addtocontents{toc}{\protect\setcounter{tocdepth}{2}}
