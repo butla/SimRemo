@@ -44,7 +44,7 @@ namespace XamarinRemotingTest
 
 		private void MyTests()
 		{
-			var knownTypes = new List<Type>{ typeof(TestDataB), typeof(Object[]), typeof(int), typeof(string) };
+			var knownTypes = new List<Type>{ typeof(TestDataB), typeof(object[]), typeof(int), typeof(string) };
 			DataContractSerializer xmlSerializer = new DataContractSerializer (typeof(TestDataA), knownTypes);
 
 			//var jsonSettings = new DataContractJsonSerializerSettings ();

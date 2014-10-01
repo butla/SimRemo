@@ -13,3 +13,13 @@
 /Thesis/document/mgr_titlepage.log
 /Thesis/document/phd_titlepage.tex
 /Thesis/document/*.aux
+/Thesis/document/lacheckw32.exe
+/other-framework-tests/JsonRpc4jTestSE/nbproject/private/
+/other-framework-tests/JsonRpc4jTestSE/build/
+/other-framework-tests/JsonRpc4jTest/bin
+/other-framework-tests/LibraryForTranslation/bin
+/other-framework-tests/XamarinRemotingTest/XamarinRemotingTest/bin
+/other-framework-tests/XamarinRemotingTest/XamarinRemotingTest/obj
+/other-framework-tests/JsonRpc4jTest/gen
+/other-framework-tests/JsonRpc4jTest/libs
+/other-framework-tests/JsonRpc4jTestSE/libs
