@@ -395,56 +395,86 @@ W~przypadku serializacji testowej tablicy\footnote{Obiekt \texttt{DataContractSe
 
 W~przypadku standardowej, poprawnie działającej serializacji dostaniemy podobnie wyglądający, a~nawet trochę lżejszy zapis (widoczny we fragmencie~\ref{code:dotNetArray}).
 Serializator na Androidzie rzuci wyjątek, jeśli każe mu się zdeserializować ten zapis.
+Można zauważyć, że główny element w~drugim (\ref{code:dotNetArray}) fragmencie zawiera oznaczenie typu -- \texttt{i:type="a:ArrayOfanyType"}, podczas gdy pierwszy go nie posiada. Przez to tablica na Androidzie jest  deserializowana jako obiekt typu \texttt{DaneA}.
+
 Mono potrafi sobie jednak poradzić z~oznaczeniem i~odszyfrowaniem pojedynczego obiektu. Sprawdziłem to podając serializatorowi spodziewającemu się obiektu typu \texttt{DaneA} obiekt typu \texttt{DaneB}\footnote{Między innymi w~takiej sytuacji \texttt{DataContractSerializer} dodaje informację o~typie.} -- odtworzony obiekt był identyczny.
 
 .NET posiada też standardowy serializator/deserializator JSON -- \texttt{DataContractJsonSerializer}.
 W~przeciwieństwie do tego, jak działa on na standardowym .NET, na Mono nie zachowuje on informacji o~typie.
 Przy konfiguracji obiektu \texttt{DataContractJsonSerializer} wymuszającej zawieranie tej informacji, próba serializacji owocuje rzuceniem mało mówiącego wyjątku o~treści ,,\texttt{There was an error during serialization for object of type XamarinTest.DaneB}''.
 
-\begin{lstlisting}[float, frame=single, caption={Testowa tablica zserializowana przez \texttt{DataContractSerializer} pod Mono. Niektóre linie zostały przycięte, aby zmieścić się na stronie.}, label=code:xamrinArray]
-<TestDataA xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/XamarinRemotingTest">
+\begin{lstlisting}[float, caption={Testowa tablica zserializowana przez \texttt{DataContractSerializer} pod Mono.}, label=code:xamrinArray]
+<DaneA xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://schemas.datacontract.org/2004/07/XamarinTest">
+  
   <anyType xmlns:d2p1="http://www.w3.org/2001/XMLSchema"
-	i:type="d2p1:int" xmlns="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
-	  28
-	</anyType>
-  <anyType xmlns:d2p1="http://www.w3.org/2001/XMLSchema" i:type="d2p1:string" xmlns="http://schemas.microsoft.com/2003/10/Serialization/Arrays">jakis tekst</anyType>
-  <anyType xmlns:d2p1="http://schemas.datacontract.org/2004/07/XamarinRemotingTest" i:type="d2p1:TestDataA" xmlns="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+      i:type="d2p1:int"
+      xmlns="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+    28
+  </anyType>
+  
+  <anyType xmlns:d2p1="http://www.w3.org/2001/XMLSchema"
+      i:type="d2p1:string"
+      xmlns="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+    jakis tekst
+  </anyType>
+  
+  <anyType xmlns:d2p1="http://schemas.datacontract.org/2004/07/XamarinTest"
+      i:type="d2p1:DaneA"
+      xmlns="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
     <d2p1:numberA>13</d2p1:numberA>
     <d2p1:stringA>domyslny</d2p1:stringA>
   </anyType>
-  <anyType xmlns:d2p1="http://schemas.datacontract.org/2004/07/XamarinRemotingTest" i:type="d2p1:TestDataB" xmlns="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+  
+  <anyType xmlns:d2p1="http://schemas.datacontract.org/2004/07/XamarinTest"
+      i:type="d2p1:TestDataB"
+      xmlns="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
     <d2p1:numberA>13</d2p1:numberA>
     <d2p1:numberB>5.25</d2p1:numberB>
     <d2p1:stringA>domyslny</d2p1:stringA>
   </anyType>
-</TestDataA>
+</DaneA>
 \end{lstlisting}
 
-\begin{lstlisting}[float, frame=single, caption={Testowa tablica zserializowana przez \texttt{DataContractSerializer} pod .NET 4.5. Niektóre linie zostały przycięte, aby zmieścić się na stronie.}, label=code:dotNetArray]
-<TestDataA i:type="a:ArrayOfanyType" xmlns="http://schemas.datacontract.org/2004/07/CSharpTest" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:a="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
-  <a:anyType i:type="b:int" xmlns:b="http://www.w3.org/2001/XMLSchema">28</a:anyType>
-  <a:anyType i:type="b:string" xmlns:b="http://www.w3.org/2001/XMLSchema">jakis tekst</a:anyType>
-  <a:anyType i:type="TestDataA">
+\begin{lstlisting}[float, caption={Testowa tablica zserializowana przez \texttt{DataContractSerializer} pod .NET 4.5.}, label=code:dotNetArray]
+<DaneA i:type="a:ArrayOfanyType"
+    xmlns="http://schemas.datacontract.org/2004/07/CSharpTest"
+    xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:a="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+    
+  <a:anyType i:type="b:int"
+      xmlns:b="http://www.w3.org/2001/XMLSchema">
+    28
+  </a:anyType>
+  
+  <a:anyType i:type="b:string"
+      xmlns:b="http://www.w3.org/2001/XMLSchema">
+    jakis tekst
+  </a:anyType>
+  
+  <a:anyType i:type="DaneA">
     <numberA>13</numberA>
     <stringA>domyslny</stringA>
   </a:anyType>
+  
   <a:anyType i:type="TestDataB">
     <numberA>13</numberA>
     <stringA>domyslny</stringA>
     <numberB>5.25</numberB>
   </a:anyType>
-</TestDataA>
+</DaneA>
 \end{lstlisting}
 
 \end{description}
 
 \subsection{Podsumowanie}
-Ma ciekawe techniki generowania owijek (\emph{bindings}) w~C\# na Javę. Może warto by przyjrzeć się im niezależnie.
-Widać, że inwestują w~komunikację z~programistą. Prowadzą za rękę i~pomagają.
+Wydaje się, że cały projekt jest dynamicznie rozwijany i~cieszy się wsparciem kilku ,,poważnych graczy''. To może mu wróżyć dalszy rozwój i~stopniową likwidację problemów.
+Twórcy inwestują w~komunikację z~użytkownikiem-programistą i~ogólne wrażenie z~pracy z~Xamarinem jest bardzo pozytywne.
+Na pewno ma duże możliwości, jeśli o~tworzenie aplikacji mobilnych.
+Ma też ciekawe techniki generowania \emph{wrapperów} na biblioteki Javowe, które może są warte uwagi nawet w~oderwaniu od reszty środowiska.
 
-Jeśli może sensowne opcje się wyczerpią, to może będę próbował posadzić Mono na Androidzie i~na nim jakiś lekki serwer RPC (jak JSON-RPC) i~będę próbował z~tym się komunikować z~.NET\@. Ale ogólnie takie rozwiązanie wydaje mi się zbyt nieporęczne.
-
-Można zarządzać Androidem i wywoływać kod Javowy z jarów, ale system pewnie nie byłby polimorficznym RPC, a czymś bardziej nieporęcznym. Trzeba by serializować rzeczy w jednym .NETcie, przekazywać do Mono i tam do Javy przez wrappery. Mało eleganckie, ale może mogłoby ładnie działać.
+Niestety podzbiór .NET wspierany przez Mono na Androidzie nie wystarczy na tworzenie serwerów RPC, czy na serializację danych pod kątem wykorzystania w~polimorficznych zdalnych metodach. Teoretycznie, jakaś zewnętrzna biblioteka .NET mogłaby w~tym pomóc.
+Współpraca z~zewnętrznymi bibliotekami, mimo, że z~założenia możliwa, wymaga wysiłku.
 
 %\subsection{Instalacja i~hello world}
 %Tworzę projekt Androidowy.
