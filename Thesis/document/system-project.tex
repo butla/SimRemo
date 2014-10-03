@@ -18,6 +18,7 @@ Po niej nastąpi szczegółowe projektowanie i~w~końcu implementacja mojego roz
 %Jeśli będę robił jakieś większe schematy to będzie to zapożyczenie z~cięższych metodyk, niejako potrzebne dla naukowego aspektu pracy.
 
 \section{Specyfikacja wymagań systemowych (SWS)}
+\textbf{TOOOOODOOOOOO}
 Z~celów tej pracy zawartych w~punkcie~\ref{lib-requirements} stworzyłem standardową listę konkretnych wymagań dla zespołu inżynierów, czyli mnie samego.
 Tworząc niniejszą sekcję wzorowałem się na specyfikacji wymagań systemowych opisanej w~prezentacji Jarosław Kuchty z~przedmiotu Inżynieria Wymagań(?) (dodać do źródeł).
 
@@ -25,12 +26,25 @@ Tworząc niniejszą sekcję wzorowałem się na specyfikacji wymagań systemowyc
 \subsection{Wstęp i~opis informacyjny}
 Jako rozbudowana sekcja wstępu SWS oraz ,,szczegółowy opis problemów do rozwiązania'' służyły poprzednie rozdziały niniejszej pracy.
 
-
+%http://tex.stackexchange.com/questions/26484/whats-the-best-way-to-embed-visio-diagrams
 \subsubsection{Diagram przepływu najwyższego poziomu(TODO)}
-WALNIJ DIAGRAM
-Może przedstawić wizję, jak to powinno działać? Że wybieram sobie metodę, mogę przekazać polimorficzne parametry, wszystko działa. Takie przejście przez system.
-Musi być serializacja (po obu stronach taka sama), przesył, oznaczanie typów, logika kierowania żądań, wiedza o typach po obu stronach (albo dynamiczne typy lub przesyłanie ze schemą), i~czymś zarządzającym wieloinstancyjnością (bo chyba ją chcę, id w~JSON-RPC za to odpowiada).
-Zrobić z~tego taki schemat przepływu (albo akcji, czy jak to się tam nazywało) przedstawiający wszystkie te główne etapy po kolei na dwóch maszynach, z transportem przez sieć.
+Diagram~\ref{fig:project-overview} przedstawia ogólną wizję projektu.
+Latają sobie obiekty i wywołania. Wszystko to polimorficzne.
+Takie przejście przez system.
+
+Po obu stronach są te same typy, generowane jedne z drugich. Przez to może dobrze działać polimorfizm. Typy wygenerowane oznaczone apostrofem (typ prim).
+Serwer może zebrać kilka obiektów, wystawiać ich metody na zewnątrz i przyjmować żądania wywołania na nich metod.
+Każdy z tych obiektów musi spełniać jakiś interfejs. Ten interfejs musi być przetłumaczony dla drugiej strony, która zrobi wtedy na jego bazie zdalny obiekt.
+Klientów można tworzyć kilka. Klient jest generowany przez mój kod, ale spełnia jakiś zadany interfejs.
+Wszystko leci przez jakiś kanał komunikacyjny. Musi on być dwustronny. Nie ma na to jakiś ograniczeń. Musi wspierać wysyłanie wiadomości (paczek danych). Może to być TCP, HTTP, SSL, cokolwiek.
+
+\begin{figure}
+	\centering
+		\includegraphics[scale=0.8]{C:/Users/Butla/Desktop/schemat-dzialania-magisterki.pdf}
+	\caption{Ogólny schemat projektu.}
+	\label{fig:project-overview}
+\end{figure}
+
 
 \subsubsection{Reprezentacja zawartości informacyjnej}
 Nie można właściwie mówić o~zawartości informacyjnej systemu, ponieważ takiej nie będzie.
@@ -117,7 +131,7 @@ Kompilacja i używanie biblioteki powinno być proste i~intuicyjne.
 
 
 
-\section{Prototyp (TODO)}
+\section{Prototypy (TODO)}
 Muszę naprawdę wiedzieć czego potrzbuje, w końca praca jest podróżą w nieznane. Zanim zacznę robić schematy jak wszystko ma działać i wyglądać muszę naprawdę wiedzieć, co jest potrzebne.
 
 O, Xtreme Programming! Tu są SPikei -- coś czego mi potrzeba, bo nie jestem pewny jak coś zrobić. Mam dużo opcji, najsensowniej będzie sprawdzić parę rzeczy, żeby coś wybrać.
@@ -142,11 +156,25 @@ Założenia każdego prototypu (Spike'a) krótko na początku scharakteryzuję.
 
 Jak oprę się o~Json-Rpc to będę miał system identyfikacji obiektów i~errory gratis.
 
-\subsection{Spike nr 1}
+\subsection{Prototyp: wspólny format informacji o typach}
+Zarówno część na Androidzie jak i~.NET musi tak samo oznaczać typy obiektów w~zserializowanych obiektach.
+Jest to podstawa do uzyskania polimorficznych zdalnych metod.
+Chcę to zrobić przez dobranie serializatorów po obu stronach i~odpowiednią ich konfigurację. Ewentualnie będę ingerował w~ich kod.
+
+Myślę o~Jackson po stronie Androida i~DataContractJsonSerializer lub JSON.NET po stronie .NET\@.
+
+\subsubsection{Wyniki}
+I~co, ma to sens? Udało się?
 
 
+\subsection{Prototyp: polimorficzne metody zdalne}
+Zakładam, że prototyp ze wspólnym formatem danych się udał.
+W~tym momencie trzeba ustawić zgodne polimorficzne serializatory zarówno dla klienta jak i~serwera i~wywołać jakąś z~metod, którymi testowałem polimorfizm w~rozdziale~\ref{similar-technologies}.
 
+Myślę o~jsonrpc4j (jeśli Jackson w~pierwszym prototypie się spisał) Androida i JSON-RPC.NET po stronie .NET\@.
 
+\subsubsection{Wyniki}
+I~co, ma to sens? Udało się?
 
 
 
@@ -219,7 +247,7 @@ Napisać, co jest potrzebne dla remotingu: jakaś tożsamość, adres obiektu, o
 %Serializujemy wszystkie publiczne pola/ propertiesy albo metody z get / set (to w Javie). Używać jakiś dostępnych już atrybutów do ręcznej konfiguracji wyboru serializowanych elementów.
 
 \subsection{Schemat działania projektu}
-Schematy działania, to z liniami życia itp.
+Schematy działania, to z liniami życia, diagramami aktywności itp.
 
 \subsection{Plan testów}
 Jakie testy akceptacyjne? Jak sprawdzę (lub sprawdziłem), że działa? Na jakiej konfiguracji sprzętowej będę musiał to robić?
@@ -229,6 +257,9 @@ Tworzenie grafu w~typów w~xmlu? Są obiekty, które mogą mieć dzieci (tablice
 Będę robił Test Driven Development. Daje zazwyczaj dobre programy i~skutkuje w~końcu szybszym wykonaniem projektu, bo nie ma przerw w~prcy związanych z jakimiś dziwnymi bugami.
 
 Logowanie też trzeba dać.
+
+\section{Implementacja}
+Jakieś szczegóły ciekawsze implementacji opisać. Może to powinno zastąpić czwarty rozdział?
 
 %Dobrze korzystać z~istniejących standardów. Wprowadzenie nowego standardu nie jest dobrą rzeczą, chyba, że ma się ogromną rzeszę zwolenników lub naprawdę poważne przesłanki (powody). Kto wie, może takie mam. Ale na ogół lepiej kombinować istniejące rozwiązania tak, żeby zewnętrzne komponenty miały szansę na współpracę z nimi.
 %
