@@ -18,25 +18,27 @@ Po niej nastąpi szczegółowe projektowanie i~w~końcu implementacja mojego roz
 %Jeśli będę robił jakieś większe schematy to będzie to zapożyczenie z~cięższych metodyk, niejako potrzebne dla naukowego aspektu pracy.
 
 \section{Specyfikacja wymagań systemowych (SWS)}
-\textbf{TOOOOODOOOOOO}
 Z~celów tej pracy zawartych w~punkcie~\ref{lib-requirements} stworzyłem standardową listę konkretnych wymagań dla zespołu inżynierów, czyli mnie samego.
-Tworząc niniejszą sekcję wzorowałem się na specyfikacji wymagań systemowych opisanej w~prezentacji ,,Inżynieria Wymagań'' Jarosława Kuchty, z~przedmiotu ,,Dokumentacja i~Jakość Oprogramowania''. (dodać do źródeł) (\url{http://galaxy.eti.pg.gda.pl/katedry/kask/pracownicy/Jaroslaw.Kuchta/DJO/04.InzynieriaWymagan.ppt}).
+Organizując niniejszą sekcję wzorowałem się na specyfikacji wymagań systemowych opisanej w~prezentacji ,,Inżynieria Wymagań'' Jarosława Kuchty, z~przedmiotu ,,Dokumentacja i~Jakość Oprogramowania''\cite{kuchta}.
 
 
 \subsection{Wstęp i~opis informacyjny}
 Jako rozbudowana sekcja wstępu SWS oraz ,,szczegółowy opis problemów do rozwiązania'' służyły poprzednie rozdziały niniejszej pracy.
 
-%http://tex.stackexchange.com/questions/26484/whats-the-best-way-to-embed-visio-diagrams
-\subsubsection{Diagram przepływu najwyższego poziomu(TODO)}
-Diagram~\ref{fig:project-overview} przedstawia ogólną wizję projektu.
-Latają sobie obiekty i wywołania. Wszystko to polimorficzne.
-Takie przejście przez system.
 
-Po obu stronach są te same typy, generowane jedne z drugich. Przez to może dobrze działać polimorfizm. Typy wygenerowane oznaczone apostrofem (typ prim).
-Serwer może zebrać kilka obiektów, wystawiać ich metody na zewnątrz i przyjmować żądania wywołania na nich metod.
-Każdy z tych obiektów musi spełniać jakiś interfejs. Ten interfejs musi być przetłumaczony dla drugiej strony, która zrobi wtedy na jego bazie zdalny obiekt.
-Klientów można tworzyć kilka. Klient jest generowany przez mój kod, ale spełnia jakiś zadany interfejs.
-Wszystko leci przez jakiś kanał komunikacyjny. Musi on być dwustronny. Nie ma na to jakiś ograniczeń. Musi wspierać wysyłanie wiadomości (paczek danych). Może to być TCP, HTTP, SSL, cokolwiek.
+\subsubsection{Diagram przepływu najwyższego poziomu}
+Diagram~\ref{fig:project-overview} przedstawia ogólne działanie systemu w~trakcie wywoływania zdalnej metody. Jest to główna funkcja mojego projektu. Funkcja drugorzędna -- tłumaczenie danych, również została ujęta.
+
+Widoczny na schemacie klient jest jednym z~wielu, które mogą być stworzone przez kod korzystający z~mojej biblioteki.
+Obiekt każdego klienta spełnia jakiś zadany interfejs. Robi to przez opakowywanie parametrów, zaadresowanie ich, wysłanie do obiektu faktycznie wykonującego kod i~odebranie wyniku.
+Interfejs klienta i obiektu zdalnego są zgodne, chodź napisane w~różnych językach na różne platformy. Aby zminimalizować nakład pracy programisty, najlepiej byłoby, gdyby interfejs po stronie klienta (.NET) był generowany z~wersji serwerowej (Java, Android).
+Tak samo jak w~przypadku interfejsów wygląda sprawa klas przekazywanych do metod jako parametry -- także muszą być zgodne, najlepiej automatycznie tłumaczone.
+Typy przetłumaczone na schemacie oznaczone są apostrofem.
+Kod kliencki nie musi zawierać tłumaczenia implementacji zdalnych interfejsów.
+Współdzielone definicje klas danych i~interfejsów są niezbędne, aby uzyskać polimorfizm metod zdalnych.
+
+Serwer jest tworzony przez kod kliencki i~nasłuchuje na żądania na zadanym interfejsie sieciowym. Może to być dowolna technologia pozwalająca na dwustronne wysyłanie wiadomości, np.\ TCP, HTTP, SSL/TLS, czy też strumienie w~pamięci (rozwiązanie lokalne).
+Na schemacie serwer posiada tylko jeden obiekt zdalny klasy \texttt{Implementacja A}, ale faktycznie może posiadać ich wiele.
 
 \begin{figure}
 	\centering
@@ -66,11 +68,13 @@ Przez mój system dane będą jedynie przepływać.
 %diagramy pomocnicze
 
 \subsubsection{Serializacja danych z zachowaniem informacji o typach}
-Dane serializowane po obu stronach barykady muszą (kiedy to potrzebne do odczytania, a więc jeśli nie wynika jasno z konktekstu) zawierać informacje umożliwiające deserializację odpowiednich typów.
-Deserializacja powinna być komplementarna i z tych zapisów odtwarzać obiekty o odpowiednich typach i z poprawnymi danymi.
-Jest to warunkiem dla polimorficznych metod.
+Zserializowane reprezentacje obiektów muszą zawierać informacje o~typach wtedy, kiedy nie wynika ona jednoznacznie z~kontekstu.
+Np.\ przy zwracaniu ze zdalnej metody obiektu klasy dziedziczącej po tym, zdeklarowanym w~interfejsie tejże metody.
+To wymaganie dotyczy zarówno strony klienta jak i~serwera.
+Deserializacja powinna być komplementarna i~ze stworzonych reprezentacji odtwarzać obiekty o~odpowiednich typach i~z~poprawnymi danymi.
+Taka metoda serializacji i~deserializacji jest warunkiem działania polimorficznych metod.
 
-\subsubsection{Serwowanie polimorficznych metod zdalnych}
+\subsubsection{Serwowanie polimorficznych metod zdalnych(TODO)}
 To na Androidzie.
 
 Kod wystawiający metody zdalne musi móc wystawić obiekt nieznanej mu, nieoznaczonej jakoś specjalnie klasy jako serwis (robi to przy pomocy refleksji i jakiegoś ogólnego zestawu zasad). Musi być do tego podany jakiś interfejs.
@@ -86,13 +90,17 @@ i deserializacje jednego obiektu (TestDataB widocznego
 jako TestDataA) a nastepnie sprawdzenie,
 czy jest taki sam.
 
-\subsubsection{Konsumowanie polimorficznych metod zdalnych}
+\subsubsection{Konsumowanie polimorficznych metod zdalnych(TODO)}
 Klien musi być tworzone dynamicznie do jakiejś arbitralnej zdalnej klasy na określonym strumieniu danych. Czyli musi dynamicznie być tworzony obiekt zgodny z jakimś interfejsem. Odpalanie na nim metod powoduje wywołanie metod zdalnych.
 
-\subsubsection{Komunikacja z systemem Android}
+\subsubsection{Komunikacja z systemem Android(TODO)}
 Faktycznie chodzi o możliwość wołania metod z API Androida i wysyłanie Intentów, które są takimi wiadomościami.
 
-\subsubsection{Tłumaczenie kodu}
+% Można się też zastanowić nad singletonami.
+\subsubsection{Tworzenie zdalnych obiektów na życzenie klienta(TODO)}
+Kod klienta wywołuje stworzenie obiektu zdalnego. Wysyłając specjalne żądanie przed pierwszym wywołaniem metody zdalnej. To daje model sesyjny -- jeden obiekt zdalny na jednego klienta.
+
+\subsubsection{Tłumaczenie kodu(TODO)}
 Zrealizowane jako niezależne narzędzie.
 Tłumaczenie kodu zmniejszyłoby nakład pracy programisty, który bez tego musiałby sam stworzyć odpowiadające klasy danych w obu językach.
 
@@ -257,9 +265,6 @@ Tworzenie grafu w~typów w~xmlu? Są obiekty, które mogą mieć dzieci (tablice
 Będę robił Test Driven Development. Daje zazwyczaj dobre programy i~skutkuje w~końcu szybszym wykonaniem projektu, bo nie ma przerw w~prcy związanych z jakimiś dziwnymi bugami.
 
 Logowanie też trzeba dać.
-
-\section{Implementacja}
-Jakieś szczegóły ciekawsze implementacji opisać. Może to powinno zastąpić czwarty rozdział?
 
 %Dobrze korzystać z~istniejących standardów. Wprowadzenie nowego standardu nie jest dobrą rzeczą, chyba, że ma się ogromną rzeszę zwolenników lub naprawdę poważne przesłanki (powody). Kto wie, może takie mam. Ale na ogół lepiej kombinować istniejące rozwiązania tak, żeby zewnętrzne komponenty miały szansę na współpracę z nimi.
 %
