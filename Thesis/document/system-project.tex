@@ -60,82 +60,111 @@ Przez mój system dane będą jedynie przepływać.
 \end{itemize}
 
 
-\subsection{Wymagania funkcjonalne(TODO)}
+\subsection{Wymagania funkcjonalne}
 %opis tekstowy
 %ograniczenia
 %wymagania wydajnościowe
 %zastrzeżenia projektowe
 %diagramy pomocnicze
 
-\subsubsection{Serializacja danych z zachowaniem informacji o typach}
+\subsubsection{Ogólne}
+
+\begin{description}
+\itemtitle{Serializacja danych z zachowaniem informacji o typach}
 Zserializowane reprezentacje obiektów muszą zawierać informacje o~typach wtedy, kiedy nie wynika ona jednoznacznie z~kontekstu.
 Np.\ przy zwracaniu ze zdalnej metody obiektu klasy dziedziczącej po tym, zdeklarowanym w~interfejsie tejże metody.
 To wymaganie dotyczy zarówno strony klienta jak i~serwera.
 Deserializacja powinna być komplementarna i~ze stworzonych reprezentacji odtwarzać obiekty o~odpowiednich typach i~z~poprawnymi danymi.
 Taka metoda serializacji i~deserializacji jest warunkiem działania polimorficznych metod.
 
-\subsubsection{Serwowanie polimorficznych metod zdalnych(TODO)}
-To na Androidzie.
+\itemtitle{Tłumaczenie kodu}
+Zrealizowane jako niezależne narzędzie.
+Tłumaczenie kodu zmniejszyłoby nakład pracy programisty, który bez tego musiałby sam stworzyć odpowiadające klasy danych w~obu językach.
+Klasy i~pola nie znajdujące odpowiednika są pomijane w~trakcie tłumaczenia.
+Tłumaczenie powinno się odbywać z~Javy do C\#, ponieważ w~Javie będzie więcej kodu (kod implementacji zdalnych metod).
+%Jeśli w danej klasie są inne klasy z zewnętrznej biblioteki, to trzeba też przetłumaczyć te. Trzeba dostarczyć kod wszystkich.
+%Jeśli jedno ogniwo jest nieprzetłumaczalne to można pominąć pole z ostrzeżeniem.
+\end{description}
 
-Kod wystawiający metody zdalne musi móc wystawić obiekt nieznanej mu, nieoznaczonej jakoś specjalnie klasy jako serwis (robi to przy pomocy refleksji i jakiegoś ogólnego zestawu zasad). Musi być do tego podany jakiś interfejs.
+\subsubsection{Serwer}
 
-Wystawianie metod rzez jakiś strumień komunikacyjny, np. socket.
+\begin{description}
 
+\itemtitle{Komunikacja z~klientem}
+Serwer powinien nasłuchiwać na żądania od klientów na zadanym dwustronnym kanale komunikacyjnym.
+Konkretny typ kanału (TCP, SSL, HTTP, itp.) nie jest ważny.
+Może przyjmować wywołania metod i~przekierowywać je do obiektów zdalnych (względem klienta).
+Przekazuje do klientów zwracane wartości.
 
-Zdalne metody oraz ich argumenty muszą być polimorficzne.
-Czy zdalne metody moga byc przeładowywane?
-Sprowadza sie do zachowania informacji o typach
-w serializowanych danych. Sprawdzane przez serializacje
-i deserializacje jednego obiektu (TestDataB widocznego
-jako TestDataA) a nastepnie sprawdzenie,
-czy jest taki sam.
-
-\subsubsection{Konsumowanie polimorficznych metod zdalnych(TODO)}
-Klien musi być tworzone dynamicznie do jakiejś arbitralnej zdalnej klasy na określonym strumieniu danych. Czyli musi dynamicznie być tworzony obiekt zgodny z jakimś interfejsem. Odpalanie na nim metod powoduje wywołanie metod zdalnych.
-
-\subsubsection{Komunikacja z systemem Android(TODO)}
-Faktycznie chodzi o możliwość wołania metod z API Androida i wysyłanie Intentów, które są takimi wiadomościami.
+\itemtitle{Wystawianie metod publicznych zadanych obiektów ,,na zewnątrz''}
+Kod serwera ma przyjmować dowolny obiekt i~umożliwiać zdalnym klientom wywoływanie jego publicznych metod.
+Parametry tych metod muszą być przetłumaczalne na kod klienta.
 
 % Można się też zastanowić nad singletonami.
-\subsubsection{Tworzenie zdalnych obiektów na życzenie klienta(TODO)}
-Kod klienta wywołuje stworzenie obiektu zdalnego. Wysyłając specjalne żądanie przed pierwszym wywołaniem metody zdalnej. To daje model sesyjny -- jeden obiekt zdalny na jednego klienta.
+\itemtitle{Tworzenie zdalnych obiektów na życzenie klienta}
+Po otrzymaniu specjalnego żądania kod serwera powinien stworzyć obiekt implementujący zadany interfejs i~zwrócić jego identyfikator. Klient będzie mógł wywoływać zdalnie metody na stworzonym obiekcie.
 
-\subsubsection{Tłumaczenie kodu(TODO)}
-Zrealizowane jako niezależne narzędzie.
-Tłumaczenie kodu zmniejszyłoby nakład pracy programisty, który bez tego musiałby sam stworzyć odpowiadające klasy danych w obu językach.
+\itemtitle{Niszczenie zdalnych obiektów na życzenie klienta}
+Specjalne żądanie zawierające identyfikator obiektu powinno powodować jego zwolnienie i~uniemożliwienie z~nim dalszej komunikacji.
 
-Klasy ze standardowych bibliotek, które nie znajdują odpowiednika nie muszą być tłumaczone.
+\itemtitle{Polimorfizm parametrów metod zdalnych}
+Metody zdalne muszą obsługiwać parametry wszystkich typów zgodnych ze spodziewanym. Dla przykładu, metoda przyjmuje parametr typu A, więc powinna przyjąć też parametry wszystkich typów dziedziczących po A.
 
-Jeśli w danej klasie są inne klasy z zewnętrznej biblioteki, to trzeba też przetłumaczyć te. Trzeba dostarczyć kod wszystkich.
-Jeśli jedno ogniwo jest nieprzetłumaczalne to można pominąć pole z ostrzeżeniem.
+\itemtitle{Przeciążanie metod zdalnych}
+Metody zdalne mogą być przeciążane, tj.\ dwie metody mogą mieć tę samą nazwę, ale inny zestaw parametrów.
+
+\itemtitle{Komunikacja z systemem Android}
+Obiekty zdalne muszą mieć możliwość wywoływania metod z~API Androida.
+
+\end{description}
+
+\subsubsection{Klient}
+
+\begin{description}
+
+\itemtitle{Tworzenie obiektów klienckich}
+Biblioteka po stronie .NET musi być w~stanie dynamicznie stworzyć obiekt klienta dla obiektu zdalnego.
+Każdy klient spełnia jakiś zadany interfejs.
+
+\itemtitle{Nawiązywanie sesji z~serwerem}
+Obiekt klienta nawiązuje kontakt z~serwerem poprzez dowolny dwustronny kanał komunikacyjny (na którym serwer nasłuchuje).
+Następnie żąda od serwera stworzenia dla siebie zdalnego obiektu.
+Wszystkie metody z~interfejsu zdalnego wywoływane na kliencie są przekazywane do jednego obiektu zdalnego.
+Zwolnienie obiektu klienta powoduje zwolnienie obiektu zdalnego.
+
+\itemtitle{Konsumowanie polimorficznych metod zdalnych}
+Klient wykonuje metody implementowanego przez siebie interfejsu przez delegację (i~wysłanie) ich do obiektu zdalnego.
+Wysłanie poprzedzane jest serializacją, podczas której muszą zostać zachowane informacje o~typach parametrów oraz ich ewentualnych obiektach składowych.
+
+\end{description}
 
 % WYMAGANIA POMIJANE:
 % reliable sessions (w sumie też by mi się przydał jakiś mechanizm, który umożliwi komunikację w niestabilnym środowisku Internetu)
 % \url{http://blogs.msdn.com/b/shycohen/archive/2006/02/20/535717.aspx} \\
 
 
-\subsection{Wymagania niefunkcjonalne(TODO)}
-O ile techniczne raczej olewam (odnieść się, do działu. Po prostu ma działać.
-Ale zależy mi na satysfakcji użytkownika (programisty) i~na prostym użytkowaniu mojego projektu.
+\subsection{Wymagania niefunkcjonalne}
 
-minimalizacja nakładu pracy -- np. minimalizacja kodu
+\begin{description}
 
-To powiedziawszy, tu są pozostające wymagania:
+\itemtitle{Serwer na Androidzie}
+Kod serwera musi działać na platformie Android.
 
-\subsubsection{Wydajność serwera}
-Ponieważ chodzi tylko o sprawdzenie założeń nie musi być duża. Wystarczy wsparcie kilku, powiedzmy 5 klientów na raz.
+\itemtitle{Klient w~.NET pod Windows}
+Kod klienta musi działać na platformie .NET\@.
 
-\subsubsection{Klient w .NET pod Windows}
-Metody zdalne z Androida mają być konsumowane przez program działający na platformie .NET pod systemem Windows.
+\itemtitle{Wydajność serwera}
+Nie musi być duża, jako, że nie jest priorytetem projektu. Wystarczy jednoczesna obsługa pięciu (5) klientów.
 
-\subsubsection{Rozszerzalność bez ingerencji w oryginalny kod}
-Można dodawać klasy dziedziczące po obu stronach nie zmieniając kodu metody, przez które przechodzą funkcjonalność metod.
-Czy mozna do serwera i klienta dodac moduł, np.
-z nowymi klasami danych dziedziczacymi istniejace
-i uzywac ich ze starymi metodami?
+\itemtitle{Rozszerzalność metod zdalnych bez ingerencji w oryginalny kod}
+Funkcjonalność metod zdalnych powinna być rozszerzalna bez ingerencji w~ich kod dzięki mechanizmom programowania obiektowego.
+Przykładem jest możliwość przyjmowania przez metodę zdalną obiektu klasy dziedziczącej po spodziewanym typie parametru, bez potrzeby jakiejkolwiek ingerencji w~kod metody, aby mogła rozumieć nową klasę.
+Jednak definicja nowej klasy musi być dostępna zarówno dla klienta, jak i~serwera.
 
-\subsubsection{Minimalizacja nakładu pracy programisty}
-Kompilacja i używanie biblioteki powinno być proste i~intuicyjne.
+\itemtitle{Łatwość użytkowania}
+Budowanie i~korzystanie z~bibliotek, które powstaną w~trakcie realizacji tego projektu, powinno być proste i~intuicyjne.
+
+\end{description}
 
 
 
@@ -184,6 +213,11 @@ Myślę o~jsonrpc4j (jeśli Jackson w~pierwszym prototypie się spisał) Android
 \subsubsection{Wyniki}
 I~co, ma to sens? Udało się?
 
+\subsection{Tworzenie zdalnych obiektów na żądanie klienta}
+Klient musi mieć specjalną metodę, którą będzie wywoływał stworzenie zdalnego obiektu, któremu dalej będzie wysyłał wywołania.
+Można to zrealizować przy pomocy mechanizmu rozszerzeń (\emph{Extensions}) standardu JSON-RPC 2.0.
+%https://jsonrpcx.org/Main/HomePage
+%http://grokbase.com/t/gg/json-rpc/138ce80p54/what-are-rpc-extensions
 
 
 \section{Dookreślenie rozwiązania}
@@ -217,6 +251,22 @@ Jakie są? Do czego można użyć tego systemu? Jak to jest z tym dynamicznym tw
 Diagramy warstwowe, komponentowe, klas.
 
 Napisać, co jest potrzebne dla remotingu: jakaś tożsamość, adres obiektu, oznaczenia metod, argumentów. Ogólnie to jest dość proste. (jak w~JSON-RPC, tylko z polimorficznymi typami)
+
+
+\subsection{Schemat działania projektu}
+Schematy działania, to z liniami życia, diagramami aktywności itp.
+
+
+\subsection{Plan testów}
+Jakie testy akceptacyjne? Jak sprawdzę (lub sprawdziłem), że działa? Na jakiej konfiguracji sprzętowej będę musiał to robić?
+
+Tworzenie grafu w~typów w~xmlu? Są obiekty, które mogą mieć dzieci (tablice, listy). Próbuję wygenerować C\# dla porównania. Zapisuję grafy, które nie działają (w trakcie automatycznych testów). Zrobić wizualizator grafów.
+
+Będę robił Test Driven Development. Daje zazwyczaj dobre programy i~skutkuje w~końcu szybszym wykonaniem projektu, bo nie ma przerw w~prcy związanych z jakimiś dziwnymi bugami.
+
+Logowanie też trzeba dać.
+
+
 
 %Budowa powinna pozwolić na łatwe podłączenie warstwy bezpieczeństwa (bezpiecznego kanału)
 %
@@ -254,17 +304,7 @@ Napisać, co jest potrzebne dla remotingu: jakaś tożsamość, adres obiektu, o
 %
 %Serializujemy wszystkie publiczne pola/ propertiesy albo metody z get / set (to w Javie). Używać jakiś dostępnych już atrybutów do ręcznej konfiguracji wyboru serializowanych elementów.
 
-\subsection{Schemat działania projektu}
-Schematy działania, to z liniami życia, diagramami aktywności itp.
 
-\subsection{Plan testów}
-Jakie testy akceptacyjne? Jak sprawdzę (lub sprawdziłem), że działa? Na jakiej konfiguracji sprzętowej będę musiał to robić?
-
-Tworzenie grafu w~typów w~xmlu? Są obiekty, które mogą mieć dzieci (tablice, listy). Próbuję wygenerować C\# dla porównania. Zapisuję grafy, które nie działają (w trakcie automatycznych testów). Zrobić wizualizator grafów.
-
-Będę robił Test Driven Development. Daje zazwyczaj dobre programy i~skutkuje w~końcu szybszym wykonaniem projektu, bo nie ma przerw w~prcy związanych z jakimiś dziwnymi bugami.
-
-Logowanie też trzeba dać.
 
 %Dobrze korzystać z~istniejących standardów. Wprowadzenie nowego standardu nie jest dobrą rzeczą, chyba, że ma się ogromną rzeszę zwolenników lub naprawdę poważne przesłanki (powody). Kto wie, może takie mam. Ale na ogół lepiej kombinować istniejące rozwiązania tak, żeby zewnętrzne komponenty miały szansę na współpracę z nimi.
 %
