@@ -1,10 +1,32 @@
 \chapter{Implementacja (TODO)}
 
+\section{Licencja}
+Ważna rzecz w~dzisiejszym oprogramowaniu (źródło).
+
+Wybrałem MIT license (sam przeczytałem licencje, a porównanie tutaj http://choosealicense.com/licenses/). Jest przeciwnikiem skomplikowanych przepisów, na które Apache (główny konkurent) zakrawa, a na patentach mi nie zależy (wątpię, żebym jakieś tu miał, poza tym w UE nie można patentować kodu, chyba). MIT jest proste, zapewnia wzmiankowanie mojego nazwiska i umożliwia używanie mojego kodu także w komercyjnych rozwiązaniach.
+
+Używa jej Ruby On Rails i parę innych dużych, znanych projektów.
+
+
 \section{Narzędzia}
 Narzędzia, których używałem/użyję. Jakie repozytorium, IDE, kompilatory, Fiddler itp.
 
+\subsection{Kontrola wersji}
+Musiałem to wybrać przed rozpoczęciem pisania tej pracy, bo chciałem ją tam przechowywać (backup). Sposób przechowywania źródeł to też ważna rzecz (link).
+Nawet w przypadku samego dokumenty pomaga mi śledzić zmiany i rozwój oraz zapewnia kopię zapasową (a więc bezpieczeństwo).
+Założyłem repozytorium na GitHubie, którego znam. Jest popularny i wygodny w użyciu. Kod ma być publiczny, więc nie mam problemu.
+Git integruje się z~większością IDE.
+
+
+\subsection{Maszyna deweloperska}
+Opisać na jakim komputerze, z~jakim OSem to wszystko pisałem i~testowałem.
+Ewentualne fizyczne Androidy też trzeba przedstawić
+
+
+\subsection{IDE}
 Eclipse z ADT
-Komputer mój opisać, jako maszynę deweloperską i~testową.
+Visual Studio 2013
+
 
 \subsection{Emulator Androida}
 \label{android-emulator}
@@ -16,13 +38,20 @@ Używam ARMowego, bo więcej telefonów jest właśnie na nim. Zdażają się te
 Konfiguracja używanej AVD: (w obrazku)
 Forward portu
 
+
+
 \section{Przebieg prac}
 Jak mi wyszło, jak wrażenia? Co musiałem zmienić, co dopracować, co dookreślić? Są jakieś poprawki do projektu?
 
+\subsection{Metodyka}
+Robiłem Test Driven Development. Daje zazwyczaj dobre programy i~skutkuje w~końcu szybszym wykonaniem projektu, bo nie ma przerw w~pracy związanych z jakimiś dziwnymi bugami.
+Cała podsekcja na to potrzebna?
+
 \subsection{Szczegóły implementacji}
 Co ciekawsze zabiegi, które zastosowałem.
+Jakie logowanie?
 
-\subsection{Założenia przy testach}
-Co tak naprawdę testuję? Jak, pod jakim kątem?
+\subsection{Wykonywanie testów}
+Jak robiłem te zaplanowane testy?
 
-Przy funkcjonalnych testach jako kanał komunikacji może służyć strumień w pamięci. W unittestach oczywiście kanały zmockowane.
+%Przy funkcjonalnych testach jako kanał komunikacji może służyć strumień w pamięci. W unittestach oczywiście kanały zmockowane.

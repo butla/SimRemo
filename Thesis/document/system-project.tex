@@ -66,6 +66,9 @@ Przez mój system dane będą jedynie przepływać.
 %wymagania wydajnościowe
 %zastrzeżenia projektowe
 %diagramy pomocnicze
+% WYMAGANIA POMIJANE:
+% reliable sessions (w sumie też by mi się przydał jakiś mechanizm, który umożliwi komunikację w niestabilnym środowisku Internetu)
+% \url{http://blogs.msdn.com/b/shycohen/archive/2006/02/20/535717.aspx} \\
 
 \subsubsection{Ogólne}
 
@@ -138,10 +141,6 @@ Wysłanie poprzedzane jest serializacją, podczas której muszą zostać zachowa
 
 \end{description}
 
-% WYMAGANIA POMIJANE:
-% reliable sessions (w sumie też by mi się przydał jakiś mechanizm, który umożliwi komunikację w niestabilnym środowisku Internetu)
-% \url{http://blogs.msdn.com/b/shycohen/archive/2006/02/20/535717.aspx} \\
-
 
 \subsection{Wymagania niefunkcjonalne}
 
@@ -168,89 +167,52 @@ Budowanie i~korzystanie z~bibliotek, które powstaną w~trakcie realizacji tego 
 
 
 
-\section{Prototypy (TODO)}
-Muszę naprawdę wiedzieć czego potrzbuje, w końca praca jest podróżą w nieznane. Zanim zacznę robić schematy jak wszystko ma działać i wyglądać muszę naprawdę wiedzieć, co jest potrzebne.
+\section{Prototypy}
+Aby dokładnie zaplanować strukturę i~działanie mojego oprogramowania muszę zebrać więcej informacji.
+Także pomysły, jakie mam na rozwiązanie problemów tej pracy, wymagają weryfikacji.
+W~tej sytuacji dobrze przygotować kilka małych prototypów lub jak to określają wytyczne programowania ekstremalnego\footnote{Z~ang. \emph{eXtreme Programming}, w~skrócie XP.} -- \emph{,,spike solutions''}, czyli rozwiązania -- gwoździe lub kolce\cite{spike}. Nazywają się tak, ponieważ przeszywają/przechodzą przez wszystkie warstwy projektu.
 
-O, Xtreme Programming! Tu są SPikei -- coś czego mi potrzeba, bo nie jestem pewny jak coś zrobić. Mam dużo opcji, najsensowniej będzie sprawdzić parę rzeczy, żeby coś wybrać.
+Poniżej znajdują się opisy przygotowanych przez mnie ,,\emph{spike'ów}''.
 
-z racji tego, że projekt jednoosobowy i to ja jestem produkt ownerem i każdym, to nie będzie jako takich releasów i planowani iteracji. iteracje tez bez sensu, bo mam po prostu dostarczyć cały produkt. Chociaz moge sobie tym ustalic priorytety
-
-Create spike solutions to figure out answers to tough technical or design problems. A spike solution is a very simple program to explore potential solutions. Build the spike to only addresses the problem under examination and ignore all other concerns. Most spikes are not good enough to keep, so expect to throw it away. The goal is reducing the risk of a technical problem or increase the reliability of a user story's estimate.
-
-Diagram Spike'a objaśnić w moim zastosowaniu (\url{http://www.extremeprogramming.org/rules/spike.html})
-Co to SPIKE? Spike w~Extreme Programming, bodajże, ma za zadanie właśnie sprawdzić czy coś się da zrobić oraz jakie elementy będzie musiało zawierać rozwiązanie.
-Spike nie musi być gotowym, działającym w pełni produktem. Ale pokazuje, czy sama zasada działania jest słuszna.
-
-
-Dobrze, żeby prototypy zawierały te wszystkie elementy, ale chociaż je mockowały.
-
-Tylko sprawdzając coś w~ten sposób mogę się przekonać, jaka droga jest dobra. Można myśleć, że przecież z~opisów bibliotek i~technologii można wywnioskować, do czego się nadają, ale w~praktyce tak nie jest. Jak się pisze konkretne rozwiązanie to czasem się okazuje, że akurat to nie działa.
-
-
-Może kilka spikeów na kilka kawałków rozwiązania?
-
-Założenia każdego prototypu (Spike'a) krótko na początku scharakteryzuję.
-
-Jak oprę się o~Json-Rpc to będę miał system identyfikacji obiektów i~errory gratis.
-
-\subsection{Prototyp: wspólny format informacji o typach}
+\subsection{Wspólny format informacji o typach (TODO)}
 Zarówno część na Androidzie jak i~.NET musi tak samo oznaczać typy obiektów w~zserializowanych obiektach.
 Jest to podstawa do uzyskania polimorficznych zdalnych metod.
 Chcę to zrobić przez dobranie serializatorów po obu stronach i~odpowiednią ich konfigurację. Ewentualnie będę ingerował w~ich kod.
-
 Myślę o~Jackson po stronie Androida i~DataContractJsonSerializer lub JSON.NET po stronie .NET\@.
 
-\subsubsection{Wyniki}
-I~co, ma to sens? Udało się?
+%\subsubsection{Wyniki}
+%I~co, ma to sens? Udało się?
 
 
-\subsection{Prototyp: polimorficzne metody zdalne}
-Zakładam, że prototyp ze wspólnym formatem danych się udał.
-W~tym momencie trzeba ustawić zgodne polimorficzne serializatory zarówno dla klienta jak i~serwera i~wywołać jakąś z~metod, którymi testowałem polimorfizm w~rozdziale~\ref{similar-technologies}.
+\subsection{Polimorficzne metody zdalne(TODO)}
+Trzeba ustawić zgodne polimorficzne serializatory zarówno dla klienta jak i~serwera i~wywołać jakąś z~metod, którymi testowałem polimorfizm w~rozdziale~\ref{similar-technologies}.
+Zastosuję jsonrpc4j (jeśli Jackson w~pierwszym prototypie się spisał) na Androidzie i~JSON-RPC.NET po stronie .NET\@.
+Opieranie się o~standard Json-Rpc daje ,,gratis'' identyfikatory połączeń i~wysyłanie błędów.
 
-Myślę o~jsonrpc4j (jeśli Jackson w~pierwszym prototypie się spisał) Androida i JSON-RPC.NET po stronie .NET\@.
-
-\subsubsection{Wyniki}
-I~co, ma to sens? Udało się?
-
-\subsection{Tworzenie zdalnych obiektów na żądanie klienta}
+\subsection{Tworzenie zdalnych obiektów na żądanie klienta(TODO)}
 Klient musi mieć specjalną metodę, którą będzie wywoływał stworzenie zdalnego obiektu, któremu dalej będzie wysyłał wywołania.
 Można to zrealizować przy pomocy mechanizmu rozszerzeń (\emph{Extensions}) standardu JSON-RPC 2.0.
 %https://jsonrpcx.org/Main/HomePage
 %http://grokbase.com/t/gg/json-rpc/138ce80p54/what-are-rpc-extensions
 
 
-\section{Dookreślenie rozwiązania}
-\subsection{Wybrana ścieżka (prototyp)}
-Który SPIKE (a~ztem którą ścieżkę) wybieram do dalszego rozwinięcia?
+
+\section{Szczegółowy projekt (TODO)}
+Tutaj decyzja, co do ostatecznego kształtu rozwiązania, szczegółowy plan struktury i~działania.
+
+\subsection{Wybrana ścieżka}
+Jakie prototypy wybieram do dalszego rozwinięcia?
 Dlaczego?
 
-\subsection{Licencja}
-Trzeba decydować o tym szybko (link dlaczego?).
 
-Wybrałem MIT license (sam przeczytałem licencje, a porównanie tutaj http://choosealicense.com/licenses/). Jest przeciwnikiem skomplikowanych przepisów, na które Apache (główny konkurent) zakrawa, a na patentach mi nie zależy (wątpię, żebym jakieś tu miał, poza tym w UE nie można patentować kodu, chyba). MIT jest proste, zapewnia wzmiankowanie mojego nazwiska i umożliwia używanie mojego kodu także w komercyjnych rozwiązaniach.
-
-Używa jej Ruby On Rails i pare innych dużych, znanych projektów.
-
-\subsection{Repozytorium}
-Musiałem to wybrać przed rozpoczęciem pisania tej pracy, bo chciałem ją tam przechowywać (backup). Sposób przechowywania źródeł to też ważna rzecz (link).
-
-Nawet w przypadku samego dokumenty pomaga mi śledzić zmiany i rozwój oraz zapewnia kopię zapasową (a więc bezpieczeństwo).
-
-Założyłem repozytorium na GitHubie, którego znam. Jest popularny i wygodny w użyciu. Kod ma być publiczny, więc nie mam problemu. 
-
-
-
-
-\subsection{Przypadki użycia}
-Jakie są? Do czego można użyć tego systemu? Jak to jest z tym dynamicznym tworzeniem web serviceów z hierarchii klas?
-
+%\subsection{Przypadki użycia}
+%Jakie są? Do czego można użyć tego systemu? Jak to jest z tym dynamicznym tworzeniem web serviceów z hierarchii klas?
 
 
 \subsection{Struktura projektu}
 Diagramy warstwowe, komponentowe, klas.
 
-Napisać, co jest potrzebne dla remotingu: jakaś tożsamość, adres obiektu, oznaczenia metod, argumentów. Ogólnie to jest dość proste. (jak w~JSON-RPC, tylko z polimorficznymi typami)
+%Napisać, co jest potrzebne dla remotingu: jakaś tożsamość, adres obiektu, oznaczenia metod, argumentów. Ogólnie to jest dość proste. (jak w~JSON-RPC, tylko z polimorficznymi typami)
 
 
 \subsection{Schemat działania projektu}
@@ -258,14 +220,9 @@ Schematy działania, to z liniami życia, diagramami aktywności itp.
 
 
 \subsection{Plan testów}
-Jakie testy akceptacyjne? Jak sprawdzę (lub sprawdziłem), że działa? Na jakiej konfiguracji sprzętowej będę musiał to robić?
+Jakie testy akceptacyjne? Jak sprawdzę, że działa? Na jakiej konfiguracji sprzętowej będę musiał to robić?
 
-Tworzenie grafu w~typów w~xmlu? Są obiekty, które mogą mieć dzieci (tablice, listy). Próbuję wygenerować C\# dla porównania. Zapisuję grafy, które nie działają (w trakcie automatycznych testów). Zrobić wizualizator grafów.
-
-Będę robił Test Driven Development. Daje zazwyczaj dobre programy i~skutkuje w~końcu szybszym wykonaniem projektu, bo nie ma przerw w~prcy związanych z jakimiś dziwnymi bugami.
-
-Logowanie też trzeba dać.
-
+Tworzenie grafu w~typów w~xmlu? Są obiekty, które mogą mieć dzieci (tablice, listy). Próbuję wygenerować C\# dla porównania. Zapisuję grafy, które nie działają (w trakcie automatycznych testów). Zrobić wizualizator grafów?
 
 
 %Budowa powinna pozwolić na łatwe podłączenie warstwy bezpieczeństwa (bezpiecznego kanału)
