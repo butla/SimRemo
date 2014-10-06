@@ -539,21 +539,16 @@ servers.
 The same application code should be able to run against TCP stream sockets, raw data in memory, or files on disk.
 
 Rozdzielony transport od serializacji, ale wsparte strumieniowanie.
-
 Niestety nie można podłączać innych bibliotek.
 
 Łatwe rozszerzanie istniejącego kodu też nie jest za bardzo możliwe, po dodaniu jakiś typów trzeba wszystko przegenerować (a w innych przypadkach trzeba dostarczyć nowe klasy na drugą stronę -- zawsze trzeba coś dodać).
 Czy jest jakiś polimorfizm?
-
 Daje możliwość zrobienia jednego kodu na dwie platformy.
-
 Pozwala na asynchroniczność -- coś, czego nie przewidywałem dla mojej biblioteki, ale też może być przydatne.
 
 Służy do robienia i klienta i serwera. Nie można np.\ zrobić serwera, do którego inni będą mogli wołać jakimś standardowym kanałem. Muszą mieć konkretny, wygenerowany kod klienta (no ewentualnie mogą zrobić swój kod korzystając z API Thrift). Moje może tak wyjść.
 
-Ale może można zrobić serwer na Androidzie? (\url{http://stackoverflow.com/questions/19141177/thrift-client-on-android}) Pewnie się nie da bez rypania kodu Thrifta.
-
-Jest polimorfizm?
+Ale może można zrobić serwer na Androidzie? (\url{http://stackoverflow.com/questions/19141177/thrift-client-on-android}) Pewnie się nie da bez przerabiania kodu Thrifta.
 
 \subsection{Ocena}
 \subsection{Podsumowanie}
@@ -682,9 +677,7 @@ Ale nie zapowiada się, żeby ta biblioteka była lepsza niż jsonrpc4j. Chocia�
 
 \section{WCF (TODO)}
 Potężny framework Web Serviceów od Microsoftu. Może posłużyć za wzór jak wszystko może działać. Może dość dynamicznie tworzyć hierarchie obiektów, które mogą funkcjonować jako usługi.
-
 Poza frameworkiem są też narzędzia do generacji kodu ze schemy i wsdl.
-
 Można robić JSONa: \url{http://msdn.microsoft.com/en-us/library/system.runtime.serialization.json.datacontractjsonserializer.aspx}\\
 
 Generowanie z JAX-WS przy pomocy wsdl toola nie do końca działało.
@@ -702,7 +695,6 @@ Napisać jak łatwo można zrobić to, co chcę mieć.
 \section{JAX-WS (TODO)}
 Standardowy framework Javy do Web Serviceów. Podobne możliwości co WCF\@. Ja też niby chcę web service'y w Javie, ale na Androidzie, któremu JAX-WS został wycięty.
 %Niestandardowe podejście z użyciem JSONa zamiast XMLa\url{http://jax-ws-commons.java.net/json/}\\
-
 Poza frameworkiem są też narzędzia do generacji kodu ze schemy i wsdl.
 
 W JVM jest mały serwerek, który może hostować, można to też robić z jakiegoś Glassfisha albo innego serwera Javy EE\@. Podobnie ma WCF.
@@ -717,13 +709,13 @@ Napisać jak łatwo można zrobić to, co chcę mieć.
 \url{https://github.com/Astn/JSON-RPC.NET} \\
 Wygląda na ciekawą sprawę. JSON.NET, którego ta biblioteka używa ma chodzić nawet na Mono na Androidzie. Ten Json.NET ma JsonSchemę.
 
-Tylko nie wiem, czy ma klienta.
+Tylko nie wiem, czy ma klienta. No ale raczej musi mieć.
 
 
 
 \section{gSOAP (TODO)}
 Web Service'y i REST w C/C++. Pytanie, czy można posadzić serwer na Androidzie i połączyć z Javą?
-Pewnie by się dało przez JNI, ale tłumaczenie danych pełne byłoby bolesne. I wołanie rzeczy w Androidzie.
+Pewnie by się dało przez JNI, ale tłumaczenie danych pełne byłoby bolesne. Wołanie API Androida też.
 \url{http://trac.e-technik.uni-rostock.de/projects/ws4d-gsoap/wiki/AndroidNDK}\\ 
 
 
