@@ -29,9 +29,12 @@ public class TestServiceImpl implements TestService
     }
 
     @Override
-    public Object[] testArray()
+    public Object[] testArray(Object[] array)
     {
-        Object[] array = new Object[] {28, "jakis tekst", new DaneA(), new DaneB()};
+        int a = (int)array[0];
+        a++;
+        array[0] = a;
+//        Object[] array = new Object[] {28, "jakis tekst", new DaneA(), new DaneB()};
         return array;
     }
 }

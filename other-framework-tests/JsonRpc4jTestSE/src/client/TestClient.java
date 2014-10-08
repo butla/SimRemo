@@ -81,8 +81,9 @@ public class TestClient
             
             // uruchomienie zdalnej metody
             try
-            {              
-                Object[] genericArray = testService.testArray();
+            {    
+                Object[] array = new Object[] {28, "jakis tekst", new DaneA(), new DaneB()};
+                Object[] genericArray = testService.testArray(array);
                 System.out.println("Kolejne typy elementów w otrzymanej tablicy.");
                 for(Object obj : genericArray)
                 {

@@ -185,6 +185,49 @@ Zrobię zmianę źródeł JSON.NET, żeby to \$type było konfigurowalne. Tworz�
 %http://james.newtonking.com/archive/2011/11/19/json-net-4-0-release-4-bug-fixes
 %http://blog.maskalik.com/asp-net/json-net-implement-custom-serialization/
 
+\begin{lstlisting}[float, frame=single, caption={Jackson daje.}, label=kod:jackson-serilization]
+[
+  "[Ljava.lang.Object;",
+  [
+    28,
+    "jakis tekst",
+    {
+      "@class":"uniserialjava.DaneA",
+      "numberA":13,
+      "stringA":"domyslny"
+    },
+    {
+      "@class":"uniserialjava.DaneB",
+      "numberA":13,
+      "stringA":"domyslny",
+      "numberB":5.25
+    }
+  ]
+]
+\end{lstlisting}
+
+\begin{lstlisting}[float, frame=single, caption={JSON.NET daje.}, label=kod:json-net-serilization]
+{
+  "$type": "System.Object[], mscorlib",
+  "$values": [
+    28,
+    "jakis tekst",
+    {
+      "$type": "UniSerialDotNet.DaneA, UniSerialDotNet",
+      "liczbaA": 13,
+      "tekstA": "domyslny"
+    },
+    {
+      "$type": "UniSerialDotNet.DaneB, UniSerialDotNet",
+      "liczbaB": 5.25,
+      "liczbaA": 13,
+      "tekstA": "domyslny"
+    }
+  ]
+}
+\end{lstlisting}
+
+
 %\subsubsection{Wyniki}
 %I~co, ma to sens? Udało się?
 
@@ -197,6 +240,7 @@ Opieranie się o~standard Json-Rpc daje ,,gratis'' identyfikatory połączeń i~
 \subsection{Tworzenie zdalnych obiektów na żądanie klienta(TODO)}
 Klient musi mieć specjalną metodę, którą będzie wywoływał stworzenie zdalnego obiektu, któremu dalej będzie wysyłał wywołania.
 Można to zrealizować przy pomocy mechanizmu rozszerzeń (\emph{Extensions}) standardu JSON-RPC 2.0.
+Normalnie tego nie ma, bo raczej mamy dane żyjące serwisy i z nimi gadamy. Też normalnie nie operuje się na typie serwisu. Tu będzie trzeba właśnie podać typ serwisu, jaki chcemy. No w sumie WCF i JAX-WS to jakoś tam robią. Ale one mają jakby serwis i tak wolnostojący i dopiero w nim robią instancje. U mnie będzie jeden główny serwer i pod nim instancje wszystkiego.
 %https://jsonrpcx.org/Main/HomePage
 %http://grokbase.com/t/gg/json-rpc/138ce80p54/what-are-rpc-extensions
 

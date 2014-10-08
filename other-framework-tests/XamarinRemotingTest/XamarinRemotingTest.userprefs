@@ -2,13 +2,14 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Android.Android-4.4.2-ARM" />
   <MonoDevelop.Ide.Workbench ActiveDocument="XamarinRemotingTest\MainActivity.cs">
     <Files>
-      <File FileName="XamarinRemotingTest\MainActivity.cs" Line="5" Column="5" />
+      <File FileName="XamarinRemotingTest\MainActivity.cs" Line="64" Column="64" />
       <File FileName="XamarinRemotingTest\Resources\values\Strings.xml" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="D:\Polibuda\Magisterka\SimRemo\other-framework-tests\XamarinRemotingTest\XamarinRemotingTest\MainActivity.cs" line="126" column="1" />
+      <Breakpoint file="D:\Polibuda\Magisterka\SimRemo\other-framework-tests\XamarinRemotingTest\XamarinRemotingTest\MainActivity.cs" line="65" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

@@ -8,5 +8,5 @@ public interface TestService
     
     DaneA testDataA(DaneA dane);
     
-    Object[] testArray();
+    Object[] testArray(Object[] array);
 }
