@@ -12,13 +12,15 @@ namespace UniSerialDotNet
         {
             JsonSerializerSettings settings = new JsonSerializerSettings();
             settings.TypeNameHandling = TypeNameHandling.All;
+            settings.Converters.Add(new JacksonConverter());
 
             object[] tablica = new object[] { 28, "jakis tekst", new DaneA(), new DaneB() };
 
             string serialized = JsonConvert.SerializeObject(tablica, Formatting.Indented, settings);
             Console.WriteLine(serialized);
 
-            object deserialized = JsonConvert.DeserializeObject(serialized, settings);
+            // using <object> template is a trick. A converter is asked if it can deserialized, and my converter always says yes.
+            object deserialized = JsonConvert.DeserializeObject<object>(serialized, settings);
             Console.WriteLine(deserialized.GetType().Name);
         }
     }
