@@ -9,4 +9,6 @@ public interface TestService
     DaneA testDataA(DaneA dane);
     
     Object[] testArray(Object[] array);
+    
+    int[] testArray2(int[] array);
 }

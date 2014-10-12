@@ -37,5 +37,17 @@ public class TestServiceImpl implements TestService
 //        Object[] array = new Object[] {28, "jakis tekst", new DaneA(), new DaneB()};
         return array;
     }
+
+    @Override
+    public int[] testArray2(int[] array)
+    {
+        int[] nowa = new int[array.length+1];
+        for(int i=0; i< array.length; i++)
+        {
+            nowa[i] = array[i];
+        }
+        nowa[array.length] = 555;
+        return nowa;
+    }
 }
 

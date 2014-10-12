@@ -196,6 +196,8 @@ Jedno, co można zrobić to zobaczyć co się będzie działo jak wszystkie gene
 Ogólnie projekt jest za duży, żeby badać wszystkie aspekty serializacji. Maksymalnie zgodna serializacja mogłaby być osobnym tematem pracy magisterskiej ze względu na swój stopień skomplikowania.
 Dodać to do działu wniosków.
 
+Jackson sam nie może przeczytać tablicy prostej, np. ["bla","alb"] jak nie wie z góry co to ma być, a spodziewa się oznaczania typów. Hm... nie jest to prawdą, kiedy taka tablica jest opakowana w coś innego, obiekt albo tablicę obiektów.
+
 Może też zrobić jakiś parser nakładkę? Przetwarzał by on gotowy dokument JSON przygotowany przez JSON.NET na format Jacksona i na odwrót.
 
 A może jednak nie ma takiej tragedii i da radę ogarnąć to tym JsonConverterem? Ale notki o skomplikowaniu serializacji powinny pozostać, bo wszystkich przypadków wspierać nie dam rady.

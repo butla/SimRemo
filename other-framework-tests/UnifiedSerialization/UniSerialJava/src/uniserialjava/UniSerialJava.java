@@ -36,6 +36,11 @@ public class UniSerialJava
         
         Object[] tablica = new Object[] { 28, "jakis tekst", new DaneA(), new DaneB() };
         
+//        int[] tablica2 = new int[] { 28, 33, 33 ,33};
+//        tablica[2] = tablica2;
+        
+        //String[] tablica = new String[] { "bla", "alb"};
+        
 //        ArrayList<Object> tablica = new ArrayList<Object>();
 //        tablica.add(28);
 //        tablica.add("jakis tekst");
