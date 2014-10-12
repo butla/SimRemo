@@ -180,11 +180,27 @@ Jest to podstawa do uzyskania polimorficznych zdalnych metod.
 Chcę to zrobić przez dobranie serializatorów po obu stronach i~odpowiednią ich konfigurację. Ewentualnie będę ingerował w~ich kod.
 Myślę o~Jackson po stronie Androida i~DataContractJsonSerializer lub JSON.NET po stronie .NET\@.
 
-Zrobię zmianę źródeł JSON.NET, żeby to \$type było konfigurowalne. Tworzę swój SerializationBinder i wszystko wygląda tak, jak w Jacksonie.
+%Zrobię zmianę źródeł JSON.NET, żeby to \$type było konfigurowalne. Tworzę swój SerializationBinder i wszystko wygląda tak, jak w Jacksonie.
 %http://stackoverflow.com/questions/9490345/json-net-change-type-field-to-another-name
 %http://james.newtonking.com/archive/2011/11/19/json-net-4-0-release-4-bug-fixes
 %http://blog.maskalik.com/asp-net/json-net-implement-custom-serialization/
 
+JSON.NET ma 14401 linii kodu (mierzone przy użyciu wtyczki Code Metrics Viewer), Jackson ma 63497 (liczone core, databind i annotations, tylko linie z kodem, używałem narzędzia CLOC). I tak są dobrze napisane i umożliwiają swobodne dostosowywanie wielu części. Niestety ogólne mechanizmy serializacji/deserializacji z informacjami o typach są specyficznie rozwiązane w obu frameworkach i dość mocno uwiązane z resztą biblioteki. Przez to ciężko zmienne.
+Poza tym widać, że grafy mogą być bardzo skomplikowane i pełne ich przełożenie z zapisu jednego serializatora na zapis drugiego jeśli nie są niemożliwe, to są trudne. Do tego dochodzą jeszcze różne cechy języka.
+Ogólnie możnaby wprowadzić tłumaczenie, ale raczej nie byłoby ono pewne i nie działało zawsze.
+
+Type erasure w Javie jest dużym utrudnieniem dla zachowania pełni informacji o typach.
+Jeśli nie można przekazywać genericów, to nie można pewnie przekazywać dowolnych klas. W praktyce sprowadziło by się to pewnie pod pisanie klas ze świadomością ograniczeń systemu. Ale wtedy, to już chyba lepiej skorzystać z czegoś takiego jak thrift.
+Jedno, co można zrobić to zobaczyć co się będzie działo jak wszystkie genericsy będziemy robili na object i rzutowali, kiedy będzie trzeba.
+
+Ogólnie projekt jest za duży, żeby badać wszystkie aspekty serializacji. Maksymalnie zgodna serializacja mogłaby być osobnym tematem pracy magisterskiej ze względu na swój stopień skomplikowania.
+Dodać to do działu wniosków.
+
+Może też zrobić jakiś parser nakładkę? Przetwarzał by on gotowy dokument JSON przygotowany przez JSON.NET na format Jacksona i na odwrót.
+
+A może jednak nie ma takiej tragedii i da radę ogarnąć to tym JsonConverterem? Ale notki o skomplikowaniu serializacji powinny pozostać, bo wszystkich przypadków wspierać nie dam rady.
+
+TABLICA
 \begin{lstlisting}[float, frame=single, caption={Jackson daje.}, label=kod:jackson-serilization]
 [
   "[Ljava.lang.Object;",
@@ -228,14 +244,80 @@ Zrobię zmianę źródeł JSON.NET, żeby to \$type było konfigurowalne. Tworz�
 \end{lstlisting}
 
 
+LISTA
+\begin{lstlisting}[float, frame=single, caption={Jackson daje. Lista}, label=kod:jackson-list-serilization]
+[
+  "java.util.ArrayList",
+  [
+    28,
+    "jakis tekst",
+    {
+      "@class":"uniserialjava.DaneA",
+      "numberA":13,
+      "stringA":"domyslny"
+    },
+    {
+      "@class":"uniserialjava.DaneB",
+      "numberA":13,
+      "stringA":"domyslny",
+      "numberB":5.25
+    }
+  ]
+]
+\end{lstlisting}
+
+\begin{lstlisting}[float, frame=single, caption={JSON.NET daje. Lista}, label=kod:json-net-list-serilization]
+{
+  "$type": "System.Collections.Generic.List`1[[System.Object, mscorlib]], mscorlib",
+  "$values": [
+    28,
+    "jakis tekst",
+    {
+      "$type": "UniSerialDotNet.DaneA, UniSerialDotNet",
+      "liczbaA": 13,
+      "tekstA": "domyslny"
+    },
+    {
+      "$type": "UniSerialDotNet.DaneB, UniSerialDotNet",
+      "liczbaB": 5.25,
+      "liczbaA": 13,
+      "tekstA": "domyslny"
+    }
+  ]
+}
+\end{lstlisting}
+
+SŁOWNIK
+\begin{lstlisting}[float, frame=single, caption={Jackson daje. Słownik}, label=kod:jackson-dict-serilization]
+{
+  "@class":"java.util.HashMap",
+  "1":"pierwszy",
+  "2":"drugi",
+  "3":"trzeci"
+}
+\end{lstlisting}
+
+%tak wygląda, dla <string, string>, a nie <int, string>
+%{"@class":"java.util.HashMap","3":"trzeci","2":"drugi","1":"pierwszy"}
+
+\begin{lstlisting}[float, frame=single, caption={JSON.NET daje. Słownik}, label=kod:json-net-dict-serilization]
+{
+  "$type": "System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib],[System.String, mscorlib]], mscorlib",
+  "1": "pierwszy",
+  "2": "drugi",
+  "3": "trzeci"
+}
+\end{lstlisting}
 %\subsubsection{Wyniki}
 %I~co, ma to sens? Udało się?
 
 
-\subsection{Polimorficzne metody zdalne(TODO)}
-Trzeba ustawić zgodne polimorficzne serializatory zarówno dla klienta jak i~serwera i~wywołać jakąś z~metod, którymi testowałem polimorfizm w~rozdziale~\ref{similar-technologies}.
+\subsection{Zdalne wywoływanie metod na Androidzie(TODO)}
+%Trzeba ustawić zgodne polimorficzne serializatory zarówno dla klienta jak i~serwera i~wywołać jakąś z~metod, którymi testowałem polimorfizm w~rozdziale~\ref{similar-technologies}.
 Zastosuję jsonrpc4j (jeśli Jackson w~pierwszym prototypie się spisał) na Androidzie i~JSON-RPC.NET po stronie .NET\@.
 Opieranie się o~standard Json-Rpc daje ,,gratis'' identyfikatory połączeń i~wysyłanie błędów.
+
+Jeśli by się nie skupiać na polimorfizmie to, bez opisu typów, samo RPC działać dobrze. Niestety pozbawia to nas w pełni obiektowego modelu programowania zdalnego, rozszerzalności kodu bez jego zmiany i używania klas z dowolnych bibliotek. Może warto wtedy wrócić do Thrifta? 
 
 \subsection{Tworzenie zdalnych obiektów na żądanie klienta(TODO)}
 Klient musi mieć specjalną metodę, którą będzie wywoływał stworzenie zdalnego obiektu, któremu dalej będzie wysyłał wywołania.

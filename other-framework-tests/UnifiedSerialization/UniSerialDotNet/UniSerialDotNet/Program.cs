@@ -15,6 +15,8 @@ namespace UniSerialDotNet
             settings.Converters.Add(new JacksonConverter());
 
             object[] tablica = new object[] { 28, "jakis tekst", new DaneA(), new DaneB() };
+            //List<object> tablica = new List<object> { 28, "jakis tekst", new DaneA(), new DaneB() };
+            //Dictionary<int, string> tablica = new Dictionary<int, string> { { 1, "pierwszy" }, { 2, "drugi" }, { 3, "trzeci" } };
 
             string serialized = JsonConvert.SerializeObject(tablica, Formatting.Indented, settings);
             Console.WriteLine(serialized);

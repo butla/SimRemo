@@ -10,6 +10,10 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Hashtable;
 
 /**
  *
@@ -31,6 +35,17 @@ public class UniSerialJava
                 JsonTypeInfo.As.PROPERTY); // all non-final types
         
         Object[] tablica = new Object[] { 28, "jakis tekst", new DaneA(), new DaneB() };
+        
+//        ArrayList<Object> tablica = new ArrayList<Object>();
+//        tablica.add(28);
+//        tablica.add("jakis tekst");
+//        tablica.add(new DaneA());
+//        tablica.add(new DaneB());
+        
+//        HashMap<Integer, String> tablica = new HashMap<>();
+//        tablica.put(1, "pierwszy");
+//        tablica.put(2, "drugi");
+//        tablica.put(3, "trzeci");
         
         String serialized = mapper.writeValueAsString(tablica);
         System.out.println(serialized);
