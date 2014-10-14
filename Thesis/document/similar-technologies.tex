@@ -553,22 +553,31 @@ Ale może można zrobić serwer na Androidzie? (\url{http://stackoverflow.com/qu
 
 \begin{description}
 \itemtitle{Klasyfikacja}
-Pełna architektura RPC z~klientami, serwerami i~serializacją przesyłanych danych. Umożliwia generację kodu w~wielu językach. Otwarty kod. 
+Pozwala na tworzenie pełnej architektury RPC z~klientami, serwerami i~serializacją przesyłanych danych. Umożliwia generację kodu w~wielu językach. Otwarty kod. 
 
 \itemtitle{Docelowa platforma(TODO)}
-Wiele (WYMIENIĆ)
+Wiele wynikowych(WYMIENIĆ) Ale kompilator przeznaczony dla Unixa (działa pod Cygwinem)
 
 \itemtitle{Łatwość instalacji(TODO)}
+Wydzielić kompilator i biblioteki do użycia w kodzie.
+Sprawdzę na Linuxie (wirtualne Kubuntu 14.04), bo nie chce mi się meczyć z Cygwinem. Nie jest to tragedia, ale może chwilkę zająć.
+
+Na pochodnym od Debiana Linuxie, konkretnie Kubuntu jest banalna. Na innych platformach nie też skomplikowana, ale w~tym przypadku ogranicza się do wpisania jednej, co prawda przydługiej, komendy: \texttt{sudo apt-get install libboost-dev libboost-test-dev libboost-program-options-dev libboost-system-dev libboost-filesystem-dev libevent-dev automake libtool flex bison pkg-config g++ libssl-dev}.
+
+Na Windowsie kompilator można ściągnąć jako jednego egzeka (nawet nie instalator, tylko działający kompilator).
 
 \itemtitle{Łatwość użycia(TODO)}
+Wydaje się łatwe. W sumie prosty system. Dobrze wytłumaczony.
 
 \itemtitle{Zgodność}
 Kod serwisów i~klientów Thrifta może być wygenerowany do wielu języków, a~następnie osadzony w~programach stworzonych w~tych samych językach.
 Para klient-serwer może ze sobą rozmawiać niezależnie od tego, w~jakiej technologii zaimplementowane są obie strony.
 Ale wszystko pozostaje hermetyczne w~obrębie Thrifta -- korzystając z~innej technologii nie da się skomunikować z~serwerem stworzonym w~Thrifcie.
 
-\itemtitle{Zewnętrzne moduły}
+\itemtitle{Zewnętrzne moduły(TODO)}
 Nie można podłączać pod system zewnętrznych bibliotek. Serwisy, parametry ich metod oraz klienty są powiązane definicjami jeżyka Thrifta. Aby w~nie ingerować trzeba zmienić ich definicje, a~następnie znowu wygenerować kod w~rzeczywistych językach programowania. Nie ma miejsca na ,,wplecenie'' zbudowanych bibliotek, np.\ javowych.
+
+Można podczepić zewnętrzne definicje Thrift pod swoje. Ale nie można nijak podczepić typów z gotowego kodu, np. Javy, w swoich definicjach serwisów lub danych. Można też użyć zewnętrznych bibliotek w implementacjach serwisów.
 
 \itemtitle{Rozszerzalność(TODO)}
 %Nie ma. Aby wpłynąć na działanie metod trzeba zmienić ich (lub ich parametrów) definicje i~ponownie wygenerować kod użytkowy.
