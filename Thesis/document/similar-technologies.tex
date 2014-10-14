@@ -539,7 +539,6 @@ servers.
 The same application code should be able to run against TCP stream sockets, raw data in memory, or files on disk.
 
 Rozdzielony transport od serializacji, ale wsparte strumieniowanie.
-Niestety nie można podłączać innych bibliotek.
 
 Łatwe rozszerzanie istniejącego kodu też nie jest za bardzo możliwe, po dodaniu jakiś typów trzeba wszystko przegenerować (a w innych przypadkach trzeba dostarczyć nowe klasy na drugą stronę -- zawsze trzeba coś dodać).
 Czy jest jakiś polimorfizm?
@@ -551,6 +550,46 @@ Służy do robienia i klienta i serwera. Nie można np.\ zrobić serwera, do kt�
 Ale może można zrobić serwer na Androidzie? (\url{http://stackoverflow.com/questions/19141177/thrift-client-on-android}) Pewnie się nie da bez przerabiania kodu Thrifta.
 
 \subsection{Ocena}
+
+\begin{description}
+\itemtitle{Klasyfikacja}
+Pełna architektura RPC z~klientami, serwerami i~serializacją przesyłanych danych. Umożliwia generację kodu w~wielu językach. Otwarty kod. 
+
+\itemtitle{Docelowa platforma(TODO)}
+Wiele (WYMIENIĆ)
+
+\itemtitle{Łatwość instalacji(TODO)}
+
+\itemtitle{Łatwość użycia(TODO)}
+
+\itemtitle{Zgodność}
+Kod serwisów i~klientów Thrifta może być wygenerowany do wielu języków, a~następnie osadzony w~programach stworzonych w~tych samych językach.
+Para klient-serwer może ze sobą rozmawiać niezależnie od tego, w~jakiej technologii zaimplementowane są obie strony.
+Ale wszystko pozostaje hermetyczne w~obrębie Thrifta -- korzystając z~innej technologii nie da się skomunikować z~serwerem stworzonym w~Thrifcie.
+
+\itemtitle{Zewnętrzne moduły}
+Nie można podłączać pod system zewnętrznych bibliotek. Serwisy, parametry ich metod oraz klienty są powiązane definicjami jeżyka Thrifta. Aby w~nie ingerować trzeba zmienić ich definicje, a~następnie znowu wygenerować kod w~rzeczywistych językach programowania. Nie ma miejsca na ,,wplecenie'' zbudowanych bibliotek, np.\ javowych.
+
+\itemtitle{Rozszerzalność(TODO)}
+%Nie ma. Aby wpłynąć na działanie metod trzeba zmienić ich (lub ich parametrów) definicje i~ponownie wygenerować kod użytkowy.
+A może jest? Bo chyba tylko interfejsy się faktycznie generuje, a implementacje się pisze samemu i można je podmieniać za kulisami. Chyba.
+
+Jeszcze jest to wersjonowanie, które pozwala starszym elementom gadać z nowszymi i na odwrót. Przynajmniej w~pewnym stopniu. 
+
+\itemtitle{Integracja z Androidem(TODO)}
+
+
+\itemtitle{Polimorfizm metod(TODO)}
+
+
+\itemtitle{Polimorfizm danych(TODO)}
+
+\itemtitle{Tłumaczenie kodu(TODO)}
+Ze wspólnego opisu generuje się kod do wielu języków.
+
+\end{description}
+
+
 \subsection{Podsumowanie}
 Gdyby tylko można było jakoś podłączać zewnętrzne biblioteki i~tworzyć kod Thrifta z~gotowych klas w~Javie lub C\# to byłby idealnym i~kompletnym rozwiązaniem (jeśli działa na Androidzie).
 
