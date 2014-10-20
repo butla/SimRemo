@@ -538,16 +538,10 @@ servers.
 %Też się z tym zgadzam i chciałbym, żeby tak w moim było
 The same application code should be able to run against TCP stream sockets, raw data in memory, or files on disk.
 
-Rozdzielony transport od serializacji, ale wsparte strumieniowanie.
+Jest IDL, który opisuje interfejsy usług i dane przez nie wykorzystywane.
 
-Łatwe rozszerzanie istniejącego kodu też nie jest za bardzo możliwe, po dodaniu jakiś typów trzeba wszystko przegenerować (a w innych przypadkach trzeba dostarczyć nowe klasy na drugą stronę -- zawsze trzeba coś dodać).
-Czy jest jakiś polimorfizm?
-Daje możliwość zrobienia jednego kodu na dwie platformy.
 Pozwala na asynchroniczność -- coś, czego nie przewidywałem dla mojej biblioteki, ale też może być przydatne.
 
-Służy do robienia i klienta i serwera. Nie można np.\ zrobić serwera, do którego inni będą mogli wołać jakimś standardowym kanałem. Muszą mieć konkretny, wygenerowany kod klienta (no ewentualnie mogą zrobić swój kod korzystając z API Thrift). Moje może tak wyjść.
-
-Ale może można zrobić serwer na Androidzie? (\url{http://stackoverflow.com/questions/19141177/thrift-client-on-android}) Pewnie się nie da bez przerabiania kodu Thrifta.
 
 \subsection{Ocena}
 
@@ -555,8 +549,9 @@ Ale może można zrobić serwer na Androidzie? (\url{http://stackoverflow.com/qu
 \itemtitle{Klasyfikacja}
 Pozwala na tworzenie pełnej architektury RPC z~klientami, serwerami i~serializacją przesyłanych danych. Umożliwia generację kodu w~wielu językach. Otwarty kod. 
 
-\itemtitle{Docelowa platforma(TODO)}
-Wiele wynikowych(WYMIENIĆ) Ale kompilator przeznaczony dla Unixa (działa pod Cygwinem)
+\itemtitle{Docelowa platforma}
+Kompilator przeznaczony dla środowisk Unixowych. Pod Windowsem działa w~środowisku Cygwin.
+Generuje kod w~wielu językach: Actionscript 3, C, C++, C\#, Cocoa, Delphi, Erlang, Go, Haskell, Java, Javascript, OCaml, Perl, PHP, Python, Ruby, Smalltalk\cite{thrift-features}.
 
 \itemtitle{Łatwość instalacji(TODO)}
 Wydzielić kompilator i biblioteki do użycia w kodzie.
@@ -569,10 +564,12 @@ Na Windowsie kompilator można ściągnąć jako jednego egzeka (nawet nie insta
 \itemtitle{Łatwość użycia(TODO)}
 Wydaje się łatwe. W sumie prosty system. Dobrze wytłumaczony.
 
-\itemtitle{Zgodność}
+\itemtitle{Zgodność(TODO)}
 Kod serwisów i~klientów Thrifta może być wygenerowany do wielu języków, a~następnie osadzony w~programach stworzonych w~tych samych językach.
 Para klient-serwer może ze sobą rozmawiać niezależnie od tego, w~jakiej technologii zaimplementowane są obie strony.
 Ale wszystko pozostaje hermetyczne w~obrębie Thrifta -- korzystając z~innej technologii nie da się skomunikować z~serwerem stworzonym w~Thrifcie.
+
+Służy do robienia i klienta i serwera. Nie można np.\ zrobić serwera, do którego inni będą mogli wołać jakimś standardowym kanałem. Muszą mieć konkretny, wygenerowany kod klienta (no ewentualnie mogą zrobić swój kod korzystając z API Thrift). Moje może tak wyjść.
 
 \itemtitle{Zewnętrzne moduły(TODO)}
 Nie można podłączać pod system zewnętrznych bibliotek. Serwisy, parametry ich metod oraz klienty są powiązane definicjami jeżyka Thrifta. Aby w~nie ingerować trzeba zmienić ich definicje, a~następnie znowu wygenerować kod w~rzeczywistych językach programowania. Nie ma miejsca na ,,wplecenie'' zbudowanych bibliotek, np.\ javowych.
@@ -580,21 +577,25 @@ Nie można podłączać pod system zewnętrznych bibliotek. Serwisy, parametry i
 Można podczepić zewnętrzne definicje Thrift pod swoje. Ale nie można nijak podczepić typów z gotowego kodu, np. Javy, w swoich definicjach serwisów lub danych. Można też użyć zewnętrznych bibliotek w implementacjach serwisów.
 
 \itemtitle{Rozszerzalność(TODO)}
-%Nie ma. Aby wpłynąć na działanie metod trzeba zmienić ich (lub ich parametrów) definicje i~ponownie wygenerować kod użytkowy.
-A może jest? Bo chyba tylko interfejsy się faktycznie generuje, a implementacje się pisze samemu i można je podmieniać za kulisami. Chyba.
+Nie ma. Aby wpłynąć na działanie metod trzeba zmienić ich (lub ich parametrów) definicje i~ponownie wygenerować kod użytkowy.
+
+Teoretycznie można podmieniać implementację usług. Musi ona spełniać generowany interfejs, ale nie jest w inny sposób ograniczana.
 
 Jeszcze jest to wersjonowanie, które pozwala starszym elementom gadać z nowszymi i na odwrót. Przynajmniej w~pewnym stopniu. 
 
 \itemtitle{Integracja z Androidem(TODO)}
+Ale może można zrobić serwer na Androidzie? (\url{http://stackoverflow.com/questions/19141177/thrift-client-on-android}) Pewnie się nie da bez przerabiania kodu Thrifta.
 
+\itemtitle{Polimorfizm metod}
+Nie ma. Każda metoda usługi musi mieć unikatową nazwę\cite{thrift-features}.
 
-\itemtitle{Polimorfizm metod(TODO)}
+\itemtitle{Polimorfizm danych}
+Nie ma. Struktury Thrift IDL nie wspierają dziedziczenia\cite{thrift-features}.
 
-
-\itemtitle{Polimorfizm danych(TODO)}
-
-\itemtitle{Tłumaczenie kodu(TODO)}
-Ze wspólnego opisu generuje się kod do wielu języków.
+\itemtitle{Tłumaczenie kodu}
+Thrift pozwala na opisanie serwisów i~struktur danych przy pomocy swojego ,,języku opisu interfejsów'' (ang. \emph{interface description language}).
+Z~tego opisu może generować kod kliencki, interfejsy serwisów oraz klasy lub struktury danych do dla wspieranych języków. \cite{thrift-features}
+Interfejsy serwisów muszą być zaimplementowane przez programistę w~jednym z~,,normalnych'' języków.
 
 \end{description}
 
@@ -729,6 +730,7 @@ Poza frameworkiem są też narzędzia do generacji kodu ze schemy i wsdl.
 Można robić JSONa: \url{http://msdn.microsoft.com/en-us/library/system.runtime.serialization.json.datacontractjsonserializer.aspx}\\
 
 Generowanie z JAX-WS przy pomocy wsdl toola nie do końca działało.
+%http://docs.oracle.com/cd/E21764_01/web.1111/e13759/interop.htm
 
 Opisać o co chodzi z tym polimorfizmem, że w WCF trzeba wypisywać KnownType, co jest robieniem wzajemnych zależności, co jest straszną praktyką programowania (źródło).
 
