@@ -303,8 +303,42 @@ SŁOWNIK
   "3": "trzeci"
 }
 \end{lstlisting}
-%\subsubsection{Wyniki}
-%I~co, ma to sens? Udało się?
+
+TO, CO MOGŁOBY DAĆ PEŁNY TEST
+Ładnie ilustruje różne możliwe przypadki:
+\begin{itemize}
+	\item Podstawowa serializacja dowolnego obiektu (Call).
+	\item Serializacja generycznej tablicy (parameters)
+	\item Serializacja tablicy, konkretnego typu (someInts)
+	\item Serializacja listy, konkretnego typu (someStrings). Informacja musi być dodana, żeby odróżnić od tablic.
+	\item Serializacja tablicy, bez kontekstu konkretnego typu (na koniec parameters)
+\end{itemize}
+
+\begin{lstlisting}[float, frame=single, caption={Jackson daje. Faktyczny test wywołania.}, label=kod:jackson-call-serilization]
+{
+  "@class":"uniserialjava.Call",
+  "someStrings": [ "java.util.ArrayList", ["a", "b", "c"] ],
+  "someInts": [1,2,3],
+  "parameters": [
+    "[Ljava.lang.Object;",
+    [
+      28,
+      "jakis tekst",
+      {
+        "@class":"uniserialjava.DaneB",
+        "numberA":13,
+        "stringA":"domyslny",
+        "numberB":5.25
+      },
+      ["[I",[1,2,3] ]]
+    ]
+  ]
+}
+\end{lstlisting}
+
+TO, CZEGO BĘDĘ FAKTYCZNIE UŻYWAŁ
+%{"id":"4653019993893876656","jsonrpc":"2.0","method":"testDataA","params":[{"@class":"jsonrpc4jtestse.TestDataB","numberA":13,"stringA":"domyslny","numberB":5.25}]}
+Dopiero pojedyncze paramsy są jakoś bardziej interpretowane przez Jacksona. Dlatego mogę spokojnie pokazać jeden polimorficzny parametr działający przy przechodzeniu przez granicę platform. I tyle wystarczy do prezentacji. Widać, że jest to możliwe, bo mamy wystarczającą ilość przekazywanych informacji. Co prawda ucinamy informację o bibliotecę, ale możemy sobie wyobrazić system mapowania, który by się bez tego obył.
 
 \subsubsection{Problemy serializacji}
 Type erasure w Javie jest dużym utrudnieniem dla zachowania pełni informacji o typach.
@@ -319,7 +353,13 @@ Serializacja zawsze będzie problemem. Chyba, że albo będziemy projektowali kl
 Ograniczona współpraca JAvy i C\# jest możliwa, ale nigdy nie będzie pełnej swobody.
 
 Jakieś źródło o tym, jak powinny wyglądać klasy parametrów web serviceów.
-Serializatory takie jak JSON.NET próbują być bardziej iniwersalne, wspierając nie tylko przypadki parametrow metod. Np. wtedym kiedy serializują referencję do żywego obiektu, którego nie dałoby się przesłać.
+Serializatory takie jak JSON.NET próbują być bardziej uniwersalne, wspierając nie tylko przypadki parametrow metod. Np. wtedym kiedy serializują referencję do żywego obiektu, którego nie dałoby się przesłać.
+
+\subsubsection{Mapowanie typów}
+Potrzebny jest system mapujący nazwy typów w jednym środowisku, na nazwy z drugiego. Mógłby działać na zasadzie słowników. Żeby zmniejszyć nakład pracy mogły by one być generowane automatycznie zgodnie z jakąś zasadą.
+Pewnie potrzebny by był też system ładowania klas.
+Może jakiś schemacik tego ładowania i jakby mapowanie działało przy serializacji, deserializacji.
+
 
 \subsection{Zdalne wywoływanie metod na Androidzie(TODO)}
 %Trzeba ustawić zgodne polimorficzne serializatory zarówno dla klienta jak i~serwera i~wywołać jakąś z~metod, którymi testowałem polimorfizm w~rozdziale~\ref{similar-technologies}.

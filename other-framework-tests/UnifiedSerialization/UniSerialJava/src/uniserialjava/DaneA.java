@@ -18,12 +18,4 @@ public class DaneA
 {
     public int numberA = 13;
     public String stringA = "domyslny";
-    
-    public ArrayList<Integer> bla;
-    
-    public DaneA()
-    {
-        bla = new ArrayList<>();
-        bla.add(666);
-    }
 }

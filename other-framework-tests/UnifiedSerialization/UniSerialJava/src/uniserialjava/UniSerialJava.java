@@ -34,7 +34,8 @@ public class UniSerialJava
                 ObjectMapper.DefaultTyping.NON_FINAL,
                 JsonTypeInfo.As.PROPERTY); // all non-final types
         
-        Object[] tablica = new Object[] { 28, "jakis tekst", new DaneA(), new DaneB() };
+        int[] tablicaIntow = new int[] {1, 2, 3};
+        Object[] tablica = new Object[] { 28, "jakis tekst",  new DaneB(), tablicaIntow};
         
 //        int[] tablica2 = new int[] { 28, 33, 33 ,33};
 //        tablica[2] = tablica2;
@@ -52,7 +53,10 @@ public class UniSerialJava
 //        tablica.put(2, "drugi");
 //        tablica.put(3, "trzeci");
         
-        String serialized = mapper.writeValueAsString(tablica);
+        Call call = new Call();
+        call.parameters = tablica;
+        
+        String serialized = mapper.writeValueAsString(call);
         System.out.println(serialized);
         
         Object bla = mapper.readValue(serialized, Object.class);
