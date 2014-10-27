@@ -340,6 +340,9 @@ TO, CZEGO BĘDĘ FAKTYCZNIE UŻYWAŁ
 %{"id":"4653019993893876656","jsonrpc":"2.0","method":"testDataA","params":[{"@class":"jsonrpc4jtestse.TestDataB","numberA":13,"stringA":"domyslny","numberB":5.25}]}
 Dopiero pojedyncze paramsy są jakoś bardziej interpretowane przez Jacksona. Dlatego mogę spokojnie pokazać jeden polimorficzny parametr działający przy przechodzeniu przez granicę platform. I tyle wystarczy do prezentacji. Widać, że jest to możliwe, bo mamy wystarczającą ilość przekazywanych informacji. Co prawda ucinamy informację o bibliotecę, ale możemy sobie wyobrazić system mapowania, który by się bez tego obył.
 
+To też może trafić do ludzi jako patch.
+Co ciekawego zrobiłem w kodzie?
+
 \subsubsection{Problemy serializacji}
 Type erasure w Javie jest dużym utrudnieniem dla zachowania pełni informacji o typach.
 Jeśli nie można przekazywać genericów, to nie można pewnie przekazywać dowolnych klas. W praktyce sprowadziło by się to pewnie pod pisanie klas ze świadomością ograniczeń systemu. Ale wtedy, to już chyba lepiej skorzystać z czegoś takiego jak thrift.
@@ -366,7 +369,17 @@ Może jakiś schemacik tego ładowania i jakby mapowanie działało przy seriali
 Zastosuję jsonrpc4j (jeśli Jackson w~pierwszym prototypie się spisał) na Androidzie i~JSON-RPC.NET po stronie .NET\@.
 Opieranie się o~standard Json-Rpc daje ,,gratis'' identyfikatory połączeń i~wysyłanie błędów.
 
-Jeśli by się nie skupiać na polimorfizmie to, bez opisu typów, samo RPC działać dobrze. Niestety pozbawia to nas w pełni obiektowego modelu programowania zdalnego, rozszerzalności kodu bez jego zmiany i używania klas z dowolnych bibliotek. Może warto wtedy wrócić do Thrifta? 
+Jeśli by się nie skupiać na polimorfizmie to, bez opisu typów, samo RPC działać dobrze. Niestety pozbawia to nas w pełni obiektowego modelu programowania zdalnego, rozszerzalności kodu bez jego zmiany i używania klas z dowolnych bibliotek. Może warto wtedy wrócić do Thrifta?
+
+\subsubsection{Jak to robię?}
+Biorę jsonrpc4j, próbuję wyciąć z klas importy, które uniemożliwiają uruchomienie na Androidzie. Możliwe, że i tak ich nie potrzebuję. Przez to będę też musiał wyciąć trochę kodu, ale ponownie -- pewnie i tak go nie potrzebowałem.
+W każdym razie chcę powycinać rzeczy z dwóch klas, które wykorzystywałem, czyli JsonRpcServer i StreamServer. Potem je zbudować i wykonać przepakowanie (repackage) jara w taki sposób, żeby zabrać tylko klasy potrzebne do działania tym dwóm, na których mi zależy. Następnie, powstałego Jara spróbuję użyć zamiast jsonrpc4j w moim testowym projekcie pod Windows. Jeśli to się powiedzie, to spróbuję użyć przepakowanego Jara w projekcie Androidowym.
+
+Biorę sobie Jacksony zbudowane pod 7.
+
+.NET jest strasznie zacofany jeśli chodzi o kod kliencki JSON-RPC. W jsonrpc4j można dynamicznie tworzyć klienty do zadanych interfejsów serwisów na dowolnym strumieniu komunikacyjnym, tutaj właściwie nie ma nawet gotowego rozwiązania na jakiegokolwiek klienta. Nawet brak czegoś topornego w użyciu, gdzie podawałoby się nazwę metody jako string, typy i wartości parametrów i oczekiwany typ zwrotny.
+Sam muszę coś zrobić.
+
 
 \subsection{Tworzenie zdalnych obiektów na żądanie klienta(TODO)}
 Klient musi mieć specjalną metodę, którą będzie wywoływał stworzenie zdalnego obiektu, któremu dalej będzie wysyłał wywołania.

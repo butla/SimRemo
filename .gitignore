@@ -32,3 +32,8 @@
 /other-framework-tests/UnifiedSerialization/UniSerialJavaGson/nbproject/private/
 /other-framework-tests/UnifiedSerialization/UniSerialJavaGson/build/
 /other-framework-tests/UnifiedSerialization/UniSerialJavaGson/libs
+/other-framework-tests/JsonRpc4jTestSE/dist/
+Newtonsoft.Json.6.0.6
+/other-framework-tests/JsonRpcClientDotNet/*.suo
+/other-framework-tests/JsonRpcClientDotNet/JsonRpcClientDotNet/bin
+/other-framework-tests/JsonRpcClientDotNet/JsonRpcClientDotNet/obj
