@@ -5,7 +5,7 @@
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
-	<classpathentry exported="true" kind="lib" path="D:/Polibuda/Magisterka/biblioteki/jsonrpc4j/target/jsonrpc4j-1.2-SNAPSHOT.jar"/>
+	<classpathentry exported="true" kind="lib" path="D:/Polibuda/Magisterka/biblioteki/jsonrpc4j-butla/target/jsonrpc4j-1.2-SNAPSHOT.jar"/>
 	<classpathentry exported="true" kind="lib" path="D:/Polibuda/Magisterka/biblioteki/jackson/jackson-annotations-2.4.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="D:/Polibuda/Magisterka/biblioteki/jackson/jackson-core-2.4.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="D:/Polibuda/Magisterka/biblioteki/jackson/jackson-databind-2.4.2.jar"/>

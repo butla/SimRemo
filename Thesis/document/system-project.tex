@@ -340,9 +340,6 @@ TO, CZEGO BĘDĘ FAKTYCZNIE UŻYWAŁ
 %{"id":"4653019993893876656","jsonrpc":"2.0","method":"testDataA","params":[{"@class":"jsonrpc4jtestse.TestDataB","numberA":13,"stringA":"domyslny","numberB":5.25}]}
 Dopiero pojedyncze paramsy są jakoś bardziej interpretowane przez Jacksona. Dlatego mogę spokojnie pokazać jeden polimorficzny parametr działający przy przechodzeniu przez granicę platform. I tyle wystarczy do prezentacji. Widać, że jest to możliwe, bo mamy wystarczającą ilość przekazywanych informacji. Co prawda ucinamy informację o bibliotecę, ale możemy sobie wyobrazić system mapowania, który by się bez tego obył.
 
-To też może trafić do ludzi jako patch.
-Co ciekawego zrobiłem w kodzie?
-
 \subsubsection{Problemy serializacji}
 Type erasure w Javie jest dużym utrudnieniem dla zachowania pełni informacji o typach.
 Jeśli nie można przekazywać genericów, to nie można pewnie przekazywać dowolnych klas. W praktyce sprowadziło by się to pewnie pod pisanie klas ze świadomością ograniczeń systemu. Ale wtedy, to już chyba lepiej skorzystać z czegoś takiego jak thrift.
@@ -363,6 +360,8 @@ Potrzebny jest system mapujący nazwy typów w jednym środowisku, na nazwy z dr
 Pewnie potrzebny by był też system ładowania klas.
 Może jakiś schemacik tego ładowania i jakby mapowanie działało przy serializacji, deserializacji.
 
+Coś jeszcze byłoby potrzebne, żeby to wszystko działało?
+
 
 \subsection{Zdalne wywoływanie metod na Androidzie(TODO)}
 %Trzeba ustawić zgodne polimorficzne serializatory zarówno dla klienta jak i~serwera i~wywołać jakąś z~metod, którymi testowałem polimorfizm w~rozdziale~\ref{similar-technologies}.
@@ -379,6 +378,9 @@ Biorę sobie Jacksony zbudowane pod 7.
 
 .NET jest strasznie zacofany jeśli chodzi o kod kliencki JSON-RPC. W jsonrpc4j można dynamicznie tworzyć klienty do zadanych interfejsów serwisów na dowolnym strumieniu komunikacyjnym, tutaj właściwie nie ma nawet gotowego rozwiązania na jakiegokolwiek klienta. Nawet brak czegoś topornego w użyciu, gdzie podawałoby się nazwę metody jako string, typy i wartości parametrów i oczekiwany typ zwrotny.
 Sam muszę coś zrobić.
+
+To też może trafić do ludzi jako patch.
+Co ciekawego zrobiłem w kodzie?
 
 
 \subsection{Tworzenie zdalnych obiektów na żądanie klienta(TODO)}

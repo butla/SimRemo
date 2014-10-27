@@ -8,7 +8,7 @@ import java.net.UnknownHostException;
 
 import android.util.Log;
 
-import com.googlecode.jsonrpc4j.JsonRpcServer;
+import com.googlecode.jsonrpc4j.JsonRpcBasicServer;
 import com.googlecode.jsonrpc4j.StreamServer;
 
 public class ServerThread extends Thread
@@ -16,11 +16,11 @@ public class ServerThread extends Thread
     public void run()
     {
         TestServiceImpl service = new TestServiceImpl();
-        JsonRpcServer serverBase = null;     
+        JsonRpcBasicServer serverBase = null;     
         
         try
         {
-            serverBase = new JsonRpcServer(service, TestService.class);
+            serverBase = new JsonRpcBasicServer(service, TestService.class);
         }
         catch(Exception ex)
         {
