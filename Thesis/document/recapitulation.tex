@@ -10,15 +10,26 @@ Dodałem wieloinstancyjność do JSON-RPC.
 Ogólnie ciężko zrobić takie tłumaczenie języków, lepiej użyć rozwiązania przeznaczonego do bycia uniwersalnym, takiego jak Thrift.
 Ale doraźne rozwiązanie można uzyskać.
 
-%I co? Udało się zrobić system który robi to, co miał robić? Zrobi furorę na świecie i będę bogaty?
-%Co dalej z nim?
-%
-%Można zapewnić bezpieczną łączność jeszcze.
-%Zrównoleglanie obsługi requestów. Itp.
-%Tutoriale jakieś wrzucić?
 
-%To dlaczego chcę polimorfizm nie jest tak ważne -- można z~tym robić wiele rzeczy, każdy może mieć różne zastosowania.
+\section{Realizacja założeń}
+Nie udało się zrobić systemu, bo zadanie okazało się za ambitne. Ale za to przedstawiłem stan technologii i pokazałem, że założenia są słuszne i można uzyskać rozwiązanie idąc drogą, którą szedłem.
 
+Polimorfizm, pupeczka, nawet na styku różnych technologii jest możliwy.
+
+Z mapowaniem typów słabo. Albo trzeba by coś zrobić, albo stosować od razu technologie typu Apache Thrift. Albo powoli przechodzić na nie, jeśli zakłada się rozbieżne środowiska.
+
+Co się udało:
+- omówienie technologii - zbadałem polimorfizm webserviców oraz RPC wokół Androida. Oba to nie bardzo popularne tematy.
+
+\subsection{Tłumaczenie typów}
+Tego się nie udało. Sharpen nie chciał działać, nic innego, co działało tak, jak chciałem nie znalazłem. Może warto by było jednak się przyjrzeć generacji typów na zasadzie generacji XML Schema z Javy, a następnie z niej klas C\#?
+
+\section{Dalsza praca}
+Jakie tematy można dalej rozwinąć? Jakie zadania może podjąć ktoś inny w ramach magisterki lub inżynierki.
+
+Dodanie warstwy bezpieczeństwa 
+
+Oczywiście pełna implementacja komponentów, takich jak mapper, serializator (albo jako fork, albo z większym wysiłkiem rozszerzyć jego konfigurowalność aby mógł serializować jak Jackson)
 %Może jakieś wnioski, co można by zrobić, żeby powstało coś pięknego. Np. jakiś mapper z~istniejącego kodu Javowego do Thrifta?
 
 %Jako dalsza praca lub temat czyjejś magisterki można by dodać do Thrifta możliwość kompilacji pod Androida.

@@ -1,26 +1,6 @@
 \chapter{Projekt systemu}
-W~tym rozdziale zdecyduję, jaką ścieżką pójdę, aby stworzyć oprogramowanie realizujące cele opisane w~punkcie~\ref{lib-requirements}.
-Ta decyzja będzie poprzedzona zebraniem wymagań i~prototypowaniem.
-Po niej nastąpi szczegółowe projektowanie i~w~końcu implementacja mojego rozwiązania.
-
-TODO
-Tak naprawdę, to opiszę, co musi zostać zrobione, aby zrealizować cele z punktu BLABLA. Powstanie też projekt rozwiązania. Poszczególne jego elementy będą przeanalizowane. Powiem, jak można je zrobić, jakie są przeszkody i ograniczenia, a także dla części dostarczę prototypy.
-
-Czyli najpierw wymagania i projekt, potem opisy/realizacja części wraz z opisem, jaką część wymagań one spełniają.
-
-%\section{Wybór metodyki}
-%Mógłbym tutaj przedstawić po co w~ogóle są metodyki wytwarzania oprogramowania, przeanalizować najpopularniejsze i~jakąś wybrać, pewnie dostosowując jeszcze do swoich potrzeb.
-%Np. na początku podział na zwinne i nie. Mi oczywiście pasują zwinne, bo nie jestem gigantycznym projektem. Poza tym zwinne są lepsze i RUP to tylko nieudana teoria.
-%Potem powiedzieć, co to Scrum i że nie potrzebuje, bo nie mam zespołu.
-%Potem Extreme Programming przedstawić, i powiedzieć, że ma Spajki, a to jest coś, co mi się przyda.
-%Jakieś linki do tego:
-%http://servicevirtualization.com/profiles/blogs/when-agile-is-not-enough
-%https://www.scrum.org/resources/what-is-scrum/
-
-%\section{Metodyka wytwarzania(TODO)}
-%Zdecydowałem, że tworząc mój projekt będę postępował zgodnie Zabierając się za projekt informatyczny dobrze sobie obrać jakąś metodykę (źródło).
-%Ja zdecydowałem się na pewną wersję Xtreme programming.
-%Jeśli będę robił jakieś większe schematy to będzie to zapożyczenie z~cięższych metodyk, niejako potrzebne dla naukowego aspektu pracy.
+W~tym rozdziale zaprojektuję oprogramowanie realizujące cele opisane w~punkcie~\ref{lib-requirements}.
+Zaproponuję sposób realizacji, możliwości i~ograniczenia poszczególnych jego elementów. Dla części komponentów stworzę prototypy.
 
 \section{Specyfikacja wymagań systemowych (SWS)}
 Z~celów tej pracy zawartych w~punkcie~\ref{lib-requirements} stworzyłem standardową listę konkretnych wymagań dla zespołu inżynierów, czyli mnie samego.
@@ -168,33 +148,47 @@ Budowanie i~korzystanie z~bibliotek, które powstaną w~trakcie realizacji tego 
 
 
 
-\section{Prototypy}
-Aby dokładnie zaplanować strukturę i~działanie mojego oprogramowania muszę zebrać więcej informacji.
-Także pomysły, jakie mam na rozwiązanie problemów tej pracy, wymagają weryfikacji.
-W~tej sytuacji dobrze przygotować kilka małych prototypów lub jak to określają wytyczne programowania ekstremalnego\footnote{Z~ang. \emph{eXtreme Programming}, w~skrócie XP.} -- \emph{,,spike solutions''}, czyli rozwiązania -- gwoździe lub kolce\cite{spike}. Nazywają się tak, ponieważ przeszywają/przechodzą przez wszystkie warstwy projektu.
+\section{Używana konfiguracja sprzętowa i~narzędzia (TODO)}
+Przed przystąpieniem do omawiania komponentów rozwiązania warto wspomnieć o~tym, na jakiej konfiguracji sprzętowej będę wytwarzał prototypy. Przedstawię też narzędzia, z których korzystałem.
+Prototypy wykonywałem na 64-bitowym Windowsie 7 i emulatorze Androida takim a takim.
 
-Poniżej znajdują się opisy przygotowanych przez mnie ,,\emph{spike'ów}''.
+\subsection{IDE}
+Eclipse z ADT
+Visual Studio 2013
 
-\subsection{Wspólny format informacji o typach (TODO)}
+
+\subsection{Emulator Androida}
+\label{android-emulator}
+Używałem Eclipsa z wtyczką do Androida z~\url{http://developer.android.com/sdk/index.html}.
+Ściągnąłem i używam narzędzia dla Androida 4.4.2.
+
+Emulator chodził na obrazie do tych narzędzi, czyli \emph{ARM EABI v7a}. Emulator standardowy od Google.\footnote{Jest jeszcze alternatywny emulator wzmiankowany na stronach Xamarina -- Genymotion, \url{http://www.genymotion.com/}. Kto wie, może są jeszcze inne. Można też chyba w~VirtualBoxie hostować Androida na x86}
+Używam ARMowego, bo więcej telefonów jest właśnie na nim. Zdażają się też drobne rozbieżności działania niektórych niskopoziomowych aplikacji względem obrazu na architekturę x86 (\emph{Intel x86 Atom}).
+Konfiguracja używanej AVD: (w obrazku)
+Forward portu
+
+
+%Co to? Jakie wymagania spełnia? Co by wchodziło w tego skład lub ogólny sposob realizacji? Realizacja prototypu. Ograniczenia?
+\section{Wspólny format informacji o typach (TODO)}
 Zarówno część na Androidzie jak i~.NET musi tak samo oznaczać typy obiektów w~zserializowanych obiektach.
 Jest to podstawa do uzyskania polimorficznych zdalnych metod.
+Wymaga zgodnych serializatorów po obu stronach kanału komunikacyjnego.
+
+
+\subsection{Spełniane wymagania}
+Takie i takie i takie
+
+
+\subsection{Realizacja}
 Chcę to zrobić przez dobranie serializatorów po obu stronach i~odpowiednią ich konfigurację. Ewentualnie będę ingerował w~ich kod.
 Myślę o~Jackson po stronie Androida i~DataContractJsonSerializer lub JSON.NET po stronie .NET\@.
 
-%Zrobię zmianę źródeł JSON.NET, żeby to \$type było konfigurowalne. Tworzę swój SerializationBinder i wszystko wygląda tak, jak w Jacksonie.
-%http://stackoverflow.com/questions/9490345/json-net-change-type-field-to-another-name
-%http://james.newtonking.com/archive/2011/11/19/json-net-4-0-release-4-bug-fixes
-%http://blog.maskalik.com/asp-net/json-net-implement-custom-serialization/
+Alternatywnym sposobem byłby parser--nakładka. Przetwarzał by on gotowy dokument JSON przygotowany przez JSON.NET na format Jacksona i na odwrót. Byłoby to wolne, ale wymagałoby może mniej ingerencji w~kod. A~pozwalałoby na uzyskanie pełnej zgodności.
 
-JSON.NET ma 14401 linii kodu (mierzone przy użyciu wtyczki Code Metrics Viewer), Jackson ma 63497 (liczone core, databind i annotations, tylko linie z kodem, używałem narzędzia CLOC). I tak są dobrze napisane i umożliwiają swobodne dostosowywanie wielu części. Niestety ogólne mechanizmy serializacji/deserializacji z informacjami o typach są specyficznie rozwiązane w obu frameworkach i dość mocno uwiązane z resztą biblioteki. Przez to ciężko zmienne.
-Poza tym widać, że grafy mogą być bardzo skomplikowane i pełne ich przełożenie z zapisu jednego serializatora na zapis drugiego jeśli nie są niemożliwe, to są trudne. Do tego dochodzą jeszcze różne cechy języka.
-Ogólnie możnaby wprowadzić tłumaczenie, ale raczej nie byłoby ono pewne i nie działało zawsze.
-
-Jackson sam nie może przeczytać tablicy prostej, np. ["bla","alb"] jak nie wie z góry co to ma być, a spodziewa się oznaczania typów. Hm... nie jest to prawdą, kiedy taka tablica jest opakowana w coś innego, obiekt albo tablicę obiektów.
-
-Może też zrobić jakiś parser nakładkę? Przetwarzał by on gotowy dokument JSON przygotowany przez JSON.NET na format Jacksona i na odwrót.
-
-A może jednak nie ma takiej tragedii i da radę ogarnąć to tym JsonConverterem? Ale notki o skomplikowaniu serializacji powinny pozostać, bo wszystkich przypadków wspierać nie dam rady.
+\subsubsection{Porównanie sposobów serializacji w JSON.NET i Jackson}
+Jackson serializuje tak a JSON.NET tak:
+BLABLABLABLA
+Żeby były zgodne trzeba zrobić to i to
 
 TABLICA
 \begin{lstlisting}[float, frame=single, caption={Jackson daje.}, label=kod:jackson-serilization]
@@ -341,6 +335,25 @@ TO, CZEGO BĘDĘ FAKTYCZNIE UŻYWAŁ
 %{"id":"4653019993893876656","jsonrpc":"2.0","method":"testDataA","params":[{"@class":"jsonrpc4jtestse.TestDataB","numberA":13,"stringA":"domyslny","numberB":5.25}]}
 Dopiero pojedyncze paramsy są jakoś bardziej interpretowane przez Jacksona. Dlatego mogę spokojnie pokazać jeden polimorficzny parametr działający przy przechodzeniu przez granicę platform. I tyle wystarczy do prezentacji. Widać, że jest to możliwe, bo mamy wystarczającą ilość przekazywanych informacji. Co prawda ucinamy informację o bibliotecę, ale możemy sobie wyobrazić system mapowania, który by się bez tego obył.
 
+
+\subsubsection{Co zrobiłem}
+W sumie jeszcze nic. Ale będzie prosta podmiana \$type na @Class na tyle, żeby działał przypadek z przekazywaniem dziedziczącego parametru.
+%Zrobię zmianę źródeł JSON.NET, żeby to \$type było konfigurowalne. Tworzę swój SerializationBinder i wszystko wygląda tak, jak w Jacksonie.
+%http://stackoverflow.com/questions/9490345/json-net-change-type-field-to-another-name
+%http://james.newtonking.com/archive/2011/11/19/json-net-4-0-release-4-bug-fixes
+%http://blog.maskalik.com/asp-net/json-net-implement-custom-serialization/
+
+
+\subsection{Ograniczenia/Problemy}
+JSON.NET ma 14401 linii kodu (mierzone przy użyciu wtyczki Code Metrics Viewer), Jackson ma 63497 (liczone core, databind i annotations, tylko linie z kodem, używałem narzędzia CLOC). I tak są dobrze napisane i umożliwiają swobodne dostosowywanie wielu części. Niestety ogólne mechanizmy serializacji/deserializacji z informacjami o typach są specyficznie rozwiązane w obu frameworkach i dość mocno uwiązane z resztą biblioteki. Przez to ciężko zmienne.
+Poza tym widać, że grafy mogą być bardzo skomplikowane i pełne ich przełożenie z zapisu jednego serializatora na zapis drugiego jeśli nie są niemożliwe, to są trudne. Do tego dochodzą jeszcze różne cechy języka.
+Ogólnie możnaby wprowadzić tłumaczenie, ale raczej nie byłoby ono pewne i nie działało zawsze.
+Wszystkich przypadków wspierać nie dam rady.
+
+Ale można przyjąć, że dane, które będą wysyłane będą podlegać jakimś ograniczeniom, np. jak w WCF. Klasy danych są projektowane specjalnie pod to, żeby być wysyłane. Lub wysyła się proste juz instniejące klasy, które i tak funkcjonowały bardziej jako dane bez metod.
+Z takimi założeniami możemy uzyskać pełną zgodność. No, jedynie zgodności
+%Jackson sam nie może przeczytać tablicy prostej, np. ["bla","alb"] jak nie wie z góry co to ma być, a spodziewa się oznaczania typów. Hm... nie jest to prawdą, kiedy taka tablica jest opakowana w coś innego, obiekt albo tablicę obiektów.
+
 \subsubsection{Problemy serializacji}
 Type erasure w Javie jest dużym utrudnieniem dla zachowania pełni informacji o typach.
 Jeśli nie można przekazywać genericów, to nie można pewnie przekazywać dowolnych klas. W praktyce sprowadziło by się to pewnie pod pisanie klas ze świadomością ograniczeń systemu. Ale wtedy, to już chyba lepiej skorzystać z czegoś takiego jak thrift.
@@ -356,7 +369,8 @@ Ograniczona współpraca JAvy i C\# jest możliwa, ale nigdy nie będzie pełnej
 Jakieś źródło o tym, jak powinny wyglądać klasy parametrów web serviceów.
 Serializatory takie jak JSON.NET próbują być bardziej uniwersalne, wspierając nie tylko przypadki parametrow metod. Np. wtedym kiedy serializują referencję do żywego obiektu, którego nie dałoby się przesłać.
 
-\subsubsection{Mapowanie typów}
+
+\subsection{Mapowanie typów}
 Potrzebny jest system mapujący nazwy typów w jednym środowisku, na nazwy z drugiego. Mógłby działać na zasadzie słowników. Żeby zmniejszyć nakład pracy mogły by one być generowane automatycznie zgodnie z jakąś zasadą.
 Pewnie potrzebny by był też system ładowania klas.
 Może jakiś schemacik tego ładowania i jakby mapowanie działało przy serializacji, deserializacji.
@@ -364,18 +378,22 @@ Może jakiś schemacik tego ładowania i jakby mapowanie działało przy seriali
 Coś jeszcze byłoby potrzebne, żeby to wszystko działało?
 
 
-\subsection{Zdalne wywoływanie metod na Androidzie(TODO)}
+\section{Zdalne wywoływanie metod na Androidzie(TODO)}
 %Trzeba ustawić zgodne polimorficzne serializatory zarówno dla klienta jak i~serwera i~wywołać jakąś z~metod, którymi testowałem polimorfizm w~rozdziale~\ref{similar-technologies}.
 Zastosuję jsonrpc4j (jeśli Jackson w~pierwszym prototypie się spisał) na Androidzie i~JSON-RPC.NET po stronie .NET\@.
 Opieranie się o~standard Json-Rpc daje ,,gratis'' identyfikatory połączeń i~wysyłanie błędów.
 
 Jeśli by się nie skupiać na polimorfizmie to, bez opisu typów, samo RPC działać dobrze. Niestety pozbawia to nas w pełni obiektowego modelu programowania zdalnego, rozszerzalności kodu bez jego zmiany i używania klas z dowolnych bibliotek. Może warto wtedy wrócić do Thrifta?
 
-\subsubsection{Jak to robię?}
+Json-RPC daje adresację i w ogóle. Metody można z kropkami nazywać (jakieś info o tym było w commicie jsonrpc4j), więc można by się odnosić do w sposób serwis.metoda (od tego chyba ten multiserwis jest).
+
+Jak już mamy to, to można wykorzystywać API Androida i nim zarządzać.
+
+\subsection{Jak to robię?}
 Biorę jsonrpc4j, próbuję wyciąć z klas importy, które uniemożliwiają uruchomienie na Androidzie. Możliwe, że i tak ich nie potrzebuję. Przez to będę też musiał wyciąć trochę kodu, ale ponownie -- pewnie i tak go nie potrzebowałem.
 W każdym razie chcę powycinać rzeczy z dwóch klas, które wykorzystywałem, czyli JsonRpcServer i StreamServer. Potem je zbudować i wykonać przepakowanie (repackage) jara w taki sposób, żeby zabrać tylko klasy potrzebne do działania tym dwóm, na których mi zależy. Następnie, powstałego Jara spróbuję użyć zamiast jsonrpc4j w moim testowym projekcie pod Windows. Jeśli to się powiedzie, to spróbuję użyć przepakowanego Jara w projekcie Androidowym.
 
-Biorę sobie Jacksony zbudowane pod 7.
+Biorę sobie Jacksony zbudowane pod Javę 7.
 
 .NET jest strasznie zacofany jeśli chodzi o kod kliencki JSON-RPC. W jsonrpc4j można dynamicznie tworzyć klienty do zadanych interfejsów serwisów na dowolnym strumieniu komunikacyjnym, tutaj właściwie nie ma nawet gotowego rozwiązania na jakiegokolwiek klienta. Nawet brak czegoś topornego w użyciu, gdzie podawałoby się nazwę metody jako string, typy i wartości parametrów i oczekiwany typ zwrotny.
 Sam muszę coś zrobić.
@@ -384,7 +402,14 @@ To też może trafić do ludzi jako patch.
 Co ciekawego zrobiłem w kodzie?
 
 
-\subsection{Tworzenie zdalnych obiektów na żądanie klienta(TODO)}
+
+\section{Klient JSON-RPC pod .NET(TODO)}
+Dziwne, ale nie ma żadnej dobrej implementacji. JSON-RPC.NET i Jayrock wskazują jakieś propozycje, ale nie ma żadnego dobrego rozwiązania na miarę tego z jsonrpc4j, gdzie wskazuje się interfejs i adres, i dostaje się obiekt klienta realizujący ten interfejs.
+Coś takiego robię. Można by to oddać światu open source, co prawda trzeba by było dodać obsługę wszystkich możliwych błędów komunikacyjnych, a to bywa żmudne.
+
+
+
+\section{Tworzenie zdalnych obiektów na żądanie klienta(TODO)}
 Klient musi mieć specjalną metodę, którą będzie wywoływał stworzenie zdalnego obiektu, któremu dalej będzie wysyłał wywołania.
 Można to zrealizować przy pomocy mechanizmu rozszerzeń (\emph{Extensions}) standardu JSON-RPC 2.0.
 Normalnie tego nie ma, bo raczej mamy dane żyjące serwisy i z nimi gadamy. Też normalnie nie operuje się na typie serwisu. Tu będzie trzeba właśnie podać typ serwisu, jaki chcemy. No w sumie WCF i JAX-WS to jakoś tam robią. Ale one mają jakby serwis i tak wolnostojący i dopiero w nim robią instancje. U mnie będzie jeden główny serwer i pod nim instancje wszystkiego.
@@ -393,118 +418,6 @@ Normalnie tego nie ma, bo raczej mamy dane żyjące serwisy i z nimi gadamy. Te�
 %consolidation service w JSON-RPC?
 
 
-\section{Szczegółowy projekt (TODO)}
-Tutaj decyzja, co do ostatecznego kształtu rozwiązania, szczegółowy plan struktury i~działania.
 
-\subsection{Wybrana ścieżka}
-Jakie prototypy wybieram do dalszego rozwinięcia?
-Dlaczego?
-
-
-%\subsection{Przypadki użycia}
-%Jakie są? Do czego można użyć tego systemu? Jak to jest z tym dynamicznym tworzeniem web serviceów z hierarchii klas?
-
-
-\subsection{Struktura projektu}
-Diagramy warstwowe, komponentowe, klas.
-
-%Napisać, co jest potrzebne dla remotingu: jakaś tożsamość, adres obiektu, oznaczenia metod, argumentów. Ogólnie to jest dość proste. (jak w~JSON-RPC, tylko z polimorficznymi typami)
-
-
-\subsection{Schemat działania projektu}
-Schematy działania, to z liniami życia, diagramami aktywności itp.
-
-
-\subsection{Plan testów}
-Jakie testy akceptacyjne? Jak sprawdzę, że działa? Na jakiej konfiguracji sprzętowej będę musiał to robić?
-
-Tworzenie grafu w~typów w~xmlu? Są obiekty, które mogą mieć dzieci (tablice, listy). Próbuję wygenerować C\# dla porównania. Zapisuję grafy, które nie działają (w trakcie automatycznych testów). Zrobić wizualizator grafów?
-
-
-%Budowa powinna pozwolić na łatwe podłączenie warstwy bezpieczeństwa (bezpiecznego kanału)
-%
-%Call:
-%- id obiektu (0 dla tworzenia nowego, wtedy argumentem jest tym)
-%- id metody
-%- parametry
-%
-%Response:
-%- czy sie udalo
-%- obiekt zwrotny, opis błędu przy wywołaniu zdalnej metody lub stacktrace z exceptiona, który wystąpił w metodzie
-%
-%Id metody:
-%składa się z nazwy i aliasów jej parametrów.
-%
-%Alias:
-%typy prymitywne - int, string, itp.
-%datacontract - sraka:\#ptaka.daka
-%lista - List
-%tablica - [int, [[int, [sraka:\#ptaka.daka, itp.
-%
-%Tłumaczenie aliasów:
-%C\# tłumaczy klasy na aliasy, jak przetłumaczy dla jednej metody to dodaje to do słownika, żeby potem robić to od razu.
-%Java tłumaczy aliasy na nazwy klas (potem loaderem). Wiąże w słowniku id metody z obiektem metody. Może być metoda przyjmująca jakiś konkretny List, np. ArrayList, ale nie może mieć overloada przyjmującego inny List.
-%Kiedy czyścić te słowniki?
-%
-%Loader:
-%Loaduje aliasy DataContractów, klasy javowe, klasy serwisów(?). Czyta sobie jary, szuka adnotacji
-%
-%Typy danych i serwisy w javie są oznaczone namespaceami, odpowiadających im rzeczy z C\# (DataContracty i interfejsy)
-%
-%Oddzielić abstrakcje od sposobu transportu. Wyróżnic transport streamowany (serializator dostaje strumień i na niego wali output, możemy tłumaczyć i wysyłać na raz) i nie (trzeba stworzyć całą wiadomość, wtedy wysłać).
-%
-%Zrobić timeouty na łączenie do serwisu i na operacje. Poczytać więcej o TCP, zobaczyć, czy dobrze można nim sprawdzać, czy trzeba używać PINGa.
-%
-%Serializujemy wszystkie publiczne pola/ propertiesy albo metody z get / set (to w Javie). Używać jakiś dostępnych już atrybutów do ręcznej konfiguracji wyboru serializowanych elementów.
-
-
-
-%Dobrze korzystać z~istniejących standardów. Wprowadzenie nowego standardu nie jest dobrą rzeczą, chyba, że ma się ogromną rzeszę zwolenników lub naprawdę poważne przesłanki (powody). Kto wie, może takie mam. Ale na ogół lepiej kombinować istniejące rozwiązania tak, żeby zewnętrzne komponenty miały szansę na współpracę z nimi.
-%
-%Pomysły do SPIKEów będę wybierał na bazie doświadczenia (i~przesłanek opisanych poniżej w~\ref{approach-selection}).
-%Będę starał się wykorzystać jakieś badane wcześniej technologie. Bo lepiej używać gotowych, dojrzałych komponentów tam, gdzie można. Po co wymyślać koło od nowa?
-%Spike'i będę tworzył w~kolejności od tego, który według mnie ma największe prawdopodobieństwo na bycie prototypem ostatecznego rozwiązania.
-%Może się nawet udać za pierwszym razem, ale na wszelki wypadek powinienem zrobić kilka. Bo a~nóż się okaże, że mój drugi albo trzeci wybór będzie się zachowywał lepiej.
-%
-%\subsection{Selekcja podejść}
-%\label{approach-selection}
-%Jakie podejścia, techniki odrzucam, na jakich się skupię, dlaczego?
-%
-%\subsubsection{Dlaczego nie chcę pisać serializacji}
-%To dużo roboty i~zostało zrobione wiele razy. Jak już to bym wziął istniejący projekt, zrobił fork i~dodał wpisywanie i~odczytywanie informacji o~typach. Może nawet potem bym swoje zmiany dodał do oryginalnego projektu?
-%
-%\subsubsection{Dlaczego nie Schemy i referencje we wiadomościach}
-%Chyba nie zależy mi na referencjach, jak linki do schem w SOAPie. System ma być prosty, wiadomości spójne i pełne. Odniesienia powodują dużo skomplikowanie, które jest zbędne - całe dane powinny być zawarte w wiadomości. A no i ja się nie bawię w schemy, nie przesyłam opisu danych (te są w klientcie i serwerze), przesyłam tylko surowe dane.
-%
-%\subsubsection{Dlaczego nie REST}
-%Nie zależy mi konkretnie na łączności przez internet, a~to jest podstawowym założeniem RESTa.
-%Chcę wspierać wiele warst transportowych, nie tylko HTTP. Poza tym parsowanie adresów jest bardziej problematyczne niż proste pobieranie nazw metod.
-%
-%Będę robił raczej RPC z~JSONem, nie będę udawał RESTa.
-%WADL nie jest w~ogólności zbyt potrzebny, bo REST może bez niego żyć.
-%
-%\subsubsection{Dlaczego nie SOAP}
-%Nie uważam, że skomplikowanie SOAPa jest odpowiednie do RPC\@. Wystarczy zobaczyć, jak ciężko jest skomunikowac sie z serwisem w WCF przy pomocy kSOAP - ktos wlozyl w to duzo roboty, a i tak w minimalnie bardziej zaawansowanych (tablice?) przypadkach ciezko sprawic, zeby dzialalo. Tylko duze implementacje na duze platformy daja rade.
-%
-%W generację WSDLa nie chcę się babrać - skomplikowane.
-%
-%Namespace'y są ważną rzeczą w SOAPie. Ja twierdzę, że nie są potrzebne w tak rozbudowanej formie. Może być jedno standardowe nazewnictwo z kropkami. Zakładam taki jakby jeden globalny namespace na oba runtime'y (klient i serwer). Fakt, że nawet jedna strona może mieć kilka przestrzeni nazw (parę class loaderów albo assembly cache'y) ale nie chcę tego robić z uwagi n utrudnienia w integracji (tu można napisać jakby to mogło wyglądać, ale nie trzeba, mogę po prostu to olać).
-
-%\section{Inne SPIKE'i}
-%
-%\textbf{Serializacja JSONa (raczej samej serializacji nie chcę robić):}
-%Przejrzeć specyfikację, zobaczyć, z czym musieli sobie poradzić i wyczaić jak to wszystko mozna odwzorować w JSONie. Obczaić, jak sobie DataContractSerializer (też DataContractJsonSerializer) radzą.
-%
-%\textbf{portowanie rozwiązań w C na Androida?}
-%Axis w~ C? Może częściowe używanie go spod javy. W sumie można sportować też jakieś inne rzeczy. Np.\ pythonowe web service'y (pyro, twisted). Może podpięcie pod gSOAP? Jakieś tłumaczenie JibXem sportowanych rzeczy?
-%
-%Sprawdzić Python Remote Objects (Pyro) na pythonie 2, 3 (też na warstwie skryptowej Androida). Porównać z Twistedem, napisać o próbach portowania wymaganych bibliotek w C na Androida. \url{http://pythonhosted.org/Pyro4/intro.html#performance}
-%
-%sl4a, py4a, kompilacja na ubuntu z użyciem NDK i Cythona
-%distutils.core zamienić na setuptools w setup.py
-%
-%\textbf{Zcentralizowane pseudo web servicy (albo nawet i nie)}
-%Też potrzebny serializator / deserializator + bindingi. To był ten pomysł, że to komp pinga serwer (Androida), żeby ten sobie pobrał rozkaz i to Android woła web service na kompie. Trzeba by było używać Ksoap albo innego ścierwa. Zobaczyć, czy to w ogóle miałoby sens. Czy tymi Ksoapami da się coś sensownie zrobić.
-%
-%\textbf{Własny serwer REST}
-%Tu dyskusja o implementacji serwera RESTowego na Androidzie \url{https://groups.google.com/forum/?fromgroups=#!topic/android-developers/vgkXg1P8iBg}
+\section{Wersja z Thriftem}
+To mogłoby robić prawie wszystko. Działałoby jako niezależny system i nie korzystało z poprzednich komponentów. Nie realizowałoby jednak wszystkich założeń.
