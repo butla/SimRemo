@@ -37,3 +37,5 @@ Newtonsoft.Json.6.0.6
 /other-framework-tests/JsonRpcClientDotNet/*.suo
 /other-framework-tests/JsonRpcClientDotNet/JsonRpcClientDotNet/bin
 /other-framework-tests/JsonRpcClientDotNet/JsonRpcClientDotNet/obj
+/other-framework-tests/JsonRpcClientDotNet/ClientTests/obj/Debug
+/other-framework-tests/JsonRpcClientDotNet/packages/NUnit.2.6.3

@@ -3,6 +3,11 @@ W~tym rozdziale zdecyduję, jaką ścieżką pójdę, aby stworzyć oprogramowan
 Ta decyzja będzie poprzedzona zebraniem wymagań i~prototypowaniem.
 Po niej nastąpi szczegółowe projektowanie i~w~końcu implementacja mojego rozwiązania.
 
+TODO
+Tak naprawdę, to opiszę, co musi zostać zrobione, aby zrealizować cele z punktu BLABLA. Powstanie też projekt rozwiązania. Poszczególne jego elementy będą przeanalizowane. Powiem, jak można je zrobić, jakie są przeszkody i ograniczenia, a także dla części dostarczę prototypy.
+
+Czyli najpierw wymagania i projekt, potem opisy/realizacja części wraz z opisem, jaką część wymagań one spełniają.
+
 %\section{Wybór metodyki}
 %Mógłbym tutaj przedstawić po co w~ogóle są metodyki wytwarzania oprogramowania, przeanalizować najpopularniejsze i~jakąś wybrać, pewnie dostosowując jeszcze do swoich potrzeb.
 %Np. na początku podział na zwinne i nie. Mi oczywiście pasują zwinne, bo nie jestem gigantycznym projektem. Poza tym zwinne są lepsze i RUP to tylko nieudana teoria.
@@ -28,6 +33,7 @@ Jako rozbudowana sekcja wstępu SWS oraz ,,szczegółowy opis problemów do rozw
 
 \subsubsection{Diagram przepływu najwyższego poziomu}
 Diagram~\ref{fig:project-overview} przedstawia ogólne działanie systemu w~trakcie wywoływania zdalnej metody. Jest to główna funkcja mojego projektu. Funkcja drugorzędna -- tłumaczenie danych, również została ujęta.
+
 
 Widoczny na schemacie klient jest jednym z~wielu, które mogą być stworzone przez kod korzystający z~mojej biblioteki.
 Obiekt każdego klienta spełnia jakiś zadany interfejs. Robi to przez opakowywanie parametrów, zaadresowanie ich, wysłanie do obiektu faktycznie wykonującego kod i~odebranie wyniku.
@@ -61,11 +67,6 @@ Przez mój system dane będą jedynie przepływać.
 
 
 \subsection{Wymagania funkcjonalne}
-%opis tekstowy
-%ograniczenia
-%wymagania wydajnościowe
-%zastrzeżenia projektowe
-%diagramy pomocnicze
 % WYMAGANIA POMIJANE:
 % reliable sessions (w sumie też by mi się przydał jakiś mechanizm, który umożliwi komunikację w niestabilnym środowisku Internetu)
 % \url{http://blogs.msdn.com/b/shycohen/archive/2006/02/20/535717.aspx} \\
