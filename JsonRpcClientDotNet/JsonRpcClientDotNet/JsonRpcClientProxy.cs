@@ -50,9 +50,7 @@ namespace JsonRpcClientDotNet
                 JToken serializedResult;
                 if(response.TryGetValue(ResultProperty, out serializedResult))
                 {
-                    // TODO wrap serializedResult string depending on their type, whether it's integer/double, string, object or array
-                    var resultReader = new JsonTextReader(new StringReader("\"" + serializedResult.ToString() + "\""));
-                    object result = this.serializer.Deserialize(resultReader, method.ReturnType);
+                    object result = ResultDeserializer.Deserialize(serializedResult, method.ReturnType);
                     return new ReturnMessage(result, null, 0, methodCall.LogicalCallContext, methodCall);
                 }
                 else if (response.TryGetValue("exception", out serializedResult))

@@ -1,5 +1,7 @@
 package com.example.jsonrpc4jtest;
 
+import android.util.Log;
+
 public class TestServiceImpl implements TestService
 {
 
@@ -15,4 +17,38 @@ public class TestServiceImpl implements TestService
         return arg + " dzia³a!";
     }
 
+    @Override
+    public DaneA testA()
+    {
+        return new DaneA();
+    }
+
+    @Override
+    public DaneB testB()
+    {
+        return new DaneB();
+    }
+    
+    public int[] testArray()
+    {
+        return new int[]{1,2,3};
+    }
+
+    @Override
+    public int testInt()
+    {
+        return 13;
+    }
+
+    @Override
+    public double testDouble()
+    {
+        return 5.25;
+    }
+
+    @Override
+    public void testVoid()
+    {
+        Log.i("MOJE SUPER RPC", "Wywolano pusta metode");
+    }    
 }
