@@ -1,35 +1,56 @@
 \chapter{Podsumowanie (TODO)}
-Czy udało się zrealizować cele? Jeśli nie, to dlaczego? Co jeszcze można dodać? Czy to, co zrobiłem ma jakąś szansę na szersze zastosowanie?
+%Czy udało się zrealizować cele? Jeśli nie, to dlaczego? Co jeszcze można dodać? Czy to, co zrobiłem ma jakąś szansę na szersze zastosowanie?
+Ważne, że pokazałem, że zasada działania jest słuszna. Konkretne narzędzia, których użyłem do zrobienia poszczególnych kawałków nie są ważne.
 
-Pewnie przydałoby się wprowadzanie do standardów RPC jednolitego oznaczania typów. SOAP to niby ma, ale jest za ciężki i~ostatecznie niejednolity (pokazać na przykładzie WCF i~JAX-WS).
+\section{Co się udało}
+Z początkowych celów:
+\begin{description}
+\itemtitle{Przybliżenie tematyki}
+Według mnie, jak najbardziej z powodzeniem. Przedstawiłem część świata RPC, serializacji i wymiany danych.
 
-Ważne, żeby pokazać, że zasada działania jest słuszna. Konkretne narzędzia, których użyłem do zrobienia poszczególnych kawałków nie sa ważne.
+\itemtitle{Porównanie istniejącego oprogramowania}
+Udane. Z jednej strony pokazałem niektóre z aktualnie najpopularniejszych rozwiązań w branży. Z drugiej -- technologie powiązane z RPC, które mają coś wspólnego z Androidem. Zbadałem polimorfizm webserviców. To i RPC związane z Androidem to nie bardzo popularne tematy.
 
-Dodałem wieloinstancyjność do JSON-RPC.
+\itemtitle{Stworzenie wieloplatformowej biblioteki}
+Nie udało się, ale pokazałem, w jaki sposób można to zrealizować. Zadanie okazało się zbyt szerokie i ambitne. Ale moje założenia okazały się słuszne i można uzyskać sprawne oprogramowanie idąc drogą, którą szedłem. Co do poszczególnych jej aspektów
+\begin{itemize}
+  \item Wywoływanie kodu na Androidzie z~poziomu C\# -- udane
+	\item Polimorfizm zdalnych metod -- pokazałem jak zrealizować i stworzyłem prototyp
+	\item Swoboda rozszerzania kodu -- jak wyżej
+	\item Prostota użycia -- pokazałem, że można ją zapewnić
+	\item Wsparcie wielu środowisk -- nie zająłem się tym, ale serwer może działać wszędzie, gdzie jest Java.
+\end{itemize}
 
-Ogólnie ciężko zrobić takie tłumaczenie języków, lepiej użyć rozwiązania przeznaczonego do bycia uniwersalnym, takiego jak Thrift.
-Ale doraźne rozwiązanie można uzyskać.
+\end{description}
 
+\section{Co poza tym się udało}
+\begin{itemize}
+	\item Dodałem wieloinstancyjność do JSON-RPC.
+	\item Schemat dynamicznego mapowania typów
+\end{itemize}
 
-\section{Realizacja założeń}
-Nie udało się zrobić systemu, bo zadanie okazało się za ambitne. Ale za to przedstawiłem stan technologii i pokazałem, że założenia są słuszne i można uzyskać rozwiązanie idąc drogą, którą szedłem.
-
-Polimorfizm, pupeczka, nawet na styku różnych technologii jest możliwy.
-
-Z mapowaniem typów słabo. Albo trzeba by coś zrobić, albo stosować od razu technologie typu Apache Thrift. Albo powoli przechodzić na nie, jeśli zakłada się rozbieżne środowiska.
-
-Co się udało:
-- omówienie technologii - zbadałem polimorfizm webserviców oraz RPC wokół Androida. Oba to nie bardzo popularne tematy.
 
 \subsection{Tłumaczenie typów}
 Tego się nie udało. Sharpen nie chciał działać, nic innego, co działało tak, jak chciałem nie znalazłem. Może warto by było jednak się przyjrzeć generacji typów na zasadzie generacji XML Schema z Javy, a następnie z niej klas C\#?
 
+
+
 \section{Dalsza praca}
-Jakie tematy można dalej rozwinąć? Jakie zadania może podjąć ktoś inny w ramach magisterki lub inżynierki.
+%Jakie tematy można dalej rozwinąć? Jakie zadania może podjąć ktoś inny w ramach magisterki lub inżynierki.
+\begin{itemize}
+	\item Przydałoby się wprowadzanie do standardów RPC takich jak JSON-RPC i XML-RPC jednolitego oznaczania typów. SOAP to ma, ale jest za ciężki i~ostatecznie niejednolity (pokazać na przykładzie WCF i~JAX-WS).
+	\item Rozszerzenie Apache Thrift o możliwość generacji kodu pod Androida (może być tematem pracy magisterskiej lub inżynierskiej)
+	\item Pełna implementacja komponentów, takich jak mapper typów i serializator pod .NET zgodny z Jacksonem. Mogłoby to być zrealizowane jako fork lub, co wymagałoby dużo więcej wysiłku, rozszerzenie konfigurowalności JSON.NET aby mógł serializować jak Jackson.
+	\item Dodanie warstwy bezpieczeństwa.
+\end{itemize}
 
-Dodanie warstwy bezpieczeństwa 
 
-Oczywiście pełna implementacja komponentów, takich jak mapper, serializator (albo jako fork, albo z większym wysiłkiem rozszerzyć jego konfigurowalność aby mógł serializować jak Jackson)
 %Może jakieś wnioski, co można by zrobić, żeby powstało coś pięknego. Np. jakiś mapper z~istniejącego kodu Javowego do Thrifta?
 
+%Ogólnie ciężko zrobić takie tłumaczenie języków, lepiej użyć rozwiązania przeznaczonego do bycia uniwersalnym, takiego jak Thrift.
+%Ale doraźne rozwiązanie można uzyskać.
+%Z mapowaniem typów słabo. Albo trzeba by coś zrobić, albo stosować od razu technologie typu Apache Thrift. Albo powoli przechodzić na nie, jeśli zakłada się rozbieżne środowiska.
+
 %Jako dalsza praca lub temat czyjejś magisterki można by dodać do Thrifta możliwość kompilacji pod Androida.
+\section{Wnioski}
+Da się zrobić dynamiczny framework do RPC. Ale jeśli od razu jest założenie wspierania różnych platform i dynamiczność nie jest wymaganiem, to lepiej użyć technologii takiej jak Apache Thrift, która pewnie jeszcze się rozwinie.

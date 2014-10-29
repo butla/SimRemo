@@ -1,4 +1,4 @@
-\chapter{Projekt systemu}
+\chapter{Projekt systemu i elementy implementacji}
 W~tym rozdziale zaprojektuję oprogramowanie realizujące cele opisane w~punkcie~\ref{lib-requirements}.
 Zaproponuję sposób realizacji, możliwości i~ograniczenia poszczególnych jego elementów. Dla części komponentów stworzę prototypy.
 
@@ -186,9 +186,9 @@ Myślę o~Jackson po stronie Androida i~DataContractJsonSerializer lub JSON.NET 
 Alternatywnym sposobem byłby parser--nakładka. Przetwarzał by on gotowy dokument JSON przygotowany przez JSON.NET na format Jacksona i na odwrót. Byłoby to wolne, ale wymagałoby może mniej ingerencji w~kod. A~pozwalałoby na uzyskanie pełnej zgodności.
 
 \subsubsection{Porównanie sposobów serializacji w JSON.NET i Jackson}
-Jackson serializuje tak a JSON.NET tak:
+Jackson serializuje tak a JSON.NET tak (wypunktować):
 BLABLABLABLA
-Żeby były zgodne trzeba zrobić to i to
+Żeby były zgodne trzeba zrobić to i to (wypunktować)
 
 TABLICA
 \begin{lstlisting}[float, frame=single, caption={Jackson daje.}, label=kod:jackson-serilization]
@@ -338,6 +338,8 @@ Dopiero pojedyncze paramsy są jakoś bardziej interpretowane przez Jacksona. Dl
 
 \subsubsection{Co zrobiłem}
 W sumie jeszcze nic. Ale będzie prosta podmiana \$type na @Class na tyle, żeby działał przypadek z przekazywaniem dziedziczącego parametru.
+
+Albo zrobię takie dostosowywanie po fakcie, które cały dokument JSON będzie przetwarzało.
 %Zrobię zmianę źródeł JSON.NET, żeby to \$type było konfigurowalne. Tworzę swój SerializationBinder i wszystko wygląda tak, jak w Jacksonie.
 %http://stackoverflow.com/questions/9490345/json-net-change-type-field-to-another-name
 %http://james.newtonking.com/archive/2011/11/19/json-net-4-0-release-4-bug-fixes
@@ -376,6 +378,8 @@ Pewnie potrzebny by był też system ładowania klas.
 Może jakiś schemacik tego ładowania i jakby mapowanie działało przy serializacji, deserializacji.
 
 Coś jeszcze byłoby potrzebne, żeby to wszystko działało?
+
+Potrzebny byłby system ładowania bibliotek i klas z nich. Ale i tak nie dostarczam gotowego systemu, tylko taki prototyp, wiec chyba mogę to pominąć. Tłumaczenia klas też nie będzie. Albo tłumaczenie mogę pominąć, ładowanie zrobić konfigurowane, tj. tak jak słownik typów byłby spis bibliotek (np. z ich pełnymi ścieżkami). Te biblioteki byłyby ładowane do Assembly w .NET i do aktualnego class loadera w javie. Można by to prosto obtestować.
 
 
 \section{Zdalne wywoływanie metod na Androidzie(TODO)}
@@ -417,6 +421,10 @@ Normalnie tego nie ma, bo raczej mamy dane żyjące serwisy i z nimi gadamy. Te�
 %http://grokbase.com/t/gg/json-rpc/138ce80p54/what-are-rpc-extensions
 %consolidation service w JSON-RPC?
 
+
+
+\section{Złożenie elementów}
+Schemat mojej wizji sklejenia kawałków prototypowych.
 
 
 \section{Wersja z Thriftem}
