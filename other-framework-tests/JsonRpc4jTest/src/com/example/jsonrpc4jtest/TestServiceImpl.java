@@ -1,5 +1,7 @@
 package com.example.jsonrpc4jtest;
 
+import java.io.IOException;
+
 import android.util.Log;
 
 public class TestServiceImpl implements TestService
@@ -50,5 +52,10 @@ public class TestServiceImpl implements TestService
     public void testVoid()
     {
         Log.i("MOJE SUPER RPC", "Wywolano pusta metode");
-    }    
+    }
+    
+    public void testException() throws IOException
+    {
+        throw new IOException("Wiadomosc w exceptionie jakas");
+    }
 }

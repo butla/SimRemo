@@ -1,5 +1,7 @@
 package com.example.jsonrpc4jtest;
 
+import java.io.IOException;
+
 public interface TestService
 {
     String test();
@@ -17,4 +19,6 @@ public interface TestService
     public double testDouble();
     
     void testVoid();
+    
+    public void testException() throws IOException;
 }

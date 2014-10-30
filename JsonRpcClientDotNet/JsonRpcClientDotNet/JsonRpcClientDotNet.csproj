@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{29566273-6BAC-4912-AD15-07F435D41E98}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>JsonRpcClientDotNet</RootNamespace>
     <AssemblyName>JsonRpcClientDotNet</AssemblyName>
@@ -32,6 +32,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -46,10 +49,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="JsonRpcClientProxy.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="JsonRpcException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultDeserializer.cs" />
-    <Compile Include="TestService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

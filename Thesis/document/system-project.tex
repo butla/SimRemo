@@ -426,6 +426,19 @@ Normalnie tego nie ma, bo raczej mamy dane żyjące serwisy i z nimi gadamy. Te�
 \section{Złożenie elementów}
 Schemat mojej wizji sklejenia kawałków prototypowych.
 
+Czytanie typów wyjątków też robiłoby problemy, bo wyglądają tak:
+%{
+  %"jsonrpc": "2.0",
+	%"id": 1, "error": {
+	  %"code": 0,
+		%"message": "Wiadomosc w exceptionie jakas",
+		%"data": {
+		  %"exceptionTypeName": "java.io.IOException",
+			%"message": "Wiadomosc w exceptionie jakas"
+		%}
+	%}
+%}
+Czyli jeszcze trzeba by się było sporo zagłębiać w JSON-RPC lub jego implementację.
 
 \section{Wersja z Thriftem}
 To mogłoby robić prawie wszystko. Działałoby jako niezależny system i nie korzystało z poprzednich komponentów. Nie realizowałoby jednak wszystkich założeń.

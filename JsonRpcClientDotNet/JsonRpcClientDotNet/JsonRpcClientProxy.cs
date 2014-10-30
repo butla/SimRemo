@@ -18,6 +18,7 @@ namespace JsonRpcClientDotNet
     public class JsonRpcClientProxy<T> : RealProxy
     {
         private const string ResultProperty = "result";
+        private const string ErrorProperty = "error";
 
         private static long nextId; // starting with zero, but will be incremented before first use
 
@@ -53,18 +54,17 @@ namespace JsonRpcClientDotNet
                     object result = ResultDeserializer.Deserialize(serializedResult, method.ReturnType);
                     return new ReturnMessage(result, null, 0, methodCall.LogicalCallContext, methodCall);
                 }
-                else if (response.TryGetValue("exception", out serializedResult))
+                else if (response.TryGetValue(ErrorProperty, out serializedResult))
                 {
-                    throw new Exception("Some JsonRpcException");
+                    throw new JsonRpcException(serializedResult.ToString());
                 }
                 else
                 {
-                    throw new Exception("Received response doesn't have either result or error, something is wrong.");  // TODO what about void methods?
+                    throw new Exception("Received response doesn't have either result or error, something is wrong.");
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine("Exception: " + e);
                 if (e is TargetInvocationException && e.InnerException != null)
                 {
                     return new ReturnMessage(e.InnerException, msg as IMethodCallMessage);

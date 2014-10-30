@@ -46,3 +46,5 @@ Newtonsoft.Json.6.0.6
 /JsonRpcClientDotNet/packages/NUnit.2.6.3
 /JsonRpcClientDotNet/ClientTests/bin
 /JsonRpcClientDotNet/ClientTests/obj
+/JsonRpcClientDotNet/ClientFunctionalTests/bin
+/JsonRpcClientDotNet/ClientFunctionalTests/obj

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace JsonRpcClientDotNet
+namespace ClientTests
 {
     public interface TestService
     {
@@ -22,6 +22,10 @@ namespace JsonRpcClientDotNet
         double testDouble();
 
         void testVoid();
+
+        void testException();
+
+        void testUndefinedMethod();
     }
 
     public class DaneA : IEquatable<DaneA>
@@ -35,8 +39,13 @@ namespace JsonRpcClientDotNet
         }
     }
 
-    public class DaneB
+    public class DaneB : DaneA, IEquatable<DaneB>
     {
         public double numberB = 5.25;
+
+        public bool Equals(DaneB other)
+        {
+            return this.numberB == other.numberB && base.Equals(other);
+        }
     }
 }
