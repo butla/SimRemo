@@ -12,7 +12,7 @@ namespace JsonRpcClientDotNet
     {
         private static JsonSerializer serializer = new JsonSerializer();
 
-        public static object Deserialize(JToken serializedResult, Type resultType)  // or JsonToken?
+        public static object Deserialize(JToken serializedResult, Type resultType)
         {
             var wrappedResult = new StringBuilder(serializedResult.ToString());
             switch(serializedResult.Type)

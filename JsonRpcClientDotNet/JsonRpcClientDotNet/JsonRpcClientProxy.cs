@@ -98,6 +98,8 @@ namespace JsonRpcClientDotNet
 
         private JObject PrepareCall(string methodName, object[] parameters)
         {
+            //TODO moze po prostu tworzyć cały obiekt Call i go serializować?
+
             JObject call = new JObject();
             Interlocked.Increment(ref nextId);
             
