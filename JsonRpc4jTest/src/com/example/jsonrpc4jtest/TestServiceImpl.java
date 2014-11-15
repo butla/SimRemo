@@ -62,6 +62,12 @@ public class TestServiceImpl implements TestService
     @Override
     public String testInputA(DaneA arg)
     {
-        return arg.stringA;
+        return arg.tekstA;
+    }
+
+    @Override
+    public String testPolymorphism(DaneA arg)
+    {
+        return arg.getClass().getName();
     }
 }

@@ -23,8 +23,8 @@ public class TestServiceImpl implements TestService
     @Override
     public DaneA testDataA(DaneA dane)
     {
-        dane.numberA += 1;
-        dane.stringA += " dodałem coś!";
+        dane.liczbaA += 1;
+        dane.tekstA += " dodałem coś!";
         return dane;
     }
 

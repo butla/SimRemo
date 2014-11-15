@@ -371,7 +371,7 @@ Poza tym widać, że grafy mogą być bardzo skomplikowane i pełne ich przeło�
 Ogólnie możnaby wprowadzić tłumaczenie, ale raczej nie byłoby ono pewne i nie działało zawsze.
 Wszystkich przypadków wspierać nie dam rady.
 
-
+W JSON.NET ważne są klasy JsonSerializerInternalReader i JsonSerializerInternalWriter
 
 
 \subsection{Mapowanie typów}
@@ -442,6 +442,10 @@ Czytanie typów wyjątków też robiłoby problemy, bo wyglądają tak:
 	%}
 %}
 Czyli jeszcze trzeba by się było sporo zagłębiać w JSON-RPC lub jego implementację.
+
+Zrobiłem taki prosty test z tym DaneA. Mogę tak też zrobić metodę, która przyjmuje object. Pokazać stringa, inta, floata i DaneA, DaneB.
+
+Popisać, jakie testy wszędzie zrobiłem.
 
 \section{Wersja z Thriftem}
 To mogłoby robić prawie wszystko. Działałoby jako niezależny system i nie korzystało z poprzednich komponentów. Nie realizowałoby jednak wszystkich założeń.

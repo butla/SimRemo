@@ -15,6 +15,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 //@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
 public class DaneA
 {
-    public int numberA = 13;
-    public String stringA = "domyslny";
+    public int liczbaA = 13;
+    public String tekstA = "domyslny";
 }

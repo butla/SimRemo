@@ -112,11 +112,14 @@ namespace JsonRpcClientDotNet
 
         private JArray PrepareAttributes(object[] parameters)
         {
+            var serializationSettings = new JsonSerializerSettings();
+            serializationSettings.TypeNameHandling = TypeNameHandling.All;
+
             JArray paramsJson = new JArray();
             
             foreach(object parameter in parameters)
             {
-                paramsJson.Add(JToken.Parse(JsonConvert.SerializeObject(parameter)));          
+                paramsJson.Add(JToken.Parse(JsonConvert.SerializeObject(parameter, serializationSettings)));          
             }
 
             return paramsJson;

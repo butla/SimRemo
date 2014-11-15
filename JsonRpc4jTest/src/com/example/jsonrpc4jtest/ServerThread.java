@@ -8,6 +8,8 @@ import java.net.UnknownHostException;
 
 import android.util.Log;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.googlecode.jsonrpc4j.JsonRpcBasicServer;
 import com.googlecode.jsonrpc4j.StreamServer;
 
@@ -20,7 +22,10 @@ public class ServerThread extends Thread
         
         try
         {
-            serverBase = new JsonRpcBasicServer(service, TestService.class);
+            serverBase = new JsonRpcBasicServer(
+                    ServerThread.createMapper(),
+                    service,
+                    TestService.class);
         }
         catch(Exception ex)
         {
@@ -35,11 +40,6 @@ public class ServerThread extends Thread
             bindAddress = InetAddress.getByName("0.0.0.0");
             StreamServer server = new StreamServer(serverBase, maxThreads, port, 0, bindAddress);
             server.start();
-            
-//            ServerSocket sock = new ServerSocket(1666);
-//            Socket clientSoc= sock.accept();
-//            int received = clientSoc.getInputStream().read();
-//            System.out.println(received);
         }
         catch (UnknownHostException e)
         {
@@ -53,5 +53,16 @@ public class ServerThread extends Thread
             e.printStackTrace();
             Log.e("Moje testy", "IOException");
         }
+    }
+    
+    private static ObjectMapper createMapper()
+    {
+        ObjectMapper mapper = new ObjectMapper();
+        
+        //mapper.enableDefaultTyping(); // defaults for defaults (see below); include as wrapper-array, non-concrete types
+        mapper.enableDefaultTyping(
+                ObjectMapper.DefaultTyping.NON_FINAL,
+                JsonTypeInfo.As.PROPERTY); // all non-final types
+        return mapper;
     }
 }

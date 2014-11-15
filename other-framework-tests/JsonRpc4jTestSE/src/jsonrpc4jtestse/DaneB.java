@@ -12,5 +12,5 @@ package jsonrpc4jtestse;
  */
 public class DaneB extends DaneA
 {
-    public double numberB = 5.25;
+    public double liczbaB = 5.25;
 }

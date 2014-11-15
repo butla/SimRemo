@@ -24,7 +24,7 @@ namespace ClientTests
             DaneA a, b;
             a = new DaneA();
             b = new DaneA();
-            b.numberA = 131313;
+            b.liczbaA = 131313;
             Assert.IsFalse(a.Equals(b));
         }
 
@@ -41,7 +41,7 @@ namespace ClientTests
         {
             var a = new DaneB();
             var b = new DaneB();
-            b.numberB = 8.8888;
+            b.liczbaB = 8.8888;
             Assert.IsFalse(a.Equals(b));
         }
     }

@@ -54,3 +54,6 @@ Newtonsoft.Json.6.0.6
 /JacksonJsonNetTranslator/JacksonJsonNetTranslator/bin
 /JacksonJsonNetTranslator/JacksonJsonNetTranslator/obj
 /JsonRpcClientDotNet/TestResults
+/JsonRpc4jTest/bin
+/JsonRpc4jTest/gen/com/example/jsonrpc4jtest/BuildConfig.java
+/JsonRpc4jTest/gen/com/example/jsonrpc4jtest/R.java

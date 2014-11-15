@@ -23,4 +23,6 @@ public interface TestService
     void testException() throws IOException;
     
     String testInputA(DaneA arg);
+    
+    String testPolymorphism(DaneA arg);
 }

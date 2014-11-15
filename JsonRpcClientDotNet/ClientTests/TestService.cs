@@ -28,26 +28,28 @@ namespace ClientTests
         void testUndefinedMethod();
 
         string testInputA(DaneA arg);
+
+        string testPolymorphism(DaneA arg);
     }
 
     public class DaneA : IEquatable<DaneA>
     {
-        public int numberA = 13;
-        public string stringA = "domyslny";
+        public int liczbaA = 13;
+        public string tekstA = "domyslny";
 
         public bool Equals(DaneA other)
         {
-            return this.numberA == other.numberA && this.stringA.Equals(other.stringA);
+            return this.liczbaA == other.liczbaA && this.tekstA.Equals(other.tekstA);
         }
     }
 
     public class DaneB : DaneA, IEquatable<DaneB>
     {
-        public double numberB = 5.25;
+        public double liczbaB = 5.25;
 
         public bool Equals(DaneB other)
         {
-            return this.numberB == other.numberB && base.Equals(other);
+            return this.liczbaB == other.liczbaB && base.Equals(other);
         }
     }
 }

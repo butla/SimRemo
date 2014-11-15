@@ -34,8 +34,17 @@ namespace ClientFunctionalTests
         public void CallWithObjectParam()
         {
             string testString = "jakis testowy lala";
-            DaneA testArg = new DaneA() { stringA = testString };
+            DaneA testArg = new DaneA() { tekstA = testString };
             Assert.AreEqual(testString, this.service.testInputA(testArg));
+        }
+
+        [Test]
+        public void CallPolymorphic()
+        {
+            DaneA arg1 = new DaneA();
+            DaneA arg2 = new DaneB();
+            Assert.AreEqual("com.example.jsonrpc4jtest.DaneA", this.service.testPolymorphism(arg1));
+            Assert.AreEqual("com.example.jsonrpc4jtest.DaneB", this.service.testPolymorphism(arg2));
         }
 
         [Test]
