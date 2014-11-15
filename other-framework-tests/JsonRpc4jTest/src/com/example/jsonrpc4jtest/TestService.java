@@ -14,11 +14,13 @@ public interface TestService
     
     int[] testArray();
 
-    public int testInt();
+    int testInt();
     
-    public double testDouble();
+    double testDouble();
     
     void testVoid();
     
-    public void testException() throws IOException;
+    void testException() throws IOException;
+    
+    String testInputA(DaneA arg);
 }

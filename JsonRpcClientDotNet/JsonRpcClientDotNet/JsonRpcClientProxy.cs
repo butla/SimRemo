@@ -106,8 +106,20 @@ namespace JsonRpcClientDotNet
             call["id"] = nextId;
             call["jsonrpc"] = "2.0";
             call["method"] = methodName;
-            call["params"] = new JArray(parameters);
+            call["params"] = PrepareAttributes(parameters);
             return call;
+        }
+
+        private JArray PrepareAttributes(object[] parameters)
+        {
+            JArray paramsJson = new JArray();
+            
+            foreach(object parameter in parameters)
+            {
+                paramsJson.Add(JToken.Parse(JsonConvert.SerializeObject(parameter)));          
+            }
+
+            return paramsJson;
         }
     }
 }

@@ -347,15 +347,6 @@ Albo zrobię takie dostosowywanie po fakcie, które cały dokument JSON będzie 
 
 
 \subsection{Ograniczenia/Problemy}
-JSON.NET ma 14401 linii kodu (mierzone przy użyciu wtyczki Code Metrics Viewer), Jackson ma 63497 (liczone core, databind i annotations, tylko linie z kodem, używałem narzędzia CLOC). I tak są dobrze napisane i umożliwiają swobodne dostosowywanie wielu części. Niestety ogólne mechanizmy serializacji/deserializacji z informacjami o typach są specyficznie rozwiązane w obu frameworkach i dość mocno uwiązane z resztą biblioteki. Przez to ciężko zmienne.
-Poza tym widać, że grafy mogą być bardzo skomplikowane i pełne ich przełożenie z zapisu jednego serializatora na zapis drugiego jeśli nie są niemożliwe, to są trudne. Do tego dochodzą jeszcze różne cechy języka.
-Ogólnie możnaby wprowadzić tłumaczenie, ale raczej nie byłoby ono pewne i nie działało zawsze.
-Wszystkich przypadków wspierać nie dam rady.
-
-Ale można przyjąć, że dane, które będą wysyłane będą podlegać jakimś ograniczeniom, np. jak w WCF. Klasy danych są projektowane specjalnie pod to, żeby być wysyłane. Lub wysyła się proste juz instniejące klasy, które i tak funkcjonowały bardziej jako dane bez metod.
-Z takimi założeniami możemy uzyskać pełną zgodność. No, jedynie zgodności
-%Jackson sam nie może przeczytać tablicy prostej, np. ["bla","alb"] jak nie wie z góry co to ma być, a spodziewa się oznaczania typów. Hm... nie jest to prawdą, kiedy taka tablica jest opakowana w coś innego, obiekt albo tablicę obiektów.
-
 \subsubsection{Problemy serializacji}
 Type erasure w Javie jest dużym utrudnieniem dla zachowania pełni informacji o typach.
 Jeśli nie można przekazywać genericów, to nie można pewnie przekazywać dowolnych klas. W praktyce sprowadziło by się to pewnie pod pisanie klas ze świadomością ograniczeń systemu. Ale wtedy, to już chyba lepiej skorzystać z czegoś takiego jak thrift.
@@ -370,6 +361,17 @@ Ograniczona współpraca JAvy i C\# jest możliwa, ale nigdy nie będzie pełnej
 
 Jakieś źródło o tym, jak powinny wyglądać klasy parametrów web serviceów.
 Serializatory takie jak JSON.NET próbują być bardziej uniwersalne, wspierając nie tylko przypadki parametrow metod. Np. wtedym kiedy serializują referencję do żywego obiektu, którego nie dałoby się przesłać.
+Ale można przyjąć, że dane, które będą wysyłane będą podlegać jakimś ograniczeniom, np. jak w WCF. Klasy danych są projektowane specjalnie pod to, żeby być wysyłane. Lub wysyła się proste juz instniejące klasy, które i tak funkcjonowały bardziej jako dane bez metod.
+Z takimi założeniami możemy uzyskać pełną zgodność. No, jedynie zgodności
+%Jackson sam nie może przeczytać tablicy prostej, np. ["bla","alb"] jak nie wie z góry co to ma być, a spodziewa się oznaczania typów. Hm... nie jest to prawdą, kiedy taka tablica jest opakowana w coś innego, obiekt albo tablicę obiektów.
+
+\subsubsection{Wymuszenie jednolitej serializacji}
+JSON.NET ma 14401 linii kodu (mierzone przy użyciu wtyczki Code Metrics Viewer), Jackson ma 63497 (liczone core, databind i annotations, tylko linie z kodem, używałem narzędzia CLOC). I tak są dobrze napisane i umożliwiają swobodne dostosowywanie wielu części. Niestety ogólne mechanizmy serializacji/deserializacji z informacjami o typach są specyficznie rozwiązane w obu frameworkach i dość mocno uwiązane z resztą biblioteki. Przez to ciężko zmienne.
+Poza tym widać, że grafy mogą być bardzo skomplikowane i pełne ich przełożenie z zapisu jednego serializatora na zapis drugiego jeśli nie są niemożliwe, to są trudne. Do tego dochodzą jeszcze różne cechy języka.
+Ogólnie możnaby wprowadzić tłumaczenie, ale raczej nie byłoby ono pewne i nie działało zawsze.
+Wszystkich przypadków wspierać nie dam rady.
+
+
 
 
 \subsection{Mapowanie typów}
@@ -380,6 +382,7 @@ Może jakiś schemacik tego ładowania i jakby mapowanie działało przy seriali
 Coś jeszcze byłoby potrzebne, żeby to wszystko działało?
 
 Potrzebny byłby system ładowania bibliotek i klas z nich. Ale i tak nie dostarczam gotowego systemu, tylko taki prototyp, wiec chyba mogę to pominąć. Tłumaczenia klas też nie będzie. Albo tłumaczenie mogę pominąć, ładowanie zrobić konfigurowane, tj. tak jak słownik typów byłby spis bibliotek (np. z ich pełnymi ścieżkami). Te biblioteki byłyby ładowane do Assembly w .NET i do aktualnego class loadera w javie. Można by to prosto obtestować.
+
 
 
 \section{Zdalne wywoływanie metod na Androidzie(TODO)}

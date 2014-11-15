@@ -58,4 +58,10 @@ public class TestServiceImpl implements TestService
     {
         throw new IOException("Wiadomosc w exceptionie jakas");
     }
+
+    @Override
+    public String testInputA(DaneA arg)
+    {
+        return arg.stringA;
+    }
 }

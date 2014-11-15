@@ -26,6 +26,8 @@ namespace ClientTests
         void testException();
 
         void testUndefinedMethod();
+
+        string testInputA(DaneA arg);
     }
 
     public class DaneA : IEquatable<DaneA>

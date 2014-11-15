@@ -24,10 +24,27 @@ namespace ClientFunctionalTests
         }
 
         [Test]
-        public void Call()
+        public void CallWithoutParams()
         {
             DaneB returned = this.service.testB();
             Assert.IsTrue(new DaneB().Equals(returned));
+        }
+
+        [Test]
+        public void CallWithObjectParam()
+        {
+            string testString = "jakis testowy lala";
+            DaneA testArg = new DaneA() { stringA = testString };
+            Assert.AreEqual(testString, this.service.testInputA(testArg));
+        }
+
+        [Test]
+        public void CallWithStringParam()
+        {
+            string testString = "jakis testowy lala";
+            Assert.AreEqual(
+                testString + " działa!",
+                this.service.testString(testString));
         }
 
         [Test]
