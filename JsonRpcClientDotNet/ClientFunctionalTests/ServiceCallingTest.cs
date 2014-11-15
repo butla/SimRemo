@@ -1,5 +1,6 @@
 ﻿using ClientTests;
 using JsonRpcClientDotNet;
+using Newtonsoft.Json.Utilities;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,16 @@ namespace ClientFunctionalTests
     public class ServiceCallingTest
     {
         private TestService service;
+
+        public ServiceCallingTest()
+        {
+            var toJavaDict = new Dictionary<string, string>
+            {
+                {"ClientTests.DaneA, ClientTests", "com.example.jsonrpc4jtest.DaneA"},
+                {"ClientTests.DaneB, ClientTests", "com.example.jsonrpc4jtest.DaneB"}
+            };
+            JavaTypeDictionary.SetTypeDictionary(toJavaDict);            
+        }
 
         [SetUp]
         public void Init()
