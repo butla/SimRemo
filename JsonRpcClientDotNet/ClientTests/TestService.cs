@@ -30,6 +30,8 @@ namespace ClientTests
         string testInputA(DaneA arg);
 
         string testPolymorphism(DaneA arg);
+
+        string testGeneric(object arg);
     }
 
     public class DaneA : IEquatable<DaneA>

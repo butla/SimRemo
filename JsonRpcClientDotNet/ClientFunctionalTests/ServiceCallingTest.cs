@@ -52,10 +52,35 @@ namespace ClientFunctionalTests
         [Test]
         public void CallPolymorphic()
         {
-            DaneA arg1 = new DaneA();
-            DaneA arg2 = new DaneB();
-            Assert.AreEqual("com.example.jsonrpc4jtest.DaneA", this.service.testPolymorphism(arg1));
-            Assert.AreEqual("com.example.jsonrpc4jtest.DaneB", this.service.testPolymorphism(arg2));
+            Assert.AreEqual(
+                "com.example.jsonrpc4jtest.DaneA",
+                this.service.testPolymorphism(new DaneA()));
+            Assert.AreEqual(
+                "com.example.jsonrpc4jtest.DaneB",
+                this.service.testPolymorphism(new DaneB()));
+        }
+
+        [Test]
+        public void CallGeneric()
+        {
+            Assert.AreEqual(
+                "java.lang.Boolean",
+                this.service.testGeneric(true));
+            Assert.AreEqual(
+                "java.lang.Integer",
+                this.service.testGeneric(156));            
+            Assert.AreEqual(
+                "java.lang.Double",
+                this.service.testGeneric(2.36));
+            Assert.AreEqual(
+                "java.lang.String",
+                this.service.testGeneric("jakis string testowy"));
+            Assert.AreEqual(
+                "com.example.jsonrpc4jtest.DaneA",
+                this.service.testGeneric(new DaneA()));
+            Assert.AreEqual(
+                "com.example.jsonrpc4jtest.DaneB",
+                this.service.testGeneric(new DaneB()));
         }
 
         [Test]

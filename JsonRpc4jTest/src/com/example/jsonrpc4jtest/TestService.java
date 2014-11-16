@@ -25,4 +25,6 @@ public interface TestService
     String testInputA(DaneA arg);
     
     String testPolymorphism(DaneA arg);
+    
+    String testGeneric(Object arg);
 }

@@ -70,4 +70,11 @@ public class TestServiceImpl implements TestService
     {
         return arg.getClass().getName();
     }
+
+    @Override
+    public String testGeneric(Object arg)
+    {
+        Log.i("MOJE SUPER RPC", arg.toString());
+        return arg.getClass().getName();
+    }
 }

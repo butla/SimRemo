@@ -335,6 +335,7 @@ TO, CZEGO BĘDĘ FAKTYCZNIE UŻYWAŁ
 %{"id":"4653019993893876656","jsonrpc":"2.0","method":"testDataA","params":[{"@class":"jsonrpc4jtestse.TestDataB","numberA":13,"stringA":"domyslny","numberB":5.25}]}
 Dopiero pojedyncze paramsy są jakoś bardziej interpretowane przez Jacksona. Dlatego mogę spokojnie pokazać jeden polimorficzny parametr działający przy przechodzeniu przez granicę platform. I tyle wystarczy do prezentacji. Widać, że jest to możliwe, bo mamy wystarczającą ilość przekazywanych informacji. Co prawda ucinamy informację o bibliotecę, ale możemy sobie wyobrazić system mapowania, który by się bez tego obył.
 
+Przydało się, to, że tak samo traktują stringi - nie muszą ich specjalnie opisywać. Tak samo z resztą typów prostych - intem, doublem. Ogólnie można przekazywać ogólnie object. Wszystkie są przedstawiane jednoznacznie.
 
 \subsubsection{Co zrobiłem}
 W sumie jeszcze nic. Ale będzie prosta podmiana \$type na @Class na tyle, żeby działał przypadek z przekazywaniem dziedziczącego parametru.
