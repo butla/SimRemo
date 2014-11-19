@@ -6,6 +6,8 @@ public interface TestService
 {
     String test();
     
+    String test(int arg);
+    
     String testString(String arg);
     
     DaneA testA();

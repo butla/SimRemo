@@ -93,6 +93,14 @@ namespace ClientFunctionalTests
         }
 
         [Test]
+        public void CallOverloads()
+        {
+            int testNum = 654;
+            Assert.AreEqual("działa!", this.service.test());
+            Assert.AreEqual("działa! a teraz cyferki: " + testNum.ToString(), this.service.test(testNum));
+        }
+
+        [Test]
         [ExpectedException(typeof(JsonRpcException))]
         public void ServerSideException()
         {

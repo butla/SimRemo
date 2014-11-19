@@ -169,20 +169,48 @@ Forward portu
 
 
 
-\section{Częściowa implementacja(TODO)}
-Tutaj przedstawię część projektu, którą udało mi się zaimplementować. W~dalszej części rozdziału dokładniej przedstawię poszczególne elementy systemu (zarówno te zaimplementowane jak i~nie) oraz wyzwania z~nimi związane.
+\section{Częściowa implementacja}
+Tutaj przedstawię zaimplementowaną część zaplanowanego projektu. Całość okazała się zbyt obszerna na jedną pracę dyplomową. W~dalszej części rozdziału dokładniej przedstawię poszczególne elementy systemu (zarówno te zaimplementowane jak i~nie) oraz wyzwania z~nimi związane.
 
-\subsection{Struktura}
+\subsection{Spełnienie wymagań systemowych}
+Poniższych wymagań nie udało się spełnić.
+\begin{description}
+\itemtitle{Tworzenie zdalnych obiektów na życzenie klienta}
+Mechanizm w~ogóle nie zaimplementowany. Zdalne obiekty (serwisy) działają jako singletony; każdy obiekt musi być stworzony przez serwer i~powiązany z~unikatowym adresem. Wszystkie żądania wysłane na jeden adres są obsługiwane przez jedną instancję serwisu.
+
+\itemtitle{Niszczenie zdalnych obiektów na życzenie klienta}
+Ponieważ nie zostało zaimplementowane tworzenie obiektów na życzenie nie ma sensu implementować usuwania.
+
+\itemtitle{Nawiązywanie sesji z serwerem}
+Sesje miały być nawiązywane na zasadzie przyznawania każdemu klientowi osobnej instancji serwisu. Ponieważ klient nie może stworzyć obiektu zdalnego na serwerze to sesje nie mogą być zaimplementowane.
+\end{description}
+
+Są jeszcze wymagania zaimplementowane, które jednak wymagają komentarza:
+\begin{description}
+\itemtitle{Tworzenie obiektów klienckich}
+Kiedy zdalna metoda rzuci wyjątek to pewien wyjątek jest rzucany przez metodę obiektu klienckiego. Nie jest to jednak przetłumaczony obiekt wyjątku rzuconego po stronie serwera, a~wyjątek typu \texttt{JsonRpcException} zawierający tekstowy zapis tego oryginalnego.s
+
+\itemtitle{Serializacja danych z zachowaniem informacji o typach}
+Nie ma wsparcia dla oznaczania typów kolekcji: tablic, list, słowników itp.
+
+\itemtitle{Łatwość użytkowania}
+Ustawianie słownika typów mogłoby się odbywać za pośrednictwem pliku konfiguracyjnego. Aktualnie odbywa się w~kodzie, przy pomocy wywołania statycznej metody, która może być trudna do znalezienia, jeśli się nie wie gdzie szukać.
+\end{description}
+
+Pozostałe 11 wymagań udało się spełnić bez zastrzeżeń.
+
+\subsection{Struktura(TODO)}
 Co jest? Jak to wygląda.
 
 
-\subsection{Działanie}
+\subsection{Działanie(TODO)}
 Co to potrafi i co z tego.
 Opisać przykładowe przejście przez system w odniesieniu do oryginalnego schematu
 
+Schemat mojej wizji sklejenia kawałków prototypowych.
 
-\subsection{Czego brakuje}
-Co jeszcze trzeba by było zrobić, żeby spełnić wymagania.
+Zrobiłem taki prosty test z tym DaneA. Mogę tak też zrobić metodę, która przyjmuje object. Pokazać stringa, inta, floata i DaneA, DaneB.
+Popisać, jakie testy wszędzie zrobiłem.
 
 
 
@@ -394,6 +422,21 @@ W JSON.NET ważne są klasy JsonSerializerInternalReader i JsonSerializerInterna
 
 Wiąże się albo z wielkim nakładem pracy i duplikacją kodu, albo okaleczeniem istniejącej funkcjonalności. Niektóre rzeczy (\$type) zhardcodowane i spodziewa się \$ na początku specjalnych atrybutów specjalnych.
 
+\subsubsection{Ogarnięcie wyjątków}
+Czytanie typów wyjątków też robiłoby problemy, bo wyglądają tak:
+%{
+  %"jsonrpc": "2.0",
+	%"id": 1, "error": {
+	  %"code": 0,
+		%"message": "Wiadomosc w exceptionie jakas",
+		%"data": {
+		  %"exceptionTypeName": "java.io.IOException",
+			%"message": "Wiadomosc w exceptionie jakas"
+		%}
+	%}
+%}
+Czyli jeszcze trzeba by się było sporo zagłębiać w JSON-RPC lub jego implementację.
+
 
 \subsection{Mapowanie typów}
 Potrzebny jest system mapujący nazwy typów w jednym środowisku, na nazwy z drugiego. Mógłby działać na zasadzie słowników. Żeby zmniejszyć nakład pracy mogły by one być generowane automatycznie zgodnie z jakąś zasadą.
@@ -435,6 +478,10 @@ Co ciekawego zrobiłem w kodzie?
 Dziwne, ale nie ma żadnej dobrej implementacji. JSON-RPC.NET i Jayrock wskazują jakieś propozycje, ale nie ma żadnego dobrego rozwiązania na miarę tego z jsonrpc4j, gdzie wskazuje się interfejs i adres, i dostaje się obiekt klienta realizujący ten interfejs.
 Coś takiego robię. Można by to oddać światu open source, co prawda trzeba by było dodać obsługę wszystkich możliwych błędów komunikacyjnych, a to bywa żmudne.
 
+- klient JSON-RPC nie obsługuje wyjątków tak dobrze, jakby mógł (zwracać je normalnie jako obiekty) i nie jest zabezpieczony przed problemami sieciowymi (nie robi retry itp.)
+
+Będzie zgłoszony jako propozycja implementacji, bo żadnej godnej (rozkminiającej interfejsy) nie ma.
+
 
 
 \section{Tworzenie zdalnych obiektów na żądanie klienta(TODO)}
@@ -446,27 +493,6 @@ Normalnie tego nie ma, bo raczej mamy dane żyjące serwisy i z nimi gadamy. Te�
 %consolidation service w JSON-RPC?
 
 
-
-\section{Złożenie elementów}
-Schemat mojej wizji sklejenia kawałków prototypowych.
-
-Czytanie typów wyjątków też robiłoby problemy, bo wyglądają tak:
-%{
-  %"jsonrpc": "2.0",
-	%"id": 1, "error": {
-	  %"code": 0,
-		%"message": "Wiadomosc w exceptionie jakas",
-		%"data": {
-		  %"exceptionTypeName": "java.io.IOException",
-			%"message": "Wiadomosc w exceptionie jakas"
-		%}
-	%}
-%}
-Czyli jeszcze trzeba by się było sporo zagłębiać w JSON-RPC lub jego implementację.
-
-Zrobiłem taki prosty test z tym DaneA. Mogę tak też zrobić metodę, która przyjmuje object. Pokazać stringa, inta, floata i DaneA, DaneB.
-
-Popisać, jakie testy wszędzie zrobiłem.
 
 \section{Wersja z Thriftem}
 To mogłoby robić prawie wszystko. Działałoby jako niezależny system i nie korzystało z poprzednich komponentów. Nie realizowałoby jednak wszystkich założeń.

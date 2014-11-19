@@ -9,6 +9,8 @@ namespace ClientTests
     {
         string test();
 
+        string test(int arg);
+
         string testString(string arg);
 
         DaneA testA();

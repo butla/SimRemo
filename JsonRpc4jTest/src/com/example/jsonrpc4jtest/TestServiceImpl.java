@@ -12,6 +12,12 @@ public class TestServiceImpl implements TestService
     {
         return "dzia³a!";
     }
+    
+    @Override
+    public String test(int arg)
+    {
+        return "dzia³a! a teraz cyferki: " + Integer.toString(arg);
+    }
 
     @Override
     public String testString(String arg)
