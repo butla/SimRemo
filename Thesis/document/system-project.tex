@@ -173,7 +173,57 @@ Forward portu
 Tutaj przedstawię zaimplementowaną część zaplanowanego projektu. Całość okazała się zbyt obszerna na jedną pracę dyplomową. W~dalszej części rozdziału dokładniej przedstawię poszczególne elementy systemu (zarówno te zaimplementowane jak i~nie) oraz wyzwania z~nimi związane.
 
 \subsection{Spełnienie wymagań systemowych}
-Poniższych wymagań nie udało się spełnić.
+Spełnienie zdefiniowanych wymagań systemowych przez stworzoną implementację zostało przedstawione w~tabeli~\ref{tab:requirements-fulfilment}.
+
+\begin{table}[htbp]
+	\centering
+		\begin{tabular}{ | c | c | c | c | }
+			\hline
+				\textbf{Nazwa wymagania} & \textbf{Typ wymagania} & \textbf{Obszar} & \textbf{Wykonanie}\\
+				\hline \hline
+				Serializacja danych z zachowaniem informacji o typach & Funkcjonalne & Ogólne & +\textasciitilde\\
+				\hline
+				Tłumaczenie kodu & Funkcjonalne & Ogólne & +\\
+				\hline
+				
+				Komunikacja z~klientem & Funkcjonalne & Serwer & +\\
+				\hline
+				Wystawianie metod publicznych zadanych obiektów ,,na zewnątrz'' & Funkcjonalne & Serwer & + \\
+				\hline
+				Tworzenie zdalnych obiektów na życzenie klienta & Funkcjonalne & Serwer & -- \\
+				\hline
+				Niszczenie zdalnych obiektów na życzenie klienta & Funkcjonalne & Serwer & -- \\
+				\hline
+				Polimorfizm parametrów metod zdalnych & Funkcjonalne & Serwer & + \\
+				\hline
+				Przeciążanie metod zdalnych & Funkcjonalne & Serwer & + \\
+				\hline
+				Komunikacja z systemem Android & Funkcjonalne & Serwer & + \\
+				\hline
+				
+				Tworzenie obiektów klienckich & Funkcjonalne & Klient & +\textasciitilde \\
+				\hline
+				Nawiązywanie sesji z serwerem & Funkcjonalne & Klient & -- \\
+				\hline
+				Konsumowanie polimorficznych metod zdalnych & Funkcjonalne & Klient & + \\
+				\hline
+				
+				Łatwość użytkowania & Niefunkcjonalne & Ogólne & +\textasciitilde \\
+				\hline
+				Serwer na Androidzie & Niefunkcjonalne & Serwer & + \\
+				\hline
+				Rozszerzalność metod zdalnych bez ingerencji w oryginalny kod & Niefunkcjonalne & Serwer & + \\
+				\hline
+				Wydajność serwera & Niefunkcjonalne & Serwer & + \\
+				\hline
+				Klient w .NET pod Windows & Niefunkcjonalne & Klient & + \\
+				\hline
+		\end{tabular}
+	\caption[Spełnienie wymagań systemowych.]{Spełnienie wymagań systemowych. ,,+'' oznacza, że wymaganie spełnione; ,,+\textasciitilde'', że zostało spełnione ale wymaga komentarza; ,,--'' że nie zostało spełnione.}
+	\label{tab:requirements-fulfilment}
+\end{table}
+
+Komentarz do niespełnionych wymagań:
 \begin{description}
 \itemtitle{Tworzenie zdalnych obiektów na życzenie klienta}
 Mechanizm w~ogóle nie zaimplementowany. Zdalne obiekty (serwisy) działają jako singletony; każdy obiekt musi być stworzony przez serwer i~powiązany z~unikatowym adresem. Wszystkie żądania wysłane na jeden adres są obsługiwane przez jedną instancję serwisu.
@@ -187,25 +237,44 @@ Sesje miały być nawiązywane na zasadzie przyznawania każdemu klientowi osobn
 
 Są jeszcze wymagania zaimplementowane, które jednak wymagają komentarza:
 \begin{description}
-\itemtitle{Tworzenie obiektów klienckich}
-Kiedy zdalna metoda rzuci wyjątek to pewien wyjątek jest rzucany przez metodę obiektu klienckiego. Nie jest to jednak przetłumaczony obiekt wyjątku rzuconego po stronie serwera, a~wyjątek typu \texttt{JsonRpcException} zawierający tekstowy zapis tego oryginalnego.s
-
 \itemtitle{Serializacja danych z zachowaniem informacji o typach}
 Nie ma wsparcia dla oznaczania typów kolekcji: tablic, list, słowników itp.
+\itemtitle{Tworzenie obiektów klienckich}
+Kiedy zdalna metoda rzuci wyjątek to pewien wyjątek jest rzucany przez metodę obiektu klienckiego. Nie jest to jednak przetłumaczony obiekt wyjątku rzuconego po stronie serwera, a~wyjątek typu \texttt{JsonRpcException} zawierający tekstowy zapis tego oryginalnego.s
 
 \itemtitle{Łatwość użytkowania}
 Ustawianie słownika typów mogłoby się odbywać za pośrednictwem pliku konfiguracyjnego. Aktualnie odbywa się w~kodzie, przy pomocy wywołania statycznej metody, która może być trudna do znalezienia, jeśli się nie wie gdzie szukać.
 \end{description}
 
-Pozostałe 11 wymagań udało się spełnić bez zastrzeżeń.
 
-\subsection{Struktura(TODO)}
-Co jest? Jak to wygląda.
-
+\subsection{Co powstało(TODO)}
+Struktura tego, co zostało zaimplementowane przedstawiona jest na schemacie BLABLABLA. Faktycznie to, co się udało to:
+\begin{itemize}
+	\item osadzenie serwera metod zdalnych (JSON-RPC) na Androidzie;
+	\item dynamiczne tworzenie obiektów klienckich JSON-RPC pod .NET
+	\item polimorfizm przekazywanych pojedynczych obiektów (ale nie kolekcji)
+\end{itemize}
 
 \subsection{Działanie(TODO)}
 Co to potrafi i co z tego.
-Opisać przykładowe przejście przez system w odniesieniu do oryginalnego schematu
+
+Można np. zrobić przekazać obiekt dziedziczący do metody. Można przekać po prostu obiekt, co daje możliwość tworzenia generycznych metod. Gdyby działały tablice, to tworząc słownik możnaby mieć w pełni dynamiczny system.
+
+
+Opisać przykładowe przejście przez system w odniesieniu do oryginalnego schematu. Zgodnie z założeniami:
+\begin{itemize}
+	\item Tworzymy obiekt klienta na bazie interfejsu.
+	\item Wywołujemy metodę interfejsu.
+	\item ta tak naprawdę serializuje parametry zgodnie z JAcksonem
+	\item z serializowanymi parametrami tworzone jest wywołanie JSON-RPC
+	\item serwer odbiera, deserializuje i przekazuje do obiektu serwisu
+	\item wykonywana jest metoda
+	\item uzyskiwana jest odpowiedź lub rzucany jest wyjatek
+	\item zwrócona wartość jest serializowana przez Jackson
+	\item to wysyłane jest w odpowiedzi
+	\item klient to dostaje, deserializuje sobie wartość albo exception (koślawo)
+	\item klient zwraca to do kodu klienckiego albo wartość albo wyjatek
+\end{itemize}
 
 Schemat mojej wizji sklejenia kawałków prototypowych.
 
