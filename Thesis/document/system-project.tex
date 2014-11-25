@@ -148,24 +148,35 @@ Budowanie i~korzystanie z~bibliotek, które powstaną w~trakcie realizacji tego 
 
 
 
-\section{Używana konfiguracja sprzętowa i~narzędzia (TODO)}
-Przed przystąpieniem do omawiania komponentów rozwiązania warto wspomnieć o~tym, na jakiej konfiguracji sprzętowej będę wytwarzał prototypy. Przedstawię też narzędzia, z których korzystałem.
-Prototypy wykonywałem na 64-bitowym Windowsie 7 i emulatorze Androida takim a takim.
+\section{Używana konfiguracja sprzętowa i~narzędzia}
+\label{system-configuration}
+Przed przystąpieniem do omawiania komponentów rozwiązania warto wspomnieć o~tym, na jakiej konfiguracji sprzętowej oraz przy pomocy jakich narzędzi były wytwarzane kod i~tekst niniejszej pracy. Na tej samej konfiguracji wykonywane były testy \emph{frameworków} w~rozdziale~\ref{similar-technologies}.
 
-\subsection{IDE}
-Eclipse z ADT
-Visual Studio 2013
+\begin{description}
+\itemtitle{System operacyjny}
+Windows 7 Professional x64. Cały kod i~tekst pracy powstał na tej maszynie. Na niej był też osadzony emulator Androida.
 
+\itemtitle{Emulator Androida}
+Ściągnięty razem z~IDE Eclipse zmodyfikowanym do pracy z~Androidem\footnote{Do ściągnięcia ze strony \url{http://developer.android.com/sdk/index.html}}.
+Jest to standardowy emulator od Google\footnote{Alternatywnym emulatorem jest Genymotion (\url{http://www.genymotion.com/}), polecany na stronach Xamarina.}.
+Emulowany był Android 4.4.2 (poziom API Androida w~tej wersji to 19). Reszta konfiguracji emulowanego urządzenia: typ obrazu~-- \emph{ARM EABI v7a}, urządzenie~-- Nexus S, RAM~-- 512MB, \emph{VM Heap}~-- 32MB, wewnętrzna pamięć~-- 200MB, karta SD~-- 50MB, zaznaczona opcja użycia GPU hosta.
+%Używam ARMowego, bo więcej telefonów jest właśnie na nim. Zdażają się też drobne rozbieżności działania niektórych niskopoziomowych aplikacji względem obrazu na architekturę x86 (\emph{Intel x86 Atom}).
 
-\subsection{Emulator Androida}
-\label{android-emulator}
-Używałem Eclipsa z wtyczką do Androida z~\url{http://developer.android.com/sdk/index.html}.
-Ściągnąłem i używam narzędzia dla Androida 4.4.2.
+\itemtitle{Eclipse 4.2.1 z~wtyczką ADT}
+Przy jego użyciu stworzona jest przykładowa aplikacja serwerowa, a~także inne aplikacje powstające w~trakcie testów \emph{frameworków} (rozdział~\ref{similar-technologies}). ADT -- \emph{Android Development Tools}, to wtyczka umożliwiająca tworzenie kodu na Androida.
 
-Emulator chodził na obrazie do tych narzędzi, czyli \emph{ARM EABI v7a}. Emulator standardowy od Google.\footnote{Jest jeszcze alternatywny emulator wzmiankowany na stronach Xamarina -- Genymotion, \url{http://www.genymotion.com/}. Kto wie, może są jeszcze inne. Można też chyba w~VirtualBoxie hostować Androida na x86}
-Używam ARMowego, bo więcej telefonów jest właśnie na nim. Zdażają się też drobne rozbieżności działania niektórych niskopoziomowych aplikacji względem obrazu na architekturę x86 (\emph{Intel x86 Atom}).
-Konfiguracja używanej AVD: (w obrazku)
-Forward portu
+\itemtitle{NetBeans 7.4}
+Kod Javy niewymagający Androida do działania powstawał w~nim.
+
+\itemtitle{Visual Studio 2013 Ultimate}
+Pod nim powstawał cały kod C\#.
+
+\itemtitle{Tortoise GIT}
+GIT jest systemem kontroli wersji w~którym trzymany jest kod oraz tekst tej pracy. Wykorzystywany przeze mnie klient to TortoiseGit\footnote{\url{https://code.google.com/p/tortoisegit/}}. Repozytorium znajduje się pod adresem \url{https://github.com/butla/SimRemo}.
+
+\itemtitle{\LaTeX}
+Tekst pracy pisany jest przy pomocy technologii \LaTeX. Jako edytor wykorzystywany jest program TeXnicCenter\footnote{\url{http://www.texniccenter.org/}}.
+\end{description}
 
 
 
@@ -219,7 +230,7 @@ Spełnienie zdefiniowanych wymagań systemowych przez stworzoną implementację 
 				Klient w .NET pod Windows & Niefunkcjonalne & Klient & + \\
 				\hline
 		\end{tabular}
-	\caption[Spełnienie wymagań systemowych.]{Spełnienie wymagań systemowych. ,,+'' oznacza, że wymaganie spełnione; ,,+\textasciitilde'', że zostało spełnione ale wymaga komentarza; ,,--'' że nie zostało spełnione.}
+	\caption[Spełnienie wymagań systemowych.]{Spełnienie wymagań systemowych. ,,+'' oznacza, że wymaganie jest spełnione; ,,+\textasciitilde'', że zostało spełnione ale wymaga komentarza; ,,--'' że nie zostało spełnione.}
 	\label{tab:requirements-fulfilment}
 \end{table}
 
@@ -280,6 +291,12 @@ Schemat mojej wizji sklejenia kawałków prototypowych.
 
 Zrobiłem taki prosty test z tym DaneA. Mogę tak też zrobić metodę, która przyjmuje object. Pokazać stringa, inta, floata i DaneA, DaneB.
 Popisać, jakie testy wszędzie zrobiłem.
+
+Do testów wymagane jest przekierowanie portu TCP hosta do portu TCP emulatora. Do tego należy użyć komendy:
+\begin{lstlisting}[language=bash]
+adb forward tcp:1666 tcp:1666
+\end{lstlisting}
+Adb to komenda z narzędzi instalowanych z Eclipsem.
 
 
 
