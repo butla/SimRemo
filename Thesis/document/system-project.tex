@@ -259,19 +259,28 @@ Ustawianie słownika typów mogłoby się odbywać za pośrednictwem pliku konfi
 
 
 \subsection{Co powstało(TODO)}
-Struktura tego, co zostało zaimplementowane przedstawiona jest na schemacie BLABLABLA. Faktycznie to, co się udało to:
+Struktura tego, co zostało zaimplementowane przedstawiona jest na schemacie~\ref{fig:implementation-overview}. Faktycznie to, co się udało to:
+\begin{figure}
+	\centering
+		\includegraphics[width=\textwidth]{img/schematy/schemat-implementacji.pdf}
+	\caption{Struktura częściowej implementacji projektu.}
+	\label{fig:implementation-overview}
+\end{figure}
+
+
 \begin{itemize}
 	\item osadzenie serwera metod zdalnych (JSON-RPC) na Androidzie;
 	\item dynamiczne tworzenie obiektów klienckich JSON-RPC pod .NET
 	\item polimorfizm przekazywanych pojedynczych obiektów (ale nie kolekcji)
 \end{itemize}
+WALNIJ JESZCZE MAŁE DIAGRAMIKI KLAS TEGO, CO JEST, ALBO OPISZ Interfejsy klas.
 
 \subsection{Działanie(TODO)}
 Co to potrafi i co z tego.
 
 Można np. zrobić przekazać obiekt dziedziczący do metody. Można przekać po prostu obiekt, co daje możliwość tworzenia generycznych metod. Gdyby działały tablice, to tworząc słownik możnaby mieć w pełni dynamiczny system.
 
-
+NARYSUJ DIAGRAM SEKWENCJI (Z WYJĄTKIEM LUB NIE WARUNKOWO)
 Opisać przykładowe przejście przez system w odniesieniu do oryginalnego schematu. Zgodnie z założeniami:
 \begin{itemize}
 	\item Tworzymy obiekt klienta na bazie interfejsu.
@@ -316,6 +325,8 @@ Chcę to zrobić przez dobranie serializatorów po obu stronach i~odpowiednią i
 Myślę o~Jackson po stronie Androida i~DataContractJsonSerializer lub JSON.NET po stronie .NET\@.
 
 Alternatywnym sposobem byłby parser--nakładka. Przetwarzał by on gotowy dokument JSON przygotowany przez JSON.NET na format Jacksona i na odwrót. Byłoby to wolne, ale wymagałoby może mniej ingerencji w~kod. A~pozwalałoby na uzyskanie pełnej zgodności.
+
+Jakie biblioteki użyłem do tego? Że testowałem z Nunitem.
 
 \subsubsection{Porównanie sposobów serializacji w JSON.NET i Jackson}
 Jackson serializuje tak a JSON.NET tak (wypunktować):
