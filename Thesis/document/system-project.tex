@@ -259,20 +259,29 @@ Ustawianie słownika typów mogłoby się odbywać za pośrednictwem pliku konfi
 
 
 \subsection{Co powstało(TODO)}
-Struktura tego, co zostało zaimplementowane przedstawiona jest na schemacie~\ref{fig:implementation-overview}. Faktycznie to, co się udało to:
+Struktura tego, co zostało zaimplementowane przedstawiona jest na schemacie~\ref{fig:implementation-overview}.
 \begin{figure}
 	\centering
 		\includegraphics[width=\textwidth]{img/schematy/schemat-implementacji.pdf}
 	\caption{Struktura częściowej implementacji projektu.}
 	\label{fig:implementation-overview}
 \end{figure}
-
-
+Możliwości tego oprogramowania to:
 \begin{itemize}
-	\item osadzenie serwera metod zdalnych (JSON-RPC) na Androidzie;
-	\item dynamiczne tworzenie obiektów klienckich JSON-RPC pod .NET
-	\item polimorfizm przekazywanych pojedynczych obiektów (ale nie kolekcji)
+	\item serwowanie JSON-RPC na Androidzie;
+	\item dynamiczne tworzenie obiektów klienckich JSON-RPC z~poziomu .NET;
+	\item polimorfizm parametrów metod zdalnych, ale tylko jeśli są pojedynczymi obiektami, a~nie kolekcjami;
+	\item przeładowywanie metod zdalnych.
 \end{itemize}
+
+Dokładniejsza struktura przygotowanych biblioteki .NET przedstawiona jest na diagramie\ref{fig:dot-net-classes}. W~przypadku Androida jest to jedna zmodyfikowana klasa jsonrpc4j (JsonRpcBasicServer). A~wspólne działanie klas na diagramie blublu. 
+\begin{figure}
+	\centering
+		\includegraphics[width=\textwidth]{img/schematy/schemat-klas-net.pdf}
+	\caption{Klasy klienta JSON-RPC pod .NET.}
+	\label{fig:dot-net-classes}
+\end{figure}
+
 WALNIJ JESZCZE MAŁE DIAGRAMIKI KLAS TEGO, CO JEST, ALBO OPISZ Interfejsy klas.
 
 \subsection{Działanie(TODO)}
@@ -481,13 +490,13 @@ Dopiero pojedyncze paramsy są jakoś bardziej interpretowane przez Jacksona. Dl
 Przydało się, to, że tak samo traktują stringi - nie muszą ich specjalnie opisywać. Tak samo z resztą typów prostych - intem, doublem. Ogólnie można przekazywać ogólnie object. Wszystkie są przedstawiane jednoznacznie.
 
 \subsubsection{Co zrobiłem}
-W sumie jeszcze nic. Ale będzie prosta podmiana \$type na @Class na tyle, żeby działał przypadek z przekazywaniem dziedziczącego parametru.
+JsonSerializerInternalWriter - we WriteTypeProperty dodane przeszukiwane po Javowym słowniku. Jak jest wpis dla danego typu, to jest używany on a nie normalna nazwa typu w .NET. Dzięki temu Java może zrozumieć.
 
-Albo zrobię takie dostosowywanie po fakcie, które cały dokument JSON będzie przetwarzało.
-%Zrobię zmianę źródeł JSON.NET, żeby to \$type było konfigurowalne. Tworzę swój SerializationBinder i wszystko wygląda tak, jak w Jacksonie.
-%http://stackoverflow.com/questions/9490345/json-net-change-type-field-to-another-name
-%http://james.newtonking.com/archive/2011/11/19/json-net-4-0-release-4-bug-fixes
-%http://blog.maskalik.com/asp-net/json-net-implement-custom-serialization/
+JsonTypeReflector - TypePropertyName zmienione \$type na @class (bo tak robi Jackson). Przez to działa przekazywanie parametru. JSON.NET ma zhardcodowane to. I tak włąśnie znajduje specjalne parametry, że mają \$ na początku. A jest ich kilka, ale nie przydają się przy przekazywaniu zdalnie. Tak że ta zmiana trochę psuje, bo zmodyfikowany JSON.NET nie może działać z normalnym.
+
+JsonSerializerInternalReader - w ReadMetadataProperties przerobiony \$ na @ żeby czytało @class, w ResolveTypeName dodane sprawdzanie w Javowym słowniku.
+
+JavaTypeDictionary - to dodałem. Można go nakarmić slownikiem (Dictionary) wtedy robi z niego słownik w drugą stronę, dla szybszego przeszukiwania.
 
 
 \subsection{Ograniczenia/Problemy}
@@ -569,6 +578,16 @@ Sam muszę coś zrobić.
 To też może trafić do ludzi jako patch.
 Co ciekawego zrobiłem w kodzie?
 
+Wystarcza to:
+%TestServiceImpl service = new TestServiceImpl();
+%JsonRpcBasicServer serverBase = new JsonRpcBasicServer(
+    %ServerThread.createMapper(),
+    %service,
+    %TestService.class);
+		
+%bindAddress = InetAddress.getByName("0.0.0.0");
+%StreamServer server = new StreamServer(serverBase, maxThreads, port, 0, bindAddress);
+%server.start();
 
 
 \section{Klient JSON-RPC pod .NET(TODO)}
