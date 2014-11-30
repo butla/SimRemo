@@ -181,7 +181,7 @@ Tekst pracy pisany jest przy pomocy technologii \LaTeX. Jako edytor wykorzystywa
 
 
 \section{Częściowa implementacja}
-Tutaj przedstawię zaimplementowaną część zaplanowanego projektu. Całość okazała się zbyt obszerna na jedną pracę dyplomową. W~dalszej części rozdziału dokładniej przedstawię poszczególne elementy systemu (zarówno te zaimplementowane jak i~nie) oraz wyzwania z~nimi związane.
+Tutaj przedstawię zaimplementowaną część zaplanowanego projektu. Całość okazała się zbyt obszerna na jedną pracę dyplomową. W~dalszej części rozdziału dokładniej przedstawię poszczególne elementy systemu (zarówno te zaimplementowane jak i~nie) oraz wyzwania z~nimi związane. Uzasadnię też metody ich implementacji.
 
 \subsection{Spełnienie wymagań systemowych}
 Spełnienie zdefiniowanych wymagań systemowych przez stworzoną implementację zostało przedstawione w~tabeli~\ref{tab:requirements-fulfilment}.
@@ -258,7 +258,24 @@ Ustawianie słownika typów mogłoby się odbywać za pośrednictwem pliku konfi
 \end{description}
 
 
-\subsection{Co powstało(TODO)}
+\subsection{Zasady działania(TODO)}
+Możliwości zaimplementowanego systemu to:
+\begin{itemize}
+	\item serwowanie publicznych metod wybranych obiektów zdalnie, z~Androida;
+	\item dynamiczne tworzenie obiektów klienckich z~poziomu .NET; obiekty implementują zadany (zdalny) interfejs;
+	\item polimorfizm parametrów metod zdalnych, ale tylko jeśli są pojedynczymi obiektami, a~nie kolekcjami;
+	\item przeładowywanie metod zdalnych.
+\end{itemize}
+
+Serwer i~klient porozumiewają się przy użyciu JSON-RPC -- standardu zdalnego wywoływania metod opartego o~JSON, opisanego w~punkcie~\ref{json-rpc}.
+W~ogólności system pozwala na wystawienie publicznych metod zwykłego javowego obiektu ,,na zewnątrz'' systemu Androida.
+Taki wystawiany obiekt (zwany od teraz obiektem zdalnym) jest powiązany z~dowolnym portem TCP swojego.
+Program na Androidzie wystawiający obiekty zdalne działa teraz jako serwer.
+ 
+Dla przykładu można wziąć to i to i wystawić tak i tak.
+Ogólnie można wziąć dowolny interfejs na Androidzie, jakąś jego implementację i wystawić na zewnątrz. Po stronier c\# trzeba mieć interfejs i zgodne klasy. I wszystko działa. Jeśli ktoś by chcciał koprzystać z klienta jsonrpc4j albo innego klienta JSON-RPC serializującego Jacksoinem to nie ma problemu. Jeśli nie potrzebuje oznaczania typów, to może używać dowolnego klienta JSON-RPC tak długo, jak ma odpowiednią interpretację. Bo nie musi być bezpośredniego mapowania typów, ale wiadomości JSON muszą móc być interpretowane dobrze (może takie rzeczy w punkcie o tłumaczeniu typów?).
+WALNIJ JESZCZE MAŁE DIAGRAMIKI KLAS TEGO, CO JEST, ALBO OPISZ Interfejsy klas.
+
 Struktura tego, co zostało zaimplementowane przedstawiona jest na schemacie~\ref{fig:implementation-overview}.
 \begin{figure}
 	\centering
@@ -266,15 +283,10 @@ Struktura tego, co zostało zaimplementowane przedstawiona jest na schemacie~\re
 	\caption{Struktura częściowej implementacji projektu.}
 	\label{fig:implementation-overview}
 \end{figure}
-Możliwości tego oprogramowania to:
-\begin{itemize}
-	\item serwowanie JSON-RPC na Androidzie;
-	\item dynamiczne tworzenie obiektów klienckich JSON-RPC z~poziomu .NET;
-	\item polimorfizm parametrów metod zdalnych, ale tylko jeśli są pojedynczymi obiektami, a~nie kolekcjami;
-	\item przeładowywanie metod zdalnych.
-\end{itemize}
 
-Dokładniejsza struktura przygotowanych biblioteki .NET przedstawiona jest na diagramie\ref{fig:dot-net-classes}. W~przypadku Androida jest to jedna zmodyfikowana klasa jsonrpc4j (JsonRpcBasicServer). A~wspólne działanie klas na diagramie blublu. 
+
+Dokładniejsza struktura przygotowanej biblioteki .NET przedstawiona jest na diagramie~\ref{fig:dot-net-classes}.
+Przygotowana przeze mnie część Androidowa to jedna klasa -- JsonRpcBasicServer -- dodana do jsonrpc4j. Więcej o~niej w~punkcie XXXX W~przypadku Androida jest to jedna zmodyfikowana klasa jsonrpc4j (JsonRpcBasicServer). 
 \begin{figure}
 	\centering
 		\includegraphics[width=\textwidth]{img/schematy/schemat-klas-net.pdf}
@@ -282,7 +294,17 @@ Dokładniejsza struktura przygotowanych biblioteki .NET przedstawiona jest na di
 	\label{fig:dot-net-classes}
 \end{figure}
 
-WALNIJ JESZCZE MAŁE DIAGRAMIKI KLAS TEGO, CO JEST, ALBO OPISZ Interfejsy klas.
+
+
+A~wspólne działanie klas na diagramie~\ref{fig:sequence-diagram}.
+\begin{figure}
+	\centering
+		\includegraphics[angle=90,origin=c,scale=0.8]{img/schematy/diagram-sekwencji.pdf}
+	\caption{Diagram sekwencji systemu.}
+	\label{fig:sequence-diagram}
+\end{figure}
+
+
 
 \subsection{Działanie(TODO)}
 Co to potrafi i co z tego.
