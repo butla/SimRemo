@@ -178,6 +178,12 @@ GIT jest systemem kontroli wersji w~którym trzymany jest kod oraz tekst tej pra
 Tekst pracy pisany jest przy pomocy technologii \LaTeX. Jako edytor wykorzystywany jest program TeXnicCenter\footnote{\url{http://www.texniccenter.org/}}.
 \end{description}
 
+%Do testów wymagane jest przekierowanie portu TCP hosta do portu TCP emulatora. Do tego należy użyć komendy:
+%\begin{lstlisting}[language=bash]
+%adb forward tcp:1666 tcp:1666
+%\end{lstlisting}
+%Adb to komenda z narzędzi instalowanych z Eclipsem.
+
 
 
 \section{Częściowa implementacja}
@@ -267,16 +273,20 @@ Możliwości zaimplementowanego systemu to:
 	\item przeładowywanie metod zdalnych.
 \end{itemize}
 
-Serwer i~klient porozumiewają się przy użyciu JSON-RPC -- standardu zdalnego wywoływania metod opartego o~JSON, opisanego w~punkcie~\ref{json-rpc}.
 W~ogólności system pozwala na wystawienie publicznych metod zwykłego javowego obiektu ,,na zewnątrz'' systemu Androida.
-Taki wystawiany obiekt (zwany od teraz obiektem zdalnym) jest powiązany z~dowolnym portem TCP swojego.
-Program na Androidzie wystawiający obiekty zdalne działa teraz jako serwer.
- 
-Dla przykładu można wziąć to i to i wystawić tak i tak.
-Ogólnie można wziąć dowolny interfejs na Androidzie, jakąś jego implementację i wystawić na zewnątrz. Po stronier c\# trzeba mieć interfejs i zgodne klasy. I wszystko działa. Jeśli ktoś by chcciał koprzystać z klienta jsonrpc4j albo innego klienta JSON-RPC serializującego Jacksoinem to nie ma problemu. Jeśli nie potrzebuje oznaczania typów, to może używać dowolnego klienta JSON-RPC tak długo, jak ma odpowiednią interpretację. Bo nie musi być bezpośredniego mapowania typów, ale wiadomości JSON muszą móc być interpretowane dobrze (może takie rzeczy w punkcie o tłumaczeniu typów?).
-WALNIJ JESZCZE MAŁE DIAGRAMIKI KLAS TEGO, CO JEST, ALBO OPISZ Interfejsy klas.
+Taki wystawiany obiekt zwany jest od teraz obiektem zdalnym.
+Program na Androidzie wystawiający obiekty zdalne działa jako serwer, konkretnie serwer JSON-RPC -- standardu zdalnego wywoływania metod opartego o~JSON, opisanego w~punkcie~\ref{json-rpc}.
+
+System zawiera też klienta JSON-RPC pod .NET. Przy jego pomocy można dynamicznie, wywołaniem jednej metody, stworzyć obiekt spełniający zadany interfejs będący klientem obiektu zdalnego.
+Dla przykładu: kod na Androida zawiera interfejs \texttt{TestService} i~klasę \texttt{TestServiceImpl} go implementującą, obie stworzone przez hipotetycznego użytkownika mojego systemu, a~nie będące jego częścią.
+Po stronie .NET musi znajdować się interfejs lustrzany dla \texttt{TestService} z~Javy (Androida), czyli posiadający tak samo nazwane metody z~analogicznymi parametrami.
+Na bazie tego interfejsu tworzony jest obiekt kliencki dla obiektu zdalnego. Można na nim wykonywać metody interfejsu \texttt{TestService} tak jak na zwykłym lokalnym obiekcie -- zwracane wartości będą normalnymi obiektami.
 
 Struktura tego, co zostało zaimplementowane przedstawiona jest na schemacie~\ref{fig:implementation-overview}.
+Dokładniejsza struktura przygotowanej biblioteki .NET przedstawiona jest na diagramie~\ref{fig:dot-net-classes}.
+Przygotowana przeze mnie część Androidowa to jedna klasa -- JsonRpcBasicServer -- dodana do jsonrpc4j\footnote{jsonrpc4j opisane w~punkcie~\ref{jsonrpc4j}.}. Więcej o~tym w~punkcie~\ref{android-rpc}.
+Natomiast schemat działania zaimplementowanego systemu można zobaczyć na diagramie sekwencji~\ref{fig:sequence-diagram}.
+Ostatni diagram zawiera cztery sekwencje: A, B, C i D.
 \begin{figure}
 	\centering
 		\includegraphics[width=\textwidth]{img/schematy/schemat-implementacji.pdf}
@@ -284,9 +294,6 @@ Struktura tego, co zostało zaimplementowane przedstawiona jest na schemacie~\re
 	\label{fig:implementation-overview}
 \end{figure}
 
-
-Dokładniejsza struktura przygotowanej biblioteki .NET przedstawiona jest na diagramie~\ref{fig:dot-net-classes}.
-Przygotowana przeze mnie część Androidowa to jedna klasa -- JsonRpcBasicServer -- dodana do jsonrpc4j. Więcej o~niej w~punkcie XXXX W~przypadku Androida jest to jedna zmodyfikowana klasa jsonrpc4j (JsonRpcBasicServer). 
 \begin{figure}
 	\centering
 		\includegraphics[width=\textwidth]{img/schematy/schemat-klas-net.pdf}
@@ -294,49 +301,44 @@ Przygotowana przeze mnie część Androidowa to jedna klasa -- JsonRpcBasicServe
 	\label{fig:dot-net-classes}
 \end{figure}
 
-
-
-A~wspólne działanie klas na diagramie~\ref{fig:sequence-diagram}.
 \begin{figure}
 	\centering
 		\includegraphics[angle=90,origin=c,scale=0.8]{img/schematy/diagram-sekwencji.pdf}
-	\caption{Diagram sekwencji systemu.}
+	\caption[Diagram sekwencji systemu.]{Diagram sekwencji systemu. Są 4 niezależne scenariusze: A, B, C i D. D musi wystąpić po 3 poprzednich.}
 	\label{fig:sequence-diagram}
 \end{figure}
 
-
-
-\subsection{Działanie(TODO)}
-Co to potrafi i co z tego.
-
-Można np. zrobić przekazać obiekt dziedziczący do metody. Można przekać po prostu obiekt, co daje możliwość tworzenia generycznych metod. Gdyby działały tablice, to tworząc słownik możnaby mieć w pełni dynamiczny system.
-
-NARYSUJ DIAGRAM SEKWENCJI (Z WYJĄTKIEM LUB NIE WARUNKOWO)
-Opisać przykładowe przejście przez system w odniesieniu do oryginalnego schematu. Zgodnie z założeniami:
+Sekwencja A to stworzenie obiektu zdalnego. Wyjaśnienie jej kroków:
 \begin{itemize}
-	\item Tworzymy obiekt klienta na bazie interfejsu.
-	\item Wywołujemy metodę interfejsu.
-	\item ta tak naprawdę serializuje parametry zgodnie z JAcksonem
-	\item z serializowanymi parametrami tworzone jest wywołanie JSON-RPC
-	\item serwer odbiera, deserializuje i przekazuje do obiektu serwisu
-	\item wykonywana jest metoda
-	\item uzyskiwana jest odpowiedź lub rzucany jest wyjatek
-	\item zwrócona wartość jest serializowana przez Jackson
-	\item to wysyłane jest w odpowiedzi
-	\item klient to dostaje, deserializuje sobie wartość albo exception (koślawo)
-	\item klient zwraca to do kodu klienckiego albo wartość albo wyjatek
+	\item Kod serwerowy tworzy instancję wybranej klasy, na diagramie jest to \texttt{TestServiceImpl}.
+	\item Kod serwerowy wystawia publiczne metody stworzonej instancji \texttt{TestServiceImpl} ,,na zewnątrz'' przy użyciu API jsonrpc4j.
+	\item jsonrpc4j tworzy obiekt opakowujący instancję \texttt{TestServiceImpl}; ten obiekt będzie odpowiedzialny za~wołanie metod instancji \texttt{TestServiceImpl} w~odpowiedzi na otrzymywanie wiadomości od klientów JSON-RPC.
 \end{itemize}
 
-Schemat mojej wizji sklejenia kawałków prototypowych.
+Sekwencja B -- stworzenie obiektu klienckiego. Faktycznie niezależna od sekwencji A, ponieważ obiekt zdalny musi istnieć dopiero przy pierwszym wywołaniu metody, nie przy stworzeniu obiektu klienckiego. Kroki:
+\begin{itemize}
+	\item Kod kliencki tworzy instancję obiektu klienckiego (proxy) dla obiektu zdalnego.
+	\item Statyczna metoda \texttt{JsonRpcClientProxy} tworzy instancję swojej klasy. Instancja tworzona jest na bazie zadanego interfejsu (np. \texttt{TestService}) i~jest wiązany z~adresem konkretnego obiektu zdalnego.
+\end{itemize}
 
-Zrobiłem taki prosty test z tym DaneA. Mogę tak też zrobić metodę, która przyjmuje object. Pokazać stringa, inta, floata i DaneA, DaneB.
-Popisać, jakie testy wszędzie zrobiłem.
+Sekwencja C -- wypełnienie słownika typów. Potrzebne jeśli użytkownik zamierza korzystać z~polimorfizmu parametrów metod zdalnych. Polega na uruchomieniu jednej metody statycznej zmodyfikowanego przeze mnie JSON.NET\footnote{Biblioteka serializacyjna pod .NET; format danych to JSON.}. Wypełniony słownik będzie wykorzystywany do mapowania typów pomiędzy Javą a~.NET przy serializacji i~deserializacji.
 
-Do testów wymagane jest przekierowanie portu TCP hosta do portu TCP emulatora. Do tego należy użyć komendy:
-\begin{lstlisting}[language=bash]
-adb forward tcp:1666 tcp:1666
-\end{lstlisting}
-Adb to komenda z narzędzi instalowanych z Eclipsem.
+Sekwencja D -- wywołanie polimorficznej metody zdalnej, czyli zasadnicza funkcjonalność systemu:
+\begin{itemize}
+	\item Kod kliencki wywołuję metodę .NETowej wersji interfejsu \texttt{TestService} na instancji \texttt{JsonRpcClientProxy}.
+	\item \texttt{JsonRpcClientProxy} przygotowuje wiadomość dla serwera JSON-RPC i~zawiera w~niej przekazane argumenty metody zdalnej.
+	\item Wiadomość jest przekazana do serializacji do zmodyfikowanego JSON.NET.
+	\item Jeśli zachodzi taka potrzeba, JSON.NET pyta \texttt{JavaTypeDictionary} o~nazwy typów w~Javie, które odpowiadają typom parametrów przekazanych do \texttt{JsonRpcClientProxy}.
+	\item \texttt{JsonRpcClientProxy} wysyła zserializawoną wiadomość do serwera JSON-RPC opakowującego instancję obiektu zdalnego.
+	\item Po odebraniu wiadomości zakodowanej w~JSON, opakowanie obiektu zdalnego przekazuje ją do deserializacji do Jacksona.
+	\item Opakowanie obiektu zdalnego przekazuje zdeserializowane parametry do odpowiedniej metody obiektu zdalnego. On wykonuje te metodę lokalnie i~zwraca otrzymaną wartość do obiektu opakowującego.
+	\item Obiekt opakowujący przygotowuje zwrotną wiadomość JSON-RPC umieszczając w~niej obiekt zwrócony z~metody zdalnej. Następnie wiadomość jest serializowana przy użyciu Jacksona.
+	\item Zserializowana wiadomość jest zwrócona do \texttt{JsonRpcClientProxy}.
+	\item \texttt{JsonRpcClientProxy} przekazuje wiadomość do wewnętrznego obiektu \texttt{ResultDeserializer}. \texttt{ResultDeserializer} rozpoznaje, czy zwrócona wartość to wynik metody czy wyjątek.
+	\item \texttt{ResultDeserializer} deserializuje zwróconą wartość wyciągniętą z~wiadomości przy użyciu JSON.NET.
+	\item JSON.NET prosi \texttt{JavaTypeDictionary} o~przetłumaczenie nazw typów Javy na odpowiadające nazwy w~.NET.
+	\item \texttt{JsonRpcClientProxy} przekazuje do kodu klienckiego przetłumaczony obiekt otrzymany z~metody zdalnej.
+\end{itemize}
 
 
 
@@ -346,6 +348,7 @@ Zarówno część na Androidzie jak i~.NET musi tak samo oznaczać typy obiektó
 Jest to podstawa do uzyskania polimorficznych zdalnych metod.
 Wymaga zgodnych serializatorów po obu stronach kanału komunikacyjnego.
 
+Można np. zrobić przekazać obiekt dziedziczący do metody. Można przekać po prostu obiekt, co daje możliwość tworzenia generycznych metod. Gdyby działały tablice, to tworząc słownik możnaby mieć w pełni dynamiczny system.
 
 \subsection{Spełniane wymagania}
 Takie i takie i takie
@@ -578,6 +581,7 @@ Potrzebny byłby system ładowania bibliotek i klas z nich. Ale i tak nie dostar
 
 
 \section{Zdalne wywoływanie metod na Androidzie(TODO)}
+\label{android-rpc}
 %Trzeba ustawić zgodne polimorficzne serializatory zarówno dla klienta jak i~serwera i~wywołać jakąś z~metod, którymi testowałem polimorfizm w~rozdziale~\ref{similar-technologies}.
 Zastosuję jsonrpc4j (jeśli Jackson w~pierwszym prototypie się spisał) na Androidzie i~JSON-RPC.NET po stronie .NET\@.
 Opieranie się o~standard Json-Rpc daje ,,gratis'' identyfikatory połączeń i~wysyłanie błędów.
@@ -587,6 +591,11 @@ Jeśli by się nie skupiać na polimorfizmie to, bez opisu typów, samo RPC dzia
 Json-RPC daje adresację i w ogóle. Metody można z kropkami nazywać (jakieś info o tym było w commicie jsonrpc4j), więc można by się odnosić do w sposób serwis.metoda (od tego chyba ten multiserwis jest).
 
 Jak już mamy to, to można wykorzystywać API Androida i nim zarządzać.
+
+Obiekt jest powiązany z~dowolnym portem TCP swojego hosta.
+Na port powiązany z~obiektem zdalnym mogą przychodzić wywołania JSON-RPC
+
+Inne klienty: ogólnie można serwować dowolne JSON-RPC. Problemy mogą być tylko wtedy, kiedy chce się uzyskać polimorfizm, bo trzeba mieć tak samo skonfigurowany serializator. Użycie czegokolwiek co korzysta z JAcksona da pełna zgodność, nawet większą niż u mojego klienta, bo będzie też możliwość polimorficznego przesyłania kolekcji. Jeśli nie potrzebuje oznaczania typów, to może używać dowolnego klienta JSON-RPC tak długo, jak ma odpowiednią interpretację. Bo nie musi być bezpośredniego mapowania typów, ale wiadomości JSON muszą móc być interpretowane dobrze (może takie rzeczy w punkcie o tłumaczeniu typów?).
 
 \subsection{Jak to robię?}
 Biorę jsonrpc4j, próbuję wyciąć z klas importy, które uniemożliwiają uruchomienie na Androidzie. Możliwe, że i tak ich nie potrzebuję. Przez to będę też musiał wyciąć trochę kodu, ale ponownie -- pewnie i tak go nie potrzebowałem.
@@ -599,6 +608,8 @@ Sam muszę coś zrobić.
 
 To też może trafić do ludzi jako patch.
 Co ciekawego zrobiłem w kodzie?
+
+Metody nie muszą mieć żadnych parametrów.
 
 Wystarcza to:
 %TestServiceImpl service = new TestServiceImpl();
