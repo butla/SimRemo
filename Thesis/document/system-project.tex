@@ -264,7 +264,7 @@ Ustawianie słownika typów mogłoby się odbywać za pośrednictwem pliku konfi
 \end{description}
 
 
-\subsection{Zasady działania(TODO)}
+\subsection{Zasady działania}
 Możliwości zaimplementowanego systemu to:
 \begin{itemize}
 	\item serwowanie publicznych metod wybranych obiektów zdalnie, z~Androida;
@@ -343,22 +343,116 @@ Sekwencja D -- wywołanie polimorficznej metody zdalnej, czyli zasadnicza funkcj
 
 
 %Co to? Jakie wymagania spełnia? Co by wchodziło w tego skład lub ogólny sposob realizacji? Realizacja prototypu. Ograniczenia?
-\section{Wspólny format informacji o typach (TODO)}
-Zarówno część na Androidzie jak i~.NET musi tak samo oznaczać typy obiektów w~zserializowanych obiektach.
-Jest to podstawa do uzyskania polimorficznych zdalnych metod.
-Wymaga zgodnych serializatorów po obu stronach kanału komunikacyjnego.
+\section{Wspólny format informacji o typach}
 
-Można np. zrobić przekazać obiekt dziedziczący do metody. Można przekać po prostu obiekt, co daje możliwość tworzenia generycznych metod. Gdyby działały tablice, to tworząc słownik możnaby mieć w pełni dynamiczny system.
+\subsection{Wprowadzenie(TODO)}
+Obie części systemu -- klient (.NET) i~serwer (Android) -- muszą mieć wspólny system oznaczania typów aby wymieniane obiekty mogły być polimorficzne. 
+Wspólny format oznaczeń nie jest potrzebny, kiedy nie zależy nam na polimorfizmie, czyli w~większości przypadków wykorzystania zdalnego wywoływania metod (kodu).
 
-\subsection{Spełniane wymagania}
-Takie i takie i takie
+Zanim przejdę do przykładów wprowadźmy trochę pseudokodu bazowanego na Javie. Będzie to interfejs obiektu zdalnego, klasa go implementująca oraz klasa danych używana wykorzystywana w~interfejsie; wszystkie znajdujące się w~jednej przestrzeni nazw (\emph{package}). Kod ten znajduje się we fragmencie~\ref{kod:example-remote-classes}.
+
+\begin{lstlisting}[float, frame=single, caption={Przykładowy kod metody zdalnej.}, label=kod:example-remote-classes]
+package org.example.test;
+
+public class DataA
+{
+    public int number;
+    public string text;
+}
+
+public interface TestService
+{        
+    DataA modifyData(DataA data);
+        
+    void nothing();
+}
+
+public class TestServiceImpl
+{
+    DataA modifyData(DataA data)
+    {
+        data.number += 1;
+        data.text += " something added";
+        return data;
+    }
+    
+    void nothing()
+    {
+        System.out.println("Just doing nothing...");
+    }
+}
+\end{lstlisting}
+
+Załóżmy, że będziemy wywołać metody przy pomocy JSON-RPC. Klasyczne JSON-RPC nie koduje w~żaden sposób informacji o typach. Można by z~.NET przekazać zakodowaną wiadomość, wyglądającą mniej więcej tak:
+\begin{lstlisting}[frame=single]
+{
+    "obiekt": "TestServiceImpl1",
+    "metoda": "modifyData",
+    "parametry": [
+        {
+            "number": 13,
+            "text": "przykladowy tekst"
+        }
+    ]
+}
+\end{lstlisting}
+i Java potrafiłaby ją rozkodować. To dlatego, że w~wybranym obiekcie (o~identyfikatorze \texttt{TestServiceImpl1}) istnieje metoda o~nazwie \texttt{modifyData}. Co więcej, przyjmowany przez nią parametr ma dwa obiekty składowe: \texttt{number} i \texttt{text} -- tak samo jak obiekt \texttt{DataA}; dlatego parametr z~JSONa może być zinterpretowany jako \texttt{DataA}\footnote{Zgodnie z~zasadą \emph{Duck Typing}}.
+
+(TODO) \\
+Gdybyśmy posługiwali się SOAPem to by nie było tak prosto, bo musiały by być bindingi do XMLa. Właściwie SOAP we wszystkim musi mieć oznaczony typ. Dlatego, dla prostoty, przez którą nic wartościowego dla tego systemu nie tracimy zdecydowałem się na JSON-RPC. Innym kandydatem był XML-RPC, ale JSON jest lżejszy niż XML.
+
+Póki co, kodowanie informacji o~typach nie jest do niczego potrzebne. Wprowadźmy teraz nową klasę, która dziedzieczy po \texttt{DataA}:
+\begin{lstlisting}[frame=single]
+package org.example.test;
+
+public class DataB extends DataA
+{
+    public double floatNumber;
+}
+\end{lstlisting}
+Zakładamy też, że po stronie .NET znajduje się odpowiednik zarówno \texttt{DataA}, jak i~dziedziczącej po nim \texttt{DataB}. Także relacja dziedziczenia jest zachowana pomiędzy odpowiednikami. Nazwijmy te odpowiedniki \texttt{DataA'} i~\texttt{DataB'}.
+
+Powiedzmy, że teraz klient chce wywołać metodę \texttt{modifyData} przekazując jako parametr \texttt{DataB'}, a~nie \texttt{DataA'} (które było interpretowane przez serwer jako \texttt{DataA}), jak poprzednim razem.
+W~programowaniu obiektowym nie jest to nic dziwnego -- polimorfizm powinien zapewniać to, że obiekt dziedziczący może być zinterpretowany jako bazowy.
+Wynikająca z~takiego wywołania wiadomość może wyglądać następująco:
+\begin{lstlisting}[frame=single]
+{
+    "obiekt": "TestServiceImpl1",
+    "metoda": "modifyData",
+    "parametry": [
+        {
+            "number": 13,
+            "text": "przykladowy tekst",
+						"floatNumber": 5.25
+        }
+    ]
+}
+\end{lstlisting}
+
+Wiadomość ta różni się od poprzedniej tylko polem \texttt{floatNumber}. W~tej sytuacji serwer może się zachować dwojako, w~zależności od konfiguracji.
+Może stwierdzić, że nie ma metody \texttt{modifyData} przyjmującej jeden parametr, który posiada trzy pola: \texttt{number}, \texttt{text} i~\texttt{floatNumber}. W~tej sytuacji nie zostanie wywołana żadna metoda zdalna, a~serwer powinien zwrócić klientowi wyjątek.
+Drugim wyjściem jest pominięcie nierozpoznanego przez serwer \texttt{floatNumber} i~zinterpretowanie reszty pól jako obiektu \texttt{DataA}.
+Metoda wykona się poprawnie, ale może być to działanie niepożądane przez programistę. Przekazując metodzie instancję \texttt{DataB'} mógł chcieć, żeby obiekt zdalny użył faktycznie jej\footnote{Nie jest, oczywiście, możliwe użycie tej samej instancji obiektu, którą przekazał klient. Chodzi o~dokładną kopię.}. Gdyby działanie metody zależało od typu jej parametru, np. kiedy dokonywana jest inspekcja parametru przy użyciu refleksji, to metoda nie zadziałałaby tak, jak oczekiwał tego programista.
+
+Oczywiste jest, że polimorfizm byłby przydatny, gdyby na przyjmowanym parametrze była wywoływana jakaś metoda. Jest to standardowy sposób rozszerzania działania kodu bez jego przepisywania w~programowaniu obiektowym.
+ALE Klasy danych mogą także mieć metody, ale raczej unika się takich rozwiązań. Ponieważ sami musimy napisać odpowiadające sobie klasy trzeba by było też je dopisać. Ale możnaby też jakieś zupełnie inne. Na pewno metody napisane w~jednym kodzie nie będą mogły być wywołane po drugiej stronie.  
+DAJ PRZYKŁAD, KIEDY JEST TO POTRZEBNE A NIE CHCEMY KORZYSTAĆ Z METOD.
 
 
-\subsection{Realizacja}
-Chcę to zrobić przez dobranie serializatorów po obu stronach i~odpowiednią ich konfigurację. Ewentualnie będę ingerował w~ich kod.
-Myślę o~Jackson po stronie Androida i~DataContractJsonSerializer lub JSON.NET po stronie .NET\@.
+Aby sytuacja była jasna typy muszą być oznaczane. Do tego, oznaczanie typów musi być jednolite. Musi być słownik itp. Wtedy wiadomość wyglądałaby tak, bo klient by sobie przetłumaczył typy (zakładamy, że robi to klient). Serwer by sobie odebrał i byłoby git.
 
-Alternatywnym sposobem byłby parser--nakładka. Przetwarzał by on gotowy dokument JSON przygotowany przez JSON.NET na format Jacksona i na odwrót. Byłoby to wolne, ale wymagałoby może mniej ingerencji w~kod. A~pozwalałoby na uzyskanie pełnej zgodności.
+Wnioskowanie o przeładowywaniu metod też działa.
+
+Można wywołać zarówno nothing, jak i metodę przeładowującą nothing, np. metodę nothing(String text)
+
+
+
+
+\subsection{Jak można to zrobić(TODO)}
+Zdecydowałem sie użyć JSON-RPC, bo mam jsonrpc4j które mogę dopasować do Androida i są dobre, otwarte serializatory do JSON -- Jackson, z którego korzysta jsonrpc4j i JSON.NET dla .NET
+
+\subsection{Jak zrobiłem (TODO)}
+
 
 Jakie biblioteki użyłem do tego? Że testowałem z Nunitem.
 

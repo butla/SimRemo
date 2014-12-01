@@ -328,6 +328,12 @@ Podać przykładowy obiekt w C\# i wypełnienie go danymi. Przedstawić jego rep
 \section{Zdalne wywoływanie kodu (TODO)}
 Tu rozstaną opisane techniki umożliwiające zdalne wywoływanie kodu.
 
+Aby wywołać metodę zdalnie jakiś zewnętrzny klient musi, w~ogólności, wskazać obiekt, na którym ma być wywołana metoda, wybrać jedną metodę i~przekazać do niej parametry. Wszystko to można zakodować w~jednym obiekcie, którego będziemy nazywać wiadomością lub wywołaniem.
+Wskazanie obiektu może polegać na podaniu jakiegoś unikatowego adresu rozpoznawanego przez serwer hostujący zdalny obiekt.
+Metoda może być w~naturalny sposób zidentyfikowana przez swoją nazwę.
+Obie te rzeczy można prosto zakodować we wiadomości jako obiekty typu \emph{string}.
+Wyzwanie stanowi przekazanie parametrów, które mogą być dość skomplikowanymi strukturami (ogólnie -- problem serializacji). Skupimy się na przekazaniu parametrów.
+
 %Zrób tak, żeby najpierw zarysować RPC, web servicy itp a dopiero potem wiązanie danych (żeby było wiadomo po co jest)
 %
 %Dane (argumenty metod i~wartości przez nie zwracane) wymieniane pomiędzy klientem a serwerem będą miały postać obiektów (programowanie obiektowe). To znaczy, że typy dziedziczące i implementujące ten sam interfejs będą polimorficzne (źródło!). Często normalnie nie jest tak łatwo to osiągnąć w heterogenicznych środowiskach - ciężko o zachowanie związków między klasami po mapowaniu na drugi język
