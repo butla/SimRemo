@@ -282,6 +282,8 @@ Dla przykładu: kod na Androida zawiera interfejs \texttt{TestService} i~klasę 
 Po stronie .NET musi znajdować się interfejs lustrzany dla \texttt{TestService} z~Javy (Androida), czyli posiadający tak samo nazwane metody z~analogicznymi parametrami.
 Na bazie tego interfejsu tworzony jest obiekt kliencki dla obiektu zdalnego. Można na nim wykonywać metody interfejsu \texttt{TestService} tak jak na zwykłym lokalnym obiekcie -- zwracane wartości będą normalnymi obiektami.
 
+Można wywoływać
+
 Struktura tego, co zostało zaimplementowane przedstawiona jest na schemacie~\ref{fig:implementation-overview}.
 Dokładniejsza struktura przygotowanej biblioteki .NET przedstawiona jest na diagramie~\ref{fig:dot-net-classes}.
 Przygotowana przeze mnie część Androidowa to jedna klasa -- JsonRpcBasicServer -- dodana do jsonrpc4j\footnote{jsonrpc4j opisane w~punkcie~\ref{jsonrpc4j}.}. Więcej o~tym w~punkcie~\ref{android-rpc}.
@@ -343,9 +345,11 @@ Sekwencja D -- wywołanie polimorficznej metody zdalnej, czyli zasadnicza funkcj
 
 
 %Co to? Jakie wymagania spełnia? Co by wchodziło w tego skład lub ogólny sposob realizacji? Realizacja prototypu. Ograniczenia?
-\section{Wspólny format informacji o typach}
+\section{Polimorfizm a wspólny format informacji o typach}
 
-\subsection{Wprowadzenie(TODO)}
+\subsection{Wprowadzenie}
+
+\subsubsection{Zdalne metody bez polimorfizmu}
 Obie części systemu -- klient (.NET) i~serwer (Android) -- muszą mieć wspólny system oznaczania typów aby wymieniane obiekty mogły być polimorficzne. 
 Wspólny format oznaczeń nie jest potrzebny, kiedy nie zależy nam na polimorfizmie, czyli w~większości przypadków wykorzystania zdalnego wywoływania metod (kodu).
 
@@ -357,14 +361,12 @@ package org.example.test;
 public class DataA
 {
     public int number;
-    public string text;
+    public String text;
 }
 
 public interface TestService
 {        
     DataA modifyData(DataA data);
-        
-    void nothing();
 }
 
 public class TestServiceImpl
@@ -374,11 +376,6 @@ public class TestServiceImpl
         data.number += 1;
         data.text += " something added";
         return data;
-    }
-    
-    void nothing()
-    {
-        System.out.println("Just doing nothing...");
     }
 }
 \end{lstlisting}
@@ -398,10 +395,12 @@ Załóżmy, że będziemy wywołać metody przy pomocy JSON-RPC. Klasyczne JSON-
 \end{lstlisting}
 i Java potrafiłaby ją rozkodować. To dlatego, że w~wybranym obiekcie (o~identyfikatorze \texttt{TestServiceImpl1}) istnieje metoda o~nazwie \texttt{modifyData}. Co więcej, przyjmowany przez nią parametr ma dwa obiekty składowe: \texttt{number} i \texttt{text} -- tak samo jak obiekt \texttt{DataA}; dlatego parametr z~JSONa może być zinterpretowany jako \texttt{DataA}\footnote{Zgodnie z~zasadą \emph{Duck Typing}}.
 
-(TODO) \\
-Gdybyśmy posługiwali się SOAPem to by nie było tak prosto, bo musiały by być bindingi do XMLa. Właściwie SOAP we wszystkim musi mieć oznaczony typ. Dlatego, dla prostoty, przez którą nic wartościowego dla tego systemu nie tracimy zdecydowałem się na JSON-RPC. Innym kandydatem był XML-RPC, ale JSON jest lżejszy niż XML.
+Gdyby obiekt zdalny był klasyczną, a~więc korzystającą z~SOAP, usługą sieciową (\emph{web service}), to powyższy przypadek nie działałby ,,tak po prostu''.
+To dlatego, że we wiadomościach SOAP każdy obiekt danych musi być oznaczonym konkretnym typem XML Schema.
+Jest to poważny wysiłek, którego w~powyższym przypadku ani serwer, ani klient nie muszą podejmować.
 
-Póki co, kodowanie informacji o~typach nie jest do niczego potrzebne. Wprowadźmy teraz nową klasę, która dziedzieczy po \texttt{DataA}:
+\subsubsection{Zapotrzebowanie na polimorfizm}
+Póki co, kodowanie informacji o~typach nie jest do niczego potrzebne. Wprowadźmy teraz nową klasę, która dziedziczy po \texttt{DataA}:
 \begin{lstlisting}[frame=single]
 package org.example.test;
 
@@ -423,7 +422,7 @@ Wynikająca z~takiego wywołania wiadomość może wyglądać następująco:
         {
             "number": 13,
             "text": "przykladowy tekst",
-						"floatNumber": 5.25
+            "floatNumber": 5.25
         }
     ]
 }
@@ -434,134 +433,162 @@ Może stwierdzić, że nie ma metody \texttt{modifyData} przyjmującej jeden par
 Drugim wyjściem jest pominięcie nierozpoznanego przez serwer \texttt{floatNumber} i~zinterpretowanie reszty pól jako obiektu \texttt{DataA}.
 Metoda wykona się poprawnie, ale może być to działanie niepożądane przez programistę. Przekazując metodzie instancję \texttt{DataB'} mógł chcieć, żeby obiekt zdalny użył faktycznie jej\footnote{Nie jest, oczywiście, możliwe użycie tej samej instancji obiektu, którą przekazał klient. Chodzi o~dokładną kopię.}. Gdyby działanie metody zależało od typu jej parametru, np. kiedy dokonywana jest inspekcja parametru przy użyciu refleksji, to metoda nie zadziałałaby tak, jak oczekiwał tego programista.
 
-Oczywiste jest, że polimorfizm byłby przydatny, gdyby na przyjmowanym parametrze była wywoływana jakaś metoda. Jest to standardowy sposób rozszerzania działania kodu bez jego przepisywania w~programowaniu obiektowym.
-ALE Klasy danych mogą także mieć metody, ale raczej unika się takich rozwiązań. Ponieważ sami musimy napisać odpowiadające sobie klasy trzeba by było też je dopisać. Ale możnaby też jakieś zupełnie inne. Na pewno metody napisane w~jednym kodzie nie będą mogły być wywołane po drugiej stronie.  
-DAJ PRZYKŁAD, KIEDY JEST TO POTRZEBNE A NIE CHCEMY KORZYSTAĆ Z METOD.
+Oczywista jest przydatność polimorfizmu gdyby na przyjmowanym parametrze była wywoływana jakaś metoda. Jest to standardowy sposób rozszerzania działania kodu bez jego przepisywania, stosowany w~programowaniu obiektowym.
+Klasy, które tutaj nazywam ,,klasami danych'' i~używam jako argumentów dla metod zdalnych mogą mieć metody, jednak wprowadza to problem przy utrzymywaniu bliźniaczych klas we dwóch językach.
+
+Łatwo jest przepisać na inny język klasę, które posiada tylko pola i~żadnych metod -- może to często zrobić nawet automat.
+Metody, natomiast, mogą być wyzwaniem nawet dla człowieka. Nawet, jeśli mowa o~prostej logice, to utrzymanie równoznaczności metod w~obu językach może być wymagające.
+Co prawda, równoznaczność nie jest wcale niezbędna. Po obu stronach barykady klasa może mieć zupełnie inne metody i~zachowanie, zachowując te same pola. Ma to jednak wyraźnie zły wpływ na przejrzystość kodu całego systemu.
+
+Aby obronić polimorfizm w~obiektach zdalnych, mogę dać nieco wydumany przykład metody, która rysuje koła, a~jest sparametryzowana obiektem typu \texttt{Object} (czyli dowolnym). Domyślnie rysuje ona jedno koło o promieniu 5.0, ale w~przekazanym obiekcie szuka pól int (pierwsze zamienia na ilość kół) i double (pierwszego double zamienia na promień rysowanych kół) wyciąga pola przekazanego obiektu.
+Inspekcja obiektów może być używana chociażby przy różnego rodzaju konfiguracjach. Np.\ każdy obiekt hipotetycznego typu \texttt{AdresBazyDanych} znajdujący się w~przychodzących do metod zdalnych parametrach ma zostać podmieniony na wartość pożądaną przez serwer. Kiedy dalej obiekt zdalny będzie wykonywać jakieś operacje na przesłanych parametrach to będzie używany adres skonfigurowany na serwerze, a~nie jakiś nieznany przysłany z~zewnątrz.
+Mniej więcej tak dzieje się w~Spring IoC\footnote{\url{http://docs.spring.io/spring-framework/docs/current/spring-framework-reference/html/beans.html}} -- kontenerze odpowiedzialnym za automatyczną konfigurację aplikacje webowej opartej na frameworku Spring.
+
+%Aby programista nie tracił niespodziewanie żadnych danych i miał po drugiej stronie to, czego chce
+%Aby sytuacja była jasna typy muszą być oznaczane. Do tego, oznaczanie typów musi być jednolite. Musi być słownik itp. Wtedy wiadomość wyglądałaby tak, bo klient by sobie przetłumaczył typy (zakładamy, że robi to klient). Serwer by sobie odebrał i byłoby git.
+%
 
 
-Aby sytuacja była jasna typy muszą być oznaczane. Do tego, oznaczanie typów musi być jednolite. Musi być słownik itp. Wtedy wiadomość wyglądałaby tak, bo klient by sobie przetłumaczył typy (zakładamy, że robi to klient). Serwer by sobie odebrał i byłoby git.
+\subsection{Plan rozwiązania}
+W~ogólności -- aby polimorfizm metod zdalnych był możliwy potrzeba aby klient i~serwer:
+\begin{itemize}
+	\item oznaczały typy obiektów, kiedy nie są one jednoznaczne;
+	\item oznaczały typy w~sposób zrozumiały dla drugiej strony;
+	\item miały dostęp do typów odpowiadającym typom przesyłanym z~drugiej strony (typy lustrzane).
+\end{itemize}
 
-Wnioskowanie o przeładowywaniu metod też działa.
+O~lustrzanych typach pisałem już we wprowadzeniu powyżej. Przykładowy program w~Javie posiadał typy \texttt{DataA} i~\texttt{DataB} po nim dziedziczący. Kod pod .NET posiadał, natomiast, odpowiadające im \texttt{DataA'} i~\texttt{DataB'}.
+Zakładając, że używanym przez nas językiem platformy .NET będzie C\#, klasy te powinny wyglądać tak:
+\begin{lstlisting}[frame=single]
+namespace SerializationTest
+{
+  public class DataA
+  {
+      public int number;
+      public string text;
+  }
+  
+  public class DataB : DataA
+  {
+      public double floatNumber;
+  }
+}
+\end{lstlisting}
+W tym przypadku Java i~C\# są do siebie bardzo zbliżone.
 
-Można wywołać zarówno nothing, jak i metodę przeładowującą nothing, np. metodę nothing(String text)
+Można zauważyć kilka rzeczy:
+\begin{itemize}
+	\item Nazwy klas nie zawierają prim (') -- będą używane tylko w~skróconych oznaczeniach w~tekście.
+	\item Nazwa paczki Javy (\texttt{org.example.test}) i~przestrzeń nazw z~.NET (\texttt{SerializationTest}) nie są takie same; pełne nazwy klas będą następujące: \texttt{org.example.test.DataA} i~\texttt{org.example.test.DataB} (Java), \texttt{SerializationTest.DataA} i~\texttt{SerializationTest.DataB} (.NET).
+	\item Klasy z~C\# zachowują zależność dziedziczenia.
+	\item Odpowiadające sobie klasy mają taki sam zestaw publicznych pól; ważny jest ich typ i nazwy, nie jest ważna kolejność.
+	\item Mimo tego, że tutaj odpowiadające sobie klasy mają takie same nazwy, to nie jest to potrzebne (choć zapewnia czytelność).
+	\item Aby logicznie powiązać odpowiadające sobie klasy musi istnieć pewnego rodzaju słownik; to on pokaże, że np. \texttt{org.example.test.DataA} jest odpowiednikiem \texttt{SerializationTest.DataA}; zależność ta jest wzajemna.
+\end{itemize}
+
+%Oznaczanie typów wymaga słownika. Można by wymusić takie same namespace'y i package, ale każde mają inne zasady nazewnictwa. Można by też wprowadzić identyfikacje po ostatnim członie, ale wtedy stracilibyśmy korzyść z osobnych przestrzeni nazw.
+
+Odpowiadające sobie typy danych w~językach tak podobnych jak Java i~C\# mogłyby teoretycznie być uzyskiwane przez automatyczne tłumaczenie -- z~Javy do .NET lub odwrotnie.
+Nie udało mi się jednak uruchomić żadnego narzędzia, które powinno to potrafić.
+
+Oznaczenie typów może polegać na dodawaniu do obiektu specjalnego pola. W~poniższym przykładzie, przedstawiającym hipotetyczną wiadomość wysłaną z~.NET, to pole zostało nazwane \texttt{\$typ} i~posiada wartość typu \emph{string} zawierającą pełną, jednoznaczną nazwę typu.
+\begin{lstlisting}[frame=single]
+{
+    "obiekt": "TestServiceImpl1",
+    "metoda": "modifyData",
+    "parametry": [
+        {
+            "$typ": "SerializationTest.DataB"
+            "number": 13,
+            "text": "przykladowy tekst",
+            "floatNumber": 5.25
+        }
+    ]
+}
+\end{lstlisting}
+
+Po dodaniu takiego pola serwer powinien wiedzieć jaki konkretnie obiekt otrzymał.
+Gdyby przekazano obiekt \texttt{DataA} to informacja o~typie (pole \$typ) nie byłaby potrzebna, ponieważ \texttt{DataA} jest spodziewanym typem parametru metody \texttt{modifyData}.
 
 
+\subsection{Implementacja(TODO)}
+\subsubsection{Założenia}
+Od razu zakładam, że serializacja danych będzie oparta o~JSON a~protokołem komunikacyjnym będzie JSON-RPC. Pozwoli to na lekką komunikację i~stosunkowo prostą implementację.
+Ponadto, biblioteka JSON-RPC dla języka Java -- jsonrpc4j\footnote{Patrz punkt~\ref{jsonrpc4j}.}, może po modyfikacji działać na Androidzie.
+Po stronie .NET posłużę się otwartą biblioteką do serializacji do JSON -- JSON.NET.
 
+Jackson jest biblioteką serializacyjną z~której korzysta jsonrpc4j. Zarówno Jackson jak i~JSON.NET mają dużo możliwości konfiguracji. Obie posiadają też możliwość kodowania (przez specjalne pola) informacji o typach.
 
-\subsection{Jak można to zrobić(TODO)}
-Zdecydowałem sie użyć JSON-RPC, bo mam jsonrpc4j które mogę dopasować do Androida i są dobre, otwarte serializatory do JSON -- Jackson, z którego korzysta jsonrpc4j i JSON.NET dla .NET
+\subsubsection{Porównanie działania Jackson i~JSON.NET(TODO)}
+W~kolejnych fragmentacj znajduje się zestawienie działania
+Zestawienie ich działania dla kilku przypadków zestawione jest we fragmentach \ref{kod:serilization-objects}, \ref{kod:serialization-arrays}, \ref{kod:serialization-lists}, \ref{kod:serialization-dicts}
 
-\subsection{Jak zrobiłem (TODO)}
+\begin{lstlisting}[float, frame=single, caption={Porównanie serializacji obiektów typu \texttt{DataA}}, label=kod:serilization-objects]
+\\ Jackson
+{
+    "@class":"org.example.test.DataA",
+    "numberA":13,
+    "text": "przykladowy tekst"
+}
 
+\\JSON.NET
+{
+    "$type": "SerializationTest.DataA, TestDataLib",
+    "number": 13,
+    "text": "przykladowy tekst"
+}
+\end{lstlisting}
 
-Jakie biblioteki użyłem do tego? Że testowałem z Nunitem.
-
-\subsubsection{Porównanie sposobów serializacji w JSON.NET i Jackson}
-Jackson serializuje tak a JSON.NET tak (wypunktować):
-BLABLABLABLA
-Żeby były zgodne trzeba zrobić to i to (wypunktować)
-
-TABLICA
-\begin{lstlisting}[float, frame=single, caption={Jackson daje.}, label=kod:jackson-serilization]
+\begin{lstlisting}[float, frame=single, caption={Porównanie serializacji tablicy obiektów typu \texttt{Object}. Tablica zawiera wartość typu \texttt{int} oraz wartość typu \texttt{string}}., label=kod:serialization-arrays]
+\\ Jackson
 [
   "[Ljava.lang.Object;",
   [
     28,
-    "jakis tekst",
-    {
-      "@class":"uniserialjava.DaneA",
-      "numberA":13,
-      "stringA":"domyslny"
-    },
-    {
-      "@class":"uniserialjava.DaneB",
-      "numberA":13,
-      "stringA":"domyslny",
-      "numberB":5.25
-    }
+    "jakis tekst"
   ]
 ]
-\end{lstlisting}
 
-\begin{lstlisting}[float, frame=single, caption={JSON.NET daje.}, label=kod:json-net-serilization]
+\\ JSON.NET
 {
   "$type": "System.Object[], mscorlib",
   "$values": [
     28,
-    "jakis tekst",
-    {
-      "$type": "UniSerialDotNet.DaneA, UniSerialDotNet",
-      "liczbaA": 13,
-      "tekstA": "domyslny"
-    },
-    {
-      "$type": "UniSerialDotNet.DaneB, UniSerialDotNet",
-      "liczbaB": 5.25,
-      "liczbaA": 13,
-      "tekstA": "domyslny"
-    }
+    "jakis tekst"
   ]
 }
 \end{lstlisting}
 
-
-LISTA
-\begin{lstlisting}[float, frame=single, caption={Jackson daje. Lista}, label=kod:jackson-list-serilization]
+\begin{lstlisting}[float, frame=single, caption={Porównanie serializacji listy obiektów typu \texttt{Object}. Lista zawiera wartość typu \texttt{int} oraz wartość typu \texttt{string}}., label=kod:serialization-lists]
+\\ Jackson
 [
   "java.util.ArrayList",
   [
     28,
-    "jakis tekst",
-    {
-      "@class":"uniserialjava.DaneA",
-      "numberA":13,
-      "stringA":"domyslny"
-    },
-    {
-      "@class":"uniserialjava.DaneB",
-      "numberA":13,
-      "stringA":"domyslny",
-      "numberB":5.25
-    }
+    "jakis tekst"
   ]
 ]
-\end{lstlisting}
 
-\begin{lstlisting}[float, frame=single, caption={JSON.NET daje. Lista}, label=kod:json-net-list-serilization]
+\\ JSON.NET
 {
   "$type": "System.Collections.Generic.List`1[[System.Object, mscorlib]], mscorlib",
   "$values": [
     28,
-    "jakis tekst",
-    {
-      "$type": "UniSerialDotNet.DaneA, UniSerialDotNet",
-      "liczbaA": 13,
-      "tekstA": "domyslny"
-    },
-    {
-      "$type": "UniSerialDotNet.DaneB, UniSerialDotNet",
-      "liczbaB": 5.25,
-      "liczbaA": 13,
-      "tekstA": "domyslny"
-    }
+    "jakis tekst"
   ]
 }
 \end{lstlisting}
 
-SŁOWNIK
-\begin{lstlisting}[float, frame=single, caption={Jackson daje. Słownik}, label=kod:jackson-dict-serilization]
+\begin{lstlisting}[float, frame=single, caption={Porównanie serializacji słownika/mapy (\emph{dictionary/map}) mapującego wartość typu \texttt{string} do wartości typu \texttt{int} (\texttt{int} jest kluczem).}, label=kod:serialization-dicts]
+\\ Jackson
 {
   "@class":"java.util.HashMap",
   "1":"pierwszy",
   "2":"drugi",
   "3":"trzeci"
 }
-\end{lstlisting}
 
-%tak wygląda, dla <string, string>, a nie <int, string>
-%{"@class":"java.util.HashMap","3":"trzeci","2":"drugi","1":"pierwszy"}
-
-\begin{lstlisting}[float, frame=single, caption={JSON.NET daje. Słownik}, label=kod:json-net-dict-serilization]
+\\ JSON.NET
 {
   "$type": "System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib],[System.String, mscorlib]], mscorlib",
   "1": "pierwszy",
@@ -569,6 +596,38 @@ SŁOWNIK
   "3": "trzeci"
 }
 \end{lstlisting}
+
+Różnice w~serializacji obu bibliotek: 
+\begin{itemize}
+	\item różni się nazwa specjalnego pola
+	\item oznaczenia w~JSON.NET zawierają też nazwę biblioteki DLL
+	\item styl oznaczania tablic dość się różni
+	\item oznaczanie typów generycznych, Java tego nie wspiera, to mogłoby być probleme tłumacząc z Javy do C\#, w drugą stronie nie
+\end{itemize}
+
+Żeby wszystko działało trzeba by zrobić to to i to.
+
+Nawet nie zagłębiałem się w głębsze funkcje, obie biblioteki mają ich dużo, ale nie są one bardzo potrzebne przy normalnych danych, jakie przekazujemy. Takie funkcje, to np. zapisywanie referencji do obiektów znajdujących się w pamięci -- coś, co nie ma prawa działać przy przenoszeniu danych na inna platformę.
+
+A nie zagłębiałem się, bo o tablice się potknąłem, które są dość podstawowym zapotrzebowaniem.
+
+\subsubsection{Co zrobiłem (TODO)}
+Ostatecznie rzeczy które zrobiłem:
+
+JsonSerializerInternalWriter - we WriteTypeProperty dodane przeszukiwane po Javowym słowniku. Jak jest wpis dla danego typu, to jest używany on a nie normalna nazwa typu w .NET. Dzięki temu Java może zrozumieć.
+
+JsonTypeReflector - TypePropertyName zmienione \$type na @class (bo tak robi Jackson). Przez to działa przekazywanie parametru. JSON.NET ma zhardcodowane to. I tak włąśnie znajduje specjalne parametry, że mają \$ na początku. A jest ich kilka, ale nie przydają się przy przekazywaniu zdalnie. Tak że ta zmiana trochę psuje, bo zmodyfikowany JSON.NET nie może działać z normalnym.
+
+JsonSerializerInternalReader - w ReadMetadataProperties przerobiony \$ na @ żeby czytało @class, w ResolveTypeName dodane sprawdzanie w Javowym słowniku.
+
+JavaTypeDictionary - to dodałem. Można go nakarmić slownikiem (Dictionary) wtedy robi z niego słownik w drugą stronę, dla szybszego przeszukiwania.
+
+
+I działa to tak, jak pokazywałem wcześniej.
+
+
+
+
 
 TO, CO MOGŁOBY DAĆ PEŁNY TEST
 Ładnie ilustruje różne możliwe przypadki:
@@ -607,15 +666,6 @@ TO, CZEGO BĘDĘ FAKTYCZNIE UŻYWAŁ
 Dopiero pojedyncze paramsy są jakoś bardziej interpretowane przez Jacksona. Dlatego mogę spokojnie pokazać jeden polimorficzny parametr działający przy przechodzeniu przez granicę platform. I tyle wystarczy do prezentacji. Widać, że jest to możliwe, bo mamy wystarczającą ilość przekazywanych informacji. Co prawda ucinamy informację o bibliotecę, ale możemy sobie wyobrazić system mapowania, który by się bez tego obył.
 
 Przydało się, to, że tak samo traktują stringi - nie muszą ich specjalnie opisywać. Tak samo z resztą typów prostych - intem, doublem. Ogólnie można przekazywać ogólnie object. Wszystkie są przedstawiane jednoznacznie.
-
-\subsubsection{Co zrobiłem}
-JsonSerializerInternalWriter - we WriteTypeProperty dodane przeszukiwane po Javowym słowniku. Jak jest wpis dla danego typu, to jest używany on a nie normalna nazwa typu w .NET. Dzięki temu Java może zrozumieć.
-
-JsonTypeReflector - TypePropertyName zmienione \$type na @class (bo tak robi Jackson). Przez to działa przekazywanie parametru. JSON.NET ma zhardcodowane to. I tak włąśnie znajduje specjalne parametry, że mają \$ na początku. A jest ich kilka, ale nie przydają się przy przekazywaniu zdalnie. Tak że ta zmiana trochę psuje, bo zmodyfikowany JSON.NET nie może działać z normalnym.
-
-JsonSerializerInternalReader - w ReadMetadataProperties przerobiony \$ na @ żeby czytało @class, w ResolveTypeName dodane sprawdzanie w Javowym słowniku.
-
-JavaTypeDictionary - to dodałem. Można go nakarmić slownikiem (Dictionary) wtedy robi z niego słownik w drugą stronę, dla szybszego przeszukiwania.
 
 
 \subsection{Ograniczenia/Problemy}
