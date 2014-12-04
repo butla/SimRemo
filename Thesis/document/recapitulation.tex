@@ -5,6 +5,16 @@ Ważne, że pokazałem, że zasada działania jest słuszna. Konkretne narzędzi
 %O polimorfizmie typów zdalnych
 Polimorfizm przekazywanych typów jest raczej bardziej sensowny, gdy wszystko zostaje w obrębie jednego języka, jeśli uruchamiamy na przekazanych parametrach metody. Inne zastosowania takiego systemu mogą być zastąpione, przez lepszy \emph{,,design''} funkcjonalności, który nie podejmuje decyzji na bazie typu. Ale może czasem się nie da. Ewentualnie klasy danych mogą mieć te metody, ale muszą być zaimplementowane po obu stronach. Ewentualnie tylko po jednej może być implementacja. Ale trzeba wtedy uważać i być świadomym różnic w zachowaniu typów. Kiedy zawierają one tylko dane nie ma takich problemów.
 
+Ogólnie projekt jest za duży, żeby badać wszystkie aspekty serializacji. Maksymalnie zgodna serializacja mogłaby być osobnym tematem pracy magisterskiej ze względu na swój stopień skomplikowania.
+Dodać to do działu wniosków.
+
+Serializacja zawsze będzie problemem. Chyba, że albo będziemy projektowali klasy danych pod nią, albo cały język zostanie pod jej kątem zaprojektowany (jak Thrift).
+
+Ograniczona współpraca JAvy i C\# jest możliwa, ale nigdy nie będzie pełnej swobody.
+
+Nie było tłumaczenia klas ani systemu ich ładowania - to byłoby fajne w kompletnym sytemie, ale to nie kompletny system. I tak jest dobrze. Fajnie by było też mieć jakis sprytniejszy system na słownik - lepiej nazwaną od niego klasę a najlepiej ładowanie z pliku konfiguracyjnego.
+
+
 \section{Co się udało}
 Ogólny cel pracy został spełniony -- jest wywoływanie kodu na Androidzie. A ze zdefiniowanych początkowych celów:
 \begin{description}
@@ -25,6 +35,10 @@ Nie udało się, ale pokazałem, w jaki sposób można to zrealizować. Zadanie 
 \end{itemize}
 
 \end{description}
+
+I co to naprawdę potrafi? Tak obrazowo?
+
+
 
 \section{Co poza tym się udało}
 \begin{itemize}

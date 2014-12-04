@@ -511,7 +511,7 @@ Po dodaniu takiego pola serwer powinien wiedzieć jaki konkretnie obiekt otrzyma
 Gdyby przekazano obiekt \texttt{DataA} to informacja o~typie (pole \$typ) nie byłaby potrzebna, ponieważ \texttt{DataA} jest spodziewanym typem parametru metody \texttt{modifyData}.
 
 
-\subsection{Implementacja(TODO)}
+\subsection{Implementacja}
 \subsubsection{Założenia}
 Od razu zakładam, że serializacja danych będzie oparta o~JSON a~protokołem komunikacyjnym będzie JSON-RPC. Pozwoli to na lekką komunikację i~stosunkowo prostą implementację.
 Ponadto, biblioteka JSON-RPC dla języka Java -- jsonrpc4j\footnote{Patrz punkt~\ref{jsonrpc4j}.}, może po modyfikacji działać na Androidzie.
@@ -519,9 +519,8 @@ Po stronie .NET posłużę się otwartą biblioteką do serializacji do JSON -- 
 
 Jackson jest biblioteką serializacyjną z~której korzysta jsonrpc4j. Zarówno Jackson jak i~JSON.NET mają dużo możliwości konfiguracji. Obie posiadają też możliwość kodowania (przez specjalne pola) informacji o typach.
 
-\subsubsection{Porównanie działania Jackson i~JSON.NET(TODO)}
-W~kolejnych fragmentacj znajduje się zestawienie działania
-Zestawienie ich działania dla kilku przypadków zestawione jest we fragmentach \ref{kod:serilization-objects}, \ref{kod:serialization-arrays}, \ref{kod:serialization-lists}, \ref{kod:serialization-dicts}
+\subsubsection{Porównanie działania Jackson i~JSON.NET}
+Zestawienie ich działania dla kilku przypadków znajduje się we fragmentach \ref{kod:serilization-objects}, \ref{kod:serialization-arrays}, \ref{kod:serialization-lists}, \ref{kod:serialization-dicts}. Różnice stylu oznaczania typów są w~tabeli~\ref{tab:jackson-jsonnet-differences}
 
 \begin{lstlisting}[float, frame=single, caption={Porównanie serializacji obiektów typu \texttt{DataA}}, label=kod:serilization-objects]
 \\ Jackson
@@ -597,130 +596,79 @@ Zestawienie ich działania dla kilku przypadków zestawione jest we fragmentach 
 }
 \end{lstlisting}
 
-Różnice w~serializacji obu bibliotek: 
+\begin{table}[htbp]
+	\centering
+		\begin{tabular}{ | p{0.25\textwidth} || p{0.30\textwidth} | p{0.35\textwidth} | }
+			\hline
+				& \textbf{Jackson} & \textbf{JSON.NET} \\
+				\hline \hline
+				Nazwa pola specjalnego pola zawierającego oznaczenie typu & \texttt{@class} & \texttt{\$type}. \\
+				\hline
+				Oznaczenie typu zawiera & Pełną nazwę klasy & Pełną nazwę klasy oraz nazwę źródłowej biblioteki (DLL). \\
+				\hline
+				Oznaczenie typu list i~tablic & Opakowanie w~dodatkową listę, której pierwszym elementem jest \texttt{string} z~nazwą typu, a~drugim oryginalna kolekcja. & Opakowanie w~obiekt z~dwoma polami: \texttt{\$type} i~\texttt{\$values} zawierające oryginalną kolekcję. \\
+				\hline
+				Oznaczenie typów generycznych & Nie ma i~nie jest możliwe ze względu na \emph{,,type erasure''}. & Oznaczane przy użyciu składni <nazwa-typu-generycznego>`<ilość-parametrów-typu>[[<nazwa-typu-1>], [<nazwa-typu-2>], ...] \\
+				\hline
+		\end{tabular}
+	\caption{Różnice w~stylu oznaczania typów pomiędzy Jackson a JSON.NET.}
+	\label{tab:jackson-jsonnet-differences}
+\end{table}
+
+\subsubsection{Dookreślenie planu rozwiązania}
+Mimo, że JSON.NET posiada duże możliwości konfiguracji stylu serializacji, zdecydowałem się na modyfikację jego źródeł, zamiast pisania biblioteki na nim bazującej. Nie wszystko da się zrobić przez konfigurację, np.\ nie da się zmienić nazwy specjalnego pola z~typem (\texttt{\$type}).
+Wydaje się też, że zbudowanie programu imitującego sposób serializacji Jacksona korzystającego z~JSON.NET byłoby znacznie bardziej pracochłonne niż przerobienie JSON.NET, aby robił to samo.
+
+Zmodyfikowany JSON.NET traci zgodność ze swoim niezmodyfikowanym odpowiednikiem.
+Przestają też działać niektóre zaawansowane funkcje, np. zapisywanie referencji do obiektów znajdujących się w~pamięci.
+Można je pominąć, ponieważ nie są przydatne w~moim zastosowaniu, tj.\ w~serializacji obiektów danych, które mają być wysyłane na inną platformę.
+
+Aby JSON.NET miał wspólny z~Jackson format informacji o~typach trzeba:
 \begin{itemize}
-	\item różni się nazwa specjalnego pola
-	\item oznaczenia w~JSON.NET zawierają też nazwę biblioteki DLL
-	\item styl oznaczania tablic dość się różni
-	\item oznaczanie typów generycznych, Java tego nie wspiera, to mogłoby być probleme tłumacząc z Javy do C\#, w drugą stronie nie
+	\item zmienić nazwę pola oznaczającego typ z~\texttt{\$type} na @class;
+	\item zmienić sposób serializacji tablic i~list na taki, który imituje Jacksona;
+	\item zmienić sposób deserializacji tablic i~list, aby mogły być przyjmowane od Jacksona;
+	\item utrzymywać po obu stronach (Java, C\#) odpowiadające sobie klasy danych;
+	\item stworzyć słownik łączący pełne nazwy klas w~Javie z~odpowiednikami w~.NET i~vice versa.
 \end{itemize}
 
-Żeby wszystko działało trzeba by zrobić to to i to.
+Brak informacji o~konkretnym typie typów generycznych zserializowanych Jacksonem będzie problemem, jeśli po drugiej stronie typ ten nie będzie mógł być jednoznacznie wywnioskowany. Np.\ kiedy nie ma żadnych założeń co do typu obiektu -- będzie to typ dziedziczący po \texttt{Object}.
+Powiedzmy, że zserializowano obiekt, którego jedno pole ma typ generyczny, np.\ jako pole typu \texttt{ArrayList<String>}. W~takim przypadku konkretny typ szablonu \texttt{ArrayList} będzie mógł być wywnioskowany i~system będzie działał dobrze.
+Ogólnie -- wrodzoną wadą systemu będzie to, że typy generyczne nie zawsze będą działać.
+Nie jest to winą Jacksona, a~mechanizmu języka Java zwanego \emph{,,type erasure''} usuwającego informacje o~faktycznym typie typu generycznego w~trakcie wykonywania kodu.
 
-Nawet nie zagłębiałem się w głębsze funkcje, obie biblioteki mają ich dużo, ale nie są one bardzo potrzebne przy normalnych danych, jakie przekazujemy. Takie funkcje, to np. zapisywanie referencji do obiektów znajdujących się w pamięci -- coś, co nie ma prawa działać przy przenoszeniu danych na inna platformę.
+Jackson nie obsługuje też informacji o bibliotece. Schemat nazywania pakietów w~Javie powinien, jednak, zapewniać ich unikalność, więc brak nazwy biblioteki to nie problem.
 
-A nie zagłębiałem się, bo o tablice się potknąłem, które są dość podstawowym zapotrzebowaniem.
+\subsubsection{Ostateczny kształt rozwiązania}
+JSON.NET ma 14401 linii kodu, używany przeze mnie podzbiór Jackson -- 63497. Obie biblioteki są dobrze napisane i~konfigurowalne, ale nie zakładają dużej ingerencji w~system oznaczania typów, który to w~obu przypadkach jest inny i~specyficzny.
+W~przypadku JSON.NET, który próbowałem zmodyfikować mechanizmy wykrywania i~oznaczania typów są dość mocno uwiązane z~resztą biblioteki. Z~racji natury procesów serializacji i~deserializacji kod jest rekurencyjny i~mocno rozgałęziony.
 
-\subsubsection{Co zrobiłem (TODO)}
-Ostatecznie rzeczy które zrobiłem:
+Przez to nie udało się dopasować serializacji tablic i~list do formatu Jacksona. Zdecydowanie nie jest to niemożliwe, ale wysiłek do tego potrzebny nie zmieścił się w~ramach tej pracy. 
 
-JsonSerializerInternalWriter - we WriteTypeProperty dodane przeszukiwane po Javowym słowniku. Jak jest wpis dla danego typu, to jest używany on a nie normalna nazwa typu w .NET. Dzięki temu Java może zrozumieć.
+Całkowicie, natomiast udała się serializacja dowolnych pojedynczych (nawet skomplikowanych) obiektów. Dzięki temu można uzyskać sprawne polimorficzne metody zdalne.
 
-JsonTypeReflector - TypePropertyName zmienione \$type na @class (bo tak robi Jackson). Przez to działa przekazywanie parametru. JSON.NET ma zhardcodowane to. I tak włąśnie znajduje specjalne parametry, że mają \$ na początku. A jest ich kilka, ale nie przydają się przy przekazywaniu zdalnie. Tak że ta zmiana trochę psuje, bo zmodyfikowany JSON.NET nie może działać z normalnym.
+Wykonane modyfikacje JSON.NET według klas:
+\begin{description}
+\itemtitle{\texttt{JavaTypeDictionary}}
+Nowa klasa statyczna. Można ją zainicjować przy pomocy słownika, czyli obiektu typu \texttt{Dictionary}. Klasa go zapamiętuje oraz tworzy słownik odwrotny (klucze i~wartości zamienione rolami) dla szybszego przeszukiwania. Klasa ta będzie używana przez resztę JSON.NET do tłumaczenia nazw typów.
 
-JsonSerializerInternalReader - w ReadMetadataProperties przerobiony \$ na @ żeby czytało @class, w ResolveTypeName dodane sprawdzanie w Javowym słowniku.
+\itemtitle{\texttt{JsonSerializerInternalWriter}}
+W~metodzie \texttt{WriteTypeProperty} dodano tłumaczenie zapisywanych nazw typów na odpowiedniki z~Javy.
 
-JavaTypeDictionary - to dodałem. Można go nakarmić slownikiem (Dictionary) wtedy robi z niego słownik w drugą stronę, dla szybszego przeszukiwania.
+\itemtitle{\texttt{JsonTypeReflector}}
+Stała \texttt{TypePropertyName} zmieniona z~\texttt{\$type} na \texttt{@class} aby zapewnić zgodność z~Jacksonem. JSON.NET rozpoznaje specjalne pola obiektów po tym, że zaczynają się od ,,\$''. Dlatego ta zmiana psuje zgodność z~oryginalnym JSON.NET.
 
+\itemtitle{\texttt{JsonSerializerInternalReader}}
+Metoda \texttt{ReadMetadataProperties} stosowała wspomniany wcześniej mechanizm wykrywania specjalnych pól obiektów polegający na sprawdzaniu, czy  pierwszy znak nazwy to ,,\$''. Został on zamieniony na ,,@'' aby mogło być wyłapane pole \texttt{@class}. Ponadto, metoda \texttt{ResolveTypeName} korzysta z~\texttt{JavaTypeDictionary} do tłumaczenia nazw klas z~Javy na .NET.
 
-I działa to tak, jak pokazywałem wcześniej.
+\end{description}
 
+%Żeby słownik był dobry dla programisty, to dobrze jakby
+%Potrzebny jest system mapujący nazwy typów w jednym środowisku, na nazwy z drugiego. Mógłby działać na zasadzie słowników. Żeby zmniejszyć nakład pracy mogły by one być generowane automatycznie zgodnie z jakąś zasadą.
+%Pewnie potrzebny by był też system ładowania klas.
+%Może jakiś schemacik tego ładowania i jakby mapowanie działało przy serializacji, deserializacji.
 
-
-
-
-TO, CO MOGŁOBY DAĆ PEŁNY TEST
-Ładnie ilustruje różne możliwe przypadki:
-\begin{itemize}
-	\item Podstawowa serializacja dowolnego obiektu (Call).
-	\item Serializacja generycznej tablicy (parameters)
-	\item Serializacja tablicy, konkretnego typu (someInts)
-	\item Serializacja listy, konkretnego typu (someStrings). Informacja musi być dodana, żeby odróżnić od tablic.
-	\item Serializacja tablicy, bez kontekstu konkretnego typu (na koniec parameters)
-\end{itemize}
-
-\begin{lstlisting}[float, frame=single, caption={Jackson daje. Faktyczny test wywołania.}, label=kod:jackson-call-serilization]
-{
-  "@class":"uniserialjava.Call",
-  "someStrings": [ "java.util.ArrayList", ["a", "b", "c"] ],
-  "someInts": [1,2,3],
-  "parameters": [
-    "[Ljava.lang.Object;",
-    [
-      28,
-      "jakis tekst",
-      {
-        "@class":"uniserialjava.DaneB",
-        "numberA":13,
-        "stringA":"domyslny",
-        "numberB":5.25
-      },
-      ["[I",[1,2,3] ]]
-    ]
-  ]
-}
-\end{lstlisting}
-
-TO, CZEGO BĘDĘ FAKTYCZNIE UŻYWAŁ
-%{"id":"4653019993893876656","jsonrpc":"2.0","method":"testDataA","params":[{"@class":"jsonrpc4jtestse.TestDataB","numberA":13,"stringA":"domyslny","numberB":5.25}]}
-Dopiero pojedyncze paramsy są jakoś bardziej interpretowane przez Jacksona. Dlatego mogę spokojnie pokazać jeden polimorficzny parametr działający przy przechodzeniu przez granicę platform. I tyle wystarczy do prezentacji. Widać, że jest to możliwe, bo mamy wystarczającą ilość przekazywanych informacji. Co prawda ucinamy informację o bibliotecę, ale możemy sobie wyobrazić system mapowania, który by się bez tego obył.
-
-Przydało się, to, że tak samo traktują stringi - nie muszą ich specjalnie opisywać. Tak samo z resztą typów prostych - intem, doublem. Ogólnie można przekazywać ogólnie object. Wszystkie są przedstawiane jednoznacznie.
-
-
-\subsection{Ograniczenia/Problemy}
-\subsubsection{Problemy serializacji}
-Type erasure w Javie jest dużym utrudnieniem dla zachowania pełni informacji o typach.
-Jeśli nie można przekazywać genericów, to nie można pewnie przekazywać dowolnych klas. W praktyce sprowadziło by się to pewnie pod pisanie klas ze świadomością ograniczeń systemu. Ale wtedy, to już chyba lepiej skorzystać z czegoś takiego jak thrift.
-Jedno, co można zrobić to zobaczyć co się będzie działo jak wszystkie genericsy będziemy robili na object i rzutowali, kiedy będzie trzeba.
-
-Ogólnie projekt jest za duży, żeby badać wszystkie aspekty serializacji. Maksymalnie zgodna serializacja mogłaby być osobnym tematem pracy magisterskiej ze względu na swój stopień skomplikowania.
-Dodać to do działu wniosków.
-
-Serializacja zawsze będzie problemem. Chyba, że albo będziemy projektowali klasy danych pod nią, albo cały język zostanie pod jej kątem zaprojektowany (jak Thrift).
-
-Ograniczona współpraca JAvy i C\# jest możliwa, ale nigdy nie będzie pełnej swobody.
-
-Jakieś źródło o tym, jak powinny wyglądać klasy parametrów web serviceów.
-Serializatory takie jak JSON.NET próbują być bardziej uniwersalne, wspierając nie tylko przypadki parametrow metod. Np. wtedym kiedy serializują referencję do żywego obiektu, którego nie dałoby się przesłać.
-Ale można przyjąć, że dane, które będą wysyłane będą podlegać jakimś ograniczeniom, np. jak w WCF. Klasy danych są projektowane specjalnie pod to, żeby być wysyłane. Lub wysyła się proste juz instniejące klasy, które i tak funkcjonowały bardziej jako dane bez metod.
-Z takimi założeniami możemy uzyskać pełną zgodność. No, jedynie zgodności
-%Jackson sam nie może przeczytać tablicy prostej, np. ["bla","alb"] jak nie wie z góry co to ma być, a spodziewa się oznaczania typów. Hm... nie jest to prawdą, kiedy taka tablica jest opakowana w coś innego, obiekt albo tablicę obiektów.
-
-\subsubsection{Wymuszenie jednolitej serializacji}
-JSON.NET ma 14401 linii kodu (mierzone przy użyciu wtyczki Code Metrics Viewer), Jackson ma 63497 (liczone core, databind i annotations, tylko linie z kodem, używałem narzędzia CLOC). I tak są dobrze napisane i umożliwiają swobodne dostosowywanie wielu części. Niestety ogólne mechanizmy serializacji/deserializacji z informacjami o typach są specyficznie rozwiązane w obu frameworkach i dość mocno uwiązane z resztą biblioteki. Przez to ciężko zmienne.
-Poza tym widać, że grafy mogą być bardzo skomplikowane i pełne ich przełożenie z zapisu jednego serializatora na zapis drugiego jeśli nie są niemożliwe, to są trudne. Do tego dochodzą jeszcze różne cechy języka.
-Ogólnie możnaby wprowadzić tłumaczenie, ale raczej nie byłoby ono pewne i nie działało zawsze.
-Wszystkich przypadków wspierać nie dam rady.
-
-W JSON.NET ważne są klasy JsonSerializerInternalReader i JsonSerializerInternalWriter
-
-Wiąże się albo z wielkim nakładem pracy i duplikacją kodu, albo okaleczeniem istniejącej funkcjonalności. Niektóre rzeczy (\$type) zhardcodowane i spodziewa się \$ na początku specjalnych atrybutów specjalnych.
-
-\subsubsection{Ogarnięcie wyjątków}
-Czytanie typów wyjątków też robiłoby problemy, bo wyglądają tak:
-%{
-  %"jsonrpc": "2.0",
-	%"id": 1, "error": {
-	  %"code": 0,
-		%"message": "Wiadomosc w exceptionie jakas",
-		%"data": {
-		  %"exceptionTypeName": "java.io.IOException",
-			%"message": "Wiadomosc w exceptionie jakas"
-		%}
-	%}
-%}
-Czyli jeszcze trzeba by się było sporo zagłębiać w JSON-RPC lub jego implementację.
-
-
-\subsection{Mapowanie typów}
-Potrzebny jest system mapujący nazwy typów w jednym środowisku, na nazwy z drugiego. Mógłby działać na zasadzie słowników. Żeby zmniejszyć nakład pracy mogły by one być generowane automatycznie zgodnie z jakąś zasadą.
-Pewnie potrzebny by był też system ładowania klas.
-Może jakiś schemacik tego ładowania i jakby mapowanie działało przy serializacji, deserializacji.
-
-Coś jeszcze byłoby potrzebne, żeby to wszystko działało?
-
-Potrzebny byłby system ładowania bibliotek i klas z nich. Ale i tak nie dostarczam gotowego systemu, tylko taki prototyp, wiec chyba mogę to pominąć. Tłumaczenia klas też nie będzie. Albo tłumaczenie mogę pominąć, ładowanie zrobić konfigurowane, tj. tak jak słownik typów byłby spis bibliotek (np. z ich pełnymi ścieżkami). Te biblioteki byłyby ładowane do Assembly w .NET i do aktualnego class loadera w javie. Można by to prosto obtestować.
+%Potrzebny byłby system ładowania bibliotek i klas z nich. Ale i tak nie dostarczam gotowego systemu, tylko taki prototyp, wiec chyba mogę to pominąć. Tłumaczenia klas też nie będzie. Albo tłumaczenie mogę pominąć, ładowanie zrobić konfigurowane, tj. tak jak słownik typów byłby spis bibliotek (np. z ich pełnymi ścieżkami). Te biblioteki byłyby ładowane do Assembly w .NET i do aktualnego class loadera w javie. Można by to prosto obtestować.
 
 
 
@@ -774,6 +722,21 @@ Coś takiego robię. Można by to oddać światu open source, co prawda trzeba b
 - klient JSON-RPC nie obsługuje wyjątków tak dobrze, jakby mógł (zwracać je normalnie jako obiekty) i nie jest zabezpieczony przed problemami sieciowymi (nie robi retry itp.)
 
 Będzie zgłoszony jako propozycja implementacji, bo żadnej godnej (rozkminiającej interfejsy) nie ma.
+
+\subsubsection{Ogarnięcie wyjątków}
+Czytanie typów wyjątków też robiłoby problemy, bo wyglądają tak:
+%{
+  %"jsonrpc": "2.0",
+	%"id": 1, "error": {
+	  %"code": 0,
+		%"message": "Wiadomosc w exceptionie jakas",
+		%"data": {
+		  %"exceptionTypeName": "java.io.IOException",
+			%"message": "Wiadomosc w exceptionie jakas"
+		%}
+	%}
+%}
+Czyli jeszcze trzeba by się było sporo zagłębiać w JSON-RPC lub jego implementację.
 
 
 
