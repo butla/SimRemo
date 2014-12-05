@@ -597,7 +597,7 @@ Zestawienie ich działania dla kilku przypadków znajduje się we fragmentach \r
 }
 \end{lstlisting}
 
-\begin{table}[htbp]
+\begin{table}[htbp]              
 	\centering
 		\begin{tabular}{ | p{0.25\textwidth} || p{0.30\textwidth} | p{0.35\textwidth} | }
 			\hline
@@ -744,34 +744,62 @@ Ponieważ po moich zmianach nie ma żadnego spadku funkcjonalności będę prób
 
 
 
-\section{Klient JSON-RPC pod .NET(TODO)}
-Dziwne, ale nie ma żadnej dobrej implementacji. JSON-RPC.NET i Jayrock wskazują jakieś propozycje, ale nie ma żadnego dobrego rozwiązania na miarę tego z jsonrpc4j, gdzie wskazuje się interfejs i adres, i dostaje się obiekt klienta realizujący ten interfejs.
-Coś takiego robię. Można by to oddać światu open source, co prawda trzeba by było dodać obsługę wszystkich możliwych błędów komunikacyjnych, a to bywa żmudne.
+\section{Klient JSON-RPC pod .NET}
+\subsection{Wprowadzenie}
+Kod kliencki mojego systemu potrzebuje możliwości wołania serwera JSON-RPC.
+Okazuje się, że implementacje w~.NET, np. JSON-RPC.NET (opisane w~punkcie~\ref{json-rpc-net}) nie posiadają takiej możliwości.
+Potrafią łatwo wystawiać obiekty zdalne na zewnątrz, ale nie mają właściwie żadnych udogodnień do ich konsumowania.
+Istnieją jedynie dyskusje na temat części klienckiej i~dość prymitywne ich implementacje.
+Te implementacje i~tak zmuszają do ,,własnoręcznego'' złożenia wiadomości JSONowej\cite{json-rpc-net-client}.
 
-.NET jest strasznie zacofany jeśli chodzi o kod kliencki JSON-RPC. W jsonrpc4j można dynamicznie tworzyć klienty do zadanych interfejsów serwisów na dowolnym strumieniu komunikacyjnym, tutaj właściwie nie ma nawet gotowego rozwiązania na jakiegokolwiek klienta. Nawet brak czegoś topornego w użyciu, gdzie podawałoby się nazwę metody jako string, typy i wartości parametrów i oczekiwany typ zwrotny.
-Sam muszę coś zrobić.
+W~przypadku rozwiniętych \emph{frameworków} jak WCF, czy JAX-WS normalne jest, że można w~prostu sposób stworzyć obiekt proxy do serwisu zasilając go jakimś interfejsem.
+Następnie obiekt ten może być wołany jak zwykły obiekt lokalny spełniający zadany interfejs.
+Taką funkcjonalność posiada też jsonrpc4j.
 
-To też może trafić do ludzi jako patch.
-Co ciekawego zrobiłem w kodzie?
+Postanowiłem stworzyć kod, który pozwoli na eleganckie tworzenie obiektów klienckich i~wywoływanie na nich metod.
 
-- klient JSON-RPC nie obsługuje wyjątków tak dobrze, jakby mógł (zwracać je normalnie jako obiekty) i nie jest zabezpieczony przed problemami sieciowymi (nie robi retry itp.)
+\subsection{Realizacja}
+Udało mi się stworzyć klienta, który jest bardzo wygodny w~użyciu (fragment~\ref{kod:my-json-rpc-clinet}).
+Można go tworzyć i~wykorzystywać jak normalny obiekt. Zwraca też normalne obiekty.
+Jeśli połączy się go ze zmodyfikowanym przeze mnie JSON.NET, to potrafi także przekazywać polimorficzne parametry do mojego serwera.
 
-Będzie zgłoszony jako propozycja implementacji, bo żadnej godnej (rozkminiającej interfejsy) nie ma.
+Niestety nie ma jeszcze zaawansowanej logiki odpowiadającej za odporność połączenia, czy ponowne próby wysłania wiadomości. Jeśli coś pójdzie nie tak w~warstwie TCP to zostanie rzucany wyjątek i~wywołanie metody się nie uda.
+Nie jest to jednak duża wada.
 
-\subsubsection{Ogarnięcie wyjątków}
-Czytanie typów wyjątków też robiłoby problemy, bo wyglądają tak:
-%{
-  %"jsonrpc": "2.0",
-	%"id": 1, "error": {
-	  %"code": 0,
-		%"message": "Wiadomosc w exceptionie jakas",
-		%"data": {
-		  %"exceptionTypeName": "java.io.IOException",
-			%"message": "Wiadomosc w exceptionie jakas"
-		%}
-	%}
-%}
-Czyli jeszcze trzeba by się było sporo zagłębiać w JSON-RPC lub jego implementację.
+Też tłumaczenie typów wyjątków nie jest jeszcze wspierane.
+To dlatego, że nie są one przekazywane tak, jak normalne obiekty i~wymagają specjalnego sposobu dekodowania (patrz fragment~\ref{kod:json-rpc-exception}).
+Jeśli coś pójdzie nie tak w~wykonywaniu zdalnej metody (też nie zostanie ona znaleziona) mój klient rzuca ogólny wyjątek \texttt{JsonRpcException}, który zawiera w~sobie wiadomość i~typ wyjątku rzuconego po drugiej stronie.
+Idealnie byłoby, gdyby na bazie wiadomości z~błędem otrzymywanej od serwera klient tworzył odpowiednią instancję wyjątku i~go propagował.
+
+\begin{lstlisting}[float, frame=single, caption={Tworzenie obiektu proxy do obiektu zdalnego przy użyciu mojej implementacji klienta JSON-RPC pod .NET.}, label=kod:my-json-rpc-clinet]
+TestService service = JsonRpcClientProxy<TestService>.
+      Create(ipAddressOrHostname, port);
+
+DataA parameter = new DataA();
+try
+{
+    DataA returnedObject = service.modifyData(parameter);
+}
+catch(JsonRpcException ex)
+{
+    \\ wyswietl tresc wyjatku z serwera
+    Console.WriteLine(ex.Message);
+}
+\end{lstlisting}
+
+\begin{lstlisting}[float, frame=single, caption={Wiadomość od serwera JSON-RPC zawierająca wyjątek.}, label=kod:json-rpc-exception]
+{
+  "jsonrpc": "2.0",
+  "id": 1, "error": {
+    "code": 0,
+    "message": "Wiadomosc w exceptionie jakas",
+    "data": {
+      "exceptionTypeName": "java.io.IOException",
+      "message": "Wiadomosc w exceptionie jakas"
+    }
+  }
+}
+\end{lstlisting}
 
 
 
