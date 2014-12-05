@@ -400,6 +400,7 @@ To dlatego, że we wiadomościach SOAP każdy obiekt danych musi być oznaczonym
 Jest to poważny wysiłek, którego w~powyższym przypadku ani serwer, ani klient nie muszą podejmować.
 
 \subsubsection{Zapotrzebowanie na polimorfizm}
+\label{need-for-polymorphism}
 Póki co, kodowanie informacji o~typach nie jest do niczego potrzebne. Wprowadźmy teraz nową klasę, która dziedziczy po \texttt{DataA}:
 \begin{lstlisting}[frame=single]
 package org.example.test;
@@ -672,52 +673,86 @@ Metoda \texttt{ReadMetadataProperties} stosowała wspomniany wcześniej mechaniz
 
 
 
-\section{Zdalne wywoływanie metod na Androidzie(TODO)}
+\section{Zdalne wywoływanie metod na Androidzie}
 \label{android-rpc}
-%Trzeba ustawić zgodne polimorficzne serializatory zarówno dla klienta jak i~serwera i~wywołać jakąś z~metod, którymi testowałem polimorfizm w~rozdziale~\ref{similar-technologies}.
-Zastosuję jsonrpc4j (jeśli Jackson w~pierwszym prototypie się spisał) na Androidzie i~JSON-RPC.NET po stronie .NET\@.
-Opieranie się o~standard Json-Rpc daje ,,gratis'' identyfikatory połączeń i~wysyłanie błędów.
 
-Jeśli by się nie skupiać na polimorfizmie to, bez opisu typów, samo RPC działać dobrze. Niestety pozbawia to nas w pełni obiektowego modelu programowania zdalnego, rozszerzalności kodu bez jego zmiany i używania klas z dowolnych bibliotek. Może warto wtedy wrócić do Thrifta?
+\subsection{Wybrana forma zdalnego wywoływania metod}
+Jako format zdalnego wywoływania metod w~moim systemie wybrałem JSON-RPC 2.0. Przez swoją prostotę zyskuje on odporność na błędy i~łatwość implementacji.
+Poza tym spełnia wszystkie moje wymagania -- identyfikuje docelowe obiekty i~metody oraz pozwala rozszerzać sposób serializacji parametrów metod.
+Każda wiadomość posiada też identyfikator, który wspomaga rozumienie serii wiadomości w~wymianie między klientem a serwerem jako logicznej ,,rozmowy''.
 
-Json-RPC daje adresację i w ogóle. Metody można z kropkami nazywać (jakieś info o tym było w commicie jsonrpc4j), więc można by się odnosić do w sposób serwis.metoda (od tego chyba ten multiserwis jest).
+Ponadto od wersji 2.0, JSON-RPC posiada mechanizm rozszerzania swoich wiadomości (\emph{Extensions})~\cite{json-rpc-extensions}.
+Dzięki tym rozszerzeniom można by wyróżnić pewne szczególne wiadomości dla serwera, np.\ takie, które mają wywołać stworzenie nowej instancji zdalnego obiektu lub usunięcie starej.
+Taka funkcjonalność jest zawarta w~zebranych wcześniej wymaganiach systemowych, jednak jako mało kluczowa została poświęcona na rzecz realizacji działającego prototypu.
 
-Jak już mamy to, to można wykorzystywać API Androida i nim zarządzać.
+Jednakże kluczowym elementem, który przyczynił się do decyzji o~użyciu JSON-RPC było istnienie biblioteki jsonrpc4j (opisanej w~punkcie~\ref{jsonrpc4j}). Była prosta w~użyciu, funkcjonalna i~nie brakowało jej dużo, aby mogła działać na Androidzie.
 
-Obiekt jest powiązany z~dowolnym portem TCP swojego hosta.
-Na port powiązany z~obiektem zdalnym mogą przychodzić wywołania JSON-RPC
 
-Inne klienty: ogólnie można serwować dowolne JSON-RPC. Problemy mogą być tylko wtedy, kiedy chce się uzyskać polimorfizm, bo trzeba mieć tak samo skonfigurowany serializator. Użycie czegokolwiek co korzysta z JAcksona da pełna zgodność, nawet większą niż u mojego klienta, bo będzie też możliwość polimorficznego przesyłania kolekcji. Jeśli nie potrzebuje oznaczania typów, to może używać dowolnego klienta JSON-RPC tak długo, jak ma odpowiednią interpretację. Bo nie musi być bezpośredniego mapowania typów, ale wiadomości JSON muszą móc być interpretowane dobrze (może takie rzeczy w punkcie o tłumaczeniu typów?).
+\subsection{Plan rozwiązania}
+Gdyby nie skupiać się na polimorfizmie, to, poza zwykłym JSON-RPC, część serwerowa mojego prototypu nie potrzebuje niczego więcej.
+Wystarczy stworzyć obiekt posiadający publiczne metody i~wystawić go na zewnątrz przy pomocy klasy \texttt{JsonRpcServer} z~jsonrpc4j.
+W~tym momencie dowolny klient JSON-RPC, napisany w~dowolnym języku, może wywoływać kod na serwerze.
+Jeśli tym serwerem jest Android, a~tak będzie w~tym przypadku, to klient JSON-RPC może zdalnie wykorzystywać API Androida i~nim zarządzać. A~więc spełnione jest jedno z~wymagań.
 
-\subsection{Jak to robię?}
-Biorę jsonrpc4j, próbuję wyciąć z klas importy, które uniemożliwiają uruchomienie na Androidzie. Możliwe, że i tak ich nie potrzebuję. Przez to będę też musiał wyciąć trochę kodu, ale ponownie -- pewnie i tak go nie potrzebowałem.
-W każdym razie chcę powycinać rzeczy z dwóch klas, które wykorzystywałem, czyli JsonRpcServer i StreamServer. Potem je zbudować i wykonać przepakowanie (repackage) jara w taki sposób, żeby zabrać tylko klasy potrzebne do działania tym dwóm, na których mi zależy. Następnie, powstałego Jara spróbuję użyć zamiast jsonrpc4j w moim testowym projekcie pod Windows. Jeśli to się powiedzie, to spróbuję użyć przepakowanego Jara w projekcie Androidowym.
+Trzeba tylko pamiętać o~posiadaniu po obu stronach wyglądających tak samo typów (wyjaśnione w~punkcie~\ref{need-for-polymorphism}).
+Chyba, że wszystkie przyjmowane i~zwracane przez zdalne metody typy są typami prostymi (\texttt{int}, \texttt{double}, \texttt{bool}, też \texttt{string}) -- są one powszechnie dostępne i~rozumiane, więc nie będzie żadnych problemów.
 
-Biorę sobie Jacksony zbudowane pod Javę 7.
+Klasa \texttt{JsonRpcServer} umożliwia przyjmowanie połączeń do obiektu zdalnego na kilka sposobów, jednak wszystkie poza jednym wymagają bibliotek, które nie są dostępne dla Androida, tylko dla standardowej (właściwie nawet rozszerzonej o~Javę EE) Javy.
+Sposób, który może działać na Androidzie polega na powiązaniu obiektu z~socketem TCP. Obiekt dostaje jeden port, na którym nasłuchuje wiadomości.
+Klienci wysyłają zakodowane JSONem po nawiązaniu połączenia TCP z~konkretnego portem, na konkretnym adresie IP.
+Tak że na jednym serwerze może być wystawionych tyle obiektów zdalnych, ile jest portów TCP na wszystkich interfejsach sieciowych hosta.
+W~przypadku Androida zazwyczaj jest tylko jeden interfejs, co i~tak daje dziesiątki tysięcy portów.
+
+Trzeba ustawić zgodne polimorficzne serializatory zarówno dla klienta jak i~serwera i~wywołać jakąś z~metod, którymi testowałem polimorfizm w~rozdziale~\ref{similar-technologies}.
+
+Kiedy zaczyna nam zależeć na polimorfizmie metod zdalnych, trzeba zwrócić uwagę na konfigurację serializatorów.
+Jackson, który jest biblioteką serializacyjną używaną przez jsonrpc4j ma zdolność oznaczania typów. API jsonrpc4j pozwala, na szczęście, na konfigurację parametrów Jacksona. Czyli możemy sprawić, że serwer będzie zarówno rozumiał oznaczenia typów, jak i~sam będzie je stosował.
+
+Polimorfizm ma swoją cenę -- serwer przestaje być uniwersalnie zgodny z~klientami, ponieważ informacje o~typie we wiadomościach JSON nie są częścią standardu JSON-RPC 2.0.
+Aby móc rozmawiać z~serwerem, klient musi teraz mieć tak samo działający serializator.
+Jest to proste dla innych aplikacji korzystających z~Jacksona, chociaż ich twórcy musieliby je świadomie skonfigurować. Ale inne biblioteki albo w~ogóle nie potrafią oznaczać typów, albo robią to w~niekompatybilny sposób.
+Tak było w~przypadku JSON.NET, którego jednak udało mi się (częściowo) dopasować do Jacksona. 
+
+
+\subsection{Realizacja}
+Przy próbie uruchomienia jsonrpc4j na Androidzie od razu wystąpił błąd. Okazało się, że mimo tego, co jest napisane na stronie projektu\footnote{,,(\ldots)In fact, the client and server both work in an Android environment.(\ldots)~\cite{jsonrpc4j}} nie można uruchomić serwera na Androidzie.
+To dlatego, że klasa \texttt{JsonRpcServer} zawiera zależności do bibliotek, które nie są dostępne dla Androida, a~Java musi móc je załadować, kidy ładuje klasę.
+
+Na szczęście można było podzielić klasę na dwie części -- tę podstawową, która umożliwia wystawianie obiektów zdalnych na portach TCP i~tę zaawansowaną, która dziedziczy po podstawowej i~zależy od bibliotek niedostępnych Androidowi.
+Wydzieloną klasę bazową nazwałem \texttt{JsonRpcBasicServer}. Aby wystawić zdalny obiekt wystarczy kod przedstawiony we fragmencie~\ref{kod:android-remote-object}.
+
+\begin{lstlisting}[float, frame=single, caption={Tworzenie obiektu zdalnego przy pomocy jsonrpc4j dostosowanego do Androida.}, label=kod:android-remote-object]
+TestServiceImpl service = new TestServiceImpl();
+JsonRpcBasicServer serverBase = new JsonRpcBasicServer(
+    ServerThread.createMapper(),
+    service,
+    TestService.class);
+		
+bindAddress = InetAddress.getByName("0.0.0.0");
+StreamServer server = new StreamServer(
+    serverBase,
+    maxThreads,
+    port,
+    0,
+    bindAddress);
+
+server.start();
+\end{lstlisting}
+
+Tym samym serwer jest całkowicie sprawny i~umożliwia wystawianie dowolnych metod Javy (poza metodami generycznymi) do konsumpcji dla wszystkich klientów JSON-RPC.
+Ponieważ po moich zmianach nie ma żadnego spadku funkcjonalności będę próbował przyłączyć je do oryginalnego projektu.
+
+
+
+\section{Klient JSON-RPC pod .NET(TODO)}
+Dziwne, ale nie ma żadnej dobrej implementacji. JSON-RPC.NET i Jayrock wskazują jakieś propozycje, ale nie ma żadnego dobrego rozwiązania na miarę tego z jsonrpc4j, gdzie wskazuje się interfejs i adres, i dostaje się obiekt klienta realizujący ten interfejs.
+Coś takiego robię. Można by to oddać światu open source, co prawda trzeba by było dodać obsługę wszystkich możliwych błędów komunikacyjnych, a to bywa żmudne.
 
 .NET jest strasznie zacofany jeśli chodzi o kod kliencki JSON-RPC. W jsonrpc4j można dynamicznie tworzyć klienty do zadanych interfejsów serwisów na dowolnym strumieniu komunikacyjnym, tutaj właściwie nie ma nawet gotowego rozwiązania na jakiegokolwiek klienta. Nawet brak czegoś topornego w użyciu, gdzie podawałoby się nazwę metody jako string, typy i wartości parametrów i oczekiwany typ zwrotny.
 Sam muszę coś zrobić.
 
 To też może trafić do ludzi jako patch.
 Co ciekawego zrobiłem w kodzie?
-
-Metody nie muszą mieć żadnych parametrów.
-
-Wystarcza to:
-%TestServiceImpl service = new TestServiceImpl();
-%JsonRpcBasicServer serverBase = new JsonRpcBasicServer(
-    %ServerThread.createMapper(),
-    %service,
-    %TestService.class);
-		
-%bindAddress = InetAddress.getByName("0.0.0.0");
-%StreamServer server = new StreamServer(serverBase, maxThreads, port, 0, bindAddress);
-%server.start();
-
-
-\section{Klient JSON-RPC pod .NET(TODO)}
-Dziwne, ale nie ma żadnej dobrej implementacji. JSON-RPC.NET i Jayrock wskazują jakieś propozycje, ale nie ma żadnego dobrego rozwiązania na miarę tego z jsonrpc4j, gdzie wskazuje się interfejs i adres, i dostaje się obiekt klienta realizujący ten interfejs.
-Coś takiego robię. Można by to oddać światu open source, co prawda trzeba by było dodać obsługę wszystkich możliwych błędów komunikacyjnych, a to bywa żmudne.
 
 - klient JSON-RPC nie obsługuje wyjątków tak dobrze, jakby mógł (zwracać je normalnie jako obiekty) i nie jest zabezpieczony przed problemami sieciowymi (nie robi retry itp.)
 
@@ -740,15 +775,15 @@ Czyli jeszcze trzeba by się było sporo zagłębiać w JSON-RPC lub jego implem
 
 
 
-\section{Tworzenie zdalnych obiektów na żądanie klienta(TODO)}
-Klient musi mieć specjalną metodę, którą będzie wywoływał stworzenie zdalnego obiektu, któremu dalej będzie wysyłał wywołania.
-Można to zrealizować przy pomocy mechanizmu rozszerzeń (\emph{Extensions}) standardu JSON-RPC 2.0.
-Normalnie tego nie ma, bo raczej mamy dane żyjące serwisy i z nimi gadamy. Też normalnie nie operuje się na typie serwisu. Tu będzie trzeba właśnie podać typ serwisu, jaki chcemy. No w sumie WCF i JAX-WS to jakoś tam robią. Ale one mają jakby serwis i tak wolnostojący i dopiero w nim robią instancje. U mnie będzie jeden główny serwer i pod nim instancje wszystkiego.
-%https://jsonrpcx.org/Main/HomePage
-%http://grokbase.com/t/gg/json-rpc/138ce80p54/what-are-rpc-extensions
-%consolidation service w JSON-RPC?
-
-
-
-\section{Wersja z Thriftem}
-To mogłoby robić prawie wszystko. Działałoby jako niezależny system i nie korzystało z poprzednich komponentów. Nie realizowałoby jednak wszystkich założeń.
+%\section{Tworzenie zdalnych obiektów na żądanie klienta(TODO)}
+%Klient musi mieć specjalną metodę, którą będzie wywoływał stworzenie zdalnego obiektu, któremu dalej będzie wysyłał wywołania.
+%Można to zrealizować przy pomocy mechanizmu rozszerzeń (\emph{Extensions}) standardu JSON-RPC 2.0.
+%Normalnie tego nie ma, bo raczej mamy dane żyjące serwisy i z nimi gadamy. Też normalnie nie operuje się na typie serwisu. Tu będzie trzeba właśnie podać typ serwisu, jaki chcemy. No w sumie WCF i JAX-WS to jakoś tam robią. Ale one mają jakby serwis i tak wolnostojący i dopiero w nim robią instancje. U mnie będzie jeden główny serwer i pod nim instancje wszystkiego.
+%%https://jsonrpcx.org/Main/HomePage
+%%http://grokbase.com/t/gg/json-rpc/138ce80p54/what-are-rpc-extensions
+%%consolidation service w JSON-RPC?
+%
+%
+%
+%\section{Wersja z Thriftem}
+%To mogłoby robić prawie wszystko. Działałoby jako niezależny system i nie korzystało z poprzednich komponentów. Nie realizowałoby jednak wszystkich założeń.
