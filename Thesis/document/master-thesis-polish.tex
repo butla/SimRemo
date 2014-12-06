@@ -124,51 +124,47 @@
 
 \usepackage{slantsc}
 
-% nazwa pliku ze stroną tytułową
-% \include{phd_titlepage}
-\include{mgr_titlepage}
-
-% parametry strony tytułowej, zdefiniowane są w plikach z poszczególnymi stronami
-% tytuł pracy
-\title{Zdalne wywoływanie metod języka Java w systemie Android z platformy .NET}
-% autor
-\author{Michał Bultrowicz}
-% rok wydania
-\date{2014}
-% miasto, gdzie napisano pracę
-\miasto{Gdańsk}
-% promotor
-%\promotor{dr inż.\ Jacek Lebiedź}
-% wydział promotora, tylko dla phd_titlepage
-% \promotordpt{Wydział Elektroniki, Telekomunikacji i~Informatyki}
-% uczelnia promotora, tylko dla phd_titlepage
-% \promotoruniv{Politechnika Gdańska}
-
-% rodzaj studiów, tylko dla mgr_titlepage
-\studies{Stacjonarne drugiego stopnia}
-% opis pracy, tylko dla mgr_titlepage
-\descr{Przegląd i~analiza istniejących rozwiązań problemu zdalnego wywoływania kodu w~heterogenicznych środowiskach. Stworzenie własnego obiektowego rozwiązania w~postaci bibliotek i~ewentualnych narzędzi pobocznych. Podstawowy model użycia obejmuje wywoływanie kodu na~Androidzie przez~program działający w~.NET\@. Nacisk jest kładziony na łatwość użycia powstałego oprogramowania w~nowych i~istniejących projektach.}
-% nr indeksu, tylko dla mgr_titlepage
-\indeks{119290}
-% katedra, tylko dla mgr_titlepage
-\dept{Inteligentnych Systemów Interaktywnych}
-% specjalność
-\speciality{Inteligentne Systemy Interaktywne}
-
 % korekta marginesów - domyślnie latex ma jakieś kosmiczne
 \usepackage{anysize}
 \marginsize{3.5cm}{2.5cm}{2.5cm}{2.5cm}
 % po zmianie marginesów konieczne jest wymuszenie przeliczenia nagłówków
 \fancyhfoffset[E,O]{0pt}
 
+\usepackage{pdfpages}
+
+
 \begin{document}
-% sekcja wstępna książki, numerowana rzymskimi
-\frontmatter
-% generacja strony tytułowej załączonej wcześniej
-\maketitle
+
+% wymagane początkowe strony
+\includepdf{StronaTytulowa_119290.pdf}
+\includepdf{Oswiadczenie_119290.pdf}
+
+{\noindent \large \textbf{STRESZCZENIE (TODO)}} \\
+% strzeszczenie i abstract
+Streszczenie powinno zawierać określenie problemu naukowego lub praktycznego do rozwiązania, cel i zakres pracy, zastosowane metody badań, wyniki i najważniejsze wnioski.
+Jeżeli praca jest realizowana przez co najmniej 2 studentów, to w Streszczeniu należy określić indywidualny udział każdego studenta w realizowanej pracy, podając jakie zagadnienia przez każdego ze studentów zostały opracowane i wykonane. Należy również zamieścić informację jakie rozdziały lub podrozdziały dany student opracował (patrz Spis treści). Należy przyjąć, że punkty podrozdziałów muszą być opracowywane przez studenta odpowiedzialnego za realizację podrozdziału. Przykładowo, jeżeli praca jest realizowana przez studenta A i studenta B, to można przytoczyć zapis: imię i nazwisko studenta A – udział w rozdziałach 1, 7 oraz indywidualnie rozdział 2 oraz podrozdziały 3.1 i 4.2, itd., imię i nazwisko studenta B – udział w rozdziałach 1, 7 oraz indywidualnie rozdział 5 i 6 oraz podrozdziały 3.2 i 4.1, itd.
+
+\textbf{Słowa kluczowe:} \\
+Android, RPC, RMI, remote, \emph{web service}
+\clearpage
+
+{\noindent \large \textbf{ABSTRACT (TODO)}} \\
+The same but in english.
+
+\textbf{Keywords:} \\
+\clearpage
 
 % spis treści
 \tableofcontents
+
+\clearpage
+{\noindent \large \textbf{WYKAZ WAŻNIEJSZYCH OZNACZEŃ I SKRÓTÓW (TODO)}} \\
+\begin{itemize}
+  \item[JAX-WS --] Remote Procedure Call
+	\item[RPC --] Remote Procedure Call 
+	\item[WCF --] Remote Procedure Call
+\end{itemize}
+\clearpage
 
 % właściwa część książki, numerowana arabskimi od 1
 \mainmatter
@@ -230,13 +226,14 @@
 
 \backmatter
 
+% rodzaj bibliografii
+\bibliographystyle{plain}
+% plik z wpisami bibliograficznymi
+\bibliography{bibliography}
+
 % lista rysunków
 \listoffigures
 % lista tabel
 \listoftables
 
-% rodzaj bibliografii
-\bibliographystyle{plain}
-% plik z wpisami bibliograficznymi
-\bibliography{bibliography}
 \end{document}
