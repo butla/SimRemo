@@ -531,7 +531,7 @@ Zestawienie ich działania dla kilku przypadków znajduje się we fragmentach \r
     "text": "przykladowy tekst"
 }
 
-\\JSON.NET
+\\ JSON.NET
 {
     "$type": "SerializationTest.DataA, TestDataLib",
     "number": 13,
@@ -782,7 +782,7 @@ try
 }
 catch(JsonRpcException ex)
 {
-    // wyswietl tresc wyjatku z serwera
+    // wyświetl treść wyjątku z serwera
     Console.WriteLine(ex.Message);
 }
 \end{lstlisting}
@@ -792,10 +792,10 @@ catch(JsonRpcException ex)
   "jsonrpc": "2.0",
   "id": 1, "error": {
     "code": 0,
-    "message": "Wiadomosc w exceptionie jakas",
+    "message": "Wiadomosc z wyjatku",
     "data": {
       "exceptionTypeName": "java.io.IOException",
-      "message": "Wiadomosc w exceptionie jakas"
+      "message": "Wiadomosc z wyjatku"
     }
   }
 }

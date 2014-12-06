@@ -297,31 +297,31 @@ Nowym formatem, który nie bardzo popularny jest AXON\footnote{\url{http://intel
 \end{description}
 
 \begin{lstlisting}[float, frame=single, caption={Przykłady XML. Komentarze poprzedzone przez ,,//'', mimo, że składnia komentarzy w~XML jest inna.}, label=kod:xml-example]
-<?xml version="1.0" encoding="UTF-8"?> // naglowek dokumentu XML
-<lista_zakupow> // element nadrzedny dokumentu
+<?xml version="1.0" encoding="UTF-8"?> // nagłówek dokumentu XML
+<lista_zakupow> // element nadrzędny dokumentu
   <pozycja>ser</pozycja> // element o nazwie ,,pozycja''
-  <pozycja>mleko</pozycja> // tekstowa wartosc ,,mleko''
-  <pozycja niezbedne="nie">cukierki</pozycja> // atrybut ,,niezbedne''
-</lista_zakupow> // zamkniecie elementu nadrzednego
+  <pozycja>mleko</pozycja> // tekstowa wartość ,,mleko''
+  <pozycja niezbedne="nie">cukierki</pozycja> // atrybut ,,niezbędne''
+</lista_zakupow> // zamkniecie elementu nadrzędnego
 
 <?xml version="1.0" encoding="UTF-8"?> // nowy dokument XML
 // wprowadzenie przestrzeni nazw ,,z''
 <z:lista_zakupow xmlns:z="http://example.com/zakupy">
   <z:pozycja></pozycja>
-  <z:pozycja/>  // elementy moga byc od razu zamkniete
+  <z:pozycja/>  // elementy mogą być od razu zamknięte
 </h:table>
 \end{lstlisting}
 
 \begin{lstlisting}[float, frame=single, caption={Przykłady JSON. Komentarze poprzedzone przez ,,//'', mimo, że składnia JSON nie posiada komentarzy.}, label=kod:json-example]
 //przyklad 1 -- obiekt
-{  // poczatek obiektu
+{  // początek obiektu
   // pole obiektu o nazwie ,,liczba''
   "liczba": 13, // przecinek przed kolejnym polem
-  "tekst": "wartosc tekstowe"
+  "tekst": "wartosc tekstowa"
 } // koniec obiektu
 
 //przyklad 2 -- lista
-[  // poczatek listy
+[  // początek listy
   1,
   2,
   3,
@@ -330,7 +330,7 @@ Nowym formatem, który nie bardzo popularny jest AXON\footnote{\url{http://intel
   true
 ]  // koniec listy
 
-//przyklad 3 -- prosta wartosc
+//przyklad 3 -- prosta wartość
 "wiadomosc" // sam typ prosty to tez dokument JSON
 \end{lstlisting}
 
@@ -487,28 +487,27 @@ XML-RPC to dość stary, ale prosty i~popularny protokół.
 %\url{http://effbot.org/zone/xmlrpc-errata.htm}\\
 
 
-\subsection{JSON-RPC(TODO)}
+\subsection{JSON-RPC}
 \label{json-rpc}
-Prosty, ciągle rozwijany standard RPC podobny do XML-RPC. W~tym przypadku przesyłane są jednak dokumenty JSON, nie XML.
+Prosty, ciągle rozwijany, bezstanowy standard RPC podobny do XML-RPC. W~tym przypadku przesyłane są jednak dokumenty JSON, nie XML.
 Podobnie jak XML-RPC może używać praktycznie czegokolwiek jako warstwy transportowej.
 Wszystko, co pozwoli na przekazanie dokumentu JSON od klienta do serwera i~z~powrotem się nadaje.
 Dzięki temu, że oparty jest o~JSON posiada bardziej zwięzłą składnię niż XML-RPC.
+Składnię JSON-RPC można rozszerzać~\cite{json-rpc-extensions}.
 
 Przykładowe wywołanie i~odpowiedź pokazane we fragmencie~\ref{kod:json-rpc-examples}.
-Elementy składni~\cite{json-rpc-specification}:
-\begin{itemize}
-	\item Każda wiadomość jest obiektem JSON.
+Każda wiadomość jest obiektem JSON.
+Elementy wiadomości~\cite{json-rpc-specification}:
+\begin{description}
 	\item[\texttt{jsonrpc}] Wartość typu \texttt{string} oznaczająca wersję protokołu JSON-RPC. Musi być równa ''2.0''.
-	\item[\texttt{id}] An identifier established by the Client that MUST contain a String, Number, or NULL value if included. If it is not included it is assumed to be a notification. The value SHOULD normally not be Null [1] and Numbers SHOULD NOT contain fractional parts 
-	\item[\texttt{method}] A String containing the name of the method to be invoked. Method names that begin with the word rpc followed by a period character (U+002E or ASCII 46) are reserved for rpc-internal methods and extensions and MUST NOT be used for anything else.
-	\item[\texttt{params}] A Structured value that holds the parameter values to be used during the invocation of the method. This member MAY be omitted.
-	\item[\texttt{result}] This member is REQUIRED on success.
+	\item[\texttt{id}] Identyfikator ustalony przez klienta identyfikator, który musi zawierać \texttt{string}, liczbę lub wartość NULL jeśli jest zamieszczony. Jeśli jest zamieszczony jest uznawany za powiadomienie.
+	\item[\texttt{method}] Wartość typu \texttt{string} zawierająca nazwę metody, która ma być wykonana. Nazwy zaczynające się od ,,rpc.'' są zarezerwowane dla rozszerzeń.
+	\item[\texttt{params}] Lista zawierająca parametry, które mają być przekazane wywoływanej metodzie. Ten element może być pominięty, jeśli metoda nie przyjmuje parametrów.
+	\item[\texttt{result}] Wartość zwracana przez metodę, może być NULL. Element musi istnieć, jeśli wywołanie zakończyło się sukcesem. Nie może istnieć, jeśli wystąpił błąd w~trakcie wywołania.
 This member MUST NOT exist if there was an error invoking the method.
-The value of this member is determined by the method invoked on the Server.
-	\item[\texttt{error}] This member is REQUIRED on error.
-This member MUST NOT exist if there was no error triggered during invocation.
-The value for this member MUST be an Object as defined in section 5.1.
-\end{itemize}
+	\item[\texttt{error}] Element musi się pojawić, jeśli wystąpił błąd przy wywołaniu metody. Jej wartość musi być obiektem błędu.
+	\item[Obiekt błędu] Może posiadać trzy pola: \texttt{code} -- kod błędu jako liczba całkowita, \texttt{message} -- wiadomość przekazywana z~wyjątkiem, \texttt{data}(opcjonalny) -- wartość lub obiekt zawierający dodatkowe informacje o~błędzie.
+\end{description}
 
 \begin{lstlisting}[float, frame=single, caption={Przykłady wiadomości w~JSON-RPC.}, label=kod:json-rpc-examples]
 // wywołanie
