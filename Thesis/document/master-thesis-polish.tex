@@ -131,6 +131,7 @@
 \fancyhfoffset[E,O]{0pt}
 
 \usepackage{pdfpages}
+\usepackage{adjustbox}
 
 
 \begin{document}
@@ -140,18 +141,27 @@
 \includepdf{Oswiadczenie_119290.pdf}
 
 {\noindent \large \textbf{STRESZCZENIE (TODO)}} \\
-% strzeszczenie i abstract
-Streszczenie powinno zawierać określenie problemu naukowego lub praktycznego do rozwiązania, cel i zakres pracy, zastosowane metody badań, wyniki i najważniejsze wnioski.
-Jeżeli praca jest realizowana przez co najmniej 2 studentów, to w Streszczeniu należy określić indywidualny udział każdego studenta w realizowanej pracy, podając jakie zagadnienia przez każdego ze studentów zostały opracowane i wykonane. Należy również zamieścić informację jakie rozdziały lub podrozdziały dany student opracował (patrz Spis treści). Należy przyjąć, że punkty podrozdziałów muszą być opracowywane przez studenta odpowiedzialnego za realizację podrozdziału. Przykładowo, jeżeli praca jest realizowana przez studenta A i studenta B, to można przytoczyć zapis: imię i nazwisko studenta A – udział w rozdziałach 1, 7 oraz indywidualnie rozdział 2 oraz podrozdziały 3.1 i 4.2, itd., imię i nazwisko studenta B – udział w rozdziałach 1, 7 oraz indywidualnie rozdział 5 i 6 oraz podrozdziały 3.2 i 4.1, itd.
+CEL I ZAKRES
+Jest mało RPC dającego polimorfizm. Też ciężko o serwery RPC dla Androida. Ja staram się dostarczyć prototypowe rozwiązanie obu tych problemów w dość specyficznym przypadku. Ten przypadek to łączenie sięz C\# do Androida. Wszystko wynika z mojej pracy zawodowej.
+Ogólnie chciałem zrobić dynamiczne, polimorficzne (aż plastyczne) RPC, które mogłoby działać jak framework pokroju WCFa. Tam możemy swobodnie korzystać z dziedziczenia, rozszerzać serwisy i ich dane. Do tego wszystko na granicy platform, z jakimś przyjaznym tłumaczeniem (uwspólnianiem) typów (kodu).
+
+Moja praca ma też przeanalizować obecny stan narzędzi.
+
+METODY BADAŃ 
+W miarę możliwości wykorzystuję lub rozszerzam gotowe rozwiązania (projekty open-source). I tak jest dużo zbędnych, nierozwijanych frameworków, nie ma co zwiększać tej liczby.
+
+WYNIKI I WNIOSKI
+asdasdasd
 
 \textbf{Słowa kluczowe:} \\
-Android, RPC, RMI, remote, \emph{web service}
+Android, RPC, RMI, serwer, \emph{web service}, polimorfizm.
 \clearpage
 
 {\noindent \large \textbf{ABSTRACT (TODO)}} \\
 The same but in english.
 
 \textbf{Keywords:} \\
+Android, RPC, RMI, server, \emph{web service}, polymorphism.
 \clearpage
 
 % spis treści
@@ -169,17 +179,8 @@ The same but in english.
 % właściwa część książki, numerowana arabskimi od 1
 \mainmatter
 
-%Dodać spis pojęć (glossary)
-%
-%Wyślij kiedyś szablon strony tytułowej, albo nawet całej pracy.
-%Wywalić Jacka jako konsultanta. Załatwić sobie kogoś od web service’ów z KASKU jako konsultanta/recenzenta. Dopisz w opisie na stronie tytułowej, że chodzi o zdalne metody polimorficzne.
-
-%Wygenerowac strone tytułowa. Oswiadczenie autora (plagiaty), jako druga strona. Streszczenie to trzecia strona. Ale powinno być w dwóch językach.
-
-%Moża podziękowania dla Lebiedzia i katedry za cierpliwość?
-
 %ustawienie kolorowania składni w przykładowych kodach
-\lstset{language=Java}
+%\lstset{language=Java}
 %polska czcionka we fragmentach kodu, źródło: http://blog.stelmisoft.pl/2010/polskie-znaki-podczas-formatowania-kodu-zrodlowego-w-latexu/
 \lstset{inputencoding=utf8x, extendedchars=\true,
     literate={ą}{{\k{a}}}1
@@ -205,12 +206,6 @@ The same but in english.
 %przerób projekty tak, żeby nie miały ścieżek na moim kompie
 
 %dodaj copyrighty do plików z kodem
-
-%Do abstraktu:
-%Jest mało RPC dającego polimorfizm. Też ciężko o serwery RPC dla Androida. Ja staram się dostarczyć prototypowe rozwiązanie obu tych problemów w dość specyficznym przypadku. Ten przypadek to łączenie sięz C\# do Androida. Wszystko wynika z mojej pracy zawodowej.
-%Ogólnie chciałem zrobić dynamiczne, polimorficzne (aż plastyczne) RPC, które mogłoby działać jak framework pokroju WCFa. Tam możemy swobodnie korzystać z dziedziczenia, rozszerzać serwisy i ich dane. Do tego wszystko na granicy platform, z jakimś przyjaznym tłumaczeniem (uwspólnianiem) typów (kodu).
-%W miarę możliwości wykorzystuję lub rozszerzam gotowe rozwiązania (projekty open-source). I tak jest dużo zbędnych, nierozwijanych frameworków, nie ma co zwiększać tej liczby.
-%Moja praca ma też przeanalizować obecny stan narzędzi.
 
 \include{introduction}
 

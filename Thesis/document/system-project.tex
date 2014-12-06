@@ -27,8 +27,8 @@ Serwer jest tworzony przez kod kliencki i~nasłuchuje na żądania na zadanym in
 Na schemacie serwer posiada tylko jeden obiekt zdalny klasy \texttt{Implementacja A}, ale faktycznie może posiadać ich wiele.
 
 \begin{figure}
-	\centering
-		\includegraphics[scale=0.8]{img/schematy/schemat-dzialania-magisterki.pdf}
+  \advance\leftskip-1.5cm
+	\includegraphics[scale=0.8]{img/schematy/schemat-dzialania-magisterki.pdf}
 	\caption{Ogólny schemat projektu.}
 	\label{fig:project-overview}
 \end{figure}
@@ -193,8 +193,8 @@ Tutaj przedstawię zaimplementowaną część zaplanowanego projektu. Całość 
 Spełnienie zdefiniowanych wymagań systemowych przez stworzoną implementację zostało przedstawione w~tabeli~\ref{tab:requirements-fulfilment}.
 
 \begin{table}[htbp]
-	\centering
-		\begin{tabular}{ | c | c | c | c | }
+	\begin{adjustbox}{center}
+		\begin{tabular}{ @{}| c | c | c | c | }
 			\hline
 				\textbf{Nazwa wymagania} & \textbf{Typ wymagania} & \textbf{Obszar} & \textbf{Wykonanie}\\
 				\hline \hline
@@ -236,6 +236,7 @@ Spełnienie zdefiniowanych wymagań systemowych przez stworzoną implementację 
 				Klient w .NET pod Windows & Niefunkcjonalne & Klient & + \\
 				\hline
 		\end{tabular}
+	\end{adjustbox}
 	\caption[Spełnienie wymagań systemowych.]{Spełnienie wymagań systemowych. ,,+'' oznacza, że wymaganie jest spełnione; ,,+\textasciitilde'', że zostało spełnione ale wymaga komentarza; ,,--'' że nie zostało spełnione.}
 	\label{tab:requirements-fulfilment}
 \end{table}
@@ -327,7 +328,7 @@ Sekwencja C -- wypełnienie słownika typów. Potrzebne jeśli użytkownik zamie
 
 Sekwencja D -- wywołanie polimorficznej metody zdalnej, czyli zasadnicza funkcjonalność systemu:
 \begin{itemize}
-	\item Kod kliencki wywołuję metodę .NETowej wersji interfejsu \texttt{TestService} na instancji \texttt{JsonRpcClientProxy}.
+	\item Metoda .NETowej wersji interfejsu \texttt{TestService} wywołana na instancji \texttt{JsonRpcClientProxy} przez kod kliencki. 
 	\item \texttt{JsonRpcClientProxy} przygotowuje wiadomość dla serwera JSON-RPC i~zawiera w~niej przekazane argumenty metody zdalnej.
 	\item Wiadomość jest przekazana do serializacji do zmodyfikowanego JSON.NET.
 	\item Jeśli zachodzi taka potrzeba, JSON.NET pyta \texttt{JavaTypeDictionary} o~nazwy typów w~Javie, które odpowiadają typom parametrów przekazanych do \texttt{JsonRpcClientProxy}.
@@ -571,7 +572,8 @@ Zestawienie ich działania dla kilku przypadków znajduje się we fragmentach \r
 
 \\ JSON.NET
 {
-  "$type": "System.Collections.Generic.List`1[[System.Object, mscorlib]], mscorlib",
+  "$type": "System.Collections.Generic.List`1
+	                     [[System.Object, mscorlib]], mscorlib",
   "$values": [
     28,
     "jakis tekst"
@@ -590,7 +592,9 @@ Zestawienie ich działania dla kilku przypadków znajduje się we fragmentach \r
 
 \\ JSON.NET
 {
-  "$type": "System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib],[System.String, mscorlib]], mscorlib",
+  "$type": "System.Collections.Generic.Dictionary`2
+	          [[System.Int32, mscorlib],[System.String, mscorlib]],
+            mscorlib",
   "1": "pierwszy",
   "2": "drugi",
   "3": "trzeci"
