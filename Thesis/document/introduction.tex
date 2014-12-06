@@ -273,21 +273,66 @@ Ale świadomość ograniczeń serializacji w~projektowaniu swoich obiektów oraz
 %http://stackoverflow.com/questions/770474/what-is-the-difference-between-serialization-and-marshaling
 % W sumie to prawie to samo co serializacja, ale wiąże się niejako z przekazem większego sensu. Ma, chyba, na celu odtworzyć obiekt z jego tożsamością, a nie tylko jego kopię. Np.\ zmarszalowanie agenta w JADEie, przesłanie go przez sieć i odmarszalowanie w nowym kontenerze. Znika z pierwszego, pojawia się w drugim i tam już normalnie funkcjonuje; faktycznie można powiedzieć, że to ten sam obiekt, ale się przemieścił.
 
-\subsection{Typy zapisu(TODO)}
+\subsection{Typy zapisu}
 Zarówno serializacja binarna i tekstowa ma wiele odmian, o różnym stopniu rozpowszechnienia. Te bardziej rozpowszechnione można nazywać standardowymi. Tutaj niektóre zostaną przybliżone.
 
-Powiem tu tylko o tych bardziej standardowych. Np.\ jak Java sobie serializuje do bajtów mówić nie będę.
-W sumie każdy z nich pozwala uzyskać ustrukturalizowane dane.
+\subsubsection{Formaty binarne}
+Platformy takie jak Java lub .NET mają swoje formaty, które mogą być wydajne ale działać tylko w~obrębie platformy.
+Istnieją też różne biblioteki międzyplatformowe umożliwiające wydajną serializację danych w~taki sposób, że mogą być one rozumiane przez programy napisane w~różnych językach.
+Jednak wszystkie są hermetyczne w~tym sensie, że trzeba użyć właśnie ich, żeby zdeserializować dane nimi zapisane. Ale to już cecha serializacji binarnej.
 
-O każdym kilka zdań - jaka jest ich główna misja:
-XML -- ustrukturalizowany i w ogóle, chyba najpopularniejszy\\
-JSON -- drugi pod względem popularności, czytelniejszy i lżejszy, \url{http://www.json.org/}\\
-BSON -- binarny, MongoDB\\
-YAML -- ma też coś poprawiać, coraz bardziej popularny, używają go takie popularne projekty jak Ansible, travis, cloud foundry. Whitespace sensitive, czytelny dla człowieka. Pewnie nie będę dużo drążył bo mało popularny i~nie widziałem RPC pod niego.\\
-AXON -- ma być w ogóle super, ale mało popularny jeszcze. Z~takich samych przyczyn co u~YAMLa nie będę drążył.\\
-SOAP -- owijka na XML, używane w web serviceach. Bogactwo informacji, dokładny opis danych (a także operacji na nich). Ciężki.\\
+\subsubsection{Formaty tekstowe}
 
-Podać przykładowy obiekt w C\# i wypełnienie go danymi. Przedstawić jego reprezentacje w różnych formatach (dla XML może wyglądać różnie, bo mogą być elementy, mogą atrybuty).
+\begin{description}
+\itemtitle{XML (EXtensible Markup Language)}
+Znany od wielu lat, uniwersalny i~bardzo popularny format opisu danych. Dokument XML ma strukturę drzewa i~składa się z~elementów~\cite{xml-tutorial}. Zawsze musi być dokładnie jeden element nadrzędny, reszta dokumentu musi być zagnieżdżona w~elemencie nadrzędnym. Element zagnieżdżony nazywany jest dzieckiem, natomiast element zawierający inny element -- rodzicem. Element musi mieć nazwę, musi być zamknięty, może posiadać jedną wartość tekstową. Elementy mogą też zawierać atrybuty. W~dokumencie mogą istnieć przestrzenie nazw wspomagające przeszukiwanie dokumenty przez rozszerzenie adresowania elementów. Przykłady XML we fragmencie~\ref{kod:xml-example}.
+
+\itemtitle{JSON (JavaScript Object Notation)}
+Drzewiasty format opisu danych o~lżejszym zapisie niż XML~\cite{json-tutorial}. Wyrósł z~JavaScripta, ale nie jest z~nim powiązany. JSON ma kilka typów podstawowych do przedstawiania podstawowych jednostek danych jak tekst, liczba, czy prawda/fałsz. Można z~nich składać obiekty lub listy. Zarówno obiekty i~listy mogą zawierać inne obiekty i~inne tablice. Obiekt różni się od listy tym, że jego elementy są nazwane. Listy mogą zawierać elementy różnych typów. Nazwy pól oraz wartości tekstowe muszą się zawierać w~cudzysłowach. Przykład JSON we fragmencie~\ref{kod:json-example}
+
+\itemtitle{Inne}
+Warto zwrócić uwagę na YAML\footnote{\url{http://www.yaml.org/spec/1.2/spec.html}} który ma być przyjazny dla ludzi i~staje się obecnie coraz bardziej popularny. Korzystają z~niego takie projekty jak Ansible\footnote{\url{http://www.ansible.com/home}}, Travis\footnote{\url{https://travis-ci.org/}} czy Cloud Foundry\footnote{\url{http://www.cloudfoundry.org/index.html}}. 
+Nowym formatem, który nie bardzo popularny jest AXON\footnote{\url{http://intellimath.bitbucket.org/blog/posts/axon_overcomes_json.html}, \url{http://intellimath.bitbucket.org/blog/posts/axon_best_of_json_xml_yaml.html}} -- format mający łączyć najlepsze cechy XML, JSON i~YAML.
+
+\end{description}
+
+\begin{lstlisting}[float, frame=single, caption={Przykłady XML. Komentarze poprzedzone przez ,,//'', mimo, że składnia komentarzy w~XML jest inna.}, label=kod:xml-example]
+<?xml version="1.0" encoding="UTF-8"?> // naglowek dokumentu XML
+<lista_zakupow> // element nadrzedny dokumentu
+  <pozycja>ser</pozycja> // element o nazwie ,,pozycja''
+  <pozycja>mleko</pozycja> // tekstowa wartosc ,,mleko''
+  <pozycja niezbedne="nie">cukierki</pozycja> // atrybut ,,niezbedne''
+</lista_zakupow> // zamkniecie elementu nadrzednego
+
+<?xml version="1.0" encoding="UTF-8"?> // nowy dokument XML
+// wprowadzenie przestrzeni nazw ,,z''
+<z:lista_zakupow xmlns:z="http://example.com/zakupy">
+  <z:pozycja></pozycja>
+  <z:pozycja/>  // elementy moga byc od razu zamkniete
+</h:table>
+\end{lstlisting}
+
+\begin{lstlisting}[float, frame=single, caption={Przykłady JSON. Komentarze poprzedzone przez ,,//'', mimo, że składnia JSON nie posiada komentarzy.}, label=kod:json-example]
+//przyklad 1 -- obiekt
+{  // poczatek obiektu
+  // pole obiektu o nazwie ,,liczba''
+  "liczba": 13, // przecinek przed kolejnym polem
+  "tekst": "wartosc tekstowe"
+} // koniec obiektu
+
+//przyklad 2 -- lista
+[  // poczatek listy
+  1,
+  2,
+  3,
+  "czwarty element listy",
+  5.0,
+  true
+]  // koniec listy
+
+//przyklad 3 -- prosta wartosc
+"wiadomosc" // sam typ prosty to tez dokument JSON
+\end{lstlisting}
 
 %Mogą być formaty dopasowane do konretnego programu, języka albo bardziej uniwersalne.
 %Może być dopasowan do jednego typu danych i jednego zastosowania (se sam napisałem jak moja klasa ma się zapisywać i odtwarzać), a może być bardziej dynamiczna i uniwersalna (binding w WCF albo JAX-WS)
@@ -296,17 +341,40 @@ Podać przykładowy obiekt w C\# i wypełnienie go danymi. Przedstawić jego rep
 %
 %\url{http://bsonspec.org/}\\
 %\url{http://json.codeplex.com/} -- w sumie to to tylko przykład implementacji dla .NET\\
-%
-%\url{http://intellimath.bitbucket.org/blog/posts/axon_overcomes_json.html}\\
-%\url{http://intellimath.bitbucket.org/blog/posts/axon_best_of_json_xml_yaml.html}\\
+
 %Jakieś porównanie AXONa i JSONa. Jeśli AXON jest stabilny i wspierany na Androidzie i .NETcie (bardzo ważne) to powinienem go użyć, bo przecież parę problemów rozwiązuje.
 %
 %Tu coś napisać może o tym, że nie wszystkie cechy obiektu, na jakie pozwala język dają się zapisać tymi metodami. Chociaż, może to bardziej rzeczy związane z klasą są ciężkie do opisu, a jak mamy klasy opisane w normalnych językach a tylko obiekty zapisujemy, to może być spoko.
 
-\subsection{XML Schema}
-Dotyczy XML, ale może przedstawiona jako przykład bindingów.
 
-\subsection{Binding(TODO)}
+\subsection{XML Schema}
+XML Schema Definition (w~skrócie XSD) to format dokumentu bazujący na XML, który określa wymagania na kształt (zawartość) innego dokumentu XML~\cite{xml-schema-tutorial}.
+
+XSD definiuje:
+\begin{itemize}
+	\item elementy, które mogą pojawić się w~dokumencie,
+	\item atrybuty, ktore mogą pojawić się w~dokumencie,
+	\item które elementy są dziećmi,
+	\item liczbę dzieci,
+	\item czy element może być pusty, czy ma zawierać tekst,
+	\item typy danych elementów i~atrybutów,
+	\item domyślne i stałe wartości elementów i atrybutów.
+\end{itemize}
+
+Atutem XSD jest wsparcie typów danych. Dzięki niemu łatwiej można:
+\begin{itemize}
+	\item opisać dopuszczalną zawartość dokumentu,
+	\item zweryfikować poprawność danych w~dokumencie,
+	\item pracować z danymi z bazy danych,
+	\item zdefiniować ograniczenia na dane (np. liczba większa niż zero),
+	\item zdefiniować wzorce (formaty) danych,
+	\item konwertować dane z jednego typu na drugi.
+\end{itemize}
+
+Przy pomocy XML Schema można tworzyć tzw.\ wiązania (\emph{bindings}). Najpierw trzeba stworzyć schemat XSD zgodny z~definicją klasy lub struktury danych z~jakiegoś języka programowania. Wtedy można tworzyć dokument XML na bazie, np.\ obiektu Javy, lub tworzyć obiekt Javy na bazie dokumentu XML zgodnego z~przygotowanym XSD. To właśnie można określić jako \emph{XML binding}.
+Proces wiązania jest wykorzystywany w~części standardów zdalnego wołania metod.
+
+%\subsection{Binding(TODO)}
 %\url{http://rpbourret.com/xml/XMLDataBinding.htm}\\
 %Pomagają przy automatycznej serializacji.
 %
@@ -328,14 +396,17 @@ Dotyczy XML, ale może przedstawiona jako przykład bindingów.
 %
 %\url{http://json-schema.org/}\\
 
-\section{Zdalne wywoływanie kodu (TODO)}
-Tu rozstaną opisane techniki umożliwiające zdalne wywoływanie kodu.
+\section{Zdalne wywoływanie kodu}
+Zdalne wywoływanie kodu może być też nazywane zdalnym wywoływaniem metod lub procedur. Angielskie odpowiedniki to \emph{Remote Method Invocation} (RMI), \emph{Remote Procedure Call} (RPC) i~\emph{Remote Code Execution} (RCE). Ostatnie określenie często używane jest jako określenie na lukę bezpieczeństwa pozwalającą niepowołanym bytom na uruchomienie w~jakimś systemie niepożądanej logiki.
 
-Aby wywołać metodę zdalnie jakiś zewnętrzny klient musi, w~ogólności, wskazać obiekt, na którym ma być wywołana metoda, wybrać jedną metodę i~przekazać do niej parametry. Wszystko to można zakodować w~jednym obiekcie, którego będziemy nazywać wiadomością lub wywołaniem.
+Aby wywołać kod zdalnie jakiś zewnętrzny klient musi, w~ogólności, wskazać obiekt, na którym ma być wywołana metoda, wybrać jedną metodę i~przekazać do niej parametry. Wszystko to można zakodować w~jednym obiekcie, którego będziemy nazywać wiadomością lub wywołaniem.
 Wskazanie obiektu może polegać na podaniu jakiegoś unikatowego adresu rozpoznawanego przez serwer hostujący zdalny obiekt.
 Metoda może być w~naturalny sposób zidentyfikowana przez swoją nazwę.
 Obie te rzeczy można prosto zakodować we wiadomości jako obiekty typu \emph{string}.
-Wyzwanie stanowi przekazanie parametrów, które mogą być dość skomplikowanymi strukturami (ogólnie -- problem serializacji). Skupimy się na przekazaniu parametrów.
+Wyzwanie stanowi przekazanie parametrów, które mogą być dość skomplikowanymi strukturami (ogólnie -- problem serializacji).
+
+Przekazywanie wiadomości musi odbywać się przez jakiś kanał komunikacyjny. Mogą one być bardzo różne, np. TCP, potoki (\emph{Unix pipe}), SSL, HTTP, HTTPS i~inne.
+Nie ma sensu jednak poświęcać im więcej uwagi, ponieważ będę korzystał z~istniejących warstw komunikacyjnym na możliwie największym poziomie abstrakcji, aby zapewnić ich wymienność.
 
 %Zrób tak, żeby najpierw zarysować RPC, web servicy itp a dopiero potem wiązanie danych (żeby było wiadomo po co jest)
 %
@@ -348,10 +419,6 @@ Wyzwanie stanowi przekazanie parametrów, które mogą być dość skomplikowany
 %
 %Web-servicey, XML-RPC, REST z JSONem i XMLem. 
 
-\subsection{Transport danych}
-Potrzebny, żeby coś wywołać. Bo trzeba przetransportować chociażby oznaczenie, jaką metodę chcemy uruchomić. Można też przekazać parametry, oraz zwrócić wartość z~powrotem.
-
-Też bardzo szeroka dziedzina. Obejmuje np. TCP, PIPEy, SSL, HTTP, HTTPS\@. Za dużo nie będę się tym zajmował, ponieważ będę tylko korzystał z istniejących warstw na możliwie największym poziomie abstrakcji, aby zapewnić ich wymienność.
 %Jak już się przetłumaczy, to zawsze trzeba jakoś przetransportować. Jak możemy przekazywać w ramach jednego kompa, jak pomiędzy kompami lokalnie, jak globalnie.
 %Celuję w globalnie, ale zwsze szerszą metodę można zastosować wężej (chociaż może nie być tak wydajna jak te węższe)
 %
@@ -363,24 +430,124 @@ Też bardzo szeroka dziedzina. Obejmuje np. TCP, PIPEy, SSL, HTTP, HTTPS\@. Za d
 %
 %\emph{TCP, PIPEy, SSL, HTTP, HTTPS}
 
-\subsection{XML RPC}
-Podstawowy chyba obecnie przykład RPC\@. Proste, dość przestarzałe. Jakie cechy? Przykład wywołania pokaż.
+\subsection{XML-RPC}
+XML-RPC jest protokołem zdalnego wołania procedur przez Internet.\cite{xml-rpc}
+Wiadomość w~tym protokole to wiadomość (zapytanie) POST protokołu HTTP. Ciałem zapytanie jest dokument XML.
+W~odpowiedzi na wiadomość określony kod uruchamiany jest na serwerze po czym zwracana jest odpowiedź, również w~formie XML.
+Przykłady wywołania i~odpowiedzi znajdują się odpowiednio we fragmentach~\ref{kod:xml-rpc-call} i~\ref{kod:xml-rpc-response}.
+
+kod:xml-rpc-call
+\begin{lstlisting}[float, frame=single, caption={Wywołanie metody XML-RPC.}, label=kod:xml-rpc-call]
+POST /RPC2 HTTP/1.0
+User-Agent: Frontier/5.1.2 (WinNT)
+Host: betty.userland.com
+Content-Type: text/xml
+Content-length: 181
+
+
+<?xml version="1.0"?>
+<methodCall>
+  <methodName>examples.getStateName</methodName>
+  <params>
+    <param>
+      <value><i4>41</i4></value>
+    </param>
+  </params>
+</methodCall>
+\end{lstlisting}
+
+\begin{lstlisting}[float, frame=single, caption={Odpowiedź XML-RPC.}, label=kod:xml-rpc-response]
+HTTP/1.1 200 OK
+Connection: close
+Content-Length: 158
+Content-Type: text/xml
+Date: Fri, 17 Jul 1998 19:55:08 GMT
+Server: UserLand Frontier/5.1.2-WinNT
+
+<?xml version="1.0"?>
+<methodResponse>
+  <params>
+    <param>
+      <value><string>South Dakota</string></value>
+    </param>
+  </params>
+</methodResponse>
+\end{lstlisting}
+
+Format URI w~pierwszej linii nagłówka HTTP nie jest określony. Może być pusty, może składać się pojedynczego ,,/'', jeśli serwer obsługuje tylko wywołania XML-RPC. Jeśli serwer obsługuję mieszankę różnych zapytań HTTP to można ustawić URI na coś, co pomoże w~obsłudzę wywołań RPC (w~przykładach ścieżka to ,,/RPC2'').
+
+Ciało wiadomości zawarte jest jest w~elemencie \texttt{<methodCall>}. Musi on zawierać podelement \texttt{<methodName>} zawierający nazwę metody (procedury), która ma być wywołana.
+Jeśli ma ona parametry, to w~wywołaniu musi się znaleźć element \texttt{<params>}. Wewnątrz niego znajdują się poszczególne parametry. Każdy z~nich musi zawierać się w~elemencie \texttt{<param>} i~posiadać element \texttt{<value>}, w~którym znajduje się właściwa wartość parametru.
+
+Właściwie wywołania metod nie muszą być wysyłane po HTTP. Równie dobrze mogłoby to być TCP lub dowolny inny protokół, w~którym można wskazać adres odbiorcy.
+
+XML-RPC to dość stary, ale prosty i~popularny protokół.
+
 %\url{http://xmlrpc.scripting.com/default.html}\\
-%\url{http://xmlrpc.scripting.com/spec.html}\\
 %\url{http://effbot.org/zone/xmlrpc-errata.htm}\\
 
-\subsection{JSON-RPC}
-\label{json-rpc}
-Proste i~lekkie, ale sensowne i~cały czas rozwijane. Też przenośne, może nawet być serwowane z~Androida.
-\url{http://www.jsonrpc.org/specification}
 
-\subsection{Usługi internetowe (\emph{web services})}
+\subsection{JSON-RPC(TODO)}
+\label{json-rpc}
+Prosty, ciągle rozwijany standard RPC podobny do XML-RPC. W~tym przypadku przesyłane są jednak dokumenty JSON, nie XML.
+Podobnie jak XML-RPC może używać praktycznie czegokolwiek jako warstwy transportowej.
+Wszystko, co pozwoli na przekazanie dokumentu JSON od klienta do serwera i~z~powrotem się nadaje.
+Dzięki temu, że oparty jest o~JSON posiada bardziej zwięzłą składnię niż XML-RPC.
+
+Przykładowe wywołanie i~odpowiedź pokazane we fragmencie~\ref{kod:json-rpc-examples}.
+Elementy składni~\cite{json-rpc-specification}:
+\begin{itemize}
+	\item Każda wiadomość jest obiektem JSON.
+	\item[\texttt{jsonrpc}] Wartość typu \texttt{string} oznaczająca wersję protokołu JSON-RPC. Musi być równa ''2.0''.
+	\item[\texttt{id}] An identifier established by the Client that MUST contain a String, Number, or NULL value if included. If it is not included it is assumed to be a notification. The value SHOULD normally not be Null [1] and Numbers SHOULD NOT contain fractional parts 
+	\item[\texttt{method}] A String containing the name of the method to be invoked. Method names that begin with the word rpc followed by a period character (U+002E or ASCII 46) are reserved for rpc-internal methods and extensions and MUST NOT be used for anything else.
+	\item[\texttt{params}] A Structured value that holds the parameter values to be used during the invocation of the method. This member MAY be omitted.
+	\item[\texttt{result}] This member is REQUIRED on success.
+This member MUST NOT exist if there was an error invoking the method.
+The value of this member is determined by the method invoked on the Server.
+	\item[\texttt{error}] This member is REQUIRED on error.
+This member MUST NOT exist if there was no error triggered during invocation.
+The value for this member MUST be an Object as defined in section 5.1.
+\end{itemize}
+
+\begin{lstlisting}[float, frame=single, caption={Przykłady wiadomości w~JSON-RPC.}, label=kod:json-rpc-examples]
+// wywołanie
+{
+	"jsonrpc": "2.0",
+	"id": 1,
+	"method": "subtract",
+	"params": [42, 23]
+}
+
+// odpowiedź
+{
+	"jsonrpc": "2.0",
+	"id": 1,
+	"result": 19
+}
+
+// odpowiedź po błędzie
+{
+	"jsonrpc": "2.0",
+	"id": "1",
+	"error": {
+		"code": -32601,
+		"message": "Method not found"
+	}
+}
+\end{lstlisting}
+
+
+\subsection{Usługi internetowe (\emph{web services})(TODO)}
 Popularne, szczególnie w dużych firmach. Dużo automatyzacji, ciężka składnia i dużo skomplikowania (dlatego te duże firmy).
 Ale teoretycznie pozwala analizować dużo programom, automatycznie generować klienty itp. Ale pełna zgodność nie istnieje (JAX-WS, WCF) i pełna automatyzacja (program sam szuka i dobiera usługi) jest marzeniem, które się nie ziściło. Ale popularne i znane.
 
 Główne założenia (bogate programowanie zdalne, automatyzacja). Jakie ma części? Jakie wady, jakie zalety.
 
+SOAP -- owijka na XML, używane w web serviceach. Bogactwo informacji, dokładny opis danych (a także operacji na nich). Ciężki.\\
 W SOAPie wszystko musi być ściśle typowane. Namespacey, nazwy, wszystko musi się dokłądnie zgadzać. Ciężko to zrobić.
+
+Przez nie obiekty zdalne mogą być nazywane serwisami.
 
 %W sumie to przykład tłumaczenia danych  i transpotru.
 %
@@ -404,7 +571,7 @@ W SOAPie wszystko musi być ściśle typowane. Namespacey, nazwy, wszystko musi 
 %
 %WSDL -- tylko on zapewnia używalność (cytat z RESTful).
 
-\subsection{REST}
+\subsection{REST(TODO)}
 Niejako konkurencja dla WS, chociaż ma inne cele. Również popularne. W sumie Internet dzieli się między REST a WS.
 
 Raczej nie będę sie w~tej pracy skupiać na REST, bo nie zależy mi konkretnie na byciu ,,internetowym'', a~wręcz wolałbym mieć wolną rękę, co do wyboru warstwy transportowej. Także, REST nie powinien dawać więcej możliwości, jeśli chodzi o~polimorfizm danych. Jego standard nic o~tym nie mówi, a~serializacja często realizowana jest tymi samymi narzędziami, co w~implementacjach RPC.

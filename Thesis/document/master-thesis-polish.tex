@@ -4,7 +4,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{textcomp}
-\usepackage[utf8]{inputenc}
+\usepackage[utf8x]{inputenc}
 \usepackage[polish]{babel}
 \usepackage[T1]{fontenc}
 
@@ -184,6 +184,27 @@
 
 %ustawienie kolorowania składni w przykładowych kodach
 \lstset{language=Java}
+%polska czcionka we fragmentach kodu, źródło: http://blog.stelmisoft.pl/2010/polskie-znaki-podczas-formatowania-kodu-zrodlowego-w-latexu/
+\lstset{inputencoding=utf8x, extendedchars=\true,
+    literate={ą}{{\k{a}}}1
+             {Ą}{{\k{A}}}1
+             {ę}{{\k{e}}}1
+             {Ę}{{\k{E}}}1
+             {ó}{{\'o}}1
+             {Ó}{{\'O}}1
+             {ś}{{\'s}}1
+             {Ś}{{\'S}}1
+             {ł}{{\l{}}}1
+             {Ł}{{\L{}}}1
+             {ż}{{\.z}}1
+             {Ż}{{\.Z}}1
+             {ź}{{\'z}}1
+             {Ź}{{\'Z}}1
+             {ć}{{\'c}}1
+             {Ć}{{\'C}}1
+             {ń}{{\'n}}1
+             {Ń}{{\'N}}1
+}
 
 %przerób projekty tak, żeby nie miały ścieżek na moim kompie
 
