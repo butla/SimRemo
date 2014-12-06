@@ -537,16 +537,85 @@ This member MUST NOT exist if there was an error invoking the method.
 \end{lstlisting}
 
 
-\subsection{Usługi internetowe (\emph{web services})(TODO)}
-Popularne, szczególnie w dużych firmach. Dużo automatyzacji, ciężka składnia i dużo skomplikowania (dlatego te duże firmy).
-Ale teoretycznie pozwala analizować dużo programom, automatycznie generować klienty itp. Ale pełna zgodność nie istnieje (JAX-WS, WCF) i pełna automatyzacja (program sam szuka i dobiera usługi) jest marzeniem, które się nie ziściło. Ale popularne i znane.
+\subsection{Usługi internetowe (\emph{web services})}
+Usługa internetowa to dowolna usługa dostępna przez Internet\footnote{W praktyce może działać w~mniejszych sieciach lub nawet w~obrębie jednej maszyny.} używająca ustandaryzowanego protokołu opartego o~XML~\cite{web-services}.
+Nie jest bezpośrednio powiązana z~jednym systemem operacyjnym czy językiem, chociaż musi być w~jakimś zaimplementowana.
+Jest kilka alternatywnych protokołów przesyłania wiadomości. Może to być XML-RPC, SOAP lub używanie wiadomości HTTP (GET i~POST) do przekazywania  arbitralnych dokumentów XML.
 
-Główne założenia (bogate programowanie zdalne, automatyzacja). Jakie ma części? Jakie wady, jakie zalety.
+\emph{Web service} powinien się sam opisywać. Czyli zawsze do wystawionej pod jakimś adresem usługi powinien być załączony jej opis.
+Język używany do tworzenia tych opisów to oparty o~XML WSDL (\emph{Web Service Description Language}).
+Przy jego pomocy opisuje się publiczny interfejs usługi. Zawiera on definicje wszystkich publicznych funkcji, używanych przez nie typów danych\footnote{Zdefiniowanych przy użyciu XML Schema}, informacje na temat używanych protokołów transportowych oraz adresy potrzebne do zlokalizowania usługi. Przykład WSDL wzięty ze strony \url{http://www.tutorialspoint.com/wsdl/wsdl_example.htm} znajduje się na listingu~\ref{kod:wsdl-example}. Nawet dla prostych interfejsów WSDL będzie dość obszerny i~trudny do zrozumienia dla człowieka.
+Jego plusem jest to, że zazwyczaj można na jego bazie wygenerować kod kliencki do wielu języków programowania.
 
-SOAP -- owijka na XML, używane w web serviceach. Bogactwo informacji, dokładny opis danych (a także operacji na nich). Ciężki.\\
-W SOAPie wszystko musi być ściśle typowane. Namespacey, nazwy, wszystko musi się dokłądnie zgadzać. Ciężko to zrobić.
+\lstset{basicstyle=\footnotesize}
+\begin{lstlisting}[float, frame=single, caption={Opis WSDL usługi posiadającej jedną metodę, \texttt{sayHello}, która zwraca tekst ,,Hello, world!''.}, label=kod:wsdl-example]
+<definitions name="HelloService"
+   targetNamespace="http://www.examples.com/wsdl/HelloService.wsdl"
+   xmlns="http://schemas.xmlsoap.org/wsdl/"
+   xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+   xmlns:tns="http://www.examples.com/wsdl/HelloService.wsdl"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+ 
+   <message name="SayHelloRequest">
+      <part name="firstName" type="xsd:string"/>
+   </message>
+   <message name="SayHelloResponse">
+      <part name="greeting" type="xsd:string"/>
+   </message>
 
-Przez nie obiekty zdalne mogą być nazywane serwisami.
+   <portType name="Hello_PortType">
+      <operation name="sayHello">
+         <input message="tns:SayHelloRequest"/>
+         <output message="tns:SayHelloResponse"/>
+      </operation>
+   </portType>
+
+   <binding name="Hello_Binding" type="tns:Hello_PortType">
+   <soap:binding style="rpc"
+      transport="http://schemas.xmlsoap.org/soap/http"/>
+   <operation name="sayHello">
+      <soap:operation soapAction="sayHello"/>
+      <input>
+         <soap:body
+            encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+            namespace="urn:examples:helloservice"
+            use="encoded"/>
+      </input>
+      <output>
+         <soap:body
+            encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+            namespace="urn:examples:helloservice"
+            use="encoded"/>
+      </output>
+   </operation>
+   </binding>
+
+   <service name="Hello_Service">
+      <documentation>WSDL File for HelloService</documentation>
+      <port binding="tns:Hello_Binding" name="Hello_Port">
+         <soap:address
+            location="http://www.examples.com/SayHello/">
+      </port>
+   </service>
+</definitions>
+\end{lstlisting}
+\lstset{basicstyle=\normalsize}
+
+SOAP to oparty o~XML protokół wymiany informacji, w~praktyce stosowany tylko przy~\emph{web services}. Podobnie jak WSDL jest mało zrozumiały dla ludzi, ale przenosi bardzo dokładne informacje (np. o~typach danych zawartych we wiadomości).
+
+Usługi powinny dawać możliwość odkrywania (\emph{discovery}) się.
+Do tego potrzebny jest prosty system w~którym obwieszcza się wystawienie usługi na zewnątrz.
+Następnie potencjalny klient może sam znaleźć usługę i~z~niej skorzystać.
+Jednym z~początkowych celów usług sieciowych była pełna automatyzacja procesu biznesowego polegającego na wyszukiwaniu usług potrzebnych danemu programowi i~wykorzystaniu ich w~swojej logice. W~praktyce nie działało to nigdy dać dobrze aby zostać szerzej przyjęte. 
+
+Standaryzacji wprowadzonej przez \emph{web services} udało się ułatwić integrację systemów rozproszonych. Zwłaszcza tych heterogenicznych.
+Mimo, że istnieją już prostsze i faktycznie pełniej wspierające heterogeniczność rozwiązania, usługi sieciowe nadal są dość popularne.
+To dlatego, że dobrze sprawują się przy użyciu z~dużymi platformami programistycznymi jak .NET i~Java.
+Umożliwiają szybką generację kodu popularnych języków, który często jest elegancki w~użyciu pozwala na obiektowe wołanie metod zdalnych.
+
+Niestety, protokoły usług sieciowych są trudne w~implementacji i~nigdy nie mają pełnych możliwości na platformach mobilnych.
+Też pełne implementacje, jak JAX-WS dla Javy i~WCF dla .NET nie posiadają tych samych możliwości, a~różne podzbiory ogólnego standardu.
+Przez to niektóre bardziej zaawansowane aspekty \emph{web services} tracą swoją heterogeniczność.
 
 %W sumie to przykład tłumaczenia danych  i transpotru.
 %
@@ -570,14 +639,25 @@ Przez nie obiekty zdalne mogą być nazywane serwisami.
 %
 %WSDL -- tylko on zapewnia używalność (cytat z RESTful).
 
-\subsection{REST(TODO)}
-Niejako konkurencja dla WS, chociaż ma inne cele. Również popularne. W sumie Internet dzieli się między REST a WS.
+\subsection{REST}
+REST rozwija się do \emph{REpresentational State Transfer}\cite{restful-web-services}.
+Jest podejściem do tworzenia rozproszonych programów w~Internecie, który polega na mechanizmach używanych przy ,,normalnej'' sieci, po której użytkownicy surfują przy pomocy przeglądarek. Czyli protokołu HTTP.
+REST służy do tworzenia usług sieciowych, jednak są one czymś odmiennym niż klasyczne, ,,duże'' \emph{web services}.
+REST jest konkurencją dla tych ,,dużych'' usług, chociaż ma nieco inne cele.
 
-Raczej nie będę sie w~tej pracy skupiać na REST, bo nie zależy mi konkretnie na byciu ,,internetowym'', a~wręcz wolałbym mieć wolną rękę, co do wyboru warstwy transportowej. Także, REST nie powinien dawać więcej możliwości, jeśli chodzi o~polimorfizm danych. Jego standard nic o~tym nie mówi, a~serializacja często realizowana jest tymi samymi narzędziami, co w~implementacjach RPC.
+Popatrzmy na REST przez pryzmat klasycznego RPC. Obiekt usługi powiązany jest z~konkretnym adresem HTTP i~nazywany jest zasobem (z~ang. \emph{resource}).
+Usługi nie mogą definiować dowolnych metod. Mogą zdefiniować maksymalnie cztery, które jednocześnie są czasownikami HTTP: GET, PUT, POST, DELETE. 
+Parametry metod mogą być przyjmowane na kilka sposobów: przez adres, jak w~normalnym HTTP po znaku ,,?'', jako element ścieżki w~adresie, czy w~końcu jako dane w~ciele zapytania HTTP.
+Format danych jest dowolny: JSON, XML lub binarne.
+Ogólnie, z~RESTową usługą można się porozumiewać, jak ze zwykłą stroną Internetową.
+Jest to na ogól dużo prostsze niż, bardziej intuicyjne i~łatwiejsze w~implementacji niż duże usługi sieciowe.
 
-Główne założenia (Intuicyjność, prostota, ujednolicenie Internetu). Jakie ma części? Jakie wady, jakie zalety.
+Mówi się, że REST to architektura skupiona na zasobach (ROA -- \emph{Resource Oriented Architecture}. Przeciwieństwem jest są standardowe architektury usług sieciowych -- SOA, czyli \emph{Service Oriented Architecture}. 
 
-,,Working with the web, not against it''. Czyli wykorzystanie potencjału drzemiącego w HTTP, żeby stworzyć łatwiejsze do zrozumienia, bardziej jednolite i proste w użyciu usługi.
+W~tej pracy będę jednak pomijał rozwiązania RESTowe ze względu na fakt, że są oparte o~HTTP.
+Z~jednej strony obsługa HTTP na urządzeniu mobilnym jest bardziej problematyczna niż, chociażby, XML-RPC słane po TCP, z~drugiej -- wolałbym żeby moje rozwiązanie nie było związane z~jedną warstwą transportową.
+Także REST nie daje innych możliwości niż standardowe RPC, jeśli chodzi o~polimorfizm danych.
+Jego standard nic o~tym nie mówi, a~serializacja realizowana jest na ogół tymi samymi narzędziami, co w~implementacjach RPC.
 
 %Cośtam o RESTcie \url{http://www.oracle.com/technetwork/articles/javase/index-137171.html}\\
 %REST and POX \url{http://msdn.microsoft.com/en-us/library/vstudio/aa395208(v=vs.90).aspx}\\
