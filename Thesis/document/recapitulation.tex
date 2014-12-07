@@ -1,85 +1,71 @@
-\chapter{Podsumowanie (TODO)}
-%Czy udało się zrealizować cele? Jeśli nie, to dlaczego? Co jeszcze można dodać? Czy to, co zrobiłem ma jakąś szansę na szersze zastosowanie?
-Zbadanie jak można coś zrobić to obszerny temat -- dlatego duża tej pracy jest. Udokumentowanie i przedstawienie wszystkich przemyśleń to też dużo.
+\chapter{Podsumowanie}
+Główny cel pracy, czyli stworzenie bibliotek umożliwiających zdalne serwowanie metod z~Androida oraz konsumpcję ich z~poziomu .NET, został zrealizowany.
+Powstał system, który umożliwia wygodne tworzenie obiektów zdalnych na Androidzie. Nie było to wcześniej możliwe, lub programy to potrafiące są zbyt mało popularne, żebym mógł je znaleźć.
+Aby to osiągnąć nie stworzyłem nowej biblioteki, a~rozszerzyłem istniejącą, dojrzałą bibliotekę (jsonrpc4j), która realizuje otwarty i~popularny standard (JSON-RPC).
+Dzięki temu wielu ludzi będzie mogło skorzystać z~osiągnięć tej pracy, jak tylko moja poprawka zostanie zaakceptowana przez twórcę jsonrpc4j.
 
-Ważne, że pokazałem, że zasada działania jest słuszna. Konkretne narzędzia, których użyłem do zrobienia poszczególnych kawałków nie są ważne.
+Klient JSON-RPC dla .NET musiał powstać od zera, ponieważ nie istnieje dobra implementacja.
+W~obecnym kształcie nie nadaje się on do użyciu w~środowisku produkcyjnym -- nie jest odporny na problemy w~warstwie transportowej.
+Demonstruje za to podejście nie znane dotąd .NETowym klientom JSON-RPC, czyli tworzenie obiektów klienckich zgodnych realizujących interfejs serwisu.
+Przez to może posłużyć za wzór solidnej i~wygodnej implementacji.
+Aby mogło do tego dojść opublikuję kod klienta w~Internecie.
 
-%O polimorfizmie typów zdalnych
-Polimorfizm przekazywanych typów jest raczej bardziej sensowny, gdy wszystko zostaje w obrębie jednego języka, jeśli uruchamiamy na przekazanych parametrach metody. Inne zastosowania takiego systemu mogą być zastąpione, przez lepszy \emph{,,design''} funkcjonalności, który nie podejmuje decyzji na bazie typu. Ale może czasem się nie da. Ewentualnie klasy danych mogą mieć te metody, ale muszą być zaimplementowane po obu stronach. Ewentualnie tylko po jednej może być implementacja. Ale trzeba wtedy uważać i być świadomym różnic w zachowaniu typów. Kiedy zawierają one tylko dane nie ma takich problemów.
+Pobocznym celem było zapewnienie polimorfizmu metod zdalnych.
+Temat ten został przeanalizowany. Dzięki tej analizie powstał prototyp, który demonstruje że jest to możliwe. Prototyp był zmodyfikowaną biblioteką JSON-NET.
+Nie wspiera jednak wszystkich przypadków serializacyjnych, czyli tablic, list i innych kolekcji.
+Jednak zostało pokazane, że przez ujednolicenie sposobu opisu danych można zapewnić zgodność i~przezroczystą obiektową współpracę Javy i~.NET, chociaż ze względu na różnice między tymi językami nigdy nie będzie pełnej swobody tej współpracy.
 
-Ogólnie projekt jest za duży, żeby badać wszystkie aspekty serializacji. Maksymalnie zgodna serializacja mogłaby być osobnym tematem pracy magisterskiej ze względu na swój stopień skomplikowania.
-Dodać to do działu wniosków.
+Aby uzyskać maksymalnie przewidywalną współpracę, gdzie programista ma pewność co będzie działało, a~co nie (w kontekście wymienianych typów), trzeba korzystać z~systemów stworzonych z~myślą o~wymianie danych między różnymi platformami programistycznymi, takich jak Apache Thrift lub Avro.
+Wymagają one jednak więcej pracy i planowania niż zaproponowane przeze mnie rozwiązanie.
 
-Serializacja zawsze będzie problemem. Chyba, że albo będziemy projektowali klasy danych pod nią, albo cały język zostanie pod jej kątem zaprojektowany (jak Thrift).
 
-Ograniczona współpraca JAvy i C\# jest możliwa, ale nigdy nie będzie pełnej swobody.
-
-Nie było tłumaczenia klas ani systemu ich ładowania - to byłoby fajne w kompletnym sytemie, ale to nie kompletny system. I tak jest dobrze. Fajnie by było też mieć jakis sprytniejszy system na słownik - lepiej nazwaną od niego klasę a najlepiej ładowanie z pliku konfiguracyjnego.
-
-Tym sposobem udało się uzyskać w~pełni sprawny serwer JSON-RPC mogący obługiwać metody polimorficzne, który dodatkowo posiada niespotykaną dotąd możliwość działania na Androidzie.
-Ta możliwość może się okazać przydatna dla programistów chcących dać możliwośc zdalnego zarządzania systemem.
-
-Opublikuję na blogu klienta i podlinkuje w znalezionych wątkach.
-
-\section{Co się udało}
-Ogólny cel pracy został spełniony -- jest wywoływanie kodu na Androidzie. A ze zdefiniowanych początkowych celów:
+\section{Zrealizowane cele}
+Status realizacji początkowo przyjętych celów:
 \begin{description}
 \itemtitle{Przybliżenie tematyki}
-Według mnie, jak najbardziej z powodzeniem. Przedstawiłem część świata RPC, serializacji i wymiany danych.
+Udane. Przedstawiłem część świata RPC, serializacji i wymiany danych.
 
 \itemtitle{Porównanie istniejącego oprogramowania}
-Udane. Z jednej strony pokazałem niektóre z aktualnie najpopularniejszych rozwiązań w branży. Z drugiej -- technologie powiązane z RPC, które mają coś wspólnego z Androidem. Zbadałem polimorfizm webserviców. To i RPC związane z Androidem to nie bardzo popularne tematy.
+Udane. Z jednej strony pokazałem niektóre z~aktualnie najpopularniejszych rozwiązań w~branży. Z drugiej -- technologie powiązane z~RPC, które mają coś wspólnego z Androidem.
+Zbadałem też możliwości na uzyskanie polimorfizmu metod zdalnych przy ich użyciu.
 
 \itemtitle{Stworzenie wieloplatformowej biblioteki}
-Nie udało się, ale pokazałem, w jaki sposób można to zrealizować. Zadanie okazało się zbyt szerokie i ambitne. Ale moje założenia okazały się słuszne i można uzyskać sprawne oprogramowanie idąc drogą, którą szedłem. Co do poszczególnych jej aspektów
+Część na Androida zrealizowana jest w~pełni, nadaje się do użytku produkcyjnego i~będzie się zawierać w~popularnej otwartej bibliotecę.
+Część pod .NET nie ma formy gotowej biblioteki, jest prototypem.
 \begin{itemize}
-  \item Wywoływanie kodu na Androidzie z~poziomu C\# -- udane
-	\item Polimorfizm zdalnych metod -- pokazałem jak zrealizować i stworzyłem prototyp
-	\item Swoboda rozszerzania kodu -- jak wyżej
-	\item Prostota użycia -- pokazałem, że można ją zapewnić
+  \item Wywoływanie kodu na Androidzie z~poziomu C\# -- udane.
+	\item Polimorfizm zdalnych metod -- pokazałem jak zrealizować i~stworzyłem prototyp.
+	\item Swoboda rozszerzania kodu -- jak wyżej.
+	\item Prostota użycia -- zapewniona.
 	\item Wsparcie wielu środowisk -- nie zająłem się tym, ale serwer może działać wszędzie, gdzie jest Java.
 \end{itemize}
 
 \end{description}
 
-I co to naprawdę potrafi? Tak obrazowo?
-
-
-
-\section{Stworzona aplikacja}
-Potrafi to i to.
-
-
-
-\section{Co poza tym się udało}
-\begin{itemize}
-	\item Dodałem wieloinstancyjność do JSON-RPC.
-	\item Schemat dynamicznego mapowania typów
-\end{itemize}
-
-
-%\subsection{Tłumaczenie typów}
-%Tego się nie udało. Sharpen nie chciał działać, nic innego, co działało tak, jak chciałem nie znalazłem. Może warto by było jednak się przyjrzeć generacji typów na zasadzie generacji XML Schema z Javy, a następnie z niej klas C\#?
-
 
 
 \section{Dalsza praca}
-%Jakie tematy można dalej rozwinąć? Jakie zadania może podjąć ktoś inny w ramach magisterki lub inżynierki.
+Niektóre z~dotkniętych przeze mnie tematów są warte dogłębniejszej analizy i~pracy.
+Ta praca mogłaby być wykonywana w~ramach kolejnych prac magisterskich, czy inżynierskich.
+Zagadnienia:
 \begin{itemize}
-	\item Przydałoby się wprowadzanie do standardów RPC takich jak JSON-RPC i XML-RPC jednolitego oznaczania typów. SOAP to ma, ale jest za ciężki i~ostatecznie niejednolity (pokazać na przykładzie WCF i~JAX-WS).
-	\item Rozszerzenie Apache Thrift o możliwość generacji kodu pod Androida (może być tematem pracy magisterskiej lub inżynierskiej)
-	\item Pełna implementacja komponentów, takich jak mapper typów i serializator pod .NET zgodny z Jacksonem. Mogłoby to być zrealizowane jako fork lub, co wymagałoby dużo więcej wysiłku, rozszerzenie konfigurowalności JSON.NET aby mógł serializować jak Jackson.
-	\item Dodanie warstwy bezpieczeństwa.
-	\item Same tajniki serializacji nadają się na pracę, bo to aktualny problem na ktory rzucają się np. Google Protocol Buffers, Apache Avro, Apache Thrift.
+	\item Jednolity format opisu typu danych we wiadomościach JSON-RPC. ,,Duże'' usługi sieciowej go mają dzięki korzystaniu z~XML Schema. Jest to jednak rozwiązanie ciężkie, mało elastyczne i~trudne w~implementacji.
+	\item Rozszerzenie Apache Thrift o~możliwość generacji kodu pod Androida.
+	\item Rozszerzenie JSON.NET, aby dzięki konfiguracji mógł formatować informacje o~typach tak samo jak Jackson.
+	\item Implementacja solidnego klienta JSON-RPC na bazie mojego kodu. Powinien zawierać obsługę błędów komunikacji, ponowne próby nadawania wiadomości itp. Powinien też wspierać komunikację HTTP, HTTPS i~TLS.
+	\item Dokładne porównanie współczesnych \emph{frameworków} do międzyplatformowego RPC i~serializacji, czyli Apachje Thrift, Apache Avro i~Google Protocol Buffers.
 \end{itemize}
 
-
-%Może jakieś wnioski, co można by zrobić, żeby powstało coś pięknego. Np. jakiś mapper z~istniejącego kodu Javowego do Thrifta?
 
 %Ogólnie ciężko zrobić takie tłumaczenie języków, lepiej użyć rozwiązania przeznaczonego do bycia uniwersalnym, takiego jak Thrift.
 %Ale doraźne rozwiązanie można uzyskać.
 %Z mapowaniem typów słabo. Albo trzeba by coś zrobić, albo stosować od razu technologie typu Apache Thrift. Albo powoli przechodzić na nie, jeśli zakłada się rozbieżne środowiska.
 
-%Jako dalsza praca lub temat czyjejś magisterki można by dodać do Thrifta możliwość kompilacji pod Androida.
-\section{Wnioski}
-Da się zrobić dynamiczny framework do RPC. Ale jeśli od razu jest założenie wspierania różnych platform i dynamiczność nie jest wymaganiem, to lepiej użyć technologii takiej jak Apache Thrift, która pewnie jeszcze się rozwinie.
+%%O polimorfizmie typów zdalnych
+%Polimorfizm przekazywanych typów jest raczej bardziej sensowny, gdy wszystko zostaje w obrębie jednego języka, jeśli uruchamiamy na przekazanych parametrach metody. Inne zastosowania takiego systemu mogą być zastąpione, przez lepszy \emph{,,design''} funkcjonalności, który nie podejmuje decyzji na bazie typu. Ale może czasem się nie da. Ewentualnie klasy danych mogą mieć te metody, ale muszą być zaimplementowane po obu stronach. Ewentualnie tylko po jednej może być implementacja. Ale trzeba wtedy uważać i być świadomym różnic w zachowaniu typów. Kiedy zawierają one tylko dane nie ma takich problemów.
+%
+%Ogólnie projekt jest za duży, żeby badać wszystkie aspekty serializacji. Maksymalnie zgodna serializacja mogłaby być osobnym tematem pracy magisterskiej ze względu na swój stopień skomplikowania.
+%Dodać to do działu wniosków.
+
+%\subsection{Tłumaczenie typów}
+%Tego się nie udało. Sharpen nie chciał działać, nic innego, co działało tak, jak chciałem nie znalazłem. Może warto by było jednak się przyjrzeć generacji typów na zasadzie generacji XML Schema z Javy, a następnie z niej klas C\#?
