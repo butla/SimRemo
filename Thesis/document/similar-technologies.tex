@@ -522,27 +522,14 @@ Współpraca z~zewnętrznymi bibliotekami, mimo, że z~założenia możliwa, wym
 
 
 
-\section{Thrift (TODO)}
-\url{http://thrift.apache.org/static/files/thrift-20070401.pdf}\\
+\section{Thrift}
+Thrift (znany też jako Apache Thrift) to biblioteka oraz zbiór narzędzi do generacji kodu stworzony przez Facebooka w~celu przyśpieszenia wytwarzania wydajnych i~skalowalnych aplikacji serwerowych (\emph{backend})~\cite{thrift-general}.
+Jego głównym celem jest umożliwienie solidnego i~efektownego modelu komunikacji pomiędzy językami programowania.
+Robi to przez wyabstrahowanie tych części każdego z~nich, które wymagają najwięcej dostosowywania i~umieszczenie ich we wspólnej bibliotece.
 
-Thrift is a software library and set of code-generation tools developed
-at Facebook to expedite development and implementation of
-efficient and scalable backend services. Its primary goal is to enable
-efficient and reliable communication across programming languages
-by abstracting the portions of each language that tend to
-require the most customization into a common library that is implemented
-in each language. Specifically, Thrift allows developers to
-define datatypes and service interfaces in a single language-neutral
-file and generate all the necessary code to build RPC clients and
-servers.
-
-%Też się z tym zgadzam i chciałbym, żeby tak w moim było
-The same application code should be able to run against TCP stream sockets, raw data in memory, or files on disk.
-
-Jest IDL, który opisuje interfejsy usług i dane przez nie wykorzystywane.
-
-Pozwala na asynchroniczność -- coś, czego nie przewidywałem dla mojej biblioteki, ale też może być przydatne.
-
+Konkretnie Thrift pozwala programistom definiować typy danych i~interfejsy usług w~pojedynczym pliku niezależnym od języków programowania.
+Następnie, z~tych definicji jest generowany cały kod do niezbędny do budowy klientów i~serwerów RPC.
+Składnia pliku z~definicjami określana jest jako IDL -- \emph{Interface Definition Language}.
 
 \subsection{Ocena}
 
@@ -554,38 +541,31 @@ Pozwala na tworzenie pełnej architektury RPC z~klientami, serwerami i~serializa
 Kompilator przeznaczony dla środowisk Unixowych. Pod Windowsem działa w~środowisku Cygwin.
 Generuje kod w~wielu językach: Actionscript 3, C, C++, C\#, Cocoa, Delphi, Erlang, Go, Haskell, Java, Javascript, OCaml, Perl, PHP, Python, Ruby, Smalltalk\cite{thrift-features}.
 
-\itemtitle{Łatwość instalacji(TODO)}
-Wydzielić kompilator i biblioteki do użycia w kodzie.
-Sprawdzę na Linuxie (wirtualne Kubuntu 14.04), bo nie chce mi się meczyć z Cygwinem. Nie jest to tragedia, ale może chwilkę zająć.
+\itemtitle{Łatwość instalacji}
+Łatwa.
+Na systemach Linux podobnych do Debiana jest banalna. Na innych platformach też nie jest skomplikowana, ale w~tym przypadku ogranicza się do wykonania jednej (choć długiej) komendy.
+Kompilator Thrift pod Windows jest dostępny jako pojedynczy plik binarny.
 
-Na pochodnym od Debiana Linuxie, konkretnie Kubuntu jest banalna. Na innych platformach nie też skomplikowana, ale w~tym przypadku ogranicza się do wpisania jednej, co prawda przydługiej.
+\itemtitle{Łatwość użycia}
+Średnia. O~ile generacja kodu jest prosta, to jego API jest dość skomplikowane. Ale dostępna jest dobra dokumentacja i~przykłady.
 
-Na Windowsie kompilator można ściągnąć jako jednego egzeka (nawet nie instalator, tylko działający kompilator).
-
-\itemtitle{Łatwość użycia(TODO)}
-Wydaje się łatwe. W sumie prosty system. Dobrze wytłumaczony.
-
-\itemtitle{Zgodność(TODO)}
+\itemtitle{Zgodność}
 Kod serwisów i~klientów Thrifta może być wygenerowany do wielu języków, a~następnie osadzony w~programach stworzonych w~tych samych językach.
 Para klient-serwer może ze sobą rozmawiać niezależnie od tego, w~jakiej technologii zaimplementowane są obie strony.
 Ale wszystko pozostaje hermetyczne w~obrębie Thrifta -- korzystając z~innej technologii nie da się skomunikować z~serwerem stworzonym w~Thrifcie.
 
-Służy do robienia i klienta i serwera. Nie można np.\ zrobić serwera, do którego inni będą mogli wołać jakimś standardowym kanałem. Muszą mieć konkretny, wygenerowany kod klienta (no ewentualnie mogą zrobić swój kod korzystając z API Thrift). Moje może tak wyjść.
+\itemtitle{Zewnętrzne moduły}
+Nie można podłączać pod system zewnętrznych bibliotek. Serwisy, parametry, ich metod oraz klienty są powiązane definicjami języka Thrift.
+Aby w~nie ingerować trzeba zmienić ich definicje, a~następnie znowu wygenerować kod w~rzeczywistych językach programowania. Nie ma miejsca na ,,wplecenie'' zbudowanych bibliotek, np.\ Javy.
 
-\itemtitle{Zewnętrzne moduły(TODO)}
-Nie można podłączać pod system zewnętrznych bibliotek. Serwisy, parametry ich metod oraz klienty są powiązane definicjami jeżyka Thrifta. Aby w~nie ingerować trzeba zmienić ich definicje, a~następnie znowu wygenerować kod w~rzeczywistych językach programowania. Nie ma miejsca na ,,wplecenie'' zbudowanych bibliotek, np.\ javowych.
+%Można podczepić zewnętrzne definicje Thrift pod swoje. Ale nie można nijak podczepić typów z gotowego kodu, np. Javy, w swoich definicjach serwisów lub danych. Można też użyć zewnętrznych bibliotek w implementacjach serwisów.
 
-Można podczepić zewnętrzne definicje Thrift pod swoje. Ale nie można nijak podczepić typów z gotowego kodu, np. Javy, w swoich definicjach serwisów lub danych. Można też użyć zewnętrznych bibliotek w implementacjach serwisów.
+\itemtitle{Rozszerzalność}
+Jest częściowo. Aby wpłynąć na działanie metod trzeba zmienić ich (lub ich parametrów) definicje i~ponownie wygenerować kod użytkowy.
+Ale można zmienić samą implementację zdalnych metod po stronie serwera bez ingerencji w~interfejs.najmniej w~pewnym stopniu. 
 
-\itemtitle{Rozszerzalność(TODO)}
-Nie ma. Aby wpłynąć na działanie metod trzeba zmienić ich (lub ich parametrów) definicje i~ponownie wygenerować kod użytkowy.
-
-Teoretycznie można podmieniać implementację usług. Musi ona spełniać generowany interfejs, ale nie jest w inny sposób ograniczana.
-
-Jeszcze jest to wersjonowanie, które pozwala starszym elementom gadać z nowszymi i na odwrót. Przynajmniej w~pewnym stopniu. 
-
-\itemtitle{Integracja z Androidem(TODO)}
-Ale może można zrobić serwer na Androidzie? (\url{http://stackoverflow.com/questions/19141177/thrift-client-on-android}) Pewnie się nie da bez przerabiania kodu Thrifta.
+\itemtitle{Integracja z Androidem}
+Thrift oficjalnie nie wspiera Androida, ale możliwe jest zmodyfikowanie i~przekompilowanie jego kodu tak, aby działał na Androidzie\footnote{\url{http://stackoverflow.com/questions/19141177/thrift-client-on-android}}.
 
 \itemtitle{Polimorfizm metod}
 Nie ma. Każda metoda usługi musi mieć unikatową nazwę\cite{thrift-features}.
@@ -600,274 +580,302 @@ Interfejsy serwisów muszą być zaimplementowane przez programistę w~jednym z~
 
 \end{description}
 
-
 \subsection{Podsumowanie}
-Gdyby tylko można było jakoś podłączać zewnętrzne biblioteki i~tworzyć kod Thrifta z~gotowych klas w~Javie lub C\# to byłby idealnym i~kompletnym rozwiązaniem (jeśli działa na Androidzie).
+Gdyby możliwe było podłączanie zewnętrznych bibliotek, tworzenie kodu IDL z~kodu Javy lub C\# i~działał na Androidzie, to idealnie spełniałby postawione w~tej pracy cele.
 
 
 
-\section{Sharpen (TODO)}
-Wtyczka do IDE Eclipse tłumacząca kod w~Javie do C\#.
-Nie jest dynamicznie rozwijany. Mimo to polecana przez Xamarina (\url{http://developer.xamarin.com/guides/android/advanced_topics/java_integration_overview/}).
-Istnieje kilka jego wersji rozsianych po kilku stronach. Wszystkie różnią się nieco kodem, ponieważ są rozwijane niezależnie.
-
-Strony, na których można znaleźć informacje o~nim to: BLABLABN LA
-
-\subsection{Ocena}
-
-\begin{description}
-\itemtitle{Klasyfikacja}
-Narzędzie do tłumaczenia kodu z~Javy na C\#.
-
-\itemtitle{Docelowa platforma}
-Tworzony jest kod skierowany na platformę .NET\@. Dane wejściowe to kod Java (w~formie źródeł), niezależny od żadnej konkretnej platformy.
-
-\itemtitle{Łatwość instalacji}
-Instalacja trudna na tyle, że nie udało mi się jej przeprowadzić. Może jest to możliwe, ale w~tej chwili nie chcę na to tracić więcej czasu.
-
-Przewodników po instalacji (i~użycia) jest kilka różnych, co wprowadza w~zakłopotanie: \\
-\url{https://github.com/slluis/sharpen}\\
-\url{https://github.com/xamarin/XobotOS/tree/master/sharpen}\\
-\url{http://blog.xamarin.com/android-in-c-sharp/}\\
-\url{http://community.versant.com/documentation/reference/db4o-7.12/java/reference/html/Content/sharpen/how_to_setup_sharpen.html}\\
-\url{http://pauldb.tumblr.com/post/14916717048/a-guide-to-sharpen-a-great-tool-for-converting-java}\\
-
-\itemtitle{Łatwość użycia}
-Średnio trudne.
-Trzeba przeprowadzić dużą konfigurację, ale jest ona zrozumiała i~dość elastyczna. Można też zdobyć gotowe pliki, które można  szybko dopasować do potrzeb.
-
-To niestety tylko teoria, bo nie udało mi się sprawić, żeby narzędzie działało.
-Nieważne z~jakich porad korzystałem, dostawałem błędy przy generacji kodu.
-Po poszukiwaniach w~Internecie widać, że nie jestem jedyną osobą z~takimi problemami\footnote{\url{http://stackoverflow.com/questions/10539105/using-sharpen-and-eclipse-error-application-sharpen-core-application-could}}.
-Niestety nie mają one ogólnego rowiązania.
-
-\itemtitle{Zgodność}
-Produkowany kod powinien dać się skompilować i~działać pod .NET\@.
-Tłumaczone powinny być nie tylko struktury danych, ale działająca logika. Można to zrealizować dzięki precyzyjnej konfiguracji narzędzia pozwalającej też na tłumaczenie wywołań charakterystycznych metod, np.\ pisania do konsoli, tworzenia map itp.
-
-\itemtitle{Zewnętrzne moduły (Code reuse)}
-Można tłumaczyć dowolny kod Javowy. Ale trzeba mieć dostęp do źródeł.
-
-\itemtitle{Tłumaczenie kodu}
-Wystarczy raz skonfigurować i~jest spokój. Kod można rozwijać, bo ponownie wygenerowanie jest proste.
-Konfiguracja to kilka ustawień ogólnych i~rozległy plik z~parami zawierającymi klasy, metody itp. Javy i~ich odpowiedniki w~C\#.
-
-Żeby przetestować stworzyłem przykładowy projekt z~klasą, którą będę chciał przetłumaczyć. Tylko jedną na razie, żeby zobaczyć, że działa.
-Do projektu dodałem pliki konfiguracyjne, zgodnie z~jednym z~poradników. Zmapowałem też \emph{namespace} do docelowego.
-\end{description}
-
-\subsection{Podsumowanie}
-Nie udało mi się użyć. Najwyraźniej dwa lata, a~z~tego, co widać to tyle minęło od większych aktualizacji kodu, to za dużo dla wtyczki do Eclipse'a\footnote{Ofiara zjawiska \emph{bit rot}.}.
-Nie ma dobrego wsparcia, ponieważ jest to ,,bezpański'' projekt, nad którym nie nie sprawuje faktycznej kontroli.
-Dziwne, że Xamarin cały czas go poleca. Może ich wersja kodu Sharpena pasuje do ich zastosowania.
-
-Generowanie kodu C\# ze źródeł Javy mogłoby się bardzo przydać w~moim projekcie. Konwersja w~tę stronę jest preferowana, ponieważ w~Javie będzie logika metod zdalnych, w~tym komunikacja z~Androidem, a~to coś, czego raczej nie da się automatycznie przełożyć z~C\#.
-Natomiast przeniesienie typów danych używanych przez te metody z~Javy powinno być stosunkowo mało skomplikowane.
-
-
-
-\section{JsonRpc (Ritwik Saikia) (TODO)}
-\subsection{Opis}
-Przez autora przedstawiony jako łatwy i~lekki klient/serwer RPC oparty o~JSON (,,Easy and lightweight Json-Rpc Client/Server'')\cite{json-rpc-lib}.
-Oparcie o~JSONa oznacza, że wiadomości, zawierające zserializowane obiekty, przesyłane między klientem a~serwerem zapisane są JSONem. Biblioteka powinnna działać dla Androida, Google App Engine i~aplikacji Javascript.
-
-Jest to jedna z~wielu bibliotek, a~jej nazwa pokrywa się (konkretna pisownia może być inna) z~nazwą standardu. To może być mylące. 
-
-\subsection{Ocena}
-
-\begin{description}
-\itemtitle{Klasyfikacja}
-Klient i~serwer RPC. Otwarty kod. Serializacja dostarczana (najprawdopodobniej) przez zewnętrzną bibliotekę -- Gson.
-
-\itemtitle{Docelowa platforma}
-Java. Autor twierdzi, że działa też na Androidzie.
-
-\itemtitle{Łatwość instalacji}
-Średnia.
-Źródła trzeba ściągnąć Gitem ze strony na Gihubie (nieduży problem), a~następnie zbudować Mavenem (jeśli ktoś nie ma zainstalowanego to wymaga to chwili pracy). Nie jest to jasno opisane, wszystkiego trzeba się domyślić.
-
-Nie ma także mowy o~tym co konkretnie zawiera się w~bibliotekach powstających w~wyniku zbudowania projektu, ale jest to intuicyjne. Plik \texttt{jsonrpc-1.1.jar} zdaje się zawierać całość klas projektu, pliki \texttt{jsonrpc-1.1-server.jar}) i~\texttt{jsonrpc-1.1-client.jar} zawierają odpowiednio klasy potrzebne do stworzenia serwera i~klienta. Jest też część wspólna 
-
-\itemtitle{Łatwość użycia}
-Średnie. Teoretycznie powinno się łatwo korzystać z~tej biblioteki, ale w~moim przypadku (nie mogę tego zrobić jako servlet) musiałbym sam zaimplementować serwer, co jest czasochłonne.
-Nie zrobiłem tego, dlatego nie mam więcej danych na temat tej biblioteki.
-
-Według autora API klienta i~serwera jest zaprojektowane tak, aby programista nie musiał być świadomy szczegółów protokołu komunikacyjnego.
-Aby stworzyć zdalną metodę wystarczy zarejestrować klasę zawierającą tę metodę po stronie serwera, a~następnie po stronie klienta dynamicznie\footnote{Dosłownie ,,w locie'', z~ang. \emph{,,on the fly''}} stworzyć do niej proxy.
-
-\itemtitle{Zgodność}
+%\section{Sharpen (TODO)}
+%Wtyczka do IDE Eclipse tłumacząca kod w~Javie do C\#.
+%Nie jest dynamicznie rozwijany. Mimo to polecana przez Xamarina (\url{http://developer.xamarin.com/guides/android/advanced_topics/java_integration_overview/}).
+%Istnieje kilka jego wersji rozsianych po kilku stronach. Wszystkie różnią się nieco kodem, ponieważ są rozwijane niezależnie.
+%
+%Strony, na których można znaleźć informacje o~nim to: BLABLABN LA
+%
+%\subsection{Ocena}
+%
+%\begin{description}
+%\itemtitle{Klasyfikacja}
+%Narzędzie do tłumaczenia kodu z~Javy na C\#.
+%
+%\itemtitle{Docelowa platforma}
+%Tworzony jest kod skierowany na platformę .NET\@. Dane wejściowe to kod Java (w~formie źródeł), niezależny od żadnej konkretnej platformy.
+%
+%\itemtitle{Łatwość instalacji}
+%Instalacja trudna na tyle, że nie udało mi się jej przeprowadzić. Może jest to możliwe, ale w~tej chwili nie chcę na to tracić więcej czasu.
+%
+%Przewodników po instalacji (i~użycia) jest kilka różnych, co wprowadza w~zakłopotanie: \\
+%\url{https://github.com/slluis/sharpen}\\
+%\url{https://github.com/xamarin/XobotOS/tree/master/sharpen}\\
+%\url{http://blog.xamarin.com/android-in-c-sharp/}\\
+%\url{http://community.versant.com/documentation/reference/db4o-7.12/java/reference/html/Content/sharpen/how_to_setup_sharpen.html}\\
+%\url{http://pauldb.tumblr.com/post/14916717048/a-guide-to-sharpen-a-great-tool-for-converting-java}\\
+%
+%\itemtitle{Łatwość użycia}
+%Średnio trudne.
+%Trzeba przeprowadzić dużą konfigurację, ale jest ona zrozumiała i~dość elastyczna. Można też zdobyć gotowe pliki, które można  szybko dopasować do potrzeb.
+%
+%To niestety tylko teoria, bo nie udało mi się sprawić, żeby narzędzie działało.
+%Nieważne z~jakich porad korzystałem, dostawałem błędy przy generacji kodu.
+%Po poszukiwaniach w~Internecie widać, że nie jestem jedyną osobą z~takimi problemami\footnote{\url{http://stackoverflow.com/questions/10539105/using-sharpen-and-eclipse-error-application-sharpen-core-application-could}}.
+%Niestety nie mają one ogólnego rowiązania.
+%
+%\itemtitle{Zgodność}
+%Produkowany kod powinien dać się skompilować i~działać pod .NET\@.
+%Tłumaczone powinny być nie tylko struktury danych, ale działająca logika. Można to zrealizować dzięki precyzyjnej konfiguracji narzędzia pozwalającej też na tłumaczenie wywołań charakterystycznych metod, np.\ pisania do konsoli, tworzenia map itp.
+%
+%\itemtitle{Zewnętrzne moduły (Code reuse)}
+%Można tłumaczyć dowolny kod Javowy. Ale trzeba mieć dostęp do źródeł.
+%
+%\itemtitle{Tłumaczenie kodu}
+%Wystarczy raz skonfigurować i~jest spokój. Kod można rozwijać, bo ponownie wygenerowanie jest proste.
+%Konfiguracja to kilka ustawień ogólnych i~rozległy plik z~parami zawierającymi klasy, metody itp. Javy i~ich odpowiedniki w~C\#.
+%
+%Żeby przetestować stworzyłem przykładowy projekt z~klasą, którą będę chciał przetłumaczyć. Tylko jedną na razie, żeby zobaczyć, że działa.
+%Do projektu dodałem pliki konfiguracyjne, zgodnie z~jednym z~poradników. Zmapowałem też \emph{namespace} do docelowego.
+%\end{description}
+%
+%\subsection{Podsumowanie}
+%Nie udało mi się użyć. Najwyraźniej dwa lata, a~z~tego, co widać to tyle minęło od większych aktualizacji kodu, to za dużo dla wtyczki do Eclipse'a\footnote{Ofiara zjawiska \emph{bit rot}.}.
+%Nie ma dobrego wsparcia, ponieważ jest to ,,bezpański'' projekt, nad którym nie nie sprawuje faktycznej kontroli.
+%Dziwne, że Xamarin cały czas go poleca. Może ich wersja kodu Sharpena pasuje do ich zastosowania.
+%
+%Generowanie kodu C\# ze źródeł Javy mogłoby się bardzo przydać w~moim projekcie. Konwersja w~tę stronę jest preferowana, ponieważ w~Javie będzie logika metod zdalnych, w~tym komunikacja z~Androidem, a~to coś, czego raczej nie da się automatycznie przełożyć z~C\#.
+%Natomiast przeniesienie typów danych używanych przez te metody z~Javy powinno być stosunkowo mało skomplikowane.
 
 
-\itemtitle{Zewnętrzne moduły}
 
-
-\itemtitle{Rozszerzalność}
-
-
-\itemtitle{Integracja z Androidem}
-
-
-\itemtitle{Polimorfizm metod}
-
-\itemtitle{Polimorfizm danych}
-Serializacja do JSONa (i~deserializacja z~niego) najprawdopodobniej nie jest zaimplementowana w~samym JsonRpc, a~przez bibliotekę Gson, która wchodzi w~skład JsonRpc. Gson\footnote{\url{https://code.google.com/p/google-gson/}} jest serializatorem napisanym w~Javie przez Google.
-
-Trzeba przeanalizować, jak sobie radzi Gson.
-
-\end{description}
-
-\subsection{Podsumowanie}
-Ponieważ nie ma dostarczonej implementacji serwera, która mogłaby działać na Androidzie nie mogłem przeprowadzić testów.
-Stąd nie mam żadnych godnych uwagi wniosków.
-Ale nie zapowiada się, żeby ta biblioteka była lepsza niż jsonrpc4j. Chociaż faktycznie ani jednej z~nich nie uruchomiłem jeszcze na Androidzie.
+%\section{JsonRpc (Ritwik Saikia) (TODO)}
+%\subsection{Opis}
+%Przez autora przedstawiony jako łatwy i~lekki klient/serwer RPC oparty o~JSON (,,Easy and lightweight Json-Rpc Client/Server'')\cite{json-rpc-lib}.
+%Oparcie o~JSONa oznacza, że wiadomości, zawierające zserializowane obiekty, przesyłane między klientem a~serwerem zapisane są JSONem. Biblioteka powinnna działać dla Androida, Google App Engine i~aplikacji Javascript.
+%
+%Jest to jedna z~wielu bibliotek, a~jej nazwa pokrywa się (konkretna pisownia może być inna) z~nazwą standardu. To może być mylące. 
+%
+%\subsection{Ocena}
+%
+%\begin{description}
+%\itemtitle{Klasyfikacja}
+%Klient i~serwer RPC. Otwarty kod. Serializacja dostarczana (najprawdopodobniej) przez zewnętrzną bibliotekę -- Gson.
+%
+%\itemtitle{Docelowa platforma}
+%Java. Autor twierdzi, że działa też na Androidzie.
+%
+%\itemtitle{Łatwość instalacji}
+%Średnia.
+%Źródła trzeba ściągnąć Gitem ze strony na Gihubie (nieduży problem), a~następnie zbudować Mavenem (jeśli ktoś nie ma zainstalowanego to wymaga to chwili pracy). Nie jest to jasno opisane, wszystkiego trzeba się domyślić.
+%
+%Nie ma także mowy o~tym co konkretnie zawiera się w~bibliotekach powstających w~wyniku zbudowania projektu, ale jest to intuicyjne. Plik \texttt{jsonrpc-1.1.jar} zdaje się zawierać całość klas projektu, pliki \texttt{jsonrpc-1.1-server.jar}) i~\texttt{jsonrpc-1.1-client.jar} zawierają odpowiednio klasy potrzebne do stworzenia serwera i~klienta. Jest też część wspólna 
+%
+%\itemtitle{Łatwość użycia}
+%Średnie. Teoretycznie powinno się łatwo korzystać z~tej biblioteki, ale w~moim przypadku (nie mogę tego zrobić jako servlet) musiałbym sam zaimplementować serwer, co jest czasochłonne.
+%Nie zrobiłem tego, dlatego nie mam więcej danych na temat tej biblioteki.
+%
+%Według autora API klienta i~serwera jest zaprojektowane tak, aby programista nie musiał być świadomy szczegółów protokołu komunikacyjnego.
+%Aby stworzyć zdalną metodę wystarczy zarejestrować klasę zawierającą tę metodę po stronie serwera, a~następnie po stronie klienta dynamicznie\footnote{Dosłownie ,,w locie'', z~ang. \emph{,,on the fly''}} stworzyć do niej proxy.
+%
+%\itemtitle{Zgodność}
+%
+%
+%\itemtitle{Zewnętrzne moduły}
+%
+%
+%\itemtitle{Rozszerzalność}
+%
+%
+%\itemtitle{Integracja z Androidem}
+%
+%
+%\itemtitle{Polimorfizm metod}
+%
+%\itemtitle{Polimorfizm danych}
+%Serializacja do JSONa (i~deserializacja z~niego) najprawdopodobniej nie jest zaimplementowana w~samym JsonRpc, a~przez bibliotekę Gson, która wchodzi w~skład JsonRpc. Gson\footnote{\url{https://code.google.com/p/google-gson/}} jest serializatorem napisanym w~Javie przez Google.
+%
+%Trzeba przeanalizować, jak sobie radzi Gson.
+%
+%\end{description}
+%
+%\subsection{Podsumowanie}
+%Ponieważ nie ma dostarczonej implementacji serwera, która mogłaby działać na Androidzie nie mogłem przeprowadzić testów.
+%Stąd nie mam żadnych godnych uwagi wniosków.
+%Ale nie zapowiada się, żeby ta biblioteka była lepsza niż jsonrpc4j. Chociaż faktycznie ani jednej z~nich nie uruchomiłem jeszcze na Androidzie.
 
 %Nie ma za bardzo instrukcji jak to zbudować. Są jakieś skrypy, ale są tylko pod Linuxa. Są w~readme jakieś fragmenty Mavena, sugerujące chyba co zrobić, w~zależności od tego, jaki build chce się uzyskać (wkleić je, pokazać, jak wygląda folder, może jakimś wydrukiem z command line).
 
 
 
-\section{WCF (TODO)}
-Potężny framework Web Serviceów od Microsoftu. Może posłużyć za wzór jak wszystko może działać. Może dość dynamicznie tworzyć hierarchie obiektów, które mogą funkcjonować jako usługi.
-Poza frameworkiem są też narzędzia do generacji kodu ze schemy i wsdl.
-Można robić JSONa: \url{http://msdn.microsoft.com/en-us/library/system.runtime.serialization.json.datacontractjsonserializer.aspx}\\
+\section{WCF}
+WCF, czyli \emph{Windows Communication Foundation} to \emph{framework} przeznaczony do tworzenia aplikacji SOA~\cite{wcf}. Zbudowany na platformie .NET.
+Jest przykładem ,,dużych'' usług sieciowych; korzysta głównie z~SOAP i~WSDL.
+Jest potężny i~może posłużyć za wzór tego, jak mogą działać \emph{web services}.
+Automatycznie generuje WSDL serwisów, dynamicznie serializuje i~deserializuje obiekty, pozwala zamienić niemal dowolny obiekt w~serwis.
+Umożliwia obiektowe podejście do RPC.
+Wspiera też wiele warstw transportowych.
 
-Generowanie z JAX-WS przy pomocy wsdl toola nie do końca działało.
-%http://docs.oracle.com/cd/E21764_01/web.1111/e13759/interop.htm
+Zawiera też narzędzia takie jak generatory kodu z~WSDL, XML Schema z~kodu itp.
+Mimo międzyplatformowości, którą powinny zapewniać usługi sieciowe, WCF potrafi mieć problemy przy współpracy ze swoim Javowym odpowiednikiem -- JAX-WS\footnote{\url{http://docs.oracle.com/cd/E21764_01/web.1111/e13759/interop.htm}}.
 
-Opisać o co chodzi z tym polimorfizmem, że w WCF trzeba wypisywać KnownType, co jest robieniem wzajemnych zależności, co jest straszną praktyką programowania (źródło).
+\begin{description}
+\itemtitle{Klasyfikacja}
+Klient i~serwer RPC, serializacja, narzędzia do generacji kodu.
 
-Napisać jak łatwo można zrobić to, co chcę mieć.
+\itemtitle{Docelowa platforma}
+.NET, a~więc Windows. Ograniczony podzbiór części klienckiej WCF działa na Windowsie mobilnym i~Xamarinie.
 
-%\subsection{Rozszerzalność}
-%Standardowo używa się DataContract, ale nie trzeba.
-%DataContractSerializerowi trzeba dać informacje o~wszystkich typach, jakich ma się spodziewać. Albo zrobić oznaczenia. Oznaczenia blokują rozwijanie kodu. Podawanie wszystkich klas też trzeba jakoś rozwiązać, np. przez analizę bibliotek i~ładowanie wszystkich możliwych klas (DataContractów).
+\itemtitle{Łatwość instalacji}
+Bardzo łatwa. Instalowany jest razem z~całym .NET, więc najczęściej jest już zainstalowany.
 
+\itemtitle{Łatwość użycia}
+Średnia. API jest rozległe, bywa skomplikowane i~wymaga przyzwyczajenia.
 
+\itemtitle{Zgodność}
+Pozwala na wystawianie i~konsumowanie serwisów zgodnych ze standardem WS, czyli nie ogranicza się tylko do .NET.
+Niezgodności mogą występować przy bardziej zaawansowanych aspektach WS.
 
-\section{JAX-WS (TODO)}
-Standardowy framework Javy do Web Serviceów. Podobne możliwości co WCF\@. Ja też niby chcę web service'y w Javie, ale na Androidzie, któremu JAX-WS został wycięty.
-%Niestandardowe podejście z użyciem JSONa zamiast XMLa\url{http://jax-ws-commons.java.net/json/}\\
-Poza frameworkiem są też narzędzia do generacji kodu ze schemy i wsdl.
+\itemtitle{Zewnętrzne moduły}
+Można używać klas z~zewnętrznych bibliotek jako danych w~metodach zdalnych, można też wystawiać je jako serwisy (obiekty wystawiające na zewnątrz zdalne metody).
 
-W JVM jest mały serwerek, który może hostować, można to też robić z jakiegoś Glassfisha albo innego serwera Javy EE\@. Podobnie ma WCF.
+\itemtitle{Rozszerzalność}
+Jest -- można dodać nowe klasy dziedziczące po argumentach zdalnej metody i~ta metoda może je obsługiwać. Nie wymaga to żadnych zmian w~kodzie samej metody. Nowe klasy muszą się znaleźć na kliencie i~na serwerze.
 
-Co by trzeba było po kolei zrobić w normalnej javie żeby połączyć z~WCF? (tłumaczenia do xsd, ujednolicanie namespaców, mamy do czynienia z jakimiś ArrayOfString, dziedziczenie chyba słabo działa przy generacji, nie da się używać DataContractSerializera żeby nie serializować części klas ogólnie syf, ale wszystko udokumentować). 
+\itemtitle{Polimorfizm metod}
+Jest.
 
-Napisać jak łatwo można zrobić to, co chcę mieć.
+\itemtitle{Polimorfizm danych}
+Jest.
+Trzeba jednak zaznaczyć, że domyślny sposób jeko uzyskania polega na dodawaniu specjalnych atrybutów wskazujący klasy dziedziczące(\texttt{[KnownType]}) do klasy nadrzędnej, co powoduje wzajemne zależności między klasami w~hierarchii dziedziczenia. Jest to sprzeczne z~dobrymi praktykami programowania obiektowego.
+WCF pozwala jednak na bardziej eleganckie rozwiązania.
 
-
-
-\section{JSON-RPC.NET (TODO)}
-\label{json-rpc-net}
-\url{https://github.com/Astn/JSON-RPC.NET} \\
-Wygląda na ciekawą sprawę. JSON.NET, którego ta biblioteka używa ma chodzić nawet na Mono na Androidzie. Ten Json.NET ma JsonSchemę.
-
-Nie za bardzo ma klienta. \url{http://jsonrpc2.codeplex.com/discussions/547022} \\
-No... jest propozycja jak zrobić: \url{https://jsonrpc2.codeplex.com/SourceControl/latest#AustinHarris.JsonRpc/AustinHarris.JsonRpc.Client/client.cs}
-W ogóle w .NETcie coś dziwnie trudno o kod kliencki. Jest Jayrock \url{https://code.google.com/p/jayrock/}
-
-
-\section{gSOAP (TODO)}
-Web Service'y i REST w C/C++. Pytanie, czy można posadzić serwer na Androidzie i połączyć z Javą?
-Pewnie by się dało przez JNI, ale tłumaczenie danych pełne byłoby bolesne. Wołanie API Androida też.
-\url{http://trac.e-technik.uni-rostock.de/projects/ws4d-gsoap/wiki/AndroidNDK}\\ 
-
-
-
-\section{Inne (TODO)}
-Chociaż wymienić pozostałe rozwiązania, które mogą być warte uwagi, choć raczej nie nadają się dla rozwiązania problemu tej pracy magisterskiej.
-
-\subsection{android-xml-rpc}
-W~jednym wątku na Google Groups \cite{android-rpc-thread} mówili, że niby zrobili serwer. I faktycznie na to wygląda.
-Też na android-json-rpc(\url{https://code.google.com/p/android-json-rpc/}).
-
-
-\subsection{Otwarte biblioteki serializacyjne}
-Są to, np.\ Google Protocol Buffers\footnote{\url{https://github.com/google/protobuf/}}, Apache Avro\footnote{\url{http://avro.apache.org/docs/current/}}, czy Apache Thrift\footnote{\url{https://thrift.apache.org/}}.
-
-
-\subsection{Google Protocol Buffers}
-\url{https://developers.google.com/protocol-buffers/docs/overview}
-Podobne do Apache Thrift, ale źródła zamknięte. Od Googla. Służy do wyabstrachowania wiadomości (danych w nich zawartych) przesyłanych między częściami twojej aplikacji.
-Nie ma tu mowy o serwisach jak w Thrifcie, tylko wiadomości, czyli właściwie dane.
-Też jest generowanie do kilku języków i~jeden odmienny język wspólny, z którego robi się tę generację. Przez to podobne wady, jak Thrift.
-
-Forma tekstowa przypomina JSONa.
-
-
-\subsection{GSON}
-Gson is a Java library that can be used to convert Java Objects into their JSON representation. It can also be used to convert a JSON string to an equivalent Java object. Gson can work with arbitrary Java objects including pre-existing objects that you do not have source-code of.
-
-Provide simple toJson() and fromJson() methods to convert Java objects to JSON and vice-versa
-Allow pre-existing unmodifiable objects to be converted to and from JSON
-Extensive support of Java Generics
-Allow custom representations for objects
-Support arbitrarily complex objects (with deep inheritance hierarchies and extensive use of generic types)
-
-Prostszy niż Jackson, ale nie zachowuje informacji o typach. 
-
-
-\subsection{I-jetty}
-Serwer webowy dla Androida. Niby port Jetty. Może ma jakiś kontener Web-serviceów?
-
-
-\subsection{Pyro}
-Pythonowe, niby obiektowe. Ale dla pythona będzie łatwo uzyskać polimorfizm, bo nie ma ostrego typowania. Także może sobie luźno traktować XMLa lub JSONa.
-
-
-\subsection{Restlet}
-\url{http://restlet.org/learn/tutorial/2.1/#/docs_2.0/13-restlet/275-restlet/266-restlet.html}\\
-Używa Jacksona, nieciekawy. Ale coś restowego by się przydało.
-
-
-\subsection{Spring}
-Javowy framework web serviceów.
-\url{http://forum.springsource.org/showthread.php?129058-Spring-Remoting-for-Android}\\
-
-
-\subsection{ZeroMQ}
-\url{http://zguide.zeromq.org/page:all}
-\url{http://stackoverflow.com/questions/8062212/difference-between-apache-thrift-and-zeromq}\\
-ØMQ (also known as ZeroMQ, 0MQ, or zmq) looks like an embeddable networking library but acts like a concurrency framework. It gives you sockets that carry atomic messages across various transports like in-process, inter-process, TCP, and multicast. You can connect sockets N-to-N with patterns like fan-out, pub-sub, task distribution, and request-reply. It's fast enough to be the fabric for clustered products. Its asynchronous I/O model gives you scalable multicore applications, built as asynchronous message-processing tasks. It has a score of language APIs and runs on most operating systems. ØMQ is from iMatix and is LGPLv3 open source.
+\itemtitle{Tłumaczenie kodu}
+WCF posiada narzędzia dzięki którym można generować WSDL i~XML Schema na bazie klas .NET.
+Pozwala też na generację gotowych bibliotek lub kodu z~dokumentów WSDL lub XSD.
+Jeśli narzędzie jakiegoś innego języka pozwalałoby na tłumaczenie klas danych do XSD lub WSDL, to jest możliwe przetłumaczenie tych klas na .NET.
+\end{description}
 
 
 
-\subsection{Jakieś pythonowe}
-WSME: \url{http://wsme.readthedocs.org/en/latest/}\\
-Python EVE (Rest framework)\\
+\section{JAX-WS}
+Standardowy \emph{framework} Javy do usług sieciowych. Można go uznać za odpowiednika WCF. Ma podobne możliwości, narzędzia i~problemy.
+
+\begin{description}
+\itemtitle{Klasyfikacja}
+Klient i~serwer RPC, serializacja, narzędzia do generacji kodu.
+
+\itemtitle{Docelowa platforma}
+Java. Java działa na bardzo wielu systemach operacyjnych. Niestety platformy mobilne posiadają jej pozdbiór, który nie zawiera klas części serwerowej JAX-WS.
+
+\itemtitle{Łatwość instalacji}
+Bardzo łatwa. Instalowany jest razem z~Java SDK.
+
+\itemtitle{Łatwość użycia}
+Łatwe. API posiada dużo możliwości, ale można go używać w~prosty sposób.
+
+\itemtitle{Zgodność}
+Pozwala na wystawianie i~konsumowanie serwisów zgodnych ze standardem WS, czyli nie ogranicza się tylko do JAX-WS.
+Niezgodności mogą występować przy bardziej zaawansowanych aspektach WS.
+
+\itemtitle{Zewnętrzne moduły}
+Można używać klas z~zewnętrznych bibliotek jako danych w~metodach zdalnych, można też wystawiać je jako serwisy (obiekty wystawiające na zewnątrz zdalne metody).
+
+\itemtitle{Rozszerzalność}
+Jest -- można dodać nowe klasy dziedziczące po argumentach zdalnej metody i~ta metoda może je obsługiwać. Nie wymaga to żadnych zmian w~kodzie samej metody. Nowe klasy muszą się znaleźć na kliencie i~na serwerze.
+
+\itemtitle{Polimorfizm metod}
+Jest.
+
+\itemtitle{Polimorfizm danych}
+Jest.
+
+\itemtitle{Tłumaczenie kodu}
+JAX-WS posiada narzędzia dzięki którym można generować WSDL i~XML Schema na bazie klas Javy.
+Pozwala też na generację gotowych bibliotek lub kodu z~dokumentów WSDL lub XSD.
+Jeśli narzędzie jakiegoś innego języka pozwalałoby na tłumaczenie klas danych do XSD lub WSDL, to jest możliwe przetłumaczenie tych klas na Javę.
+\end{description}
 
 
-\subsection{Java to C\# itp.}
-\url{http://sourceforge.net/projects/ikvm/}
-\url{http://jni4net.com/} -- most (umożliwia wywoływanie), nie translator kodu, aktywnie utrzymywany \\
-\url{http://sourceforge.net/projects/j2cstranslator/}\\
-Przejście do schemy a~potem na inny kod może być alternatywą dla tych rzeczy.
+
+\section{JSON-RPC}
+Najbardziej popularna biblioteka .NET w~systemie NuGet (repozytorium bibliotek).
+Pozwala na tworzenie i~parsowanie JSON, a~także na serializację i~deserializację do/z JSON.
+ 
+\begin{description}
+\itemtitle{Klasyfikacja}
+Serializacja. Kod otwarty.
+
+\itemtitle{Docelowa platforma}
+.NET. Działa zarówno na pełnym, jak i~mobilnym Windowsie.
+
+\itemtitle{Łatwość instalacji}
+Bardzo łatwa. Wystarczy ściągnąć z~NuGeta i~podpiąć do projektu.
+
+\itemtitle{Łatwość użycia}
+Łatwe.
+
+\itemtitle{Zgodność}
+Tworzy i~czyta dokumenty zgodne ze standardem JSON.
+Tworzona przez JSON-NET opcjonalna informacja o~typach nie ma standardu.
+
+\itemtitle{Zewnętrzne moduły}
+Można używać klas z~zewnętrznych bibliotek, swobodnie je serializować i~deserializować.
+
+\itemtitle{Polimorfizm danych}
+Możliwy.
+JSON-NET jest w~stanie dodawać do JSON informację o~typach według specyficznego dla siebie formatu.
+Może też ja dekodować.
+\end{description}
 
 
-\subsection{Jeśli chciałbym się bawić w schemy}
-To może poszukać jakiś frameworków pozwalających oznakować klasy do serializacji (binding) do xmla albo jsona (a może nawet WSDL).
-W końcu jak mamy schemę po obu stronach, to można przetłumaczyć z Javy do XMLa a dalej do C\# i z powrotem.
 
-JiBX!!! Tworzenie klas ze schemy i robienie wsdl z javy\\
-Wsdl2Java: tworzenie klas z wsdl, głównie chodzi o klasy danych\\
+\section{Inne}
+Istnieje jeszcze wiele bibliotek i~\emph{frameworków} w~obrębie dziedziny tej pracy, chociaż może nie są one najlepszymi kandydatami na spełnienie jej celów.
 
-Generacja javovego kodu z bindingu:\\
-XSD2Java – generuje kod java z xsd. Mocno niedorobione.\\
+\begin{description}
+\item[Google Protocol Buffers] Otwarta biblioteka serializacyjna od Google. Napisana w~C++, ale posiada \emph{wrappery} do wielu języków.
+\item[gSOAP] Biblioteka C do tworzenia i~konsumpcji serwisów opartych o~SOAP i~REST.Serwer JSON-RPC pod .NET. Nie ma implementacji klienta. Korzysta z JSON.NET do serializacji.
+\item[GSON] Biblioteka serializująca z/do JSON. Ma prostszy interfejs niż Jackson, ale nie może zapisywać informacji o typach.
+\item[I-Jetty] Serwer webowy na Androida. Lżejsza wersja serwera Jetty.
+\item[IKVM.NET] JVM dla .NET umożliwiająca dynamiczne wywoływanie kodu Javy z~bibliotek .NET.
+\item[Jayrock] Implementacja serwera JSON-RPC pod .NET.
+\item[jni4net] Most pomiędzy .NET a~Javą umożliwiający wołanie Javy przy pomocy JNI (\emph{Java Native Interface}).
+\item[JiBX] Pozwala na tworzenie XSD ze zwykłych klas Javy i~klas z~XSD.
+\item[JSON-RPC.NET] Serwer JSON-RPC pod .NET. Nie ma implementacji klienta. Korzysta z JSON.NET do serializacji.
+\item[Otwarte biblioteki serializacyjne / RPC] Są to, np. Apache Avro i~Apache Thrift. Można z~nich korzystać z~poziomu wielu języków programowania.
+\item[Restlet] Biblioteka Javowa służąca do tworzenia usług REST. Do serializacji używa biblioteki Jackson.
+\item[Sharpen] Narzędzie tłumaczące kod Javy na C\#. Nie jest aktywnie utrzymywane i~nie udało mi się go uruchomić.
+\item[Spring] Obszerny \emph{framework} Javowy. Obejmuje np. tworzenie aplikacji internetowych, usługi internetowe i~REST.
+\item[Systemy kolejkowe] Np. ZeroMQ, RabidMQ, Kafka, NServiceBus. Służą do tworzenia asynchronicznego rozsyłania i~konsumowania wiadomości.
 
-\url{http://stackoverflow.com/questions/6920175/how-to-generate-java-classes-from-wsdl-file}\\
-\url{http://blog.tourgeek.com/2011/12/xml-data-binding-for-java-on-android.html}\\
+\end{description}
 
-\subsection{Jakieś serializacje}
-\url{http://simple.sourceforge.net/}\\
-\url{http://code.google.com/p/dbdroid-remoting/} - klient web serviców serializujący i deserializujący xmle\\
+%\subsection{JSON-RPC.NET (TODO)}
+%\url{https://github.com/Astn/JSON-RPC.NET} \\
+%Wygląda na ciekawą sprawę. JSON.NET, którego ta biblioteka używa ma chodzić nawet na Mono na Androidzie. Ten Json.NET ma JsonSchemę.
+%
+%Nie za bardzo ma klienta. \url{http://jsonrpc2.codeplex.com/discussions/547022} \\
+%No... jest propozycja jak zrobić: \url{https://jsonrpc2.codeplex.com/SourceControl/latest#AustinHarris.JsonRpc/AustinHarris.JsonRpc.Client/client.cs}
+%W ogóle w .NETcie coś dziwnie trudno o kod kliencki. Jest Jayrock \url{https://code.google.com/p/jayrock/}
 
 
-\subsection{Reszta}
-Crest, Ksoap \\
-\url{https://code.google.com/p/android-json-rpc/} -- bazuje na JSON-RPC, wspomaga w~robieniu klientów na Androida.\\
-\url{http://software.dzhuvinov.com/json-rpc-2.0-server.html} -- też jakiś niby niezależny serwer. \\ 
-\url{http://en.wikipedia.org/wiki/JSON-RPC#Implementations} -- cała lista implementacji JSON-RPC \\
-\url{https://github.com/cowtowncoder/java-classmate} -- introspekcja typów w Javie. Powinno sobie dawać radę z~ ,,type erasure''. \\
-Jayrock -- JSON-RPC dla .NET, nie ma łądnie generowanych klientów.
+%\subsection{gSOAP (TODO)}
+%Web Service'y i REST w C/C++. Pytanie, czy można posadzić serwer na Androidzie i połączyć z Javą?
+%Pewnie by się dało przez JNI, ale tłumaczenie danych pełne byłoby bolesne. Wołanie API Androida też.
+%\url{http://trac.e-technik.uni-rostock.de/projects/ws4d-gsoap/wiki/AndroidNDK}\\
+
+
+%\subsection{android-xml-rpc}
+%W~jednym wątku na Google Groups \cite{android-rpc-thread} mówili, że niby zrobili serwer. I faktycznie na to wygląda.
+%Też na android-json-rpc(\url{https://code.google.com/p/android-json-rpc/}).
+
+
+
+%\subsection{Reszta}
+%Crest, Ksoap \\
+%\url{https://code.google.com/p/android-json-rpc/} -- bazuje na JSON-RPC, wspomaga w~robieniu klientów na Androida.\\
+%\url{http://software.dzhuvinov.com/json-rpc-2.0-server.html} -- też jakiś niby niezależny serwer. \\ 
+%\url{http://en.wikipedia.org/wiki/JSON-RPC#Implementations} -- cała lista implementacji JSON-RPC \\
+%\url{https://github.com/cowtowncoder/java-classmate} -- introspekcja typów w Javie. Powinno sobie dawać radę z~ ,,type erasure''. \\
+%Jayrock -- JSON-RPC dla .NET, nie ma łądnie generowanych klientów.
+%Sharpen -- narzędzie które miało tłumaczyć kod polecane przez Xamarina. Wydaje się jednak przestarzałe i nie udało mi się go uruchomić.
 
 %\section{Wrappery pythonowe}
 %Może zamiast równoważnych implementacji na pythona, C\# i javę zrobić tylko pythona i wrappery w jythonie i iron pythonie?

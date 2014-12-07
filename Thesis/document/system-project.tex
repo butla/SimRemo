@@ -61,11 +61,11 @@ To wymaganie dotyczy zarówno strony klienta jak i~serwera.
 Deserializacja powinna być komplementarna i~ze stworzonych reprezentacji odtwarzać obiekty o~odpowiednich typach i~z~poprawnymi danymi.
 Taka metoda serializacji i~deserializacji jest warunkiem działania polimorficznych metod.
 
-\itemtitle{Tłumaczenie kodu}
-Zrealizowane jako niezależne narzędzie.
-Tłumaczenie kodu zmniejszyłoby nakład pracy programisty, który bez tego musiałby sam stworzyć odpowiadające klasy danych w~obu językach.
-Klasy i~pola nie znajdujące odpowiednika są pomijane w~trakcie tłumaczenia.
-Tłumaczenie powinno się odbywać z~Javy do C\#, ponieważ w~Javie będzie więcej kodu (kod implementacji zdalnych metod).
+%\itemtitle{Tłumaczenie kodu}
+%Zrealizowane jako niezależne narzędzie.
+%Tłumaczenie kodu zmniejszyłoby nakład pracy programisty, który bez tego musiałby sam stworzyć odpowiadające klasy danych w~obu językach.
+%Klasy i~pola nie znajdujące odpowiednika są pomijane w~trakcie tłumaczenia.
+%Tłumaczenie powinno się odbywać z~Javy do C\#, ponieważ w~Javie będzie więcej kodu (kod implementacji zdalnych metod).
 %Jeśli w danej klasie są inne klasy z zewnętrznej biblioteki, to trzeba też przetłumaczyć te. Trzeba dostarczyć kod wszystkich.
 %Jeśli jedno ogniwo jest nieprzetłumaczalne to można pominąć pole z ostrzeżeniem.
 \end{description}
@@ -199,8 +199,6 @@ Spełnienie zdefiniowanych wymagań systemowych przez stworzoną implementację 
 				\textbf{Nazwa wymagania} & \textbf{Typ wymagania} & \textbf{Obszar} & \textbf{Wykonanie}\\
 				\hline \hline
 				Serializacja danych z zachowaniem informacji o typach & Funkcjonalne & Ogólne & +\textasciitilde\\
-				\hline
-				Tłumaczenie kodu & Funkcjonalne & Ogólne & +\\
 				\hline
 				
 				Komunikacja z~klientem & Funkcjonalne & Serwer & +\\
@@ -751,7 +749,7 @@ Ponieważ po moich zmianach nie ma żadnego spadku funkcjonalności będę prób
 \section{Klient JSON-RPC pod .NET}
 \subsection{Wprowadzenie}
 Kod kliencki mojego systemu potrzebuje możliwości wołania serwera JSON-RPC.
-Okazuje się, że implementacje w~.NET, np. JSON-RPC.NET (opisane w~punkcie~\ref{json-rpc-net}) nie posiadają takiej możliwości.
+Okazuje się, że implementacje w~.NET, np. JSON-RPC.NET nie posiadają takiej możliwości.
 Potrafią łatwo wystawiać obiekty zdalne na zewnątrz, ale nie mają właściwie żadnych udogodnień do ich konsumowania.
 Istnieją jedynie dyskusje na temat części klienckiej i~dość prymitywne ich implementacje.
 Te implementacje i~tak zmuszają do ,,własnoręcznego'' złożenia wiadomości JSONowej\cite{json-rpc-net-client}.
