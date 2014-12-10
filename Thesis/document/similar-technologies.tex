@@ -22,7 +22,7 @@ Testy przedstawione są w~tabeli~\ref{tab:frameworks-criteria}.
 				\hline
 				Docelowa platforma & Ogólna & Czy technologia działa na platformie docelowej (Android, .NET)? Której?\\
 				\hline
-				Łatwość instalacji & Ogólna & Na ile intuicyjne i mało czasochłonne jest zinstalowane danego narzędzia/biblioteki? Na ile łatwo można go użyć, żeby zweryfikować, że działa?  Wyznacznik użyteczności.\\
+				Łatwość instalacji & Ogólna & Na ile intuicyjne i~mało czasochłonne jest zainstalowane danego narzędzia/biblioteki? Na ile łatwo można go użyć, żeby zweryfikować, że działa?  Wyznacznik użyteczności.\\
 				\hline
 				Łatwość użycia & Ogólna & Dotyczy bardziej sensownego wykorzystania technologii. U mnie to będzie przedstawiać jak trudno było wykonać testy polimorfizmu. Wyznacznik użyteczności.\\
 				\hline
@@ -52,7 +52,7 @@ Te, które będą tego wymagać będą uruchamiane na emulowanym (w~Windowsie) A
 
 
 \subsection{Dane do testów polimorfizmu}
-W~testach polimorfizmu będą brały dwie klasy danych. Obie są zapisane w~Javie, we fragmencie~\ref{code:testData}, chociaż ich odpowiedniki będą tworzone też w~innych językach. Posiadają one domyślne wartości pól, które będą przydatne w~trakcie weryfikacji wyników testów. Wszystkie dalsze pseudokody będą zbliżone do Javy.
+W~testach polimorfizmu będą brały udział dwie klasy danych. Obie są zapisane w~Javie, we fragmencie~\ref{code:testData}, chociaż ich odpowiedniki będą tworzone też w~innych językach. Posiadają one domyślne wartości pól, które będą przydatne w~trakcie weryfikacji wyników testów. Wszystkie dalsze pseudokody będą zbliżone do Javy.
 
 \begin{lstlisting}[float, frame=single, caption={Testowe klasy danych; jedna dziedzicząca drugą.}, label=code:testData]
 public class DaneA
@@ -95,7 +95,7 @@ Testy polimorfizmu metod zdalnych będą weryfikować trzy rzeczy.
 
 Odpowiedzialne za tę weryfikacje będą testy polegające na stworzeniu zdalnych metod przy pomocy sprawdzanego narzędzia i~próby ich wywołania.
 Nawet jeśli metoda się wykona, to mogła nie zwrócić odpowiedniego wyniku, dlatego go też trzeba będzie weryfikować.
-Tym testom będą podlegać tylko biblioteki, którą pozwalają tworzyć lub konsumować zdalne metody.
+Tym testom będą podlegać tylko biblioteki, które pozwalają tworzyć lub konsumować zdalne metody.
 Kody klasy zawierającej testowe zdalne metody (zwanej też serwisem) oraz jej interfejsu znajdują się we fragmencie~\ref{code:testService}
 
 \begin{lstlisting}[float, frame=single, caption={Przykładowa zdalna metoda testowana pod kątem polimorfizmu}, label=code:testService]
@@ -142,7 +142,7 @@ public class TestowySerwis implements ITestowySerwis
 \subsection{Testowanie tłumaczenia danych}
 \begin{enumerate}
 	\item Przetłumaczenie klasy zawierającej podstawowe typy, listy, tablicy, mapy, jakąś inną klasę, domyślne wartości.
-	\item Przetłumaczenie prostej metody. To nie jest priorytetem, ponieważ głównie zależy mi na tłumaczenia klas danych, które będą służyć za argumenty metod zdalnych.
+	\item Przetłumaczenie prostej metody. To nie jest priorytetem, ponieważ głównie zależy mi na tłumaczeniu klas danych, które będą służyć za argumenty metod zdalnych.
 \end{enumerate}
 
 
@@ -169,7 +169,7 @@ Działa na Androidzie. Skierowane pod maszynę wirtualną Javy (JVM).
 Instalacja łatwa, ale nie banalna.
 Wymaga odnalezienia się pośród kilku przestarzałych stron, zawierających sprzeczne informacje.
 Na właściwej stronie głównej, potrzebne biblioteki mogłyby być wyraźniej wskazane.
-To, że wszystko narzędzie jest do pobrania z~Githuba może być odebrane dwojako; z~jednej strony trzeba się z~nim przez chwilę zaznajomić, z~drugiej, jest to popularna platforma standaryzująca dystrybucję wielu bibliotek i~dla niektórych może być bardziej intuicyjna niż osobna, unikatowa strona domowa projektu.
+To, że całe narzędzie jest do pobrania z~Githuba może być odebrane dwojako; z~jednej strony trzeba się z~nim przez chwilę zaznajomić, z~drugiej, jest to popularna platforma standaryzująca dystrybucję wielu bibliotek i~dla niektórych może być bardziej intuicyjna niż osobna, unikatowa strona domowa projektu.
 
 \itemtitle{Łatwość użycia}
 Sensowne i łatwe, ale może nie oczywiste. Niektóre bardziej zaawansowane cechy, np. zmiana stylu oznaczania typów słabo udokumentowana.
@@ -186,13 +186,13 @@ Można serializować i~deserializować klasy wzięte z~zewnętrznych bibliotek.
 
 %Może jakaś sekcja ze spostrzeżeniami albo każda z tych ocen jako osobne subsubsection?
 \itemtitle{Polimorfizm danych}
-Jest. Realizowany przy pomocy wpisywania dodatkowych danych o~typach wtedy, gdy nie wynika on jasno z~kontekstu\footnote{Faktycznie to jedno z~możliwych ustawień. Generalnie można konfigurować kiedy ma być dodawana informacja o~typach.}.
+Jest. Realizowany za pomocą wpisywania dodatkowych danych o~typach wtedy, gdy nie wynika on jasno z~kontekstu\footnote{Faktycznie to jedno z~możliwych ustawień. Generalnie można konfigurować, kiedy ma być dodawana informacja o~typach.}.
 Sposób wpisywania tej informacji może być konfigurowany.
 Jednym sposobem jest dodanie do obiektu specjalnego pola; jak we fragmencie kodu~\ref{code:typeInfoField}, gdzie obiekt typu DaneB był w~kontekście sugerującym DaneA i~musiało to być oznaczone.
 Innym sposobem jest owinięcie obiektu w~tablicę i~dodanie nazwy typu jako jej pierwszy element, jak w~kodzie~\ref{code:typeInfoArray}.
 Zastrzeżeniem jest serializacja tablic -- w~tym przypadku można to zrobić tylko przez owijanie w~kolejną tablicę.
 
-Trzeba zaznaczyć, że dodawanie informacji o~typach nie jest zachowaniem domyślnym. Aby to osiągnąć należy odpowiednio skonfigurować klasę odpowiedzialną za serializację i~deserializację (\texttt{ObjectMapper}) lub dodać adnotację \texttt{JsonTypeInfo} do konkretnego typu danych (przykład na fragmencie~\ref{code:typeInfoAnnotation}). Wszystkie klasy dziedziczącej po klasie z~\texttt{JsonTypeInfo} będą, w~przypadku serializacji, opisywane w~analogiczny sposób.
+Trzeba zaznaczyć, że dodawanie informacji o~typach nie jest zachowaniem domyślnym. Aby to osiągnąć należy odpowiednio skonfigurować klasę odpowiedzialną za serializację i~deserializację (\texttt{ObjectMapper}) lub dodać adnotację \texttt{JsonTypeInfo} do konkretnego typu danych (przykład na fragmencie~\ref{code:typeInfoAnnotation}). Wszystkie klasy dziedziczące po klasie z~\texttt{JsonTypeInfo} będą, w~przypadku serializacji, opisywane w~analogiczny sposób.
 
 \begin{lstlisting}[float, frame=single, caption={Oznaczanie typu przez dodatkowe pole.}, label=code:typeInfoField]
 {
@@ -284,7 +284,7 @@ Na głównej stronie projektu można znaleźć przykłady, dzięki którym możn
 
 Przeprowadziłem testy wzorując się na najprostszym przykładzie niekorzystającym z~frameworku Spring, wykorzystując klasę \texttt{StreamServer}.
 W~moim zastosowaniu zarówno klient jak i~serwer działały lokalnie na jednej maszynie. Dodatkowo, serwer musiał być niezależną aplikacją niekorzystającą z~kontenera Javy EE\footnote{Przykładem takiego kontenera mogą być Glassfish lub serwer Apache.}.
-Takiego przypadku nie było w~przykładach, ale dzięki sensownej strukturze biblioteki szybko rozwiązałem mój problem odpowiednio konfigurując klasy.0
+Takiego przypadku nie było w~przykładach, ale dzięki sensownej strukturze biblioteki szybko rozwiązałem mój problem odpowiednio konfigurując klasy.
 
 Nie da się, niestety, tak skonfigurować ,,serwera strumieniowego''(\texttt{StreamServer}), żeby działał w~jednym procesie na strumieniach w~pamięci. Trzeba użyć socketów. Nie jest to duży problem, ale wymaga większej finezji przy przechwytywaniu wiadomości w~celu analizy. Chociaż warto znowu pochwalić budowę biblioteki za to, że takie przechwytywanie jest w~ogóle możliwe.
 
@@ -342,8 +342,8 @@ Niestety, mimo obietnicy twórcy, nie można na Androidzie stworzyć serwera\foo
 
 \section{Xamarin}
 \subsection{Opis}
-Xamarin jest środowiskiem do tworzenia aplikacji mobilnych na platformy Android, iOS i~Windows\cite{xamarin-overview}.
-Pozwala na stworzenie jednego kodu w~C\#z~którego może powstać aplikacja na dowolny z~wcześniej wymienionych systemów. Tylko nieznaczna część aplikacji musi być świadoma, a~zatem zależna od systemu operacyjnego.
+Xamarin jest środowiskiem do tworzenia aplikacji mobilnych na platformy Android, iOS i~Windows~\cite{xamarin-overview}.
+Pozwala na stworzenie jednego kodu w~C\#z~którego może powstać aplikacja na dowolny z~wcześniej wymienionych systemów. Tylko nieznaczna część aplikacji musi być ,,świadoma'', a~zatem zależna od systemu operacyjnego.
 Twórcy twierdzą, że C\# jest najlepszym językiem do tworzenia aplikacji mobilnych, posiadając cechy takie jak lekkość składni, silne typowanie, operacje asynchroniczne, czy wyrażenia lambda\footnote{Dostępne dopiero w~Javie 8\cite{java-8-features}, podczas gdy Android ma co najwyżej 7\cite{android-java-7}} .
 
 Na korzyść Xamarina może przemawiać to, że znalazł użytek wśród znanych organizacji, takich jak Bosch, Github czy Dow Jones\cite{xamarin-overview}.
@@ -373,33 +373,30 @@ W~moim przypadku, kiedy miałem już zainstalowaną Javę 7 i~Android SDK, insta
 Użycie jest proste; bardzo intuicyjne dla kogoś, kto korzystał z~IDE takich jak Visual Studio, Netbeans itp.
 
 Jedyny zgrzyt był w~tym, że moja testowa aplikacja nie chciała się uruchomić, ponieważ rzekomo mój emulator był w~za starej wersji Androida.
-Aplikacja domyślnie budowała się najnowszą dostępną wersję Androida. Można było jednak wybrać też wersję ręcznie z~listy. Najwyżej znajdowała się najnowsza wersja -- 4.4 -- taka sama, jak na moim emulatorze. Jednak wybranie ręczne tej opcji poskutkowało, aplikacja wgrała się na emulator i~uruchomiła. Według mnie przyczyną tego zachowania było to, że najnowsza wersja środowiska dostępna dla mojego Android SDK to 4.4W (jeden poziom API wyżej niż Android 4.4). Najwyraźniej Xamarin automatycznie wybierał 4.4W, jednak nie wyświetlał go jako osobnej opcji. Takie zachowanie środowiska mogłoby speszyć programistów niedoświadczonych w~pracy z~Androidem.
+Aplikacja domyślnie budowała się na najnowszą dostępną wersję Androida. Można było jednak wybrać też wersję ręcznie z~listy. Najwyżej znajdowała się najnowsza wersja -- 4.4 -- taka sama, jak na moim emulatorze. Dopiero wybranie ręczne tej opcji poskutkowało, aplikacja wgrała się na emulator i~uruchomiła. Według mnie przyczyną tego zachowania było to, że najnowsza wersja środowiska dostępna dla mojego Android SDK to 4.4W (jeden poziom API wyżej niż Android 4.4). Najwyraźniej Xamarin automatycznie wybierał 4.4W, jednak nie wyświetlał go jako osobnej opcji. Takie zachowanie środowiska mogłoby speszyć programistów niedoświadczonych w~pracy z~Androidem.
 
 \itemtitle{Zgodność}
-Xamarin jako platforma ma takie same możliwości co pewien podzbiór .NET\@. Dzięki odpowiednim \emph{wrapperom} ma też dostęp do najnowszym wersjom API Androida.
+Xamarin jako platforma ma takie same możliwości co pewien podzbiór .NET\@. Dzięki odpowiednim \emph{wrapperom} ma też dostęp do najnowszych wersji API Androida.
 
-Wykonywanie kodu po stronie Androida odbywa się dzięki silnikowi Mono\footnote{O~którym była już mowa w~rozdziale \ref{android}}\cite{xamarin-android-arch}.
-Podobnie jak przy użyciu Mono\cite{mono-compatibility}, nie można korzystać z~pełni możliwości .NET\cite{xamarin-dot-net}.
+Wykonywanie kodu po stronie Androida odbywa się dzięki silnikowi Mono\footnote{O~którym była już mowa w~rozdziale \ref{dot-net}}~\cite{xamarin-android-arch}.
+Podobnie jak przy użyciu Mono~\cite{mono-compatibility}, nie można korzystać z~pełni możliwości .NET\cite{xamarin-dot-net}.
 Faktyczny zakres wspieranych bibliotek .NET jest zbliżony do tych, które są wspierane w~technologii Silverlight, czyli około .NET 3.5 (czasami wyżej).
-Mono nie umożliwia też tworzenia serwerów WCF (silnik RPC), może tylko działać jako klient. Nawet to nie jest do końca dopracowane, stoi na poziomie alfa.
+Mono nie umożliwia też tworzenia serwerów WCF (silnik RPC), może tylko działać jako klient. Nawet to nie jest do końca dopracowane, znajduje się na poziomie ,,alfa''.
 
 Skoro aplikacja na Androidzie działa w~środowisku .NET, to teoretycznie wymiana danych (w~sensie zserializowanych obiektów) z~inną aplikacją .NET na PC powinna być łatwa, podobnie jak w~przypadku JVM na różnych platformach. Tak jednak nie jest.
 Pod Mono, standardowe narzędzia serializacyjne .NET (serializacja do XML) nie działają w~pełni, a~dane serializowane binarnie nie dają się odczytać przez ,,duży'' .NET\@. Najprawdopodobniej różne wersje platformy mają po prostu inny binarny format obiektów.
 Możliwe, że dałoby się uzyskać łatwą wymianę danych przez użycie po obu stronach (Mono i~,,duży'' .NET) jednej zewnętrznej biblioteki serializacyjnej
 
-\itemtitle{\emph{Code reuse}}
+\itemtitle{Zewnętrzne moduły}
 Do aplikacji Androidowej tworzonej Xamarinem można podłączyć zewnętrzne biblioteki zarówno .NET, jak i~Javy.
 W~obu przypadkach wymaga to jednak specjalnego przygotowania tychże bibliotek.
 W~przypadku .NET trzeba dostać źródła, co nie zawsze jest możliwe, i~przekompilować Xamarinem\cite{xamarin-dot-net}.
 Biblioteki Javowe trzeba owinąć kodem C\#, czyli stworzyć tzw.\ \emph{wrappery}\footnote{Dokładniej opisane pod adresem \url{http://developer.xamarin.com/guides/android/advanced_topics/java_integration_overview/binding_a_java_library_(.jar)/}}.
 
-Ogólnie, wykorzystanie zewnętrznych bibliotek wymaga pracy i~nie zawsze może się udać, np.\ w~przypadku bibliotek .NET z~zamkniętym kodem.
-
-\itemtitle{Modularność (taka rozszerzalność)}
-Podobnie jak w~powyższym punkcie -- nie ma RPC, więc nie ma co o~tym pisać.
+Ogólnie, wykorzystanie zewnętrznych bibliotek wymaga pewnej dodatkowej pracy i~nie zawsze może się udać, np.\ w~przypadku bibliotek .NET z~zamkniętym kodem.
 
 \itemtitle{Integracja z Androidem}
-Aplikacja stworzona Xamarinem może komunikować się z~systemem Androida oraz z~innymi (też ,,normalnymi'', napisanymi w~Javie) aplikacjami działającymi w~systemie.
+Aplikacja stworzona Xamarinem może komunikować się z~systemem Android oraz z~innymi (też ,,normalnymi'', napisanymi w~Javie) aplikacjami działającymi w~systemie.
 
 %W sumie chodzi o wyslanie intentu, to takie androidowe wiadomosci (źródło, z książki o androidzie).
 %Dzięki nim aplikacje komunikują się z~systemem i~ze sobą nawzajem.
@@ -412,10 +409,10 @@ Nie wyklucza to jednak tego, że na Androidzie z~Mono można uruchomić jakąś 
 
 \itemtitle{Polimorfizm danych}
 Nie spełnia moich oczekiwań.
-Podstawowa serializacja .NETa (korzystjąca z~klasy \texttt{DataContractSerializer}) jest ograniczona i~nie pozwala na zachowanie pełni danych o~typach w~przypadku tablic (więcej o~tym poniżej).
+Podstawowa serializacja .NETa (korzystająca z~klasy \texttt{DataContractSerializer}) jest ograniczona i~nie pozwala na zachowanie pełni danych o~typach w~przypadku tablic (więcej o~tym poniżej).
 Obiekty zserializowane binarnie (używając klasy \texttt{BinaryFormatter}) zachowują informację o~typach, ale nie mogą być odtworzone na innej platformie, np.\ desktopowym .NET\@. 
 
-W~przypadku serializacji testowej tablicy\footnote{Obiekt \texttt{DataContractSerializer} stworzony dla typu \texttt{DaneA}, dodatkowo został ,,nauczony'' typów \texttt{DaneB} i~\texttt{object[]}.} wszystko wydaje się być w~porządku. Dokument, który powstaje znajduje się we fragmencie~\ref{code:xamrinArray}. Udaje się go nawet zdeserializować, ale obiekt, który powstaje nie ma sensu. Zamiast tablicy powstaje obiekt typu \texttt{DaneA} (podstawowy typ serilizatora), który zamiast domyślnych wartości ma 0 i~\texttt{null}.
+W~przypadku serializacji testowej tablicy\footnote{Obiekt \texttt{DataContractSerializer} stworzony dla typu \texttt{DaneA}, dodatkowo został ,,nauczony'' typów \texttt{DaneB} i~\texttt{object[]}.} wszystko wydaje się być w~porządku. Dokument, który powstaje znajduje się we fragmencie~\ref{code:xamrinArray}. Udaje się go nawet zdeserializować, ale obiekt, który powstaje zawiera błędne dane. Zamiast tablicy powstaje obiekt typu \texttt{DaneA} (podstawowy typ serilizatora), który zamiast domyślnych wartości ma 0 i~\texttt{null}.
 
 W~przypadku standardowej, poprawnie działającej serializacji dostaniemy podobnie wyglądający, a~nawet trochę lżejszy zapis (widoczny we fragmencie~\ref{code:dotNetArray}).
 Serializator na Androidzie rzuci wyjątek, jeśli każe mu się zdeserializować ten zapis.
@@ -494,7 +491,7 @@ Przy konfiguracji obiektu \texttt{DataContractJsonSerializer} wymuszającej zawi
 \subsection{Podsumowanie}
 Wydaje się, że cały projekt jest dynamicznie rozwijany i~cieszy się wsparciem kilku ,,poważnych graczy''. To może mu wróżyć dalszy rozwój i~stopniową likwidację problemów.
 Twórcy inwestują w~komunikację z~użytkownikiem-programistą i~ogólne wrażenie z~pracy z~Xamarinem jest bardzo pozytywne.
-Na pewno ma duże możliwości, jeśli o~tworzenie aplikacji mobilnych.
+Na pewno ma duże możliwości, jeśli chodzi o~tworzenie aplikacji mobilnych.
 Ma też ciekawe techniki generowania \emph{wrapperów} na biblioteki Javowe, które może są warte uwagi nawet w~oderwaniu od reszty środowiska.
 
 Niestety podzbiór .NET wspierany przez Mono na Androidzie nie wystarczy na tworzenie serwerów RPC, czy na serializację danych pod kątem wykorzystania w~polimorficznych zdalnych metodach. Teoretycznie, jakaś zewnętrzna biblioteka .NET mogłaby w~tym pomóc.
