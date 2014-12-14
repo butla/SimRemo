@@ -4,7 +4,7 @@ Zaproponuję sposób realizacji, możliwości i~ograniczenia poszczególnych jeg
 
 \section{Specyfikacja wymagań systemowych (SWS)}
 Z~celów tej pracy zawartych w~punkcie~\ref{lib-requirements} stworzyłem standardową listę konkretnych wymagań dla zespołu inżynierów, czyli mnie samego.
-Organizując niniejszą sekcję wzorowałem się na specyfikacji wymagań systemowych opisanej w~prezentacji ,,Inżynieria Wymagań'' Jarosława Kuchty, z~przedmiotu ,,Dokumentacja i~Jakość Oprogramowania''\cite{kuchta}.
+Organizując niniejszą sekcję wzorowałem się na specyfikacji wymagań systemowych opisanej w~prezentacji ,,Inżynieria Wymagań'' Jarosława Kuchty, z~przedmiotu ,,Dokumentacja i~Jakość Oprogramowania''~\cite{kuchta}.
 
 
 \subsection{Wstęp i~opis informacyjny}
@@ -172,7 +172,7 @@ Kod Javy niewymagający Androida do działania powstawał w~nim.
 Pod nim powstawał cały kod C\#.
 
 \itemtitle{Tortoise GIT}
-GIT jest systemem kontroli wersji w~którym trzymany jest kod oraz tekst tej pracy. Wykorzystywany przeze mnie klient to TortoiseGit\footnote{\url{https://code.google.com/p/tortoisegit/}}. Repozytorium znajduje się pod adresem \url{https://github.com/butla/SimRemo}.
+GIT jest systemem kontroli wersji w~którym trzymany jest kod oraz tekst tej pracy. Wykorzystywany przeze mnie klient to TortoiseGit\footnote{Do pobrania ze strony \url{https://code.google.com/p/tortoisegit/}}. Repozytorium znajduje się pod adresem \url{https://github.com/butla/SimRemo}.
 
 \itemtitle{\LaTeX}
 Tekst pracy pisany jest przy pomocy technologii \LaTeX. Jako edytor wykorzystywany jest program TeXnicCenter\footnote{\url{http://www.texniccenter.org/}}.
@@ -256,7 +256,7 @@ Są jeszcze wymagania zaimplementowane, które jednak wymagają komentarza:
 \itemtitle{Serializacja danych z zachowaniem informacji o typach}
 Nie ma wsparcia dla oznaczania typów kolekcji: tablic, list, słowników itp.
 \itemtitle{Tworzenie obiektów klienckich}
-Kiedy zdalna metoda rzuci wyjątek to pewien wyjątek jest rzucany przez metodę obiektu klienckiego. Nie jest to jednak przetłumaczony obiekt wyjątku rzuconego po stronie serwera, a~wyjątek typu \texttt{JsonRpcException} zawierający tekstowy zapis tego oryginalnego.s
+Kiedy zdalna metoda rzuci wyjątek, to pewien wyjątek jest rzucany przez metodę obiektu klienckiego. Nie jest to jednak przetłumaczony obiekt wyjątku rzuconego po stronie serwera, a~wyjątek typu \texttt{JsonRpcException} zawierający tekstowy zapis tego oryginalnego.s
 
 \itemtitle{Łatwość użytkowania}
 Ustawianie słownika typów mogłoby się odbywać za pośrednictwem pliku konfiguracyjnego. Aktualnie odbywa się w~kodzie, przy pomocy wywołania statycznej metody, która może być trudna do znalezienia, jeśli się nie wie gdzie szukać.
@@ -349,7 +349,7 @@ Sekwencja D -- wywołanie polimorficznej metody zdalnej, czyli zasadnicza funkcj
 \subsection{Wprowadzenie}
 
 \subsubsection{Zdalne metody bez polimorfizmu}
-Obie części systemu -- klient (.NET) i~serwer (Android) -- muszą mieć wspólny system oznaczania typów aby wymieniane obiekty mogły być polimorficzne. 
+Obie części systemu -- klient (.NET) i~serwer (Android) -- muszą mieć wspólny system oznaczania typów, aby wymieniane obiekty mogły być polimorficzne. 
 Wspólny format oznaczeń nie jest potrzebny, kiedy nie zależy nam na polimorfizmie, czyli w~większości przypadków wykorzystania zdalnego wywoływania metod (kodu).
 
 Zanim przejdę do przykładów wprowadźmy trochę pseudokodu bazowanego na Javie. Będzie to interfejs obiektu zdalnego, klasa go implementująca oraz klasa danych używana wykorzystywana w~interfejsie; wszystkie znajdujące się w~jednej przestrzeni nazw (\emph{package}). Kod ten znajduje się we fragmencie~\ref{kod:example-remote-classes}.
@@ -441,8 +441,8 @@ Metody, natomiast, mogą być wyzwaniem nawet dla człowieka. Nawet, jeśli mowa
 Co prawda, równoznaczność nie jest wcale niezbędna. Po obu stronach barykady klasa może mieć zupełnie inne metody i~zachowanie, zachowując te same pola. Ma to jednak wyraźnie zły wpływ na przejrzystość kodu całego systemu.
 
 Aby obronić polimorfizm w~obiektach zdalnych, mogę dać nieco wydumany przykład metody, która rysuje koła, a~jest sparametryzowana obiektem typu \texttt{Object} (czyli dowolnym). Domyślnie rysuje ona jedno koło o promieniu 5.0, ale w~przekazanym obiekcie szuka pól int (pierwsze zamienia na ilość kół) i double (pierwszego double zamienia na promień rysowanych kół) wyciąga pola przekazanego obiektu.
-Inspekcja obiektów może być używana chociażby przy różnego rodzaju konfiguracjach. Np.\ każdy obiekt hipotetycznego typu \texttt{AdresBazyDanych} znajdujący się w~przychodzących do metod zdalnych parametrach ma zostać podmieniony na wartość pożądaną przez serwer. Kiedy dalej obiekt zdalny będzie wykonywać jakieś operacje na przesłanych parametrach to będzie używany adres skonfigurowany na serwerze, a~nie jakiś nieznany przysłany z~zewnątrz.
-Mniej więcej tak dzieje się w~Spring IoC\footnote{\url{http://docs.spring.io/spring-framework/docs/current/spring-framework-reference/html/beans.html}} -- kontenerze odpowiedzialnym za automatyczną konfigurację aplikacje webowej opartej na frameworku Spring.
+Inspekcja obiektów może być używana chociażby przy różnego rodzaju konfiguracjach. Np.\ każdy obiekt hipotetycznego typu \texttt{AdresBazyDanych} znajdujący się w~przychodzących do metod zdalnych parametrach ma zostać podmieniony na wartość pożądaną przez serwer. Kiedy dalej obiekt zdalny będzie wykonywać jakieś operacje na przesłanych parametrach, to będzie używany adres skonfigurowany na serwerze, a~nie jakiś nieznany przysłany z~zewnątrz.
+Mniej więcej tak dzieje się w~Spring IoC~\cite{sping-ioc} -- kontenerze odpowiedzialnym za automatyczną konfigurację aplikacje webowej opartej na frameworku Spring.
 
 %Aby programista nie tracił niespodziewanie żadnych danych i miał po drugiej stronie to, czego chce
 %Aby sytuacja była jasna typy muszą być oznaczane. Do tego, oznaczanie typów musi być jednolite. Musi być słownik itp. Wtedy wiadomość wyglądałaby tak, bo klient by sobie przetłumaczył typy (zakładamy, że robi to klient). Serwer by sobie odebrał i byłoby git.
@@ -450,7 +450,7 @@ Mniej więcej tak dzieje się w~Spring IoC\footnote{\url{http://docs.spring.io/s
 
 
 \subsection{Plan rozwiązania}
-W~ogólności -- aby polimorfizm metod zdalnych był możliwy potrzeba aby klient i~serwer:
+W~ogólności -- aby polimorfizm metod zdalnych był możliwy potrzeba, aby klient i~serwer:
 \begin{itemize}
 	\item oznaczały typy obiektów, kiedy nie są one jednoznaczne;
 	\item oznaczały typy w~sposób zrozumiały dla drugiej strony;
@@ -640,7 +640,7 @@ Powiedzmy, że zserializowano obiekt, którego jedno pole ma typ generyczny, np.
 Ogólnie -- wrodzoną wadą systemu będzie to, że typy generyczne nie zawsze będą działać.
 Nie jest to winą Jacksona, a~mechanizmu języka Java zwanego \emph{,,type erasure''} usuwającego informacje o~faktycznym typie typu generycznego w~trakcie wykonywania kodu.
 
-Jackson nie obsługuje też informacji o bibliotece. Schemat nazywania pakietów w~Javie powinien, jednak, zapewniać ich unikalność, więc brak nazwy biblioteki to nie problem.
+Jackson nie obsługuje też informacji o bibliotece. Schemat nazywania pakietów w~Javie powinien jednak zapewniać ich unikalność, więc brak nazwy biblioteki to nie problem.
 
 \subsubsection{Ostateczny kształt rozwiązania}
 JSON.NET ma 14401 linii kodu, używany przeze mnie podzbiór Jackson -- 63497. Obie biblioteki są dobrze napisane i~konfigurowalne, ale nie zakładają dużej ingerencji w~system oznaczania typów, który to w~obu przypadkach jest inny i~specyficzny.
@@ -659,10 +659,10 @@ Nowa klasa statyczna. Można ją zainicjować przy pomocy słownika, czyli obiek
 W~metodzie \texttt{WriteTypeProperty} dodano tłumaczenie zapisywanych nazw typów na odpowiedniki z~Javy.
 
 \itemtitle{\texttt{JsonTypeReflector}}
-Stała \texttt{TypePropertyName} zmieniona z~\texttt{\$type} na \texttt{@class} aby zapewnić zgodność z~Jacksonem. JSON.NET rozpoznaje specjalne pola obiektów po tym, że zaczynają się od ,,\$''. Dlatego ta zmiana psuje zgodność z~oryginalnym JSON.NET.
+Stała \texttt{TypePropertyName} zmieniona z~\texttt{\$type} na \texttt{@class}, aby zapewnić zgodność z~Jacksonem. JSON.NET rozpoznaje specjalne pola obiektów po tym, że zaczynają się od ,,\$''. Dlatego ta zmiana psuje zgodność z~oryginalnym JSON.NET.
 
 \itemtitle{\texttt{JsonSerializerInternalReader}}
-Metoda \texttt{ReadMetadataProperties} stosowała wspomniany wcześniej mechanizm wykrywania specjalnych pól obiektów polegający na sprawdzaniu, czy  pierwszy znak nazwy to ,,\$''. Został on zamieniony na ,,@'' aby mogło być wyłapane pole \texttt{@class}. Ponadto, metoda \texttt{ResolveTypeName} korzysta z~\texttt{JavaTypeDictionary} do tłumaczenia nazw klas z~Javy na .NET.
+Metoda \texttt{ReadMetadataProperties} stosowała wspomniany wcześniej mechanizm wykrywania specjalnych pól obiektów polegający na sprawdzaniu, czy  pierwszy znak nazwy to ,,\$''. Został on zamieniony na ,,@'', aby mogło być wyłapane pole \texttt{@class}. Ponadto, metoda \texttt{ResolveTypeName} korzysta z~\texttt{JavaTypeDictionary} do tłumaczenia nazw klas z~Javy na .NET.
 
 \end{description}
 
@@ -752,7 +752,7 @@ Kod kliencki mojego systemu potrzebuje możliwości wołania serwera JSON-RPC.
 Okazuje się, że implementacje w~.NET, np. JSON-RPC.NET nie posiadają takiej możliwości.
 Potrafią łatwo wystawiać obiekty zdalne na zewnątrz, ale nie mają właściwie żadnych udogodnień do ich konsumowania.
 Istnieją jedynie dyskusje na temat części klienckiej i~dość prymitywne ich implementacje.
-Te implementacje i~tak zmuszają do ,,własnoręcznego'' złożenia wiadomości JSONowej\cite{json-rpc-net-client}.
+Te implementacje i~tak zmuszają do ,,własnoręcznego'' złożenia wiadomości JSONowej~\cite{json-rpc-net-client}.
 
 W~przypadku rozwiniętych \emph{frameworków} jak WCF, czy JAX-WS normalne jest, że można w~prostu sposób stworzyć obiekt proxy do serwisu zasilając go jakimś interfejsem.
 Następnie obiekt ten może być wołany jak zwykły obiekt lokalny spełniający zadany interfejs.

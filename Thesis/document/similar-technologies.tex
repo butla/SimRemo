@@ -48,7 +48,7 @@ Testy przedstawione są w~tabeli~\ref{tab:frameworks-criteria}.
 \end{table}
 
 Większość testów wykonywana będzie na systemie Windows 7 Professional x64.
-Te, które będą tego wymagać będą uruchamiane na emulowanym (w~Windowsie) Androidzie 4.4.2, który szerzej jest opisany w~punkcie~\ref{system-configuration}.
+Te, które będą tego wymagać będą uruchamiane na emulowanym (wewnątrz Windows) Androidzie 4.4.2, który szerzej jest opisany w~punkcie~\ref{system-configuration}.
 
 
 \subsection{Dane do testów polimorfizmu}
@@ -72,7 +72,7 @@ public class DaneB extends DaneA
 W~przypadku samej serializacji będzie tylko jeden test, operujący na jednym obiekcie danych -- generycznej tablicy zawierającej obiekty różnego typu.
 Sposób jej tworzenia został opisany we fragmencie kodu \ref{code:testArray}.
 Test sprawdza, czy informacja o~typach obiektu przeżywa serializację.
-Jest to niezbędne aby uzyskać polimorfizm parametrów zdalnych metod.
+Jest to niezbędne, aby uzyskać polimorfizm parametrów zdalnych metod.
 Właściwe kroki testu:
 \begin{enumerate}
 	\item Serializacja obiektu (w sumie powinno się go serializować w jakimś kontekście).
@@ -154,7 +154,7 @@ Wspiera wiele kodowań: JSON, Avro, CBOR, CSV, Smile, XML i~YAML.
 Najbardziej znany jego komponent to biblioteka do parsowania i~generacji danych w~formacie JSON.
 Można jej używać jako narzędzia do serializacji i~deserializacji obiektów.
 Spośród całego zastawu przyglądał się będę tylko jej.
-Więcej informacji na temat Jacksona można znaleźć na jego oficjalnej stronie w~serwisie Github: \url{https://github.com/FasterXML/jackson}.
+Więcej informacji na temat Jacksona można znaleźć na jego oficjalnej stronie w~serwisie Github~\cite{jackson}.
 
 \subsection{Ocena}
 
@@ -321,7 +321,7 @@ Niestety, mimo obietnicy twórcy, nie można na Androidzie stworzyć serwera\foo
 %%Unrecognized field "numberB" (class jsonrpc4jtestse.TestDataA), not marked as ignorable (2 known properties: , "numberA", "stringA"])
 
 %Readme nic o~tym nie mówi, dokumentacji nie ma. Ale w~błędzie jackson, więc trzeba się udać do Jacksona.
-%Najwyraźniej potrzeba dodatkowych informacji, żeby serializacja mogła się udać. Z~pomocą przychodzi funkcja oznaczania typów obiektów we wiadomości\cite{jackson-polymorphic}.
+%Najwyraźniej potrzeba dodatkowych informacji, żeby serializacja mogła się udać. Z~pomocą przychodzi funkcja oznaczania typów obiektów we wiadomości~\cite{jackson-polymorphic}.
 %Nawet mimo tego są jakieś problemy... Robi się to irytujące.
 %Używa valueToTree zamiast po prostu write i~przez to nie chce przejść z~oznaczaniem typów.
 
@@ -344,9 +344,9 @@ Niestety, mimo obietnicy twórcy, nie można na Androidzie stworzyć serwera\foo
 \subsection{Opis}
 Xamarin jest środowiskiem do tworzenia aplikacji mobilnych na platformy Android, iOS i~Windows~\cite{xamarin-overview}.
 Pozwala na stworzenie jednego kodu w~C\#z~którego może powstać aplikacja na dowolny z~wcześniej wymienionych systemów. Tylko nieznaczna część aplikacji musi być ,,świadoma'', a~zatem zależna od systemu operacyjnego.
-Twórcy twierdzą, że C\# jest najlepszym językiem do tworzenia aplikacji mobilnych, posiadając cechy takie jak lekkość składni, silne typowanie, operacje asynchroniczne, czy wyrażenia lambda\footnote{Dostępne dopiero w~Javie 8\cite{java-8-features}, podczas gdy Android ma co najwyżej 7\cite{android-java-7}} .
+Twórcy twierdzą, że C\# jest najlepszym językiem do tworzenia aplikacji mobilnych, posiadając cechy takie jak lekkość składni, silne typowanie, operacje asynchroniczne, czy wyrażenia lambda\footnote{Dostępne dopiero w~Javie 8~\cite{java-8-features}, podczas gdy Android ma co najwyżej 7~\cite{android-java-7}} .
 
-Na korzyść Xamarina może przemawiać to, że znalazł użytek wśród znanych organizacji, takich jak Bosch, Github czy Dow Jones\cite{xamarin-overview}.
+Na korzyść Xamarina może przemawiać to, że znalazł użytek wśród znanych organizacji, takich jak Bosch, Github czy Dow Jones~\cite{xamarin-overview}.
 Ponadto, jego twórcy współpracują z~Microsoftem.
 
 %\url{http://docs.xamarin.com/guides/cross-platform/application_fundamentals/web_services/}\\
@@ -379,7 +379,7 @@ Aplikacja domyślnie budowała się na najnowszą dostępną wersję Androida. M
 Xamarin jako platforma ma takie same możliwości co pewien podzbiór .NET\@. Dzięki odpowiednim \emph{wrapperom} ma też dostęp do najnowszych wersji API Androida.
 
 Wykonywanie kodu po stronie Androida odbywa się dzięki silnikowi Mono\footnote{O~którym była już mowa w~rozdziale \ref{dot-net}}~\cite{xamarin-android-arch}.
-Podobnie jak przy użyciu Mono~\cite{mono-compatibility}, nie można korzystać z~pełni możliwości .NET\cite{xamarin-dot-net}.
+Podobnie jak przy użyciu Mono~\cite{mono-compatibility}, nie można korzystać z~pełni możliwości .NET~\cite{xamarin-dot-net}.
 Faktyczny zakres wspieranych bibliotek .NET jest zbliżony do tych, które są wspierane w~technologii Silverlight, czyli około .NET 3.5 (czasami wyżej).
 Mono nie umożliwia też tworzenia serwerów WCF (silnik RPC), może tylko działać jako klient. Nawet to nie jest do końca dopracowane, znajduje się na poziomie ,,alfa''.
 
@@ -390,8 +390,8 @@ Możliwe, że dałoby się uzyskać łatwą wymianę danych przez użycie po obu
 \itemtitle{Zewnętrzne moduły}
 Do aplikacji Androidowej tworzonej Xamarinem można podłączyć zewnętrzne biblioteki zarówno .NET, jak i~Javy.
 W~obu przypadkach wymaga to jednak specjalnego przygotowania tychże bibliotek.
-W~przypadku .NET trzeba dostać źródła, co nie zawsze jest możliwe, i~przekompilować Xamarinem\cite{xamarin-dot-net}.
-Biblioteki Javowe trzeba owinąć kodem C\#, czyli stworzyć tzw.\ \emph{wrappery}\footnote{Dokładniej opisane pod adresem \url{http://developer.xamarin.com/guides/android/advanced_topics/java_integration_overview/binding_a_java_library_(.jar)/}}.
+W~przypadku .NET trzeba dostać źródła, co nie zawsze jest możliwe, i~przekompilować Xamarinem~\cite{xamarin-dot-net}.
+Biblioteki Javy trzeba owinąć kodem C\#, czyli stworzyć tzw.\ \emph{wrappery}~\cite{xamarin-binding}.
 
 Ogólnie, wykorzystanie zewnętrznych bibliotek wymaga pewnej dodatkowej pracy i~nie zawsze może się udać, np.\ w~przypadku bibliotek .NET z~zamkniętym kodem.
 
@@ -535,8 +535,8 @@ Składnia pliku z~definicjami określana jest jako IDL -- \emph{Interface Defini
 Pozwala na tworzenie pełnej architektury RPC z~klientami, serwerami i~serializacją przesyłanych danych. Umożliwia generację kodu w~wielu językach. Otwarty kod. 
 
 \itemtitle{Docelowa platforma}
-Kompilator przeznaczony dla środowisk Unixowych. Pod Windowsem działa w~środowisku Cygwin.
-Generuje kod w~wielu językach: Actionscript 3, C, C++, C\#, Cocoa, Delphi, Erlang, Go, Haskell, Java, Javascript, OCaml, Perl, PHP, Python, Ruby, Smalltalk\cite{thrift-features}.
+Kompilator przeznaczony dla środowisk uniksowych. Pod Windows działa w~środowisku Cygwin.
+Generuje kod w~wielu językach: Actionscript 3, C, C++, C\#, Cocoa, Delphi, Erlang, Go, Haskell, Java, Javascript, OCaml, Perl, PHP, Python, Ruby, Smalltalk~\cite{thrift-features}.
 
 \itemtitle{Łatwość instalacji}
 Łatwa.
@@ -562,17 +562,17 @@ Jest częściowo. Aby wpłynąć na działanie metod trzeba zmienić ich (lub ic
 Ale można zmienić samą implementację zdalnych metod po stronie serwera bez ingerencji w~interfejs.najmniej w~pewnym stopniu. 
 
 \itemtitle{Integracja z Androidem}
-Thrift oficjalnie nie wspiera Androida, ale możliwe jest zmodyfikowanie i~przekompilowanie jego kodu tak, aby działał na Androidzie\footnote{\url{http://stackoverflow.com/questions/19141177/thrift-client-on-android}}.
+Thrift oficjalnie nie wspiera Androida, ale możliwe jest zmodyfikowanie i~przekompilowanie jego kodu tak, aby działał na Androidzie~\cite{thrift-android}.
 
 \itemtitle{Polimorfizm metod}
-Nie ma. Każda metoda usługi musi mieć unikatową nazwę\cite{thrift-features}.
+Nie ma. Każda metoda usługi musi mieć unikatową nazwę~\cite{thrift-features}.
 
 \itemtitle{Polimorfizm danych}
-Nie ma. Struktury Thrift IDL nie wspierają dziedziczenia\cite{thrift-features}.
+Nie ma. Struktury Thrift IDL nie wspierają dziedziczenia~\cite{thrift-features}.
 
 \itemtitle{Tłumaczenie kodu}
 Thrift pozwala na opisanie serwisów i~struktur danych przy pomocy swojego ,,języku opisu interfejsów'' (ang. \emph{interface description language}).
-Z~tego opisu może generować kod kliencki, interfejsy serwisów oraz klasy lub struktury danych do dla wspieranych języków. \cite{thrift-features}
+Z~tego opisu może generować kod kliencki, interfejsy serwisów oraz klasy lub struktury danych do dla wspieranych języków.~\cite{thrift-features}
 Interfejsy serwisów muszą być zaimplementowane przez programistę w~jednym z~,,normalnych'' języków.
 
 \end{description}
@@ -644,7 +644,7 @@ Gdyby możliwe było podłączanie zewnętrznych bibliotek, tworzenie kodu IDL z
 
 %\section{JsonRpc (Ritwik Saikia) (TODO)}
 %\subsection{Opis}
-%Przez autora przedstawiony jako łatwy i~lekki klient/serwer RPC oparty o~JSON (,,Easy and lightweight Json-Rpc Client/Server'')\cite{json-rpc-lib}.
+%Przez autora przedstawiony jako łatwy i~lekki klient/serwer RPC oparty o~JSON (,,Easy and lightweight Json-Rpc Client/Server'')~\cite{json-rpc-lib}.
 %Oparcie o~JSONa oznacza, że wiadomości, zawierające zserializowane obiekty, przesyłane między klientem a~serwerem zapisane są JSONem. Biblioteka powinnna działać dla Androida, Google App Engine i~aplikacji Javascript.
 %
 %Jest to jedna z~wielu bibliotek, a~jej nazwa pokrywa się (konkretna pisownia może być inna) z~nazwą standardu. To może być mylące. 
@@ -710,14 +710,14 @@ Umożliwia obiektowe podejście do RPC.
 Wspiera też wiele warstw transportowych.
 
 Zawiera też narzędzia takie jak generatory kodu z~WSDL, XML Schema z~kodu itp.
-Mimo międzyplatformowości, którą powinny zapewniać usługi sieciowe, WCF potrafi mieć problemy przy współpracy ze swoim Javowym odpowiednikiem -- JAX-WS\footnote{\url{http://docs.oracle.com/cd/E21764_01/web.1111/e13759/interop.htm}}.
+Mimo międzyplatformowości, którą powinny zapewniać usługi sieciowe, WCF potrafi mieć problemy przy współpracy ze swoim javowym odpowiednikiem -- JAX-WS~\cite{wcf-jaxws}.
 
 \begin{description}
 \itemtitle{Klasyfikacja}
 Klient i~serwer RPC, serializacja, narzędzia do generacji kodu.
 
 \itemtitle{Docelowa platforma}
-.NET, a~więc Windows. Ograniczony podzbiór części klienckiej WCF działa na Windowsie mobilnym i~Xamarinie.
+.NET, a~więc Windows. Ograniczony podzbiór części klienckiej WCF działa na mobilnej wersji Windows i~Xamarinie.
 
 \itemtitle{Łatwość instalacji}
 Bardzo łatwa. Instalowany jest razem z~całym .NET, więc najczęściej jest już zainstalowany.
@@ -800,7 +800,7 @@ Pozwala na tworzenie i~parsowanie JSON, a~także na serializację i~deserializac
 Serializacja. Kod otwarty.
 
 \itemtitle{Docelowa platforma}
-.NET. Działa zarówno na pełnym, jak i~mobilnym Windowsie.
+.NET. Działa zarówno na pełnym, jak i~mobilnym Windows.
 
 \itemtitle{Łatwość instalacji}
 Bardzo łatwa. Wystarczy ściągnąć z~NuGeta i~podpiąć do projektu.
@@ -860,7 +860,7 @@ Istnieje jeszcze wiele bibliotek i~\emph{frameworków} w~obrębie dziedziny tej 
 
 
 %\subsection{android-xml-rpc}
-%W~jednym wątku na Google Groups \cite{android-rpc-thread} mówili, że niby zrobili serwer. I faktycznie na to wygląda.
+%W~jednym wątku na Google Groups~\cite{android-rpc-thread} mówili, że niby zrobili serwer. I faktycznie na to wygląda.
 %Też na android-json-rpc(\url{https://code.google.com/p/android-json-rpc/}).
 
 

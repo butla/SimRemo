@@ -13,7 +13,7 @@ Aby mogło do tego dojść opublikuję kod klienta w~Internecie.
 Pobocznym celem było zapewnienie polimorfizmu metod zdalnych.
 Temat ten został przeanalizowany. Dzięki tej analizie powstał prototyp, który demonstruje że jest to możliwe. Prototyp był zmodyfikowaną biblioteką JSON-NET.
 Nie wspiera jednak wszystkich przypadków serializacyjnych, czyli tablic, list i innych kolekcji.
-Jednak zostało pokazane, że przez ujednolicenie sposobu opisu danych można zapewnić zgodność i~przezroczystą obiektową współpracę Javy i~.NET, chociaż ze względu na różnice między tymi językami nigdy nie będzie pełnej swobody tej współpracy.
+Ale zostało pokazane, że przez ujednolicenie sposobu opisu danych można zapewnić zgodność i~przezroczystą obiektową współpracę Javy i~.NET, chociaż ze względu na różnice między tymi językami nigdy nie będzie pełnej swobody tej współpracy.
 
 Aby uzyskać maksymalnie przewidywalną współpracę, gdzie programista ma pewność co będzie działało, a~co nie (w kontekście wymienianych typów), trzeba korzystać z~systemów stworzonych z~myślą o~wymianie danych między różnymi platformami programistycznymi, takich jak Apache Thrift lub Avro.
 Wymagają one jednak więcej pracy i planowania niż zaproponowane przeze mnie rozwiązanie.
@@ -26,7 +26,7 @@ Status realizacji początkowo przyjętych celów:
 Udane. Przedstawiłem część świata RPC, serializacji i wymiany danych.
 
 \itemtitle{Porównanie istniejącego oprogramowania}
-Udane. Z jednej strony pokazałem niektóre z~aktualnie najpopularniejszych rozwiązań w~branży. Z drugiej -- technologie powiązane z~RPC, które mają coś wspólnego z Androidem.
+Udane. Z~jednej strony pokazałem niektóre z~aktualnie najpopularniejszych rozwiązań w~branży. Z drugiej -- technologie powiązane z~RPC, które mają coś wspólnego z Androidem.
 Zbadałem też możliwości na uzyskanie polimorfizmu metod zdalnych przy ich użyciu.
 
 \itemtitle{Stworzenie wieloplatformowej biblioteki}
@@ -62,7 +62,7 @@ Zagadnienia:
 %Z mapowaniem typów słabo. Albo trzeba by coś zrobić, albo stosować od razu technologie typu Apache Thrift. Albo powoli przechodzić na nie, jeśli zakłada się rozbieżne środowiska.
 
 %%O polimorfizmie typów zdalnych
-%Polimorfizm przekazywanych typów jest raczej bardziej sensowny, gdy wszystko zostaje w obrębie jednego języka, jeśli uruchamiamy na przekazanych parametrach metody. Inne zastosowania takiego systemu mogą być zastąpione, przez lepszy \emph{,,design''} funkcjonalności, który nie podejmuje decyzji na bazie typu. Ale może czasem się nie da. Ewentualnie klasy danych mogą mieć te metody, ale muszą być zaimplementowane po obu stronach. Ewentualnie tylko po jednej może być implementacja. Ale trzeba wtedy uważać i być świadomym różnic w zachowaniu typów. Kiedy zawierają one tylko dane nie ma takich problemów.
+%Polimorfizm przekazywanych typów jest raczej bardziej sensowny, gdy wszystko zostaje w obrębie jednego języka, jeśli uruchamiamy na przekazanych parametrach metody. Inne zastosowania takiego systemu mogą być zastąpione, przez lepszy \emph{,,design''} funkcjonalności, który nie podejmuje decyzji na bazie typu. Ale może czasem się nie da. Ewentualnie klasy danych mogą mieć te metody, ale muszą być zaimplementowane po obu stronach. Ewentualnie tylko po jednej może być implementacja. Ale trzeba wtedy uważać i być świadomym różnic w zachowaniu typów. Kiedy zawierają one tylko dane, nie ma takich problemów.
 %
 %Ogólnie projekt jest za duży, żeby badać wszystkie aspekty serializacji. Maksymalnie zgodna serializacja mogłaby być osobnym tematem pracy magisterskiej ze względu na swój stopień skomplikowania.
 %Dodać to do działu wniosków.
