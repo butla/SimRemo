@@ -133,28 +133,36 @@
 \usepackage{pdfpages}
 \usepackage{adjustbox}
 
+% bibliografia itp. w spisie treści
+\usepackage[nottoc,numbib]{tocbibind}
+
+% jednolita numeracja przypisów w całym dokumencie
+\usepackage{chngcntr}
+\counterwithout{footnote}{chapter}
 
 \begin{document}
+\mainmatter
 
 % wymagane początkowe strony
 \includepdf{StronaTytulowa_119290.pdf}
 \includepdf{Oswiadczenie_119290.pdf}
 
 {\noindent \large \textbf{STRESZCZENIE}} \\
-Celem tej pracy jest stworzenie zestawu bibliotek umożliwiającego programistom wygodne zdalne wywoływanie kodu w~systemie Android. Musi istnieć możliwość wołania tego kodu z~poziomu platformy .NET na innej maszynie.
-Dodatkowo ma być zbadany i~zaimplementowany polimorfizm metod zdalnych.
-Ma to umożliwić obiektowy model zdalnego wołania kodu.
+Celem tej pracy było stworzenie zestawu bibliotek umożliwiającego programistom wygodne zdalne wywoływanie kodu w~systemie Android.
+Przyjęto, że musi istnieć możliwość wołania tego kodu z~poziomu platformy .NET na innej maszynie.
+Dodatkowo zbadano i~(z pewnymi ograniczeniami) zaimplementowano polimorfizm metod zdalnych.
+Pozwala to osiągać obiektowy model zdalnego wołania kodu.
 
-Aby to osiągnąć autor bada aktualny stan technologii powiązanej z~RPC (\emph{Remote Procedure Call}).
-Wśród istniejących rozwiązań szukane są takie, które albo realizują cele pracy, albo mogą stać sie składnikami implementacji rozwiązania.
-Okazuje się, że żaden \emph{framework} nie umożliwia tworzenia serwera RPC na Androidzie.
+Aby to osiągnąć autor zbadał aktualny stan technologii powiązanej z~RPC (\emph{Remote Procedure Call}).
+Wśród istniejących rozwiązań przeanalizowano takie, które albo realizują cele pracy, albo mogłyby stać się składnikami implementacji rozwiązania.
+Okazało się, że żaden \emph{framework} nie umożliwia tworzenia serwera RPC na Androidzie.
 
-Jako format RPC, który będzie serwowany z~Androida wybrane zostaje protokół JSON-RPC oparty o~format zapisu danych JSON.
-Żadna otwarta biblioteka .NET nie posiada implementuje klienta JSON-RPC mimo tego, że implementują bardziej skomplikowaną część serwerową.
-Dlatego powstaje prototypowa implementacja klienta JSON-RPC pod .NET. Pozwala ona na wygodne, obiektowe korzystanie z~metod zdalnych dzięki tworzeniu proxy implementujących interfejs serwisu.
+Jako format RPC, który jest udostępniany z~Androida, został wybrany protokół JSON-RPC oparty o~format zapisu danych JSON.
+Żadna otwarta biblioteka .NET nie implementuje klienta JSON-RPC, mimo tego, że biblioteki te implementują bardziej skomplikowaną część serwerową.
+Dlatego powstała prototypowa implementacja klienta JSON-RPC pod .NET. Pozwala ona na wygodne, obiektowe korzystanie z~metod zdalnych dzięki tworzeniu proxy implementujących interfejs serwisu.
 Nie nadaje się jednak do zastosowań produkcyjnych, ze względu na brak obsługi błędów warstwy komunikacyjnej.
 
-Implementacja serwera RPC na Androida zostaje zrealizowana jako rozszerzenie otwartej biblioteki jsonrpc4j.
+Implementacja serwera RPC na system Android została zrealizowana jako rozszerzenie otwartej biblioteki jsonrpc4j.
 Rozszerzenie pozwala podzbiorowi funkcjonalności serwerowej jsonrpc4j działać na Androidzie.
 Ponieważ modyfikacja nie wpływa negatywnie na bibliotekę, może być wprowadzona do oryginalnej biblioteki na stałe.
 
@@ -197,6 +205,7 @@ Android, RPC, RMI, server, web service, polymorphism.
 \tableofcontents
 
 \clearpage
+\addcontentsline{toc}{chapter}{Wykaz ważniejszych oznaczeń i skrótów}
 {\noindent \large \textbf{WYKAZ WAŻNIEJSZYCH OZNACZEŃ I SKRÓTÓW}} \\
 \begin{itemize}
   \item[JAX-WS --] Java API for XML Web Services
@@ -209,9 +218,6 @@ Android, RPC, RMI, server, web service, polymorphism.
 	\item[XSD --] XML Schema Definition
 \end{itemize}
 \clearpage
-
-% właściwa część książki, numerowana arabskimi od 1
-\mainmatter
 
 %ustawienie kolorowania składni w przykładowych kodach
 %\lstset{language=Java}

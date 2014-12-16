@@ -10,10 +10,12 @@ Wśród nich będę szukał takich, które mogę wkomponować w~moje rozwiązani
 Będą one poddane testom, które sprawdzą obecność pożądanych przeze mnie cech (opisanych w~punkcie~\ref{lib-requirements}).
 Niektóre własności, takie jak np.\ łatwość instalacji będą poddane bardziej subiektywnej ocenie.
 Nie wszystkie testowane kryteria będą dotyczyć wszystkich technologii, ponieważ te należą do różnych dziedzin.
+Np. nie ma sensu omawiać polimorfizmu metod zdalnych przy bibliotece serializacyjnej, ponieważ nie umożliwia ona tworzenia zdalnych metod (za to potrafią to biblioteki RPC).
 Testy przedstawione są w~tabeli~\ref{tab:frameworks-criteria}.
 
 \begin{table}[htbp]
 	\centering
+	  \caption[Kryteria oceny technologii.]{Kryteria oceny technologii.}
 		\begin{tabular}{ | c | c | p{8cm} |}
 			\hline
 				\textbf{Nazwa} & \textbf{Dziedzina} & \textbf{Opis}\\
@@ -22,14 +24,14 @@ Testy przedstawione są w~tabeli~\ref{tab:frameworks-criteria}.
 				\hline
 				Docelowa platforma & Ogólna & Czy technologia działa na platformie docelowej (Android, .NET)? Której?\\
 				\hline
-				Łatwość instalacji & Ogólna & Na ile intuicyjne i~mało czasochłonne jest zainstalowane danego narzędzia/biblioteki? Na ile łatwo można go użyć, żeby zweryfikować, że działa?  Wyznacznik użyteczności.\\
+				Łatwość instalacji & Ogólna & Na ile intuicyjne i~mało czasochłonne jest zainstalowane danego narzędzia/biblioteki? Na ile łatwo można je/ją użyć, żeby zweryfikować, że działa?  Wyznacznik użyteczności.\\
 				\hline
 				Łatwość użycia & Ogólna & Dotyczy bardziej sensownego wykorzystania technologii. U mnie to będzie przedstawiać jak trudno było wykonać testy polimorfizmu. Wyznacznik użyteczności.\\
 				\hline
-				Zgodność & Ogólna & Z~jakimi technologiami dany projekt projekt może współpracować? Na jakich zasadach? Jeśli projekt jest klientem/serwerem RPC to z~jakimi klientami/serwerami może działać? Jak (czy w~ogóle?) to się zmienia po wymuszeniu polimorfizmu? \\
+				Zgodność & Ogólna & Z~jakimi technologiami dany projekt może współpracować? Na jakich zasadach? Jeśli projekt jest klientem/serwerem RPC to z~jakimi klientami/serwerami może działać? Jak (czy w~ogóle?) to się zmienia po wymuszeniu polimorfizmu? \\
 				\hline
 				%Może to nazwać Zewnętrzne moduły
-				Zewnętrzne moduły & Ogólna & Czy można do danej technologii podpiąć, albo wykorzystać z~nią jakieś istniejące biblioteki napisane na tę samą platformę? Np. dla technologii Javowych -- Jary.\\
+				Zewnętrzne moduły & Ogólna & Czy można do danej technologii podpiąć, albo wykorzystać z~nią jakieś istniejące biblioteki napisane na tę samą platformę? Np. dla technologii javowych -- Jary.\\
 				\hline
 				%Może to nazwać rozszerzalność?
 				Rozszerzalność & RPC & Czy można do serwera i~klienta dodać moduł, np. z~nowymi klasami danych dziedziczącymi istniejące i~używać ich ze starymi metodami?\\
@@ -43,7 +45,6 @@ Testy przedstawione są w~tabeli~\ref{tab:frameworks-criteria}.
 				Tłumaczenie kodu & Tłumaczenie kodu & Jeśli dany projekt pozwala na generację kodu w~jednym języku na bazie kodu w~innym, to w~jaki sposób to robi? Czy umożliwia przekładanie z~Javy na C\# lub odwrotnie? \\
 				\hline
 		\end{tabular}
-	\caption[Kryteria oceny technologii.]{Kryteria oceny technologii.}
 	\label{tab:frameworks-criteria}
 \end{table}
 
@@ -52,7 +53,7 @@ Te, które będą tego wymagać będą uruchamiane na emulowanym (wewnątrz Wind
 
 
 \subsection{Dane do testów polimorfizmu}
-W~testach polimorfizmu będą brały udział dwie klasy danych. Obie są zapisane w~Javie, we fragmencie~\ref{code:testData}, chociaż ich odpowiedniki będą tworzone też w~innych językach. Posiadają one domyślne wartości pól, które będą przydatne w~trakcie weryfikacji wyników testów. Wszystkie dalsze pseudokody będą zbliżone do Javy.
+W~testach polimorfizmu będą brały udział dwie klasy danych. Obie są zapisane w~Javie, na listingu~\ref{code:testData}, chociaż ich odpowiedniki będą tworzone też w~innych językach. Posiadają one domyślne wartości pól, które będą przydatne w~trakcie weryfikacji wyników testów. Wszystkie dalsze pseudokody będą zbliżone do Javy.
 
 \begin{lstlisting}[float, frame=single, caption={Testowe klasy danych; jedna dziedzicząca drugą.}, label=code:testData]
 public class DaneA
@@ -70,7 +71,7 @@ public class DaneB extends DaneA
 
 \subsection{Testowanie serializacji}
 W~przypadku samej serializacji będzie tylko jeden test, operujący na jednym obiekcie danych -- generycznej tablicy zawierającej obiekty różnego typu.
-Sposób jej tworzenia został opisany we fragmencie kodu \ref{code:testArray}.
+Sposób jej tworzenia został opisany na listingu~\ref{code:testArray}.
 Test sprawdza, czy informacja o~typach obiektu przeżywa serializację.
 Jest to niezbędne, aby uzyskać polimorfizm parametrów zdalnych metod.
 Właściwe kroki testu:
@@ -86,17 +87,17 @@ Object[] testowaTablica =
 \end{lstlisting}
 
 \subsection{Testowanie polimorfizmu metod zdalnych}
-Testy polimorfizmu metod zdalnych będą weryfikować trzy rzeczy.
+Testy polimorfizmu metod zdalnych będą weryfikować trzy rzeczy:
 \begin{enumerate}
 	\item Czy metoda potrafi poprawnie zidentyfikować argument typu dziędziczącego typ spodziewany?
 	\item Czy można przeciążać zdalne metody?
 	\item Czy dane wchodzące i~wychodzące z~metody są poprawnie serializowane i~deserializowane?
 \end{enumerate}
 
-Odpowiedzialne za tę weryfikacje będą testy polegające na stworzeniu zdalnych metod przy pomocy sprawdzanego narzędzia i~próby ich wywołania.
-Nawet jeśli metoda się wykona, to mogła nie zwrócić odpowiedniego wyniku, dlatego go też trzeba będzie weryfikować.
-Tym testom będą podlegać tylko biblioteki, które pozwalają tworzyć lub konsumować zdalne metody.
-Kody klasy zawierającej testowe zdalne metody (zwanej też serwisem) oraz jej interfejsu znajdują się we fragmencie~\ref{code:testService}
+Odpowiedzialne za tę weryfikacje będą testy polegające na stworzeniu zdalnych metod za pomocą sprawdzanego narzędzia i~próby ich wywołania.
+Nawet jeśli metoda się wykona, to może mogła nie zwrócić odpowiedniego wyniku, dlatego go też trzeba będzie weryfikować.
+Tym testom będą podlegać tylko biblioteki, które pozwalają tworzyć lub wywoływać zdalne metody.
+Kody klasy zawierającej testowe zdalne metody (zwanej też serwisem) oraz jej interfejsu znajdują się na~listingu~\ref{code:testService}
 
 \begin{lstlisting}[float, frame=single, caption={Przykładowa zdalna metoda testowana pod kątem polimorfizmu}, label=code:testService]
 public interface ITestowySerwis
@@ -140,9 +141,10 @@ public class TestowySerwis implements ITestowySerwis
 \end{lstlisting}
 
 \subsection{Testowanie tłumaczenia danych}
+Testy konwersji danych będą sprawdzać dwa aspekty:
 \begin{enumerate}
 	\item Przetłumaczenie klasy zawierającej podstawowe typy, listy, tablicy, mapy, jakąś inną klasę, domyślne wartości.
-	\item Przetłumaczenie prostej metody. To nie jest priorytetem, ponieważ głównie zależy mi na tłumaczeniu klas danych, które będą służyć za argumenty metod zdalnych.
+	\item Przetłumaczenie prostej metody (to nie jest priorytetem, ponieważ głównie zależy mi na tłumaczeniu klas danych, które będą służyć za argumenty metod zdalnych).
 \end{enumerate}
 
 
@@ -188,11 +190,11 @@ Można serializować i~deserializować klasy wzięte z~zewnętrznych bibliotek.
 \itemtitle{Polimorfizm danych}
 Jest. Realizowany za pomocą wpisywania dodatkowych danych o~typach wtedy, gdy nie wynika on jasno z~kontekstu\footnote{Faktycznie to jedno z~możliwych ustawień. Generalnie można konfigurować, kiedy ma być dodawana informacja o~typach.}.
 Sposób wpisywania tej informacji może być konfigurowany.
-Jednym sposobem jest dodanie do obiektu specjalnego pola; jak we fragmencie kodu~\ref{code:typeInfoField}, gdzie obiekt typu DaneB był w~kontekście sugerującym DaneA i~musiało to być oznaczone.
-Innym sposobem jest owinięcie obiektu w~tablicę i~dodanie nazwy typu jako jej pierwszy element, jak w~kodzie~\ref{code:typeInfoArray}.
+Jednym sposobem jest dodanie do obiektu specjalnego pola; jak na listingu~\ref{code:typeInfoField}, gdzie obiekt typu DaneB był w~kontekście sugerującym DaneA i~musiało to być oznaczone.
+Innym sposobem jest owinięcie obiektu w~tablicę i~dodanie nazwy typu jako jej pierwszy element, jak na listingu~\ref{code:typeInfoArray}.
 Zastrzeżeniem jest serializacja tablic -- w~tym przypadku można to zrobić tylko przez owijanie w~kolejną tablicę.
 
-Trzeba zaznaczyć, że dodawanie informacji o~typach nie jest zachowaniem domyślnym. Aby to osiągnąć należy odpowiednio skonfigurować klasę odpowiedzialną za serializację i~deserializację (\texttt{ObjectMapper}) lub dodać adnotację \texttt{JsonTypeInfo} do konkretnego typu danych (przykład na fragmencie~\ref{code:typeInfoAnnotation}). Wszystkie klasy dziedziczące po klasie z~\texttt{JsonTypeInfo} będą, w~przypadku serializacji, opisywane w~analogiczny sposób.
+Trzeba zaznaczyć, że dodawanie informacji o~typach nie jest zachowaniem domyślnym. Aby to osiągnąć należy odpowiednio skonfigurować klasę odpowiedzialną za serializację i~deserializację (\texttt{ObjectMapper}) lub dodać adnotację \texttt{JsonTypeInfo} do konkretnego typu danych (przykład na listingu~\ref{code:typeInfoAnnotation}). Wszystkie klasy dziedziczące po klasie z~\texttt{JsonTypeInfo} będą, w~przypadku serializacji, opisywane w~analogiczny sposób.
 
 \begin{lstlisting}[float, frame=single, caption={Oznaczanie typu przez dodatkowe pole.}, label=code:typeInfoField]
 {
@@ -251,10 +253,10 @@ Dlatego ma dużą szansę na wykorzystanie w~Androidowej części mojego projekt
 
 \section{JSON-RPC for Java (jsonrpc4j)}
 \label{jsonrpc4j}
-Biblioteko umożliwiająca łatwą implementacji standardu JSON-RPC 2.0 w~języku Java.
-jsonrpc4j używa biblioteki Jackson do konwersji pomiędzy obiektami Javy a~dokumentami JSONa oraz do innych czynności związanych z~JSON-RPC.
+Jest to Biblioteka umożliwiająca łatwą implementację standardu JSON-RPC 2.0 w~języku Java.
+Biblioteka jsonrpc4j używa biblioteki Jackson do konwersji pomiędzy obiektami Javy a~dokumentami JSONa oraz do innych czynności związanych z~JSON-RPC.
 Umożliwia wywoływanie zdalnych metod nie tylko przez HTTP, ale też przez sockety TCP.
-Informacje na jego temat oraz jego kod źródłowy dostępne są na jego oficjalnej stronie w~serwisie Github~\cite{jsonrpc4j}.
+Informacje na jej temat oraz jej kod źródłowy dostępne są na oficjalnej stronie w~serwisie Github~\cite{jsonrpc4j}.
 
 \subsection{Ocena}
 
@@ -266,7 +268,7 @@ Klient i~serwer RPC. Otwarty kod. Serializacja dostarczana przez zewnętrzną bi
 Java SE.
 Teoretycznie na Androidzie powinien działać zarówno klient jak i~serwer (taka informacja znajduje się w~README).
 Tak jednak nie jest, a~to dlatego, że biblioteka zawiera referencje do klas z~klasycznej wersji Javy (w~tym Javy EE).
-Standardowe środowisko deweloperskie (Eclipse z~wtyczką ADT) do aplikacji na Androida wykrywa to jako znany błąd.
+Standardowe środowisko deweloperskie (Eclipse z~wtyczką ADT) do aplikacji na Androida wykrywa to\footnote{Przy użyciu narzędzia Android Lint.} jako powszechny błąd.
 
 \itemtitle{Łatwość instalacji}
 Instalacja średnio skomplikowana.
@@ -292,7 +294,7 @@ Nie da się, niestety, tak skonfigurować ,,serwera strumieniowego''(\texttt{Str
 
 \itemtitle{Zgodność}
 Jest zgodność ze standardem JSON-RPC 2.0. Ale standard ten nie mówi nic o~danych zawierających dodatkowe informacje o typach.
-Dlatego zgodność z~drugą stroną możliwa jest tylko w~przypadku analogicznie skonfigurowanej warstwy serializacyjnej (więcej informacji w~punkcie~\ref{jackson}).
+Dlatego zgodność z~drugą stroną możliwa jest tylko w~przypadku analogicznie skonfigurowanej warstwy serializacyjnej. W~przypadku jsonrpc4j za serializację odpowiada biblioteka Jackson (więcej informacji o~niej w punkcie~\ref{jackson}).
 
 \itemtitle{Zewnętrzne moduły}
 Można używać klas z~zewnętrznych bibliotek jako danych w~metodach zdalnych, można też wystawiać je jako serwisy (obiekty wystawiające na zewnątrz zdalne metody).
@@ -343,7 +345,7 @@ Niestety, mimo obietnicy twórcy, nie można na Androidzie stworzyć serwera\foo
 \section{Xamarin}
 \subsection{Opis}
 Xamarin jest środowiskiem do tworzenia aplikacji mobilnych na platformy Android, iOS i~Windows~\cite{xamarin-overview}.
-Pozwala na stworzenie jednego kodu w~C\#z~którego może powstać aplikacja na dowolny z~wcześniej wymienionych systemów. Tylko nieznaczna część aplikacji musi być ,,świadoma'', a~zatem zależna od systemu operacyjnego.
+Pozwala na stworzenie jednego kodu w~C\#, z~którego może powstać aplikacja na dowolny z~wcześniej wymienionych systemów. Tylko nieznaczna część aplikacji musi być ,,świadoma'', a~zatem zależna od systemu operacyjnego.
 Twórcy twierdzą, że C\# jest najlepszym językiem do tworzenia aplikacji mobilnych, posiadając cechy takie jak lekkość składni, silne typowanie, operacje asynchroniczne, czy wyrażenia lambda\footnote{Dostępne dopiero w~Javie 8~\cite{java-8-features}, podczas gdy Android ma co najwyżej 7~\cite{android-java-7}} .
 
 Na korzyść Xamarina może przemawiać to, że znalazł użytek wśród znanych organizacji, takich jak Bosch, Github czy Dow Jones~\cite{xamarin-overview}.
@@ -373,7 +375,7 @@ W~moim przypadku, kiedy miałem już zainstalowaną Javę 7 i~Android SDK, insta
 Użycie jest proste; bardzo intuicyjne dla kogoś, kto korzystał z~IDE takich jak Visual Studio, Netbeans itp.
 
 Jedyny zgrzyt był w~tym, że moja testowa aplikacja nie chciała się uruchomić, ponieważ rzekomo mój emulator był w~za starej wersji Androida.
-Aplikacja domyślnie budowała się na najnowszą dostępną wersję Androida. Można było jednak wybrać też wersję ręcznie z~listy. Najwyżej znajdowała się najnowsza wersja -- 4.4 -- taka sama, jak na moim emulatorze. Dopiero wybranie ręczne tej opcji poskutkowało, aplikacja wgrała się na emulator i~uruchomiła. Według mnie przyczyną tego zachowania było to, że najnowsza wersja środowiska dostępna dla mojego Android SDK to 4.4W (jeden poziom API wyżej niż Android 4.4). Najwyraźniej Xamarin automatycznie wybierał 4.4W, jednak nie wyświetlał go jako osobnej opcji. Takie zachowanie środowiska mogłoby speszyć programistów niedoświadczonych w~pracy z~Androidem.
+Aplikacja domyślnie budowała się na najnowszą dostępną wersję Androida. Można było jednak wybrać też wersję ręcznie z~listy. Najwyżej znajdowała się najnowsza wersja -- 4.4 -- taka sama, jak na moim emulatorze. Dopiero wybranie ręczne tej opcji poskutkowało, aplikacja wgrała się na emulator i~uruchomiła. Według mnie przyczyną tego zachowania było to, że najnowsza wersja środowiska dostępna dla mojego Android SDK to 4.4W (jeden poziom API wyżej niż Android 4.4). Najwyraźniej Xamarin automatycznie wybierał 4.4W, jednak nie wyświetlał go jako osobnej opcji. Takie zachowanie środowiska mogłoby zniechęcić programistów niedoświadczonych w~pracy z~Androidem.
 
 \itemtitle{Zgodność}
 Xamarin jako platforma ma takie same możliwości co pewien podzbiór .NET\@. Dzięki odpowiednim \emph{wrapperom} ma też dostęp do najnowszych wersji API Androida.
@@ -396,7 +398,7 @@ Biblioteki Javy trzeba owinąć kodem C\#, czyli stworzyć tzw.\ \emph{wrappery}
 Ogólnie, wykorzystanie zewnętrznych bibliotek wymaga pewnej dodatkowej pracy i~nie zawsze może się udać, np.\ w~przypadku bibliotek .NET z~zamkniętym kodem.
 
 \itemtitle{Integracja z Androidem}
-Aplikacja stworzona Xamarinem może komunikować się z~systemem Android oraz z~innymi (też ,,normalnymi'', napisanymi w~Javie) aplikacjami działającymi w~systemie.
+Aplikacja stworzona Xamarinem może komunikować się z~systemem Android oraz z~innymi aplikacjami (też ,,normalnymi'', napisanymi w~Javie) działającymi w~systemie.
 
 %W sumie chodzi o wyslanie intentu, to takie androidowe wiadomosci (źródło, z książki o androidzie).
 %Dzięki nim aplikacje komunikują się z~systemem i~ze sobą nawzajem.
@@ -409,14 +411,14 @@ Nie wyklucza to jednak tego, że na Androidzie z~Mono można uruchomić jakąś 
 
 \itemtitle{Polimorfizm danych}
 Nie spełnia moich oczekiwań.
-Podstawowa serializacja .NETa (korzystająca z~klasy \texttt{DataContractSerializer}) jest ograniczona i~nie pozwala na zachowanie pełni danych o~typach w~przypadku tablic (więcej o~tym poniżej).
+Podstawowa serializacja .NETa\footnote{Korzystająca z~klasy \texttt{DataContractSerializer}.} jest ograniczona i~nie pozwala na zachowanie pełni danych o~typach w~przypadku tablic (więcej o~tym poniżej).
 Obiekty zserializowane binarnie (używając klasy \texttt{BinaryFormatter}) zachowują informację o~typach, ale nie mogą być odtworzone na innej platformie, np.\ desktopowym .NET\@. 
 
-W~przypadku serializacji testowej tablicy\footnote{Obiekt \texttt{DataContractSerializer} stworzony dla typu \texttt{DaneA}, dodatkowo został ,,nauczony'' typów \texttt{DaneB} i~\texttt{object[]}.} wszystko wydaje się być w~porządku. Dokument, który powstaje znajduje się we fragmencie~\ref{code:xamrinArray}. Udaje się go nawet zdeserializować, ale obiekt, który powstaje zawiera błędne dane. Zamiast tablicy powstaje obiekt typu \texttt{DaneA} (podstawowy typ serilizatora), który zamiast domyślnych wartości ma 0 i~\texttt{null}.
+W~przypadku serializacji testowej tablicy\footnote{Obiekt \texttt{DataContractSerializer} stworzony dla typu \texttt{DaneA}, dodatkowo został ,,nauczony'' typów \texttt{DaneB} i~\texttt{object[]}.} wszystko wydaje się być w~porządku. Dokument, który powstaje znajduje się na listingu~\ref{code:xamrinArray}. Udaje się go nawet zdeserializować, ale obiekt, który powstaje zawiera błędne dane. Zamiast tablicy powstaje obiekt typu \texttt{DaneA} (podstawowy typ serilizatora), który zamiast domyślnych wartości ma 0 i~\texttt{null}.
 
-W~przypadku standardowej, poprawnie działającej serializacji dostaniemy podobnie wyglądający, a~nawet trochę lżejszy zapis (widoczny we fragmencie~\ref{code:dotNetArray}).
+W~przypadku standardowej, poprawnie działającej serializacji dostaniemy podobnie wyglądający, a~nawet trochę lżejszy zapis (widoczny na listingu~\ref{code:dotNetArray}).
 Serializator na Androidzie rzuci wyjątek, jeśli każe mu się zdeserializować ten zapis.
-Można zauważyć, że główny element w~drugim (\ref{code:dotNetArray}) fragmencie zawiera oznaczenie typu -- \texttt{i:type="a:ArrayOfanyType"}, podczas gdy pierwszy go nie posiada. Przez to tablica na Androidzie jest  deserializowana jako obiekt typu \texttt{DaneA}.
+Można zauważyć, że główny element na listingu~\ref{code:dotNetArray} zawiera oznaczenie typu -- \texttt{i:type=''a:ArrayOfanyType''}, podczas gdy pierwszy go nie posiada. Przez to tablica na Androidzie jest  deserializowana jako obiekt typu \texttt{DaneA}.
 
 Mono potrafi sobie jednak poradzić z~oznaczeniem i~odszyfrowaniem pojedynczego obiektu. Sprawdziłem to podając serializatorowi spodziewającemu się obiektu typu \texttt{DaneA} obiekt typu \texttt{DaneB}\footnote{Między innymi w~takiej sytuacji \texttt{DataContractSerializer} dodaje informację o~typie.} -- odtworzony obiekt był identyczny.
 
@@ -520,12 +522,12 @@ Współpraca z~zewnętrznymi bibliotekami, mimo, że z~założenia możliwa, wym
 
 
 \section{Thrift}
-Thrift (znany też jako Apache Thrift) to biblioteka oraz zbiór narzędzi do generacji kodu stworzony przez Facebooka w~celu przyśpieszenia wytwarzania wydajnych i~skalowalnych aplikacji serwerowych (\emph{backend})~\cite{thrift-general}.
+Thrift (znany też jako Apache Thrift) to biblioteka oraz zbiór narzędzi do generacji kodu stworzony przez Facebook w~celu przyśpieszenia wytwarzania wydajnych i~skalowalnych aplikacji serwerowych (\emph{backend})~\cite{thrift-general}.
 Jego głównym celem jest umożliwienie solidnego i~efektownego modelu komunikacji pomiędzy językami programowania.
-Robi to przez wyabstrahowanie tych części każdego z~nich, które wymagają najwięcej dostosowywania i~umieszczenie ich we wspólnej bibliotece.
+Osiąga to przez wyabstrahowanie tych części każdego z~nich, które wymagają najwięcej dostosowywania i~umieszczenie ich we wspólnej bibliotece.
 
 Konkretnie Thrift pozwala programistom definiować typy danych i~interfejsy usług w~pojedynczym pliku niezależnym od języków programowania.
-Następnie, z~tych definicji jest generowany cały kod do niezbędny do budowy klientów i~serwerów RPC.
+Następnie, z~tych definicji jest generowany cały kod niezbędny do budowy klientów i~serwerów RPC.
 Składnia pliku z~definicjami określana jest jako IDL -- \emph{Interface Definition Language}.
 
 \subsection{Ocena}
@@ -552,14 +554,14 @@ Para klient-serwer może ze sobą rozmawiać niezależnie od tego, w~jakiej tech
 Ale wszystko pozostaje hermetyczne w~obrębie Thrifta -- korzystając z~innej technologii nie da się skomunikować z~serwerem stworzonym w~Thrifcie.
 
 \itemtitle{Zewnętrzne moduły}
-Nie można podłączać pod system zewnętrznych bibliotek. Serwisy, parametry, ich metod oraz klienty są powiązane definicjami języka Thrift.
+Nie można podłączać pod system zewnętrznych bibliotek. Serwisy, parametry, ich metody oraz klienty są powiązane definicjami języka Thrift.
 Aby w~nie ingerować trzeba zmienić ich definicje, a~następnie znowu wygenerować kod w~rzeczywistych językach programowania. Nie ma miejsca na ,,wplecenie'' zbudowanych bibliotek, np.\ Javy.
 
 %Można podczepić zewnętrzne definicje Thrift pod swoje. Ale nie można nijak podczepić typów z gotowego kodu, np. Javy, w swoich definicjach serwisów lub danych. Można też użyć zewnętrznych bibliotek w implementacjach serwisów.
 
 \itemtitle{Rozszerzalność}
 Jest częściowo. Aby wpłynąć na działanie metod trzeba zmienić ich (lub ich parametrów) definicje i~ponownie wygenerować kod użytkowy.
-Ale można zmienić samą implementację zdalnych metod po stronie serwera bez ingerencji w~interfejs.najmniej w~pewnym stopniu. 
+Ale można zmienić samą implementację zdalnych metod po stronie serwera bez ingerencji w~interfejs. 
 
 \itemtitle{Integracja z Androidem}
 Thrift oficjalnie nie wspiera Androida, ale możliwe jest zmodyfikowanie i~przekompilowanie jego kodu tak, aby działał na Androidzie~\cite{thrift-android}.
@@ -571,14 +573,14 @@ Nie ma. Każda metoda usługi musi mieć unikatową nazwę~\cite{thrift-features
 Nie ma. Struktury Thrift IDL nie wspierają dziedziczenia~\cite{thrift-features}.
 
 \itemtitle{Tłumaczenie kodu}
-Thrift pozwala na opisanie serwisów i~struktur danych przy pomocy swojego ,,języku opisu interfejsów'' (ang. \emph{interface description language}).
-Z~tego opisu może generować kod kliencki, interfejsy serwisów oraz klasy lub struktury danych do dla wspieranych języków.~\cite{thrift-features}
+Thrift pozwala na opisanie serwisów i~struktur danych za pomocą swojego ,,języka opisu interfejsów'' (ang. \emph{interface description language}).
+Z~tego opisu może generować kod kliencki, interfejsy serwisów oraz klasy lub struktury danych dla wspieranych języków~\cite{thrift-features}.
 Interfejsy serwisów muszą być zaimplementowane przez programistę w~jednym z~,,normalnych'' języków.
 
 \end{description}
 
 \subsection{Podsumowanie}
-Gdyby możliwe było podłączanie zewnętrznych bibliotek, tworzenie kodu IDL z~kodu Javy lub C\# i~działał na Androidzie, to idealnie spełniałby postawione w~tej pracy cele.
+Gdyby możliwe było podłączanie zewnętrznych bibliotek, tworzenie kodu IDL z~kodu Javy lub C\#~i~gdyby Thrift działał na Androidzie, to idealnie spełniałby postawione w~tej pracy cele.
 
 
 
@@ -709,8 +711,10 @@ Automatycznie generuje WSDL serwisów, dynamicznie serializuje i~deserializuje o
 Umożliwia obiektowe podejście do RPC.
 Wspiera też wiele warstw transportowych.
 
-Zawiera też narzędzia takie jak generatory kodu z~WSDL, XML Schema z~kodu itp.
+Zawiera ponadto narzędzia, takie jak generatory tworzące kod na bazie dokumentów WSDL lub dokumenty XML Schema na bazie kodu itp.
 Mimo międzyplatformowości, którą powinny zapewniać usługi sieciowe, WCF potrafi mieć problemy przy współpracy ze swoim javowym odpowiednikiem -- JAX-WS~\cite{wcf-jaxws}.
+
+\subsection{Ocena}
 
 \begin{description}
 \itemtitle{Klasyfikacja}
@@ -735,12 +739,15 @@ Można używać klas z~zewnętrznych bibliotek jako danych w~metodach zdalnych, 
 \itemtitle{Rozszerzalność}
 Jest -- można dodać nowe klasy dziedziczące po argumentach zdalnej metody i~ta metoda może je obsługiwać. Nie wymaga to żadnych zmian w~kodzie samej metody. Nowe klasy muszą się znaleźć na kliencie i~na serwerze.
 
+\itemtitle{Integracja z Androidem}
+Nie ma -- WCF nie działa na Androidzie.
+
 \itemtitle{Polimorfizm metod}
 Jest.
 
 \itemtitle{Polimorfizm danych}
 Jest.
-Trzeba jednak zaznaczyć, że domyślny sposób jeko uzyskania polega na dodawaniu specjalnych atrybutów wskazujący klasy dziedziczące(\texttt{[KnownType]}) do klasy nadrzędnej, co powoduje wzajemne zależności między klasami w~hierarchii dziedziczenia. Jest to sprzeczne z~dobrymi praktykami programowania obiektowego.
+Trzeba jednak zaznaczyć, że domyślny sposób jego uzyskania polega na dodawaniu specjalnych atrybutów wskazujący klasy dziedziczące(\texttt{[KnownType]}) do klasy nadrzędnej, co powoduje wzajemne zależności między klasami w~hierarchii dziedziczenia. Jest to sprzeczne z~dobrymi praktykami programowania obiektowego.
 WCF pozwala jednak na bardziej eleganckie rozwiązania.
 
 \itemtitle{Tłumaczenie kodu}
@@ -749,11 +756,16 @@ Pozwala też na generację gotowych bibliotek lub kodu z~dokumentów WSDL lub XS
 Jeśli narzędzie jakiegoś innego języka pozwalałoby na tłumaczenie klas danych do XSD lub WSDL, to jest możliwe przetłumaczenie tych klas na .NET.
 \end{description}
 
+\subsection{Podsumowanie}
+WCF jest potężną i~stosunkowo łatwą w~użyciu platformą, która spełnia prawie wszystkie postawione w~tej pracy cele (wobec biblioteki).
+Nie może jednak działać na Androidzie.
+
 
 
 \section{JAX-WS}
 Standardowy \emph{framework} Javy do usług sieciowych. Można go uznać za odpowiednika WCF. Ma podobne możliwości, narzędzia i~problemy.
 
+\subsection{Ocena}
 \begin{description}
 \itemtitle{Klasyfikacja}
 Klient i~serwer RPC, serializacja, narzędzia do generacji kodu.
@@ -777,6 +789,9 @@ Można używać klas z~zewnętrznych bibliotek jako danych w~metodach zdalnych, 
 \itemtitle{Rozszerzalność}
 Jest -- można dodać nowe klasy dziedziczące po argumentach zdalnej metody i~ta metoda może je obsługiwać. Nie wymaga to żadnych zmian w~kodzie samej metody. Nowe klasy muszą się znaleźć na kliencie i~na serwerze.
 
+\itemtitle{Integracja z Androidem}
+Nie ma -- JAX-WS nie działa na Androidzie.
+
 \itemtitle{Polimorfizm metod}
 Jest.
 
@@ -789,11 +804,17 @@ Pozwala też na generację gotowych bibliotek lub kodu z~dokumentów WSDL lub XS
 Jeśli narzędzie jakiegoś innego języka pozwalałoby na tłumaczenie klas danych do XSD lub WSDL, to jest możliwe przetłumaczenie tych klas na Javę.
 \end{description}
 
+\subsection{Podsumowanie}
+Podobnie jak WCF, JAX-WS wiele potrafi i~jest prosty w~użyciu.
+Mimo, że jest oparty o~Javę, to nie może działać na Androidzie, co wyklucza go z~użytku w~tej pracy.
 
 
-\section{JSON-RPC}
-Najbardziej popularna biblioteka .NET w~systemie NuGet (repozytorium bibliotek).
+
+\section{JSON.NET}
+JSON.NET to najbardziej popularna biblioteka .NET w~systemie NuGet (repozytorium bibliotek).
 Pozwala na tworzenie i~parsowanie JSON, a~także na serializację i~deserializację do/z JSON.
+
+\subsection{Ocena}
  
 \begin{description}
 \itemtitle{Klasyfikacja}
@@ -813,7 +834,7 @@ Tworzy i~czyta dokumenty zgodne ze standardem JSON.
 Tworzona przez JSON-NET opcjonalna informacja o~typach nie ma standardu.
 
 \itemtitle{Zewnętrzne moduły}
-Można używać klas z~zewnętrznych bibliotek, swobodnie je serializować i~deserializować.
+Można używać klasy z~zewnętrznych bibliotek, swobodnie je serializować i~deserializować.
 
 \itemtitle{Polimorfizm danych}
 Możliwy.
@@ -821,22 +842,27 @@ JSON-NET jest w~stanie dodawać do JSON informację o~typach według specyficzne
 Może też ja dekodować.
 \end{description}
 
+\subsection{Podsumowanie}
+JSON.NET wydaje się być dobrym kandydatem na element mojej biblioteki.
+Przede wszystkim pozwala na oznaczanie typów, co może umożliwić polimorfizm danych.
+Ponadto jest prosty w~użyciu, a~jego kod jest na otwartej i~,,przyjaznej'' licencji, co pozwala go (w~razie potrzeb) zmodyfikować.
+
 
 
 \section{Inne}
 Istnieje jeszcze wiele bibliotek i~\emph{frameworków} w~obrębie dziedziny tej pracy, chociaż może nie są one najlepszymi kandydatami na spełnienie jej celów.
 
 \begin{description}
+\item[Apache Avro] Otwarta biblioteka do RPC i~serializacji. Można z~niej korzystać z~poziomu wielu języków programowania.
 \item[Google Protocol Buffers] Otwarta biblioteka serializacyjna od Google. Napisana w~C++, ale posiada \emph{wrappery} do wielu języków.
 \item[gSOAP] Biblioteka C do tworzenia i~konsumpcji serwisów opartych o~SOAP i~REST.Serwer JSON-RPC pod .NET. Nie ma implementacji klienta. Korzysta z JSON.NET do serializacji.
 \item[GSON] Biblioteka serializująca z/do JSON. Ma prostszy interfejs niż Jackson, ale nie może zapisywać informacji o typach.
 \item[I-Jetty] Serwer webowy na Androida. Lżejsza wersja serwera Jetty.
 \item[IKVM.NET] JVM dla .NET umożliwiająca dynamiczne wywoływanie kodu Javy z~bibliotek .NET.
 \item[Jayrock] Implementacja serwera JSON-RPC pod .NET.
-\item[jni4net] Most pomiędzy .NET a~Javą umożliwiający wołanie Javy przy pomocy JNI (\emph{Java Native Interface}).
+\item[jni4net] Most pomiędzy .NET a~Javą umożliwiający wołanie Javy za pomocą JNI (\emph{Java Native Interface}).
 \item[JiBX] Pozwala na tworzenie XSD ze zwykłych klas Javy i~klas z~XSD.
 \item[JSON-RPC.NET] Serwer JSON-RPC pod .NET. Nie ma implementacji klienta. Korzysta z JSON.NET do serializacji.
-\item[Otwarte biblioteki serializacyjne / RPC] Są to, np. Apache Avro i~Apache Thrift. Można z~nich korzystać z~poziomu wielu języków programowania.
 \item[Restlet] Biblioteka Javowa służąca do tworzenia usług REST. Do serializacji używa biblioteki Jackson.
 \item[Sharpen] Narzędzie tłumaczące kod Javy na C\#. Nie jest aktywnie utrzymywane i~nie udało mi się go uruchomić.
 \item[Spring] Obszerny \emph{framework} Javowy. Obejmuje np. tworzenie aplikacji internetowych, usługi internetowe i~REST.

@@ -3,12 +3,13 @@ W~tym rozdziale zaprojektuję oprogramowanie realizujące cele opisane w~punkcie
 Zaproponuję sposób realizacji, możliwości i~ograniczenia poszczególnych jego elementów. Dla części komponentów stworzę prototypy.
 
 \section{Specyfikacja wymagań systemowych (SWS)}
-Z~celów tej pracy zawartych w~punkcie~\ref{lib-requirements} stworzyłem standardową listę konkretnych wymagań dla zespołu inżynierów, czyli mnie samego.
+Z~celów tej pracy zawartych w~punkcie~\ref{lib-requirements} stworzyłem standardową listę konkretnych wymagań dla zespołu wytwórczego, czyli mnie samego.
 Organizując niniejszą sekcję wzorowałem się na specyfikacji wymagań systemowych opisanej w~prezentacji ,,Inżynieria Wymagań'' Jarosława Kuchty, z~przedmiotu ,,Dokumentacja i~Jakość Oprogramowania''~\cite{kuchta}.
 
 
 \subsection{Wstęp i~opis informacyjny}
-Jako rozbudowana sekcja wstępu SWS oraz ,,szczegółowy opis problemów do rozwiązania'' służyły poprzednie rozdziały niniejszej pracy.
+Jako rozbudowana sekcja wstępu SWS służyły poprzednie rozdziały niniejszej pracy.
+,,Szczegółowy opis problemów do rozwiązania'' znajduje się w~punkcie~\ref{lib-requirements}.
 
 
 \subsubsection{Diagram przepływu najwyższego poziomu}
@@ -55,8 +56,8 @@ Przez mój system dane będą jedynie przepływać.
 
 \begin{description}
 \itemtitle{Serializacja danych z zachowaniem informacji o typach}
-Zserializowane reprezentacje obiektów muszą zawierać informacje o~typach wtedy, kiedy nie wynika ona jednoznacznie z~kontekstu.
-Np.\ przy zwracaniu ze zdalnej metody obiektu klasy dziedziczącej po tym, zdeklarowanym w~interfejsie tejże metody.
+Zserializowane reprezentacje obiektów muszą zawierać informacje o~typach wtedy, kiedy nie wynika ona jednoznacznie z~kontekstu,
+np.\ przy zwracaniu ze zdalnej metody obiektu klasy dziedziczącej po tym, zdeklarowanym w~interfejsie tejże metody.
 To wymaganie dotyczy zarówno strony klienta jak i~serwera.
 Deserializacja powinna być komplementarna i~ze stworzonych reprezentacji odtwarzać obiekty o~odpowiednich typach i~z~poprawnymi danymi.
 Taka metoda serializacji i~deserializacji jest warunkiem działania polimorficznych metod.
@@ -75,7 +76,7 @@ Taka metoda serializacji i~deserializacji jest warunkiem działania polimorficzn
 \begin{description}
 
 \itemtitle{Komunikacja z~klientem}
-Serwer powinien nasłuchiwać na żądania od klientów na zadanym dwustronnym kanale komunikacyjnym.
+Serwer powinien nasłuchiwać żądań od klientów na zadanym dwustronnym kanale komunikacyjnym.
 Konkretny typ kanału (TCP, SSL, HTTP, itp.) nie jest ważny.
 Może przyjmować wywołania metod i~przekierowywać je do obiektów zdalnych (względem klienta).
 Przekazuje do klientów zwracane wartości.
@@ -150,7 +151,7 @@ Budowanie i~korzystanie z~bibliotek, które powstaną w~trakcie realizacji tego 
 
 \section{Używana konfiguracja sprzętowa i~narzędzia}
 \label{system-configuration}
-Przed przystąpieniem do omawiania komponentów rozwiązania warto wspomnieć o~tym, na jakiej konfiguracji sprzętowej oraz przy pomocy jakich narzędzi były wytwarzane kod i~tekst niniejszej pracy. Na tej samej konfiguracji wykonywane były testy \emph{frameworków} w~rozdziale~\ref{similar-technologies}.
+Przed przystąpieniem do omawiania komponentów rozwiązania warto wspomnieć o~tym, na jakiej konfiguracji sprzętowej oraz za pomocą jakich narzędzi były wytwarzane kod i~tekst niniejszej pracy. Na tej samej konfiguracji wykonywane były testy \emph{frameworków} w~rozdziale~\ref{similar-technologies}.
 
 \begin{description}
 \itemtitle{System operacyjny}
@@ -175,7 +176,7 @@ Pod nim powstawał cały kod C\#.
 GIT jest systemem kontroli wersji w~którym trzymany jest kod oraz tekst tej pracy. Wykorzystywany przeze mnie klient to TortoiseGit\footnote{Do pobrania ze strony \url{https://code.google.com/p/tortoisegit/}}. Repozytorium znajduje się pod adresem \url{https://github.com/butla/SimRemo}.
 
 \itemtitle{\LaTeX}
-Tekst pracy pisany jest przy pomocy technologii \LaTeX. Jako edytor wykorzystywany jest program TeXnicCenter\footnote{\url{http://www.texniccenter.org/}}.
+Tekst pracy pisany jest z~użyciem technologii \LaTeX. Jako edytor wykorzystywany jest program TeXnicCenter\footnote{\url{http://www.texniccenter.org/}}.
 \end{description}
 
 %Do testów wymagane jest przekierowanie portu TCP hosta do portu TCP emulatora. Do tego należy użyć komendy:
@@ -193,6 +194,7 @@ Tutaj przedstawię zaimplementowaną część zaplanowanego projektu. Całość 
 Spełnienie zdefiniowanych wymagań systemowych przez stworzoną implementację zostało przedstawione w~tabeli~\ref{tab:requirements-fulfilment}.
 
 \begin{table}[htbp]
+	  \caption[Spełnienie wymagań systemowych.]{Spełnienie wymagań systemowych. ,,+'' oznacza, że wymaganie jest spełnione; ,,+\textasciitilde'', że zostało spełnione ale wymaga komentarza; ,,--'' że nie zostało spełnione.}
 	\begin{adjustbox}{center}
 		\begin{tabular}{ @{}| c | c | c | c | }
 			\hline
@@ -235,7 +237,6 @@ Spełnienie zdefiniowanych wymagań systemowych przez stworzoną implementację 
 				\hline
 		\end{tabular}
 	\end{adjustbox}
-	\caption[Spełnienie wymagań systemowych.]{Spełnienie wymagań systemowych. ,,+'' oznacza, że wymaganie jest spełnione; ,,+\textasciitilde'', że zostało spełnione ale wymaga komentarza; ,,--'' że nie zostało spełnione.}
 	\label{tab:requirements-fulfilment}
 \end{table}
 
@@ -256,10 +257,10 @@ Są jeszcze wymagania zaimplementowane, które jednak wymagają komentarza:
 \itemtitle{Serializacja danych z zachowaniem informacji o typach}
 Nie ma wsparcia dla oznaczania typów kolekcji: tablic, list, słowników itp.
 \itemtitle{Tworzenie obiektów klienckich}
-Kiedy zdalna metoda rzuci wyjątek, to pewien wyjątek jest rzucany przez metodę obiektu klienckiego. Nie jest to jednak przetłumaczony obiekt wyjątku rzuconego po stronie serwera, a~wyjątek typu \texttt{JsonRpcException} zawierający tekstowy zapis tego oryginalnego.s
+Kiedy zdalna metoda rzuci wyjątek, to pewien wyjątek jest rzucany przez metodę obiektu klienckiego. Nie jest to jednak przetłumaczony obiekt wyjątku rzuconego po stronie serwera, a~wyjątek typu \texttt{JsonRpcException} zawierający tekstowy zapis tego oryginalnego.
 
 \itemtitle{Łatwość użytkowania}
-Ustawianie słownika typów mogłoby się odbywać za pośrednictwem pliku konfiguracyjnego. Aktualnie odbywa się w~kodzie, przy pomocy wywołania statycznej metody, która może być trudna do znalezienia, jeśli się nie wie gdzie szukać.
+Ustawianie słownika typów mogłoby się odbywać za pośrednictwem pliku konfiguracyjnego. Aktualnie odbywa się w~kodzie, za pomocą wywołania statycznej metody, która może być trudna do znalezienia, jeśli się nie wie gdzie szukać.
 \end{description}
 
 
@@ -272,21 +273,19 @@ Możliwości zaimplementowanego systemu to:
 	\item przeładowywanie metod zdalnych.
 \end{itemize}
 
-W~ogólności system pozwala na wystawienie publicznych metod zwykłego javowego obiektu ,,na zewnątrz'' systemu Androida.
+W~ogólności system pozwala na wystawienie publicznych metod zwykłego javowego obiektu ,,na zewnątrz'' systemu Android.
 Taki wystawiany obiekt zwany jest od teraz obiektem zdalnym.
 Program na Androidzie wystawiający obiekty zdalne działa jako serwer, konkretnie serwer JSON-RPC -- standardu zdalnego wywoływania metod opartego o~JSON, opisanego w~punkcie~\ref{json-rpc}.
 
-System zawiera też klienta JSON-RPC pod .NET. Przy jego pomocy można dynamicznie, wywołaniem jednej metody, stworzyć obiekt spełniający zadany interfejs będący klientem obiektu zdalnego.
+System zawiera też klienta JSON-RPC pod .NET. Za jego pomocą można dynamicznie, wywołaniem jednej metody, stworzyć obiekt spełniający zadany interfejs będący klientem obiektu zdalnego.
 Dla przykładu: kod na Androida zawiera interfejs \texttt{TestService} i~klasę \texttt{TestServiceImpl} go implementującą, obie stworzone przez hipotetycznego użytkownika mojego systemu, a~nie będące jego częścią.
 Po stronie .NET musi znajdować się interfejs lustrzany dla \texttt{TestService} z~Javy (Androida), czyli posiadający tak samo nazwane metody z~analogicznymi parametrami.
 Na bazie tego interfejsu tworzony jest obiekt kliencki dla obiektu zdalnego. Można na nim wykonywać metody interfejsu \texttt{TestService} tak jak na zwykłym lokalnym obiekcie -- zwracane wartości będą normalnymi obiektami.
 
-Można wywoływać
-
-Struktura tego, co zostało zaimplementowane przedstawiona jest na schemacie~\ref{fig:implementation-overview}.
-Dokładniejsza struktura przygotowanej biblioteki .NET przedstawiona jest na diagramie~\ref{fig:dot-net-classes}.
+Struktura tego, co zostało zaimplementowane przedstawiona jest na rysunku~\ref{fig:implementation-overview}.
+Dokładniejsza struktura przygotowanej biblioteki .NET przedstawiona jest na rysunku~\ref{fig:dot-net-classes}.
 Przygotowana przeze mnie część Androidowa to jedna klasa -- JsonRpcBasicServer -- dodana do jsonrpc4j\footnote{jsonrpc4j opisane w~punkcie~\ref{jsonrpc4j}.}. Więcej o~tym w~punkcie~\ref{android-rpc}.
-Natomiast schemat działania zaimplementowanego systemu można zobaczyć na diagramie sekwencji~\ref{fig:sequence-diagram}.
+Natomiast schemat działania zaimplementowanego systemu można zobaczyć na rysunku~\ref{fig:sequence-diagram}.
 Ostatni diagram zawiera cztery sekwencje: A, B, C i D.
 \begin{figure}
 	\centering
@@ -313,13 +312,13 @@ Sekwencja A to stworzenie obiektu zdalnego. Wyjaśnienie jej kroków:
 \begin{itemize}
 	\item Kod serwerowy tworzy instancję wybranej klasy, na diagramie jest to \texttt{TestServiceImpl}.
 	\item Kod serwerowy wystawia publiczne metody stworzonej instancji \texttt{TestServiceImpl} ,,na zewnątrz'' przy użyciu API jsonrpc4j.
-	\item jsonrpc4j tworzy obiekt opakowujący instancję \texttt{TestServiceImpl}; ten obiekt będzie odpowiedzialny za~wołanie metod instancji \texttt{TestServiceImpl} w~odpowiedzi na otrzymywanie wiadomości od klientów JSON-RPC.
+	\item Biblioteka jsonrpc4j tworzy obiekt opakowujący instancję \texttt{TestServiceImpl}; ten obiekt będzie odpowiedzialny za~wołanie metod instancji \texttt{TestServiceImpl} w~odpowiedzi na otrzymywanie wiadomości od klientów JSON-RPC.
 \end{itemize}
 
 Sekwencja B -- stworzenie obiektu klienckiego. Faktycznie niezależna od sekwencji A, ponieważ obiekt zdalny musi istnieć dopiero przy pierwszym wywołaniu metody, nie przy stworzeniu obiektu klienckiego. Kroki:
 \begin{itemize}
 	\item Kod kliencki tworzy instancję obiektu klienckiego (proxy) dla obiektu zdalnego.
-	\item Statyczna metoda \texttt{JsonRpcClientProxy} tworzy instancję swojej klasy. Instancja tworzona jest na bazie zadanego interfejsu (np. \texttt{TestService}) i~jest wiązany z~adresem konkretnego obiektu zdalnego.
+	\item Statyczna metoda \texttt{JsonRpcClientProxy} tworzy instancję swojej klasy. Instancja tworzona jest na bazie zadanego interfejsu (np. \texttt{TestService}) i~jest wiązana z~adresem konkretnego obiektu zdalnego.
 \end{itemize}
 
 Sekwencja C -- wypełnienie słownika typów. Potrzebne jeśli użytkownik zamierza korzystać z~polimorfizmu parametrów metod zdalnych. Polega na uruchomieniu jednej metody statycznej zmodyfikowanego przeze mnie JSON.NET\footnote{Biblioteka serializacyjna pod .NET; format danych to JSON.}. Wypełniony słownik będzie wykorzystywany do mapowania typów pomiędzy Javą a~.NET przy serializacji i~deserializacji.
@@ -352,7 +351,7 @@ Sekwencja D -- wywołanie polimorficznej metody zdalnej, czyli zasadnicza funkcj
 Obie części systemu -- klient (.NET) i~serwer (Android) -- muszą mieć wspólny system oznaczania typów, aby wymieniane obiekty mogły być polimorficzne. 
 Wspólny format oznaczeń nie jest potrzebny, kiedy nie zależy nam na polimorfizmie, czyli w~większości przypadków wykorzystania zdalnego wywoływania metod (kodu).
 
-Zanim przejdę do przykładów wprowadźmy trochę pseudokodu bazowanego na Javie. Będzie to interfejs obiektu zdalnego, klasa go implementująca oraz klasa danych używana wykorzystywana w~interfejsie; wszystkie znajdujące się w~jednej przestrzeni nazw (\emph{package}). Kod ten znajduje się we fragmencie~\ref{kod:example-remote-classes}.
+Zanim przejdę do przykładów wprowadźmy trochę pseudokodu bazowanego na Javie. Będzie to interfejs obiektu zdalnego, klasa go implementująca oraz klasa danych używana wykorzystywana w~interfejsie; wszystkie znajdujące się w~jednej przestrzeni nazw (\emph{package}). Kod ten znajduje się na listingu~\ref{kod:example-remote-classes}.
 
 \begin{lstlisting}[float, frame=single, caption={Przykładowy kod metody zdalnej.}, label=kod:example-remote-classes]
 package org.example.test;
@@ -379,8 +378,9 @@ public class TestServiceImpl
 }
 \end{lstlisting}
 
-Załóżmy, że będziemy wywołać metody przy pomocy JSON-RPC. Klasyczne JSON-RPC nie koduje w~żaden sposób informacji o typach. Można by z~.NET przekazać zakodowaną wiadomość, wyglądającą mniej więcej tak:
-\begin{lstlisting}[frame=single]
+Załóżmy, że będziemy wywołać metody za pomocą JSON-RPC. Klasyczne JSON-RPC nie koduje w~żaden sposób informacji o typach. Można by z~.NET przekazać zakodowaną wiadomość, podobną do tej z~listingu~\ref{kod:example-call}, i Java potrafiłaby ją rozkodować. To dlatego, że w~wybranym obiekcie (o~identyfikatorze \texttt{TestServiceImpl1}) istnieje metoda o~nazwie \texttt{modifyData}. Co więcej, przyjmowany przez nią parametr ma dwa obiekty składowe: \texttt{number} i \texttt{text} -- tak samo jak obiekt \texttt{DataA}; dlatego parametr z~JSONa może być zinterpretowany jako \texttt{DataA}\footnote{Zgodnie z~zasadą \emph{Duck Typing}}.
+
+\begin{lstlisting}[frame=single, float, caption={Przykład wiadomości JSON wywołującej metodę zdalną.}, label=kod:example-call]
 {
     "obiekt": "TestServiceImpl1",
     "metoda": "modifyData",
@@ -392,7 +392,6 @@ Załóżmy, że będziemy wywołać metody przy pomocy JSON-RPC. Klasyczne JSON-
     ]
 }
 \end{lstlisting}
-i Java potrafiłaby ją rozkodować. To dlatego, że w~wybranym obiekcie (o~identyfikatorze \texttt{TestServiceImpl1}) istnieje metoda o~nazwie \texttt{modifyData}. Co więcej, przyjmowany przez nią parametr ma dwa obiekty składowe: \texttt{number} i \texttt{text} -- tak samo jak obiekt \texttt{DataA}; dlatego parametr z~JSONa może być zinterpretowany jako \texttt{DataA}\footnote{Zgodnie z~zasadą \emph{Duck Typing}}.
 
 Gdyby obiekt zdalny był klasyczną, a~więc korzystającą z~SOAP, usługą sieciową (\emph{web service}), to powyższy przypadek nie działałby ,,tak po prostu''.
 To dlatego, że we wiadomościach SOAP każdy obiekt danych musi być oznaczonym konkretnym typem XML Schema.
@@ -400,8 +399,10 @@ Jest to poważny wysiłek, którego w~powyższym przypadku ani serwer, ani klien
 
 \subsubsection{Zapotrzebowanie na polimorfizm}
 \label{need-for-polymorphism}
-Póki co, kodowanie informacji o~typach nie jest do niczego potrzebne. Wprowadźmy teraz nową klasę, która dziedziczy po \texttt{DataA}:
-\begin{lstlisting}[frame=single]
+Póki co, kodowanie informacji o~typach nie jest do niczego potrzebne. Wprowadźmy teraz nową klasę, która dziedziczy po \texttt{DataA} (listing~\ref{kod:example-inheritance}).
+Zakładamy też, że po stronie .NET znajduje się odpowiednik zarówno \texttt{DataA}, jak i~dziedziczącej po nim \texttt{DataB}. Także relacja dziedziczenia jest zachowana pomiędzy odpowiednikami. Nazwijmy te odpowiedniki \texttt{DataA'} i~\texttt{DataB'}.
+
+\begin{lstlisting}[frame=single, float, caption={Klasa danych dziedzicząca po innej klasie danych.}, label=kod:example-inheritance]
 package org.example.test;
 
 public class DataB extends DataA
@@ -409,12 +410,12 @@ public class DataB extends DataA
     public double floatNumber;
 }
 \end{lstlisting}
-Zakładamy też, że po stronie .NET znajduje się odpowiednik zarówno \texttt{DataA}, jak i~dziedziczącej po nim \texttt{DataB}. Także relacja dziedziczenia jest zachowana pomiędzy odpowiednikami. Nazwijmy te odpowiedniki \texttt{DataA'} i~\texttt{DataB'}.
 
 Powiedzmy, że teraz klient chce wywołać metodę \texttt{modifyData} przekazując jako parametr \texttt{DataB'}, a~nie \texttt{DataA'} (które było interpretowane przez serwer jako \texttt{DataA}), jak poprzednim razem.
 W~programowaniu obiektowym nie jest to nic dziwnego -- polimorfizm powinien zapewniać to, że obiekt dziedziczący może być zinterpretowany jako bazowy.
-Wynikająca z~takiego wywołania wiadomość może wyglądać następująco:
-\begin{lstlisting}[frame=single]
+Wynikająca z~takiego wywołania wiadomość znajduje się na listingu~\ref{kod:bad-inheritance-call}.
+
+\begin{lstlisting}[frame=single, float, caption={Wywołanie zawierające parametr dziedziczący po parametrze spodziewanym.}, label=kod:bad-inheritance-call]
 {
     "obiekt": "TestServiceImpl1",
     "metoda": "modifyData",
@@ -438,11 +439,11 @@ Klasy, które tutaj nazywam ,,klasami danych'' i~używam jako argumentów dla me
 
 Łatwo jest przepisać na inny język klasę, które posiada tylko pola i~żadnych metod -- może to często zrobić nawet automat.
 Metody, natomiast, mogą być wyzwaniem nawet dla człowieka. Nawet, jeśli mowa o~prostej logice, to utrzymanie równoznaczności metod w~obu językach może być wymagające.
-Co prawda, równoznaczność nie jest wcale niezbędna. Po obu stronach barykady klasa może mieć zupełnie inne metody i~zachowanie, zachowując te same pola. Ma to jednak wyraźnie zły wpływ na przejrzystość kodu całego systemu.
+Co prawda, równoznaczność nie jest wcale niezbędna. Po obu stronach systemu klasa może mieć zupełnie inne metody i~zachowanie, zachowując te same pola. Ma to jednak wyraźnie zły wpływ na przejrzystość kodu całego systemu.
 
-Aby obronić polimorfizm w~obiektach zdalnych, mogę dać nieco wydumany przykład metody, która rysuje koła, a~jest sparametryzowana obiektem typu \texttt{Object} (czyli dowolnym). Domyślnie rysuje ona jedno koło o promieniu 5.0, ale w~przekazanym obiekcie szuka pól int (pierwsze zamienia na ilość kół) i double (pierwszego double zamienia na promień rysowanych kół) wyciąga pola przekazanego obiektu.
+Aby obronić polimorfizm w~obiektach zdalnych, mogę dać nieco wydumany przykład metody, która rysuje koła, a~jest sparametryzowana obiektem typu \texttt{Object} (czyli dowolnym). Domyślnie rysuje ona jedno koło o promieniu 5.0, ale w~przekazanym obiekcie szuka pól \texttt{int} (żeby pierwszy \texttt{int} został zamieniony na ilość kół) i \texttt{double} (żeby pierwszy \texttt{double} został zamieniony na promień rysowanych kół).
 Inspekcja obiektów może być używana chociażby przy różnego rodzaju konfiguracjach. Np.\ każdy obiekt hipotetycznego typu \texttt{AdresBazyDanych} znajdujący się w~przychodzących do metod zdalnych parametrach ma zostać podmieniony na wartość pożądaną przez serwer. Kiedy dalej obiekt zdalny będzie wykonywać jakieś operacje na przesłanych parametrach, to będzie używany adres skonfigurowany na serwerze, a~nie jakiś nieznany przysłany z~zewnątrz.
-Mniej więcej tak dzieje się w~Spring IoC~\cite{sping-ioc} -- kontenerze odpowiedzialnym za automatyczną konfigurację aplikacje webowej opartej na frameworku Spring.
+Mniej więcej tak dzieje się w~Spring IoC~\cite{sping-ioc} -- kontenerze odpowiedzialnym za automatyczną konfigurację aplikacji webowej opartej na frameworku Spring.
 
 %Aby programista nie tracił niespodziewanie żadnych danych i miał po drugiej stronie to, czego chce
 %Aby sytuacja była jasna typy muszą być oznaczane. Do tego, oznaczanie typów musi być jednolite. Musi być słownik itp. Wtedy wiadomość wyglądałaby tak, bo klient by sobie przetłumaczył typy (zakładamy, że robi to klient). Serwer by sobie odebrał i byłoby git.
@@ -458,8 +459,9 @@ W~ogólności -- aby polimorfizm metod zdalnych był możliwy potrzeba, aby klie
 \end{itemize}
 
 O~lustrzanych typach pisałem już we wprowadzeniu powyżej. Przykładowy program w~Javie posiadał typy \texttt{DataA} i~\texttt{DataB} po nim dziedziczący. Kod pod .NET posiadał, natomiast, odpowiadające im \texttt{DataA'} i~\texttt{DataB'}.
-Zakładając, że używanym przez nas językiem platformy .NET będzie C\#, klasy te powinny wyglądać tak:
-\begin{lstlisting}[frame=single]
+Przy założeniu, że używanym przez nas językiem platformy .NET będzie C\#, powstanie klasa z~listingu~\ref{kod:dot-net-data-classes}.
+
+\begin{lstlisting}[frame=single, float, caption={Przykładowe klasy danych zapisane w~C\#}, label=kod:dot-net-data-classes]
 namespace SerializationTest
 {
   public class DataA
@@ -474,12 +476,13 @@ namespace SerializationTest
   }
 }
 \end{lstlisting}
-W tym przypadku Java i~C\# są do siebie bardzo zbliżone.
+
+W tym przypadku Java (listingi~\ref{kod:example-remote-classes} i~\ref{kod:example-inheritance}) i~C\# (listing~\ref{kod:dot-net-data-classes}) są do siebie bardzo zbliżone.
 
 Można zauważyć kilka rzeczy:
 \begin{itemize}
 	\item Nazwy klas nie zawierają prim (') -- będą używane tylko w~skróconych oznaczeniach w~tekście.
-	\item Nazwa paczki Javy (\texttt{org.example.test}) i~przestrzeń nazw z~.NET (\texttt{SerializationTest}) nie są takie same; pełne nazwy klas będą następujące: \texttt{org.example.test.DataA} i~\texttt{org.example.test.DataB} (Java), \texttt{SerializationTest.DataA} i~\texttt{SerializationTest.DataB} (.NET).
+	\item Nazwa paczki Javy (\texttt{org.example.test}) i~przestrzeń nazw z~.NET (\texttt{SerializationTest}) nie są takie same; pełne nazwy klas będą następujące: dla Javy -- \texttt{org.example.test.DataA} i~\texttt{org.example.test.DataB}, dla .NET -- \texttt{SerializationTest.DataA} i~\texttt{SerializationTest.DataB}.
 	\item Klasy z~C\# zachowują zależność dziedziczenia.
 	\item Odpowiadające sobie klasy mają taki sam zestaw publicznych pól; ważny jest ich typ i nazwy, nie jest ważna kolejność.
 	\item Mimo tego, że tutaj odpowiadające sobie klasy mają takie same nazwy, to nie jest to potrzebne (choć zapewnia czytelność).
@@ -491,8 +494,9 @@ Można zauważyć kilka rzeczy:
 Odpowiadające sobie typy danych w~językach tak podobnych jak Java i~C\# mogłyby teoretycznie być uzyskiwane przez automatyczne tłumaczenie -- z~Javy do .NET lub odwrotnie.
 Nie udało mi się jednak uruchomić żadnego narzędzia, które powinno to potrafić.
 
-Oznaczenie typów może polegać na dodawaniu do obiektu specjalnego pola. W~poniższym przykładzie, przedstawiającym hipotetyczną wiadomość wysłaną z~.NET, to pole zostało nazwane \texttt{\$typ} i~posiada wartość typu \emph{string} zawierającą pełną, jednoznaczną nazwę typu.
-\begin{lstlisting}[frame=single]
+Oznaczenie typów może polegać na dodawaniu do obiektu specjalnego pola. W~przykładzie z~listingu~\ref{kod:call-with-types}, przedstawiającym hipotetyczną wiadomość wysłaną z~.NET, to pole zostało nazwane \texttt{\$typ} i~posiada wartość typu \emph{string} zawierającą pełną, jednoznaczną nazwę typu.
+
+\begin{lstlisting}[frame=single, float, caption={Przykład wywołania zdalnej metody zawierającego informację o~typach.}, label=kod:call-with-types]
 {
     "obiekt": "TestServiceImpl1",
     "metoda": "modifyData",
@@ -517,16 +521,16 @@ Od razu zakładam, że serializacja danych będzie oparta o~JSON a~protokołem k
 Ponadto, biblioteka JSON-RPC dla języka Java -- jsonrpc4j\footnote{Patrz punkt~\ref{jsonrpc4j}.}, może po modyfikacji działać na Androidzie.
 Po stronie .NET posłużę się otwartą biblioteką do serializacji do JSON -- JSON.NET.
 
-Jackson jest biblioteką serializacyjną z~której korzysta jsonrpc4j. Zarówno Jackson jak i~JSON.NET mają dużo możliwości konfiguracji. Obie posiadają też możliwość kodowania (przez specjalne pola) informacji o typach.
+Jackson jest biblioteką serializacyjną z~której korzysta jsonrpc4j. Zarówno Jackson jak i~JSON.NET mają dużo możliwości konfiguracji. Obie posiadają też możliwość kodowania (przez specjalne pola) informacji o~typach (listing~\ref{kod:serilization-objects}).
 
 \subsubsection{Porównanie działania Jackson i~JSON.NET}
-Zestawienie ich działania dla kilku przypadków znajduje się we fragmentach \ref{kod:serilization-objects}, \ref{kod:serialization-arrays}, \ref{kod:serialization-lists}, \ref{kod:serialization-dicts}. Różnice stylu oznaczania typów są w~tabeli~\ref{tab:jackson-jsonnet-differences}
+Zestawienie ich działania dla kilku przypadków znajduje się na listingach~\ref{kod:serilization-objects}, \ref{kod:serialization-arrays}, \ref{kod:serialization-lists}, \ref{kod:serialization-dicts}. Różnice stylu oznaczania typów są w~tabeli~\ref{tab:jackson-jsonnet-differences}
 
 \begin{lstlisting}[float, frame=single, caption={Porównanie serializacji obiektów typu \texttt{DataA}}, label=kod:serilization-objects]
 \\ Jackson
 {
     "@class":"org.example.test.DataA",
-    "numberA":13,
+    "number":13,
     "text": "przykladowy tekst"
 }
 
@@ -601,7 +605,8 @@ Zestawienie ich działania dla kilku przypadków znajduje się we fragmentach \r
 
 \begin{table}[htbp]              
 	\centering
-		\begin{tabular}{ | p{0.25\textwidth} || p{0.30\textwidth} | p{0.35\textwidth} | }
+	\caption{Różnice w~stylu oznaczania typów pomiędzy Jackson a JSON.NET.}
+		\begin{tabular}{ | p{0.25\textwidth} || p{0.25\textwidth} | p{0.40\textwidth} | }
 			\hline
 				& \textbf{Jackson} & \textbf{JSON.NET} \\
 				\hline \hline
@@ -609,12 +614,11 @@ Zestawienie ich działania dla kilku przypadków znajduje się we fragmentach \r
 				\hline
 				Oznaczenie typu zawiera & Pełną nazwę klasy & Pełną nazwę klasy oraz nazwę źródłowej biblioteki (DLL). \\
 				\hline
-				Oznaczenie typu list i~tablic & Opakowanie w~dodatkową listę, której pierwszym elementem jest \texttt{string} z~nazwą typu, a~drugim oryginalna kolekcja. & Opakowanie w~obiekt z~dwoma polami: \texttt{\$type} i~\texttt{\$values} zawierające oryginalną kolekcję. \\
+				Oznaczenie typu list i~tablic & Opakowanie w~dodatkową listę, której pierwszym elementem jest \texttt{string} z~nazwą typu, a~drugim oryginalna kolekcja. & Opakowanie w~obiekt z~dwoma polami: \texttt{\$type} i~\texttt{\$values} zawierającym oryginalną kolekcję. \\
 				\hline
 				Oznaczenie typów generycznych & Nie ma i~nie jest możliwe ze względu na \emph{,,type erasure''}. & Oznaczane przy użyciu składni <nazwa-typu-generycznego>`<ilość-parametrów-typu>[[<nazwa-typu-1>], [<nazwa-typu-2>], ...] \\
 				\hline
 		\end{tabular}
-	\caption{Różnice w~stylu oznaczania typów pomiędzy Jackson a JSON.NET.}
 	\label{tab:jackson-jsonnet-differences}
 \end{table}
 
@@ -640,20 +644,22 @@ Powiedzmy, że zserializowano obiekt, którego jedno pole ma typ generyczny, np.
 Ogólnie -- wrodzoną wadą systemu będzie to, że typy generyczne nie zawsze będą działać.
 Nie jest to winą Jacksona, a~mechanizmu języka Java zwanego \emph{,,type erasure''} usuwającego informacje o~faktycznym typie typu generycznego w~trakcie wykonywania kodu.
 
-Jackson nie obsługuje też informacji o bibliotece. Schemat nazywania pakietów w~Javie powinien jednak zapewniać ich unikalność, więc brak nazwy biblioteki to nie problem.
+Jackson nie obsługuje też informacji o bibliotece. Schemat nazywania pakietów w~Javie powinien jednak zapewniać ich unikatowość, więc brak nazwy biblioteki to nie problem.
 
 \subsubsection{Ostateczny kształt rozwiązania}
 JSON.NET ma 14401 linii kodu, używany przeze mnie podzbiór Jackson -- 63497. Obie biblioteki są dobrze napisane i~konfigurowalne, ale nie zakładają dużej ingerencji w~system oznaczania typów, który to w~obu przypadkach jest inny i~specyficzny.
-W~przypadku JSON.NET, który próbowałem zmodyfikować mechanizmy wykrywania i~oznaczania typów są dość mocno uwiązane z~resztą biblioteki. Z~racji natury procesów serializacji i~deserializacji kod jest rekurencyjny i~mocno rozgałęziony.
 
-Przez to nie udało się dopasować serializacji tablic i~list do formatu Jacksona. Zdecydowanie nie jest to niemożliwe, ale wysiłek do tego potrzebny nie zmieścił się w~ramach tej pracy. 
+W~przypadku JSON.NET, który próbowałem zmodyfikować mechanizmy wykrywania i~oznaczania typów są dość mocno uwiązane z~resztą biblioteki.
+Z~racji natury procesów serializacji i~deserializacji kod jest rekurencyjny i~mocno rozgałęziony.
+To sprawia, że ciężko wykonać większą modyfikację bez skutków ubocznych w~kodzie.
+Przez to nie udało się dopasować serializacji tablic i~list do formatu Jacksona. Zdecydowanie nie jest to niemożliwe, ale wysiłek do tego potrzebny nie zmieścił się w~ramach tej pracy.
 
 Całkowicie, natomiast udała się serializacja dowolnych pojedynczych (nawet skomplikowanych) obiektów. Dzięki temu można uzyskać sprawne polimorficzne metody zdalne.
 
 Wykonane modyfikacje JSON.NET według klas:
 \begin{description}
 \itemtitle{\texttt{JavaTypeDictionary}}
-Nowa klasa statyczna. Można ją zainicjować przy pomocy słownika, czyli obiektu typu \texttt{Dictionary}. Klasa go zapamiętuje oraz tworzy słownik odwrotny (klucze i~wartości zamienione rolami) dla szybszego przeszukiwania. Klasa ta będzie używana przez resztę JSON.NET do tłumaczenia nazw typów.
+Stworzona przeze mnie w~całości klasa statyczna. Można ją zainicjować za pomocą słownika, czyli obiektu typu \texttt{Dictionary}. Klasa go zapamiętuje oraz tworzy słownik odwrotny (klucze i~wartości zamienione rolami) dla szybszego przeszukiwania. Klasa ta będzie używana przez resztę JSON.NET do tłumaczenia nazw typów.
 
 \itemtitle{\texttt{JsonSerializerInternalWriter}}
 W~metodzie \texttt{WriteTypeProperty} dodano tłumaczenie zapisywanych nazw typów na odpowiedniki z~Javy.
@@ -663,8 +669,9 @@ Stała \texttt{TypePropertyName} zmieniona z~\texttt{\$type} na \texttt{@class},
 
 \itemtitle{\texttt{JsonSerializerInternalReader}}
 Metoda \texttt{ReadMetadataProperties} stosowała wspomniany wcześniej mechanizm wykrywania specjalnych pól obiektów polegający na sprawdzaniu, czy  pierwszy znak nazwy to ,,\$''. Został on zamieniony na ,,@'', aby mogło być wyłapane pole \texttt{@class}. Ponadto, metoda \texttt{ResolveTypeName} korzysta z~\texttt{JavaTypeDictionary} do tłumaczenia nazw klas z~Javy na .NET.
-
 \end{description}
+Łącznie, zmodyfikowałem 7 linii i~dodałem 44, aby uzyskać oznaczanie typów zgodne z~Jacksonem dla pojedynczych obiektów.
+Modyfikacja serializacji i deserializacji kolekcji byłaby dużo bardziej złożona.
 
 %Żeby słownik był dobry dla programisty, to dobrze jakby
 %Potrzebny jest system mapujący nazwy typów w jednym środowisku, na nazwy z drugiego. Mógłby działać na zasadzie słowników. Żeby zmniejszyć nakład pracy mogły by one być generowane automatycznie zgodnie z jakąś zasadą.
@@ -680,7 +687,7 @@ Metoda \texttt{ReadMetadataProperties} stosowała wspomniany wcześniej mechaniz
 
 \subsection{Wybrana forma zdalnego wywoływania metod}
 Jako format zdalnego wywoływania metod w~moim systemie wybrałem JSON-RPC 2.0. Przez swoją prostotę zyskuje on odporność na błędy i~łatwość implementacji.
-Poza tym spełnia wszystkie moje wymagania -- identyfikuje docelowe obiekty i~metody oraz pozwala rozszerzać sposób serializacji parametrów metod.
+Poza tym spełnia wszystkie założone wymagania -- identyfikuje docelowe obiekty i~metody oraz pozwala rozszerzać sposób serializacji parametrów metod.
 Każda wiadomość posiada też identyfikator, który wspomaga rozumienie serii wiadomości w~wymianie między klientem a serwerem jako logicznej ,,rozmowy''.
 
 Ponadto od wersji 2.0, JSON-RPC posiada mechanizm rozszerzania swoich wiadomości (\emph{Extensions})~\cite{json-rpc-extensions}.
@@ -692,7 +699,7 @@ Jednakże kluczowym elementem, który przyczynił się do decyzji o~użyciu JSON
 
 \subsection{Plan rozwiązania}
 Gdyby nie skupiać się na polimorfizmie, to, poza zwykłym JSON-RPC, część serwerowa mojego prototypu nie potrzebuje niczego więcej.
-Wystarczy stworzyć obiekt posiadający publiczne metody i~wystawić go na zewnątrz przy pomocy klasy \texttt{JsonRpcServer} z~jsonrpc4j.
+Wystarczy stworzyć obiekt posiadający publiczne metody i~wystawić go na zewnątrz za pomocą klasy \texttt{JsonRpcServer} z~jsonrpc4j.
 W~tym momencie dowolny klient JSON-RPC, napisany w~dowolnym języku, może wywoływać kod na serwerze.
 Jeśli tym serwerem jest Android, a~tak będzie w~tym przypadku, to klient JSON-RPC może zdalnie wykorzystywać API Androida i~nim zarządzać. A~więc spełnione jest jedno z~wymagań.
 
@@ -701,8 +708,8 @@ Chyba, że wszystkie przyjmowane i~zwracane przez zdalne metody typy są typami 
 
 Klasa \texttt{JsonRpcServer} umożliwia przyjmowanie połączeń do obiektu zdalnego na kilka sposobów, jednak wszystkie poza jednym wymagają bibliotek, które nie są dostępne dla Androida, tylko dla standardowej (właściwie nawet rozszerzonej o~Javę EE) Javy.
 Sposób, który może działać na Androidzie polega na powiązaniu obiektu z~socketem TCP. Obiekt dostaje jeden port, na którym nasłuchuje wiadomości.
-Klienci wysyłają zakodowane JSONem po nawiązaniu połączenia TCP z~konkretnego portem, na konkretnym adresie IP.
-Tak że na jednym serwerze może być wystawionych tyle obiektów zdalnych, ile jest portów TCP na wszystkich interfejsach sieciowych hosta.
+Klienci wysyłają zakodowane JSONem wiadomości, po nawiązaniu połączenia TCP z~konkretnym portem, na konkretnym adresie IP.
+Na jednym serwerze może być wystawionych tyle obiektów zdalnych, ile jest portów TCP na wszystkich interfejsach sieciowych hosta.
 W~przypadku Androida zazwyczaj jest tylko jeden interfejs, co i~tak daje dziesiątki tysięcy portów.
 
 Trzeba ustawić zgodne polimorficzne serializatory zarówno dla klienta jak i~serwera i~wywołać jakąś z~metod, którymi testowałem polimorfizm w~rozdziale~\ref{similar-technologies}.
@@ -710,20 +717,20 @@ Trzeba ustawić zgodne polimorficzne serializatory zarówno dla klienta jak i~se
 Kiedy zaczyna nam zależeć na polimorfizmie metod zdalnych, trzeba zwrócić uwagę na konfigurację serializatorów.
 Jackson, który jest biblioteką serializacyjną używaną przez jsonrpc4j ma zdolność oznaczania typów. API jsonrpc4j pozwala, na szczęście, na konfigurację parametrów Jacksona. Czyli możemy sprawić, że serwer będzie zarówno rozumiał oznaczenia typów, jak i~sam będzie je stosował.
 
-Polimorfizm ma swoją cenę -- serwer przestaje być uniwersalnie zgodny z~klientami, ponieważ informacje o~typie we wiadomościach JSON nie są częścią standardu JSON-RPC 2.0.
+Polimorfizm ma swoją cenę -- serwer przestaje być uniwersalnie zgodny z~klientami, ponieważ informacje o~typie w~wiadomościach JSON nie są częścią standardu JSON-RPC 2.0.
 Aby móc rozmawiać z~serwerem, klient musi teraz mieć tak samo działający serializator.
-Jest to proste dla innych aplikacji korzystających z~Jacksona, chociaż ich twórcy musieliby je świadomie skonfigurować. Ale inne biblioteki albo w~ogóle nie potrafią oznaczać typów, albo robią to w~niekompatybilny sposób.
-Tak było w~przypadku JSON.NET, którego jednak udało mi się (częściowo) dopasować do Jacksona. 
+Jest to proste dla innych aplikacji korzystających z~Jacksona, chociaż ich twórcy musieliby je świadomie skonfigurować. Ale inne biblioteki albo w~ogóle nie potrafią oznaczać typów, albo robią to w~niezgodny sposób.
+Tak było w~przypadku JSON.NET, który jednak udało mi się (częściowo) dopasować do Jacksona. 
 
 
 \subsection{Realizacja}
 Przy próbie uruchomienia jsonrpc4j na Androidzie od razu wystąpił błąd. Okazało się, że mimo tego, co jest napisane na stronie projektu\footnote{,,(\ldots)In fact, the client and server both work in an Android environment.(\ldots)~\cite{jsonrpc4j}} nie można uruchomić serwera na Androidzie.
-To dlatego, że klasa \texttt{JsonRpcServer} zawiera zależności do bibliotek, które nie są dostępne dla Androida, a~Java musi móc je załadować, kidy ładuje klasę.
+To dlatego, że klasa \texttt{JsonRpcServer} zawiera zależności do bibliotek, które nie są dostępne dla Androida, a~Java musi móc je załadować, kiedy ładuje klasę.
 
 Na szczęście można było podzielić klasę na dwie części -- tę podstawową, która umożliwia wystawianie obiektów zdalnych na portach TCP i~tę zaawansowaną, która dziedziczy po podstawowej i~zależy od bibliotek niedostępnych Androidowi.
-Wydzieloną klasę bazową nazwałem \texttt{JsonRpcBasicServer}. Aby wystawić zdalny obiekt wystarczy kod przedstawiony we fragmencie~\ref{kod:android-remote-object}.
+Wydzieloną klasę bazową nazwałem \texttt{JsonRpcBasicServer}. Aby wystawić zdalny obiekt wystarczy kod przedstawiony na listingu~\ref{kod:android-remote-object}.
 
-\begin{lstlisting}[float, frame=single, caption={Tworzenie obiektu zdalnego przy pomocy jsonrpc4j dostosowanego do Androida.}, label=kod:android-remote-object]
+\begin{lstlisting}[float, frame=single, caption={Tworzenie obiektu zdalnego za pomocą jsonrpc4j dostosowanego do Androida.}, label=kod:android-remote-object]
 TestServiceImpl service = new TestServiceImpl();
 JsonRpcBasicServer serverBase = new JsonRpcBasicServer(
     ServerThread.createMapper(),
@@ -741,36 +748,38 @@ StreamServer server = new StreamServer(
 server.start();
 \end{lstlisting}
 
-Tym samym serwer jest całkowicie sprawny i~umożliwia wystawianie dowolnych metod Javy (poza metodami generycznymi) do konsumpcji dla wszystkich klientów JSON-RPC.
+Tym samym serwer jest całkowicie sprawny i~umożliwia wystawianie dowolnych metod Javy (poza metodami generycznymi) do wykorzystania dla wszystkich klientów JSON-RPC.
 Ponieważ po moich zmianach nie ma żadnego spadku funkcjonalności będę próbował przyłączyć je do oryginalnego projektu.
 
 
 
 \section{Klient JSON-RPC pod .NET}
-\subsection{Wprowadzenie}
+\subsection{Podstawy}
 Kod kliencki mojego systemu potrzebuje możliwości wołania serwera JSON-RPC.
 Okazuje się, że implementacje w~.NET, np. JSON-RPC.NET nie posiadają takiej możliwości.
 Potrafią łatwo wystawiać obiekty zdalne na zewnątrz, ale nie mają właściwie żadnych udogodnień do ich konsumowania.
 Istnieją jedynie dyskusje na temat części klienckiej i~dość prymitywne ich implementacje.
 Te implementacje i~tak zmuszają do ,,własnoręcznego'' złożenia wiadomości JSONowej~\cite{json-rpc-net-client}.
 
-W~przypadku rozwiniętych \emph{frameworków} jak WCF, czy JAX-WS normalne jest, że można w~prostu sposób stworzyć obiekt proxy do serwisu zasilając go jakimś interfejsem.
+W~przypadku rozwiniętych \emph{frameworków} jak WCF, czy JAX-WS normalne jest, że można w~prosty sposób stworzyć obiekt proxy do serwisu zasilając go jakimś interfejsem.
 Następnie obiekt ten może być wołany jak zwykły obiekt lokalny spełniający zadany interfejs.
 Taką funkcjonalność posiada też jsonrpc4j.
 
-Postanowiłem stworzyć kod, który pozwoli na eleganckie tworzenie obiektów klienckich i~wywoływanie na nich metod.
+Postanowiłem stworzyć kod, który pozwoli na eleganckie tworzenie obiektów klienckich i~zdalne wywoływanie metod na tych obiektach.
 
 \subsection{Realizacja}
-Udało mi się stworzyć klienta, który jest bardzo wygodny w~użyciu (fragment~\ref{kod:my-json-rpc-clinet}).
+Udało mi się stworzyć klienta, który jest bardzo wygodny w~użyciu (listing~\ref{kod:my-json-rpc-clinet}).
 Można go tworzyć i~wykorzystywać jak normalny obiekt. Zwraca też normalne obiekty.
 Jeśli połączy się go ze zmodyfikowanym przeze mnie JSON.NET, to potrafi także przekazywać polimorficzne parametry do mojego serwera.
 
-Niestety nie ma jeszcze zaawansowanej logiki odpowiadającej za odporność połączenia, czy ponowne próby wysłania wiadomości. Jeśli coś pójdzie nie tak w~warstwie TCP to zostanie rzucany wyjątek i~wywołanie metody się nie uda.
+
+Implementacja ma ok. 140 linii kodu.
+Niestety nie ma jeszcze zaawansowanej logiki odpowiadającej za odporność połączenia, czy ponowne próby wysłania wiadomości. Jeśli coś pójdzie nie tak w~warstwie TCP to zostanie rzucony wyjątek i~wywołanie metody się nie uda.
 Nie jest to jednak duża wada.
 
-Też tłumaczenie typów wyjątków nie jest jeszcze wspierane.
-To dlatego, że nie są one przekazywane tak, jak normalne obiekty i~wymagają specjalnego sposobu dekodowania (patrz fragment~\ref{kod:json-rpc-exception}).
-Jeśli coś pójdzie nie tak w~wykonywaniu zdalnej metody (też nie zostanie ona znaleziona) mój klient rzuca ogólny wyjątek \texttt{JsonRpcException}, który zawiera w~sobie wiadomość i~typ wyjątku rzuconego po drugiej stronie.
+Podobnie tłumaczenie typów wyjątków nie jest jeszcze wspierane.
+To dlatego, że nie są one przekazywane tak, jak normalne obiekty i~wymagają specjalnego sposobu dekodowania (patrz listing~\ref{kod:json-rpc-exception}).
+Jeśli coś pójdzie nie tak w~wykonywaniu zdalnej metody (też nie zostanie ona znaleziona), mój klient rzuca ogólny wyjątek \texttt{JsonRpcException}, który zawiera w~sobie wiadomość i~typ wyjątku rzuconego po drugiej stronie.
 Idealnie byłoby, gdyby na bazie wiadomości z~błędem otrzymywanej od serwera klient tworzył odpowiednią instancję wyjątku i~go propagował.
 
 \begin{lstlisting}[float, frame=single, caption={Tworzenie obiektu proxy do obiektu zdalnego przy użyciu mojej implementacji klienta JSON-RPC pod .NET.}, label=kod:my-json-rpc-clinet]

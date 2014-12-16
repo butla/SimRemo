@@ -45,11 +45,11 @@ Po tej analizie stwierdzę na których rozwiązaniach mogę się wzorować lub w
 
 \subsection{Stworzenie wieloplatformowej biblioteki}
 \label{lib-requirements}
-Oprogramowanie które stworzę będzie miało postać kilku (dwóch lub więcej) bibliotek na różne systemy. Każda z~nich będzie miała analogiczny interfejs i~taką samą funkcjonalność. Poniżej wyliczone są cechy, których obecność ma definiować moje rozwiązanie.
+Oprogramowanie które stworzę będzie miało postać kilku (dwóch lub więcej) bibliotek na różne systemy. Każda z~nich będzie miała analogiczny interfejs i~taką samą funkcjonalność. Poniżej wyliczone są cechy, których obecność ma definiować moje rozwiązanie. Pełnią one też funkcję celów pracy.
 
 \begin{description}
 \itemtitle{Wywoływanie kodu na Androidzie z~poziomu C\#}
-Cel główny, w~końcu to jest mój problem wyjściowy. Moje dzieło ma pozwolić na wywoływanie metod (i~otrzymanie od nich wartości zwrotnych) napisanych w~języku Java pod Androidem przez program napisany w C\#. Można powiedzieć, że jest to zarządzanie Androidem z~Windows (bo C\# działa na .NET, a~ten z~kolei domyślnie działa na Windows).
+Wywoływanie kodu na Androidzie z~poziomu .NET (C\#) to cel główny niniejszej pracy. Moje dzieło ma pozwolić na wywoływanie metod (i~otrzymanie od nich wartości zwrotnych) napisanych w~języku Java pod Androidem przez program napisany w C\#. Można powiedzieć, że jest to zarządzanie Androidem z~systemu Windows (bo C\# działa na .NET, a~ten z~kolei domyślnie działa na Windows).
 
 %Nie zapewnie polimorfizmu parametrycznego, czyli szblonów.
 \itemtitle{Polimorfizm zdalnych metod}
@@ -166,7 +166,7 @@ Aktualnie istnieje już następca Dalvika -- Android Runtime (ART). Wprowadzono 
 
 Java która jest dostępna na Androidzie niestety nie ma pełnego zbioru standardowych bibliotek (z~Javy SE). Między innymi, brakuje wielu części pakietu \emph{javax}. Niektóre rzeczy, za które były one odpowiedzialne to świadczenie i~konsumowanie usług internetowych (bycie serwerem lub klientem dla web service'ów), czy interfejsy użytkownika (Swing, AWT). W~zamian zostały dodane pakiety ułatwiające pisanie aplikacji pod Androida. Umożliwiają one komunikację aplikacji między sobą i~z~systemem, składowanie danych, dostęp do sensorów i~funkcji telefonu oraz wiele inne przydatnych działań~\cite{android-package}. Wśród nich są też biblioteki odpowiedzialne za GUI Androida. Dzięki nim wszystkim ekosystem (programów) jest dość jednorodny i~ustandaryzowany.
 
-Od jakiegoś czasu Java nie jest jedynym językiem, w którym można pisać aplikacje. Co prawda już kiedyś można dodać do APK bibliotekę C/C++ (pisaną przy użyciu NDK -- Native Development Kit~\cite{android-ndk}) i~wołać ją z~Javy, ale zawsze potrzebny był Javowy szkielet. Teraz można oznaczyć, że APK korzysta z~\emph{NativeActivity}~\cite{android-native-activity}, co pozwala całość zaimplementować natywnie. 
+Od jakiegoś czasu Java nie jest jedynym językiem, w którym można pisać aplikacje. Co prawda już kiedyś można było dodać do APK bibliotekę C/C++ (pisaną przy użyciu NDK -- Native Development Kit~\cite{android-ndk}) i~wołać ją z~Javy, ale zawsze potrzebny był Javowy szkielet. Teraz można oznaczyć, że APK korzysta z~\emph{NativeActivity}~\cite{android-native-activity}, co pozwala całość zaimplementować natywnie. 
 
 Warto też powiedzieć, że każda aplikacja instalowana z~APK jest identyfikowana jako odrębny Uniksowy użytkownik~\cite{android-permissions}. Dzięki temu można precyzyjnie zarządzać tym, do czego dana aplikacja ma dostęp, co zwiększa ogólne bezpieczeństwo systemu. W~systemach instalowanych na telefonach standardowo jest blokowane konto administratora systemu (\emph{root}). Użytkownik może je odblokować przez zabieg zwany rootowaniem.
 
@@ -189,14 +189,14 @@ Jednak zarówno SL4A i~Xamarin nie dają dostępu do wszystkich standardowych bi
 .NET to technologia stworzona przez Microsoft, wspomagająca tworzenie i~uruchamianie aplikacji (w~tym usług sieciowych), głównie dla systemu Microsoft Windows~\cite{dot-net-overview}. Jego główne cele:
 \begin{itemize}
 	\item Zapewnić jednorodne środowisko do programowania obiektowego, zarówno dla kodu lokalnego wykonywanego lokalnie, kodu rozproszonego wykonywanego lokalnie, czy wykonywanego w~całości zdalnie.
-	\item Minimalizacja ilości zależności aplikacji oraz konfliktów wersji.
+	\item Minimalizacja liczby zależności aplikacji oraz konfliktów wersji.
 	\item Promowanie bezpiecznego wykonywania kodu, także od nieznanych lub częściowo zaufanych źródeł.
 	\item Zlikwidowanie problemów wydajnościowych skryptów oraz kodów interpretowanych (nienatywnych).
 	\item Zapewnić jednolity styl programowania na różnych platformach, np.\ przy aplikacjach okienkowych Windows i~aplikacjach internetowych.
 	\item Oparcie całej komunikacji o~obowiązujące standardy, aby kod napisany pod .NETem mógł się integrować z~dowolnym innym kodem.
 \end{itemize}
 
-Cała platforma składa się z~dwóch elementów -- środowiska uruchomieniowego języka wspólnego (ang. \emph{common language runtime}) oraz biblioteki klas. Środowisko uruchomieniowe jest podstawą całej platformy. Przypomina maszynę wirtualną Javy (można je też samo nazywać maszyną wirtualną), będąc agentem, który zarządza kodem w~trakcie jego wykonywania, dostarczając przy okazji kluczową funkcjonalność jak zarządzanie pamięcią, wątkami, zdalne wywoływanie, wymuszanie bezpieczeństwa typów (ang. \emph{type safety}) i~innych form poprawności kodu zapewniających bezpieczeństwo i~solidność programów.
+Cała platforma składa się z~dwóch elementów -- środowiska uruchomieniowego języka wspólnego (ang. \emph{common language runtime}) oraz biblioteki klas. Środowisko uruchomieniowe jest podstawą całej platformy. Przypomina maszynę wirtualną Javy (można je tak samo nazywać maszyną wirtualną), będąc agentem, który zarządza kodem w~trakcie jego wykonywania, dostarczając przy okazji kluczową funkcjonalność jak zarządzanie pamięcią, wątkami, zdalne wywoływanie, wymuszanie bezpieczeństwa typów (ang. \emph{type safety}) i~innych form poprawności kodu zapewniających bezpieczeństwo i~solidność programów.
 
 Kod wykonujący się w~środowisku uruchomieniowym zwany jest kodem zarządzanym (ang. \emph{managed code}). Pozostały kod, jak natywny, nazywany jest kodem niezarządanym (ang. \emph{unmanaged code}). Kod zarządzany jest kompilowany do Wspólnego Języka Pośredniego~\cite{cil} (ang. \emph{Common Intermediate Language, CIL}), który można porównać do kodu bajtowego Javy, choć jest bardziej czytelny dla człowieka. Podobnie cechuje go niezależność od sprzętu i~systemu operacyjnego.
 
@@ -221,7 +221,7 @@ Do zarządzanych języków należą m.in.\ C\#, Visual Basic .NET, J\#, C++ (spe
 
 Cała platforma .NET jest (słusznie~\cite{dot-net-requirements}) kojarzona z~Windows, choć można uruchamiać napisane pod nią programy na innych systemach, jeśli tylko posiada się odpowiednią implementację środowiska uruchomieniowego, bo to ono tłumaczy wspólny kod (CIL) na natywne instrukcje (ponownie, znany z~Javy \emph{just-in-time compilation}). Niestety żadna z~alternatywnych implementacji nie wspiera wszystkich funkcji .NET\@.
 Dlatego nie można z~pełną swobodą, np.\ pisać w~C\# pod Linuksa. Jednak dla wielu programów poziom wsparcia jest wystarczający.
-Chyba najbardziej znana, nie pochodząca od Microsoftu implementacja -- Mono -- nie posiada kilka aspektów, takich jak WPF, WWF oraz ma ograniczone wersje WCF i~stosu asynchronicznego ASP.NET 4.5~\cite{mono-compatibility}. Ale za to jest dostępna dla kilku systemów operacyjnych, m.in.\ na Linuksa, Mac OS czy Solaris~\cite{mono-supported-platforms}. Także, w~przeciwieństwie do standardowej maszyny wirtualnej Microsoftu, może działać na architekturach procesorów innych niż x86 i AMD64~\cite{dot-net-requirements}, np.\ na ARM, PowerPC, SPARC.
+Chyba najbardziej znana, nie pochodząca od Microsoftu implementacja -- Mono -- nie posiada kilku aspektów, takich jak WPF, WWF oraz ma ograniczone wersje WCF i~stosu asynchronicznego ASP.NET 4.5~\cite{mono-compatibility}. Ale za to jest dostępna dla kilku systemów operacyjnych, m.in.\ na Linuksa, Mac OS czy Solaris~\cite{mono-supported-platforms}. Także, w~przeciwieństwie do standardowej maszyny wirtualnej Microsoftu, może działać na architekturach procesorów innych niż x86 i AMD64~\cite{dot-net-requirements}, np.\ na ARM, PowerPC, SPARC.
 
 %\subsection{Odpowiedniość Javy i C\#}
 %Porównać zdolności obu języków, znaleźć cechy nieprzetłumaczalne. Jak dużą zgodność można uzyskać teoretycznie?
@@ -242,7 +242,7 @@ Chyba najbardziej znana, nie pochodząca od Microsoftu implementacja -- Mono -- 
 %Wzmianka, że podstawowa implementacja pythona, której będę używał (albo i nie) nie korzysta z wielu procesorów.
 
 \section{Serializacja}
-\subsection{Ogólnie}
+\subsection{Podstawy}
 Serializacja polega na przetworzeniu obiektu (lub grupy obiektów, lub innej struktury danych z~pamięci) w~postać nadającą się do zapisu na dysk albo do transportu przez sieć~\cite{serialization-basics}. Nieodzownie łączy się też z~deserializacją -- odwrotnością serializacji, która odtwarza w~pamięci obiekt z~zapisu na dysku lub z~danych z~sieci. Kiedy będę używał określenia serializacja, zazwyczaj w~domyśle będę mówił i~o~serializacji, i~o~deserializacji. Podstawową techniką serializacji jest ,,spłaszczenie'' obiektu w~jednowymiarowy strumień bitów, a~następnie, w~ramach deserializacji, na odtworzenie z~tego strumienia oryginalnego obiektu.
 
 Warto zaznaczyć, że możliwe jest przeniesienie obiektu z~jednej platformy programistycznej na drugą (przetłumaczenie z~jednego języka programawania na inny) przez jego serializację na platformie źródłowej, a~następnie deserializację na docelowej.
@@ -289,11 +289,11 @@ Jednak wszystkie są hermetyczne w~tym sensie, że trzeba użyć właśnie ich, 
 Znany od wielu lat, uniwersalny i~bardzo popularny format opisu danych. Dokument XML ma strukturę drzewa i~składa się z~elementów~\cite{xml-tutorial}. Zawsze musi być dokładnie jeden element nadrzędny, reszta dokumentu musi być zagnieżdżona w~elemencie nadrzędnym. Element zagnieżdżony nazywany jest dzieckiem, natomiast element zawierający inny element -- rodzicem. Element musi mieć nazwę, musi być zamknięty, może posiadać jedną wartość tekstową. Elementy mogą też zawierać atrybuty. W~dokumencie mogą istnieć przestrzenie nazw wspomagające przeszukiwanie dokumenty przez rozszerzenie adresowania elementów. Przykłady XML we fragmencie~\ref{kod:xml-example}.
 
 \itemtitle{JSON (JavaScript Object Notation)}
-Drzewiasty format opisu danych o~lżejszym zapisie niż XML~\cite{json-tutorial}. Wyrósł z~JavaScripta, ale nie jest z~nim powiązany. JSON ma kilka typów podstawowych do przedstawiania podstawowych jednostek danych jak tekst, liczba, czy prawda/fałsz. Można z~nich składać obiekty lub listy. Zarówno obiekty i~listy mogą zawierać inne obiekty i~inne tablice. Obiekt różni się od listy tym, że jego elementy są nazwane. Listy mogą zawierać elementy różnych typów. Nazwy pól oraz wartości tekstowe muszą się zawierać w~cudzysłowach. Przykład JSON we fragmencie~\ref{kod:json-example}
+Drzewiasty format opisu danych o~lżejszym zapisie niż XML~\cite{json-tutorial}. Wyrósł z~języka JavaScript, ale nie jest z~nim powiązany. JSON ma kilka typów podstawowych do przedstawiania podstawowych jednostek danych jak tekst, liczba, czy prawda/fałsz. Można z~nich składać obiekty lub listy. Zarówno obiekty i~listy mogą zawierać inne obiekty i~inne tablice. Obiekt różni się od listy tym, że jego elementy są nazwane. Listy mogą zawierać elementy różnych typów. Nazwy pól oraz wartości tekstowe muszą się zawierać w~cudzysłowach. Przykład JSON we fragmencie~\ref{kod:json-example}
 
 \itemtitle{Inne}
 Warto zwrócić uwagę na YAML, który ma być przyjazny dla ludzi~\cite{yaml-spec} i~staje się obecnie coraz bardziej popularny. Korzystają z~niego takie projekty jak Ansible~\cite{ansible-yaml}, Travis~\cite{travis-configuration}, czy Cloud Foundry~\cite{cloud-foundry-config}. 
-Nowym, nie tak bardzo popularnym formatem jest AXON, mający łączyć najlepsze cechy XML, JSON i~YAML~\cite{axon-better-json}\cite{axon-best}.
+Nowym, jeszcze nie tak bardzo popularnym formatem jest AXON, mający łączyć najlepsze cechy XML, JSON i~YAML~\cite{axon-better-json}\cite{axon-best}.
 
 \end{description}
 
@@ -372,7 +372,7 @@ Atutem XSD jest wsparcie typów danych. Dzięki niemu łatwiej można:
 	\item konwertować dane z jednego typu na drugi.
 \end{itemize}
 
-Przy pomocy XML Schema można tworzyć tzw.\ wiązania (\emph{bindings}). Najpierw trzeba stworzyć schemat XSD zgodny z~definicją klasy lub struktury danych z~jakiegoś języka programowania. Wtedy można tworzyć dokument XML na bazie, np.\ obiektu Javy, lub tworzyć obiekt Javy na bazie dokumentu XML zgodnego z~przygotowanym XSD. To właśnie można określić jako \emph{XML binding}.
+Za pomocą XML Schema można tworzyć tzw.\ wiązania (\emph{bindings}). Najpierw trzeba stworzyć schemat XSD zgodny z~definicją klasy lub struktury danych z~jakiegoś języka programowania. Wtedy można tworzyć dokument XML na bazie, np.\ obiektu Javy, lub tworzyć obiekt Javy na bazie dokumentu XML zgodnego z~przygotowanym XSD. To właśnie można określić jako \emph{XML binding}.
 Proces wiązania jest wykorzystywany w~części standardów zdalnego wołania metod.
 
 %\subsection{Binding(TODO)}
@@ -400,10 +400,10 @@ Proces wiązania jest wykorzystywany w~części standardów zdalnego wołania me
 \section{Zdalne wywoływanie kodu}
 Zdalne wywoływanie kodu może być też nazywane zdalnym wywoływaniem metod lub procedur. Angielskie odpowiedniki to \emph{Remote Method Invocation} (RMI), \emph{Remote Procedure Call} (RPC) i~\emph{Remote Code Execution} (RCE). Ostatnie określenie często używane jest jako określenie na lukę bezpieczeństwa pozwalającą niepowołanym bytom na uruchomienie w~jakimś systemie niepożądanej logiki.
 
-Aby wywołać kod zdalnie jakiś zewnętrzny klient musi, w~ogólności, wskazać obiekt, na którym ma być wywołana metoda, wybrać jedną metodę i~przekazać do niej parametry. Wszystko to można zakodować w~jednym obiekcie, którego będziemy nazywać wiadomością lub wywołaniem.
+Aby wywołać kod zdalnie jakiś zewnętrzny klient musi, w~ogólności, wskazać obiekt, na którym ma być wywołana metoda, wybrać jedną metodę i~przekazać do niej parametry. Wszystko to można zakodować w~jednym obiekcie, który będziemy nazywać wiadomością lub wywołaniem.
 Wskazanie obiektu może polegać na podaniu jakiegoś unikatowego adresu rozpoznawanego przez serwer hostujący zdalny obiekt.
 Metoda może być w~naturalny sposób zidentyfikowana przez swoją nazwę.
-Obie te rzeczy można prosto zakodować we wiadomości jako obiekty typu \emph{string}.
+Obie te rzeczy można prosto zakodować w~wiadomości jako obiekty typu \emph{string}.
 Wyzwanie stanowi przekazanie parametrów, które mogą być dość skomplikowanymi strukturami (ogólnie -- problem serializacji).
 
 Przekazywanie wiadomości musi odbywać się przez jakiś kanał komunikacyjny. Mogą one być bardzo różne, np. TCP, potoki (\emph{Unix pipe}), SSL, HTTP, HTTPS i~inne.
@@ -433,11 +433,10 @@ Nie ma sensu jednak poświęcać im więcej uwagi, ponieważ będę korzystał z
 
 \subsection{XML-RPC}
 XML-RPC jest protokołem zdalnego wołania procedur przez Internet~\cite{xml-rpc}.
-Wiadomość w~tym protokole to wiadomość (zapytanie) POST protokołu HTTP. Ciałem zapytanie jest dokument XML.
+Wiadomość w~tym protokole to wiadomość (zapytanie) POST protokołu HTTP. Ciałem zapytania jest dokument XML.
 W~odpowiedzi na wiadomość określony kod uruchamiany jest na serwerze po czym zwracana jest odpowiedź, również w~formie XML.
-Przykłady wywołania i~odpowiedzi znajdują się odpowiednio we fragmentach~\ref{kod:xml-rpc-call} i~\ref{kod:xml-rpc-response}.
+Przykłady wywołania i~odpowiedzi znajdują się odpowiednio w~listingach~\ref{kod:xml-rpc-call} i~\ref{kod:xml-rpc-response}.
 
-kod:xml-rpc-call
 \begin{lstlisting}[float, frame=single, caption={Wywołanie metody XML-RPC.}, label=kod:xml-rpc-call]
 POST /RPC2 HTTP/1.0
 User-Agent: Frontier/5.1.2 (WinNT)
@@ -475,9 +474,9 @@ Server: UserLand Frontier/5.1.2-WinNT
 </methodResponse>
 \end{lstlisting}
 
-Format URI w~pierwszej linii nagłówka HTTP nie jest określony. Może być pusty, może składać się pojedynczego ,,/'', jeśli serwer obsługuje tylko wywołania XML-RPC. Jeśli serwer obsługuję mieszankę różnych zapytań HTTP to można ustawić URI na coś, co pomoże w~obsłudzę wywołań RPC (w~przykładach ścieżka to ,,/RPC2'').
+Format URI w~pierwszej linii nagłówka HTTP nie jest określony. Może być pusty, może składać się pojedynczego ,,/'', jeśli serwer obsługuje tylko wywołania XML-RPC. Jeśli serwer obsługuje mieszankę różnych zapytań HTTP to można ustawić URI na coś, co pomoże w~obsłudze wywołań RPC (w~przykładach ścieżka to ,,/RPC2'').
 
-Ciało wiadomości zawarte jest jest w~elemencie \texttt{<methodCall>}. Musi on zawierać podelement \texttt{<methodName>} zawierający nazwę metody (procedury), która ma być wywołana.
+Ciało wiadomości zawarte jest w~elemencie \texttt{<methodCall>}. On posiada podelement \texttt{<methodName>} zawierający nazwę metody (procedury), która ma być wywołana.
 Jeśli ma ona parametry, to w~wywołaniu musi się znaleźć element \texttt{<params>}. Wewnątrz niego znajdują się poszczególne parametry. Każdy z~nich musi zawierać się w~elemencie \texttt{<param>} i~posiadać element \texttt{<value>}, w~którym znajduje się właściwa wartość parametru.
 
 Właściwie wywołania metod nie muszą być wysyłane po HTTP. Równie dobrze mogłoby to być TCP lub dowolny inny protokół, w~którym można wskazać adres odbiorcy.
@@ -490,7 +489,7 @@ XML-RPC to dość stary, ale prosty i~popularny protokół.
 
 \subsection{JSON-RPC}
 \label{json-rpc}
-Prosty, ciągle rozwijany, bezstanowy standard RPC podobny do XML-RPC. W~tym przypadku przesyłane są jednak dokumenty JSON, nie XML.
+JSON-RPC to prosty, ciągle rozwijany, bezstanowy standard RPC podobny do XML-RPC. W~tym przypadku przesyłane są jednak dokumenty JSON, nie XML.
 Podobnie jak XML-RPC może używać praktycznie czegokolwiek jako warstwy transportowej.
 Wszystko, co pozwoli na przekazanie dokumentu JSON od klienta do serwera i~z~powrotem się nadaje.
 Dzięki temu, że oparty jest o~JSON posiada bardziej zwięzłą składnię niż XML-RPC.
@@ -498,15 +497,14 @@ Składnię JSON-RPC można rozszerzać~\cite{json-rpc-extensions}.
 
 Przykładowe wywołanie i~odpowiedź pokazane we fragmencie~\ref{kod:json-rpc-examples}.
 Każda wiadomość jest obiektem JSON.
-Elementy wiadomości~\cite{json-rpc-specification}:
+Elementy wiadomości są następujące~\cite{json-rpc-specification}:
 \begin{description}
 	\item[\texttt{jsonrpc}] Wartość typu \texttt{string} oznaczająca wersję protokołu JSON-RPC. Musi być równa ''2.0''.
 	\item[\texttt{id}] Identyfikator ustalony przez klienta identyfikator, który musi zawierać \texttt{string}, liczbę lub wartość NULL jeśli jest zamieszczony. Jeśli jest zamieszczony jest uznawany za powiadomienie.
 	\item[\texttt{method}] Wartość typu \texttt{string} zawierająca nazwę metody, która ma być wykonana. Nazwy zaczynające się od ,,rpc.'' są zarezerwowane dla rozszerzeń.
 	\item[\texttt{params}] Lista zawierająca parametry, które mają być przekazane wywoływanej metodzie. Ten element może być pominięty, jeśli metoda nie przyjmuje parametrów.
 	\item[\texttt{result}] Wartość zwracana przez metodę, może być NULL. Element musi istnieć, jeśli wywołanie zakończyło się sukcesem. Nie może istnieć, jeśli wystąpił błąd w~trakcie wywołania.
-This member MUST NOT exist if there was an error invoking the method.
-	\item[\texttt{error}] Element musi się pojawić, jeśli wystąpił błąd przy wywołaniu metody. Jej wartość musi być obiektem błędu.
+	\item[\texttt{error}] Element musi się pojawić, jeśli wystąpił błąd przy wywołaniu metody. Wartość zwracana z~metody musi być obiektem błędu.
 	\item[Obiekt błędu] Może posiadać trzy pola: \texttt{code} -- kod błędu jako liczba całkowita, \texttt{message} -- wiadomość przekazywana z~wyjątkiem, \texttt{data}(opcjonalny) -- wartość lub obiekt zawierający dodatkowe informacje o~błędzie.
 \end{description}
 
@@ -545,7 +543,7 @@ Jest kilka alternatywnych protokołów przesyłania wiadomości. Może to być X
 
 \emph{Web service} powinien się sam opisywać. Czyli zawsze do wystawionej pod jakimś adresem usługi powinien być załączony jej opis.
 Język używany do tworzenia tych opisów to oparty o~XML WSDL (\emph{Web Service Description Language}).
-Przy jego pomocy opisuje się publiczny interfejs usługi. Zawiera on definicje wszystkich publicznych funkcji, używanych przez nie typów danych\footnote{Zdefiniowanych przy użyciu XML Schema}, informacje na temat używanych protokołów transportowych oraz adresy potrzebne do zlokalizowania usługi. Przykład WSDL znajduje się na listingu~\ref{kod:wsdl-example}. Nawet dla prostych interfejsów WSDL będzie dość obszerny i~trudny do zrozumienia dla człowieka.
+Za jego pomocą opisuje się publiczny interfejs usługi. Zawiera on definicje wszystkich publicznych funkcji, używanych przez nie typów danych\footnote{Zdefiniowanych przy użyciu XML Schema}, informacje na temat używanych protokołów transportowych oraz adresy potrzebne do zlokalizowania usługi. Przykład WSDL znajduje się na listingu~\ref{kod:wsdl-example}. Nawet dla prostych interfejsów WSDL będzie dość obszerny i~trudny do zrozumienia dla człowieka.
 Jego plusem jest to, że zazwyczaj można na jego bazie wygenerować kod kliencki do wielu języków programowania.
 
 \lstset{basicstyle=\footnotesize}
@@ -602,17 +600,17 @@ Jego plusem jest to, że zazwyczaj można na jego bazie wygenerować kod klienck
 \end{lstlisting}
 \lstset{basicstyle=\normalsize}
 
-SOAP to oparty o~XML protokół wymiany informacji, w~praktyce stosowany tylko przy~\emph{web services}. Podobnie jak WSDL jest mało zrozumiały dla ludzi, ale przenosi bardzo dokładne informacje (np. o~typach danych zawartych we wiadomości).
+SOAP to oparty o~XML protokół wymiany informacji, w~praktyce stosowany tylko przy~\emph{web services}. Podobnie jak WSDL jest mało zrozumiały dla ludzi, ale przenosi bardzo dokładne informacje (np. o~typach danych zawartych w~wiadomości).
 
 Usługi powinny dawać możliwość odkrywania (\emph{discovery}) się.
 Do tego potrzebny jest prosty system w~którym obwieszcza się wystawienie usługi na zewnątrz.
 Następnie potencjalny klient może sam znaleźć usługę i~z~niej skorzystać.
-Jednym z~początkowych celów usług sieciowych była pełna automatyzacja procesu biznesowego polegającego na wyszukiwaniu usług potrzebnych danemu programowi i~wykorzystaniu ich w~swojej logice. W~praktyce nie działało to nigdy dać dobrze, aby zostać szerzej przyjęte. 
+Jednym z~początkowych celów usług sieciowych była pełna automatyzacja procesu biznesowego polegającego na wyszukiwaniu usług potrzebnych danemu programowi i~wykorzystaniu ich w~swojej logice. W~praktyce nie działało to nigdy tak dobrze, aby zostać szerzej przyjęte. 
 
 Standaryzacji wprowadzonej przez \emph{web services} udało się ułatwić integrację systemów rozproszonych. Zwłaszcza tych heterogenicznych.
 Mimo, że istnieją już prostsze i faktycznie pełniej wspierające heterogeniczność rozwiązania, usługi sieciowe nadal są dość popularne.
 To dlatego, że dobrze sprawują się przy użyciu z~dużymi platformami programistycznymi jak .NET i~Java.
-Umożliwiają szybką generację kodu popularnych języków, który często jest elegancki w~użyciu pozwala na obiektowe wołanie metod zdalnych.
+Umożliwiają szybką generację kodu popularnych języków, który często jest elegancki w~użyciu i~pozwala na obiektowe wołanie metod zdalnych.
 
 Niestety, protokoły usług sieciowych są trudne w~implementacji i~nigdy nie mają pełnych możliwości na platformach mobilnych.
 Też pełne implementacje, jak JAX-WS dla Javy i~WCF dla .NET nie posiadają tych samych możliwości, a~różne podzbiory ogólnego standardu.
@@ -641,19 +639,19 @@ Przez to niektóre bardziej zaawansowane aspekty \emph{web services} tracą swoj
 %WSDL -- tylko on zapewnia używalność (cytat z RESTful).
 
 \subsection{REST}
-REST rozwija się do \emph{REpresentational State Transfer}~\cite{restful-web-services}.
-Jest podejściem do tworzenia rozproszonych programów w~Internecie, który polega na mechanizmach używanych przy ,,normalnej'' sieci, po której użytkownicy surfują przy pomocy przeglądarek. Czyli protokołu HTTP.
+Skrót REST rozwija się do \emph{REpresentational State Transfer}~\cite{restful-web-services}.
+Jest podejściem do tworzenia rozproszonych programów w~Internecie, który wykorzystuje mechanizmy używane w~,,normalnej'' sieci, po której użytkownicy surfują za pomocą przeglądarek, czyli protokołu HTTP.
 REST służy do tworzenia usług sieciowych, jednak są one czymś odmiennym niż klasyczne, ,,duże'' \emph{web services}.
-REST jest konkurencją dla tych ,,dużych'' usług, chociaż ma nieco inne cele.
+REST jest alternatywą dla tych ,,dużych'' usług, chociaż ma nieco inne cele.
 
 Popatrzmy na REST przez pryzmat klasycznego RPC. Obiekt usługi powiązany jest z~konkretnym adresem HTTP i~nazywany jest zasobem (z~ang. \emph{resource}).
 Usługi nie mogą definiować dowolnych metod. Mogą zdefiniować maksymalnie cztery, które jednocześnie są czasownikami HTTP: GET, PUT, POST, DELETE. 
 Parametry metod mogą być przyjmowane na kilka sposobów: przez adres, jak w~normalnym HTTP po znaku ,,?'', jako element ścieżki w~adresie, czy w~końcu jako dane w~ciele zapytania HTTP.
 Format danych jest dowolny: JSON, XML lub binarne.
 Ogólnie, z~RESTową usługą można się porozumiewać, jak ze zwykłą stroną Internetową.
-Jest to na ogól dużo prostsze niż, bardziej intuicyjne i~łatwiejsze w~implementacji niż duże usługi sieciowe.
+Jest to na ogól dużo prostsze, bardziej intuicyjne i~łatwiejsze w~implementacji niż duże usługi sieciowe.
 
-Mówi się, że REST to architektura skupiona na zasobach (ROA -- \emph{Resource Oriented Architecture}. Przeciwieństwem jest są standardowe architektury usług sieciowych -- SOA, czyli \emph{Service Oriented Architecture}. 
+Mówi się, że REST to architektura skupiona na zasobach (ROA -- \emph{Resource Oriented Architecture}. Przeciwieństwem są standardowe architektury usług sieciowych -- SOA, czyli \emph{Service Oriented Architecture}. 
 
 W~tej pracy będę jednak pomijał rozwiązania RESTowe ze względu na fakt, że są oparte o~HTTP.
 Z~jednej strony obsługa HTTP na urządzeniu mobilnym jest bardziej problematyczna niż, chociażby, XML-RPC słane po TCP, z~drugiej -- wolałbym żeby moje rozwiązanie nie było związane z~jedną warstwą transportową.

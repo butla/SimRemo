@@ -1,21 +1,21 @@
 \chapter{Podsumowanie}
-Główny cel pracy, czyli stworzenie bibliotek umożliwiających zdalne serwowanie metod z~Androida oraz konsumpcję ich z~poziomu .NET, został zrealizowany.
-Powstał system, który umożliwia wygodne tworzenie obiektów zdalnych na Androidzie. Nie było to wcześniej możliwe, lub programy to potrafiące są zbyt mało popularne, żebym mógł je znaleźć.
+Główny cel pracy, czyli stworzenie bibliotek umożliwiających zdalne serwowanie metod z~Androida oraz ich ,,konsumpcję'' z~poziomu .NET, został zrealizowany.
+Powstał system, który umożliwia wygodne tworzenie obiektów zdalnych na Androidzie. Nie było to wcześniej możliwe lub programy to potrafiące są zbyt mało popularne, żebym mógł je znaleźć.
 Aby to osiągnąć nie stworzyłem nowej biblioteki, a~rozszerzyłem istniejącą, dojrzałą bibliotekę (jsonrpc4j), która realizuje otwarty i~popularny standard (JSON-RPC).
 Dzięki temu wielu ludzi będzie mogło skorzystać z~osiągnięć tej pracy, jak tylko moja poprawka zostanie zaakceptowana przez twórcę jsonrpc4j.
 
 Klient JSON-RPC dla .NET musiał powstać od zera, ponieważ nie istnieje dobra implementacja.
 W~obecnym kształcie nie nadaje się on do użyciu w~środowisku produkcyjnym -- nie jest odporny na problemy w~warstwie transportowej.
-Demonstruje za to podejście nie znane dotąd .NETowym klientom JSON-RPC, czyli tworzenie obiektów klienckich zgodnych realizujących interfejs serwisu.
+Demonstruje za to podejście nieznane dotąd .NETowym klientom JSON-RPC, czyli tworzenie obiektów klienckich zgodnych realizujących interfejs serwisu.
 Przez to może posłużyć za wzór solidnej i~wygodnej implementacji.
 Aby mogło do tego dojść opublikuję kod klienta w~Internecie.
 
 Pobocznym celem było zapewnienie polimorfizmu metod zdalnych.
-Temat ten został przeanalizowany. Dzięki tej analizie powstał prototyp, który demonstruje że jest to możliwe. Prototyp był zmodyfikowaną biblioteką JSON-NET.
+Temat ten został przeanalizowany. Dzięki tej analizie powstał prototyp, który demonstruje, że jest to możliwe. Prototyp jest zmodyfikowaną biblioteką JSON-NET.
 Nie wspiera jednak wszystkich przypadków serializacyjnych, czyli tablic, list i innych kolekcji.
 Ale zostało pokazane, że przez ujednolicenie sposobu opisu danych można zapewnić zgodność i~przezroczystą obiektową współpracę Javy i~.NET, chociaż ze względu na różnice między tymi językami nigdy nie będzie pełnej swobody tej współpracy.
 
-Aby uzyskać maksymalnie przewidywalną współpracę, gdzie programista ma pewność co będzie działało, a~co nie (w kontekście wymienianych typów), trzeba korzystać z~systemów stworzonych z~myślą o~wymianie danych między różnymi platformami programistycznymi, takich jak Apache Thrift lub Avro.
+Aby uzyskać maksymalnie przewidywalną współpracę, gdzie programista ma pewność, co będzie działało, a~co nie (w kontekście wymienianych typów), trzeba korzystać z~systemów stworzonych z~myślą o~wymianie danych między różnymi platformami programistycznymi, takich jak Apache Thrift lub Avro.
 Wymagają one jednak więcej pracy i planowania niż zaproponowane przeze mnie rozwiązanie.
 
 
@@ -30,7 +30,7 @@ Udane. Z~jednej strony pokazałem niektóre z~aktualnie najpopularniejszych rozw
 Zbadałem też możliwości na uzyskanie polimorfizmu metod zdalnych przy ich użyciu.
 
 \itemtitle{Stworzenie wieloplatformowej biblioteki}
-Część na Androida zrealizowana jest w~pełni, nadaje się do użytku produkcyjnego i~będzie się zawierać w~popularnej otwartej bibliotecę.
+Część na Androida zrealizowana jest w~pełni, nadaje się do użytku produkcyjnego i~będzie się zawierać w~popularnej otwartej bibliotece.
 Część pod .NET nie ma formy gotowej biblioteki, jest prototypem.
 \begin{itemize}
   \item Wywoływanie kodu na Androidzie z~poziomu C\# -- udane.
@@ -49,11 +49,11 @@ Niektóre z~dotkniętych przeze mnie tematów są warte dogłębniejszej analizy
 Ta praca mogłaby być wykonywana w~ramach kolejnych prac magisterskich, czy inżynierskich.
 Zagadnienia:
 \begin{itemize}
-	\item Jednolity format opisu typu danych we wiadomościach JSON-RPC. ,,Duże'' usługi sieciowej go mają dzięki korzystaniu z~XML Schema. Jest to jednak rozwiązanie ciężkie, mało elastyczne i~trudne w~implementacji.
+	\item Jednolity format opisu typu danych w~wiadomościach JSON-RPC. ,,Duże'' usługi sieciowe go mają dzięki korzystaniu z~XML Schema. Jest to jednak rozwiązanie ciężkie, mało elastyczne i~trudne w~implementacji.
 	\item Rozszerzenie Apache Thrift o~możliwość generacji kodu pod Androida.
 	\item Rozszerzenie JSON.NET, aby dzięki konfiguracji mógł formatować informacje o~typach tak samo jak Jackson.
 	\item Implementacja solidnego klienta JSON-RPC na bazie mojego kodu. Powinien zawierać obsługę błędów komunikacji, ponowne próby nadawania wiadomości itp. Powinien też wspierać komunikację HTTP, HTTPS i~TLS.
-	\item Dokładne porównanie współczesnych \emph{frameworków} do międzyplatformowego RPC i~serializacji, czyli Apachje Thrift, Apache Avro i~Google Protocol Buffers.
+	\item Dokładne porównanie współczesnych \emph{frameworków} do międzyplatformowego RPC i~serializacji, czyli Apache Thrift, Apache Avro i~Google Protocol Buffers.
 \end{itemize}
 
 
